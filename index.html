@@ -6,37 +6,17 @@
     />
     <meta charset="utf-8" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
 
     <script id="tknData"></script>
 
-    <style type="text/css">
-      html {
-        height: 100%;
-      }
-
-      body {
-        min-height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      canvas {
-        padding: 0;
-        margin: auto;
-        display: block;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-    </style>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="show-container">
       <label for="tokenId"></label>
-      <input id="tokenId" placeholder="token Id" />
-      <button type="button" id="showButton">show</button>
+      <input id="tokenId" placeholder="tokenId" />
+      <button type="button" id="showButton">show art</button>
     </div>
     <canvas></canvas>
 
