@@ -24,55 +24,80 @@ const contractV3 = new ethers.Contract(
 
 const tokenIdInput = document.getElementById("tokenId")
 const showButton = document.getElementById("showButton")
+let tknData = document.getElementById("tknData")
+let artCode = document.getElementById("artCode")
 
 let _tokenId = ""
 let _hash = ""
-let _script = ""
+let _script
+
+window.addEventListener("DOMContentLoaded", (event) => {
+  const storedTokenId = localStorage.getItem("_tokenId")
+  const storedHash = localStorage.getItem("_hash")
+  const storedScript = localStorage.getItem("_script")
+
+  if (storedTokenId && storedHash && storedScript) {
+    _tokenId = storedTokenId
+    _hash = storedHash
+    _script = storedScript
+    updateTknData(_tokenId, _hash)
+    updateArtCode(_script)
+  }
+})
+
+function clearLocalStorage() {
+  localStorage.removeItem("_tokenId")
+  localStorage.removeItem("_hash")
+  localStorage.removeItem("_script")
+}
 
 async function show() {
   _tokenId = tokenIdInput.value
   try {
+    clearLocalStorage()
+
     _hash = await contractV2.tokenIdToHash(_tokenId)
     let projId = await contractV2.tokenIdToProjectId(_tokenId)
     let projectInfo = await contractV2.projectScriptInfo(projId)
 
+    _script = ""
     for (let i = 0; i < projectInfo[1].toNumber(); i++) {
       const scrpt = await contractV2.projectScriptByIndex(projId.toString(), i)
       _script += scrpt
     }
 
-    console.log("token Id is:", _tokenId)
-    console.log("Hash is:", _hash)
-    console.log("Project ID is:", projId.toString())
-    console.log("Script count is:", projectInfo[1].toNumber())
-    console.log("Script is:", _script)
+    // console.log("token Id is:", _tokenId)
+    // console.log("Hash is:", _hash)
+    // console.log("Project ID is:", projId.toString())
+    // console.log("Script count is:", projectInfo[1].toNumber())
+    // console.log("Script is:", _script)
 
-    update(_tokenId, _hash, _script)
+    updateTknData(_tokenId, _hash)
+    updateArtCode(_script)
+
+    localStorage.setItem("_tokenId", _tokenId)
+    localStorage.setItem("_hash", _hash)
+    localStorage.setItem("_script", _script)
+
+    window.location.reload()
   } catch (error) {
     console.error("Error:", error)
   }
 }
 
-function update(_tokenId, _hash, _script) {
-  let tknData = document.getElementById("tknData")
-  let artCode = document.getElementById("artCode")
-
+function updateTknData(_tokenId, _hash) {
   let tokenDataObj = {
     tokenId: _tokenId,
     hash: _hash,
   }
   tknData.innerText = "let tokenData = " + JSON.stringify(tokenDataObj)
-
-  console.log("_script:", _script)
-  artCode.innerText = _script
-
-  // Execute token data script
   eval(tknData.innerText)
-
-  // Execute art code
-  eval(artCode.innerText)
-
   console.log(tknData.innerText)
+}
+
+function updateArtCode(_script) {
+  artCode.innerText = _script
+  eval(artCode.innerText)
   console.log(artCode.innerText)
 }
 
