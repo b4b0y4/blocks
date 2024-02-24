@@ -1,8 +1,13 @@
 // Import ethers library and contract ABIs
 import { ethers } from "./constants/ethers-5.6.esm.min.js"
-import { abiV1, contractAddressV1 } from "./constants/abV1.js"
-import { abiV2, contractAddressV2 } from "./constants/abV2.js"
-import { abiV3, contractAddressV3 } from "./constants/abV3.js"
+import {
+  abiV1,
+  abiV2,
+  abiV3,
+  contractAddressV1,
+  contractAddressV2,
+  contractAddressV3,
+} from "./constants/ab.js"
 
 // Initialize Ethereum provider
 const provider = new ethers.providers.JsonRpcProvider(
@@ -18,7 +23,6 @@ const contracts = [
 
 // DOM elements
 const tokenIdInput = document.getElementById("tokenId")
-const showButton = document.getElementById("showButton")
 const tknData = document.getElementById("tknData")
 const artCode = document.getElementById("artCode")
 const detail = document.getElementById("detail")
@@ -27,17 +31,7 @@ const detail = document.getElementById("detail")
 let _tokenId = ""
 let _hash = ""
 let _script = ""
-let _detail
-
-// Event listener when the DOM content is loaded
-window.addEventListener("DOMContentLoaded", () => {
-  // Retrieve data from local storage if available
-  const storedData = JSON.parse(localStorage.getItem("tokenData"))
-  if (storedData) {
-    ;({ _tokenId, _hash, _script, _detail } = storedData)
-    update(_tokenId, _hash, _script, _detail)
-  }
-})
+let _detail = ""
 
 // Function to clear local storage
 function clearLocalStorage() {
@@ -117,5 +111,26 @@ function update(_tokenId, _hash, _script, _detail) {
   console.log(detail.innerText)
 }
 
-// Event listener for show button click
-showButton.addEventListener("click", show)
+// Event listener when the DOM content is loaded
+window.addEventListener("DOMContentLoaded", () => {
+  // Retrieve data from local storage if available
+  const storedData = JSON.parse(localStorage.getItem("tokenData"))
+  if (storedData) {
+    update(...Object.values(storedData))
+  }
+
+  // Event listener for the Enter key press on tokenIdInput
+  tokenIdInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+      show()
+    }
+  })
+
+  // Event listener to clear the window
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      clearLocalStorage()
+      location.reload()
+    }
+  })
+})
