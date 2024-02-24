@@ -10,11 +10,12 @@ html {
   }
 
   .show-container {
+    font-family: Helvetica, sans-serif;
     display: flex;
     align-items: center;
     position: fixed;
     bottom: 0;
-    right: 5px;
+    right: 0;
     z-index: 1000;
     background-color: #1F1F1F;
     border-radius: 5px;
@@ -31,7 +32,7 @@ html {
   input {
     width: 80px;
     text-align: end;
-    margin-right: 10px;
+    margin-right: 5px;
   }
 
   button, input {

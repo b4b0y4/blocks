@@ -105,12 +105,11 @@ async function show() {
 
 // Function to update UI elements
 function update(_tokenId, _hash, _script, _detail) {
+  tokenIdInput.placeholder = _tokenId
   tknData.innerText = `let tokenData = { tokenId: "${_tokenId}", hash: "${_hash}" }`
   artCode.textContent = _script
   if (_detail) {
-    detail.innerText = `${_detail[0].toString()} #${_tokenId.slice(
-      -4
-    )} / ${_detail[1].toString()}`
+    detail.innerText = `${_detail[0].toString()} / ${_detail[1].toString()}`
   }
 
   console.log(tknData.innerText)
