@@ -29,6 +29,26 @@ html {
     color: white;
   }
 
+  .panel {
+    position: fixed;
+    bottom: -100%;
+    right: 0;
+    width: 80%;
+    height: auto;
+    padding: 10px;
+    background-color: #1F1F1F;
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    z-index: 999;
+    transition: bottom 0.3s ease;
+    opacity: 0.9;
+  }
+
+  .panel.open {
+    bottom: 30px;
+}
+
   input {
     background-color: #1F1F1F;
     color: white;

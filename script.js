@@ -26,6 +26,7 @@ const tokenIdInput = document.getElementById("tokenId")
 const tknData = document.getElementById("tknData")
 const artCode = document.getElementById("artCode")
 const detail = document.getElementById("detail")
+const panel = document.querySelector(".panel")
 
 // Variables to store contract data
 let _tokenId = ""
@@ -104,6 +105,7 @@ function update(_tokenId, _hash, _script, _detail) {
   artCode.textContent = _script
   if (_detail) {
     detail.innerText = `${_detail[0].toString()} / ${_detail[1].toString()}`
+    panel.innerText = _detail[2].toString()
   }
 
   console.log(tknData.innerText)
@@ -132,5 +134,9 @@ window.addEventListener("DOMContentLoaded", () => {
       clearLocalStorage()
       location.reload()
     }
+  })
+
+  detail.addEventListener("click", function () {
+    panel.classList.toggle("open")
   })
 })
