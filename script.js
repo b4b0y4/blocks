@@ -23,7 +23,6 @@ const contracts = [
 
 // DOM elements
 const tokenIdInput = document.getElementById("tokenId")
-const tknData = document.getElementById("tknData")
 const artCode = document.getElementById("artCode")
 const detail = document.getElementById("detail")
 const panel = document.querySelector(".panel")
@@ -36,7 +35,7 @@ let _detail = ""
 
 // Function to clear local storage
 function clearLocalStorage() {
-  localStorage.removeItem("tokenData")
+  localStorage.removeItem("contractData")
 }
 
 // Function to handle show button click event
@@ -89,7 +88,7 @@ async function show() {
 
     // Store data in local storage
     localStorage.setItem(
-      "tokenData",
+      "contractData",
       JSON.stringify({ _tokenId, _hash, _script, _detail })
     )
     location.reload()
@@ -98,25 +97,57 @@ async function show() {
   }
 }
 
+// Function to create and append a new script element with the desired content and type to the body
+function createScriptElement(content, type = "") {
+  const scriptElement = document.createElement("script")
+  scriptElement.textContent = content
+  if (type) {
+    scriptElement.type = type
+  }
+  console.log("Appending script element to body:", scriptElement)
+  document.body.appendChild(scriptElement)
+}
+
 // Function to update UI elements
 function update(_tokenId, _hash, _script, _detail) {
+  // Set the placeholder for tokenIdInput
   tokenIdInput.placeholder = _tokenId
-  tknData.innerText = `let tokenData = { tokenId: "${_tokenId}", hash: "${_hash}" }`
-  artCode.textContent = _script
+
+  // Construct the content for the new script element for token data
+  const tokenDataScriptContent =
+    _tokenId < 3000000
+      ? `let tokenData = { tokenId: "${_tokenId}", hashes: ["${_hash}"] };`
+      : `let tokenData = { tokenId: "${_tokenId}", hash: "${_hash}" };`
+
+  createScriptElement(tokenDataScriptContent)
+
+  // Construct the content for the new script element for art code
+  const artCodeScriptContent = _script
+
+  // Determine the type for the art code script element
+  const artCodeScriptType =
+    _tokenId > 999999 && _tokenId < 3000000 ? "application/processing" : ""
+
+  createScriptElement(artCodeScriptContent, artCodeScriptType)
+
+  // If _detail exists, set detail.innerText and panel.innerText accordingly
   if (_detail) {
-    detail.innerText = `${_detail[0].toString()} / ${_detail[1].toString()}`
-    panel.innerText = _detail[2].toString()
+    detail.innerText = `${_detail[0]} / ${_detail[1]}`
+    panel.innerText = _detail[2]
   }
 
-  console.log(tknData.innerText)
-  console.log(artCode.textContent)
-  console.log(detail.innerText)
+  // Create the canvas element with opening and closing tags
+  const canvas = document.createElement("canvas")
+  document.body.appendChild(canvas)
+
+  // Log the canvas element to see its structure
+  console.log(canvas.outerHTML)
 }
 
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
   // Retrieve data from local storage if available
-  const storedData = JSON.parse(localStorage.getItem("tokenData"))
+  const storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
     update(...Object.values(storedData))
   }
@@ -136,6 +167,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   })
 
+  // Event listener to show description
   detail.addEventListener("click", function () {
     panel.classList.toggle("open")
   })
