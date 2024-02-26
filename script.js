@@ -10,9 +10,7 @@ import {
 } from "./constants/ab.js"
 
 // Initialize Ethereum provider
-const provider = new ethers.providers.JsonRpcProvider(
-  "https://eth.llamarpc.com"
-)
+const provider = new ethers.providers.JsonRpcProvider("")
 
 // Initialize contracts array
 const contracts = [
@@ -39,8 +37,8 @@ function clearLocalStorage() {
   localStorage.removeItem("contractData")
 }
 
-// Function to handle show button click event
-async function show() {
+// Function to get and store data from ethereum
+async function grabData() {
   _tokenId = tokenIdInput.value
   try {
     clearLocalStorage()
@@ -121,8 +119,17 @@ function update(_tokenId, _hash, _script, _detail) {
     panel.innerText = _detail[2]
   }
 
-  console.log("Type of artCode script tag:", artCode.type)
-  console.log("Content of artCode script tag:", artCode.textContent)
+  // Disable p5.min.js script tag if _tokenId meets the specified condition
+  if (_tokenId > 143000000 && _tokenId < 144000000) {
+    document.querySelector(
+      'script[src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js]'
+    ).src = ""
+    console.log("p5.min.js script tag disabled")
+  }
+
+  console.log("script tknData:", tknData.innerText)
+  console.log("script artCode type:", artCode.type)
+  console.log("script artCode:", artCode.textContent)
 }
 
 // Event listener when the DOM content is loaded
@@ -135,7 +142,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   tokenIdInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
-      show()
+      grabData()
     }
   })
 
