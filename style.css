@@ -7,7 +7,7 @@ html {
     min-height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #1F1F1F;
+    background-color: #171717;
   }
 
   .show-container {
@@ -17,7 +17,7 @@ html {
     bottom: 0;
     right: 0;
     z-index: 1000;
-    background-color: #1F1F1F;
+    background-color: #171717;
     border-radius: 5px;
     padding: 2px;
     opacity: 0.6;
@@ -33,10 +33,11 @@ html {
     position: fixed;
     bottom: -100%;
     right: 0;
-    width: 80%;
-    height: auto;
+    width: 50vw;
+    max-height: 50vh;
+    overflow: scroll;
     padding: 10px;
-    background-color: #1F1F1F;
+    background-color: #171717;
     color: white;
     border-radius: 10px;
     z-index: 999;
@@ -49,7 +50,7 @@ html {
 }
 
   input {
-    background-color: #1F1F1F;
+    background-color: #171717;
     color: white;
     width: 80px;
     text-align: end;

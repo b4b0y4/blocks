@@ -23,6 +23,7 @@ const contracts = [
 
 // DOM elements
 const tokenIdInput = document.getElementById("tokenId")
+const tknData = document.getElementById("tknData")
 const artCode = document.getElementById("artCode")
 const detail = document.getElementById("detail")
 const panel = document.querySelector(".panel")
@@ -97,51 +98,31 @@ async function show() {
   }
 }
 
-// Function to create and append a new script element with the desired content and type to the body
-function createScriptElement(content, type = "") {
-  const scriptElement = document.createElement("script")
-  scriptElement.textContent = content
-  if (type) {
-    scriptElement.type = type
-  }
-  console.log("Appending script element to body:", scriptElement)
-  document.body.appendChild(scriptElement)
-}
-
 // Function to update UI elements
 function update(_tokenId, _hash, _script, _detail) {
-  // Set the placeholder for tokenIdInput
   tokenIdInput.placeholder = _tokenId
 
-  // Construct the content for the new script element for token data
-  const tokenDataScriptContent =
+  // Update tknData content
+  const tokenData =
     _tokenId < 3000000
-      ? `let tokenData = { tokenId: "${_tokenId}", hashes: ["${_hash}"] };`
-      : `let tokenData = { tokenId: "${_tokenId}", hash: "${_hash}" };`
+      ? `{ tokenId: "${_tokenId}", hashes: ["${_hash}"] };`
+      : `{ tokenId: "${_tokenId}", hash: "${_hash}" };`
+  tknData.innerText = `let tokenData = ${tokenData}`
 
-  createScriptElement(tokenDataScriptContent)
+  // Update artCode type and content
+  if (_tokenId > 999999 && _tokenId < 3000000) {
+    artCode.type = "application/processing"
+  }
+  artCode.textContent = _script
 
-  // Construct the content for the new script element for art code
-  const artCodeScriptContent = _script
-
-  // Determine the type for the art code script element
-  const artCodeScriptType =
-    _tokenId > 999999 && _tokenId < 3000000 ? "application/processing" : ""
-
-  createScriptElement(artCodeScriptContent, artCodeScriptType)
-
-  // If _detail exists, set detail.innerText and panel.innerText accordingly
+  // Update detail content
   if (_detail) {
     detail.innerText = `${_detail[0]} / ${_detail[1]}`
     panel.innerText = _detail[2]
   }
 
-  // Create the canvas element with opening and closing tags
-  const canvas = document.createElement("canvas")
-  document.body.appendChild(canvas)
-
-  // Log the canvas element to see its structure
-  console.log(canvas.outerHTML)
+  console.log("Type of artCode script tag:", artCode.type)
+  console.log("Content of artCode script tag:", artCode.textContent)
 }
 
 // Event listener when the DOM content is loaded
@@ -152,14 +133,12 @@ window.addEventListener("DOMContentLoaded", () => {
     update(...Object.values(storedData))
   }
 
-  // Event listener for the Enter key press on tokenIdInput
   tokenIdInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
       show()
     }
   })
 
-  // Event listener to clear the window
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       clearLocalStorage()
@@ -167,7 +146,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-  // Event listener to show description
   detail.addEventListener("click", function () {
     panel.classList.toggle("open")
   })
