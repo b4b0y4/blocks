@@ -10,7 +10,7 @@ import {
 } from "./constants/ab.js"
 
 // Initialize Ethereum provider
-const provider = new ethers.providers.JsonRpcProvider("")
+const provider = new ethers.providers.JsonRpcProvider()
 
 // Initialize contracts array
 const contracts = [
@@ -21,20 +21,23 @@ const contracts = [
 
 // DOM elements
 const tokenIdInput = document.getElementById("tokenId")
+const lib = document.getElementById("lib")
 const tknData = document.getElementById("tknData")
 const artCode = document.getElementById("artCode")
-const detail = document.getElementById("detail")
 const panel = document.querySelector(".panel")
+const detail = document.getElementById("detail")
 
 // Variables to store contract data
 let _tokenId = ""
 let _hash = ""
 let _script = ""
 let _detail = ""
+let _codeType = ""
 
 // Function to clear local storage
 function clearLocalStorage() {
   localStorage.removeItem("contractData")
+  localStorage.removeItem("newSrc")
 }
 
 // Function to get and store data from ethereum
@@ -62,6 +65,14 @@ async function grabData() {
       ? contractToUse.projectScriptDetails(projId.toString())
       : contractToUse.projectScriptInfo(projId.toString()))
 
+    // Extract library name from _codeType
+    _codeType = ""
+    if (projectInfo[0].includes("@")) {
+      _codeType = projectInfo[0].split("@")[0].trim()
+    } else {
+      _codeType = JSON.parse(projectInfo[0]).type
+    }
+
     // Construct script
     _script = ""
     for (
@@ -82,22 +93,48 @@ async function grabData() {
     // Fetch project details
     _detail = await contractToUse.projectDetails(projId.toString())
 
-    // Update UI
-    update(_tokenId, _hash, _script, _detail)
-
     // Store data in local storage
     localStorage.setItem(
       "contractData",
-      JSON.stringify({ _tokenId, _hash, _script, _detail })
+      JSON.stringify({ _tokenId, _hash, _script, _detail, _codeType })
     )
+
+    // Update library
+    updateTag(_codeType)
+
     location.reload()
   } catch (error) {
     console.error("Error:", error)
   }
 }
 
+// Function to update tags
+function updateTag(_codeType) {
+  const predefinedLibraries = {
+    p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+    three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+    processing:
+      "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
+    tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
+    regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  }
+
+  // Update library based on _codeType
+  if (predefinedLibraries[_codeType]) {
+    lib.src = predefinedLibraries[_codeType]
+    localStorage.setItem("newSrc", predefinedLibraries[_codeType])
+  } else {
+    lib.src = ""
+  }
+
+  // Update artCode type
+  if (_codeType === "processing") {
+    artCode.type = "application/processing"
+  }
+}
+
 // Function to update UI elements
-function update(_tokenId, _hash, _script, _detail) {
+function updateContent(_tokenId, _hash, _script, _detail, _codeType) {
   tokenIdInput.placeholder = _tokenId
 
   // Update tknData content
@@ -105,12 +142,9 @@ function update(_tokenId, _hash, _script, _detail) {
     _tokenId < 3000000
       ? `{ tokenId: "${_tokenId}", hashes: ["${_hash}"] };`
       : `{ tokenId: "${_tokenId}", hash: "${_hash}" };`
-  tknData.innerText = `let tokenData = ${tokenData}`
+  tknData.textContent = `let tokenData = ${tokenData}`
 
-  // Update artCode type and content
-  if (_tokenId > 999999 && _tokenId < 3000000) {
-    artCode.type = "application/processing"
-  }
+  // Update artCode content
   artCode.textContent = _script
 
   // Update detail content
@@ -118,42 +152,35 @@ function update(_tokenId, _hash, _script, _detail) {
     detail.innerText = `${_detail[0]} / ${_detail[1]}`
     panel.innerText = _detail[2]
   }
-
-  // Disable p5.min.js script tag if _tokenId meets the specified condition
-  if (_tokenId > 143000000 && _tokenId < 144000000) {
-    document.querySelector(
-      'script[src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js]'
-    ).src = ""
-    console.log("p5.min.js script tag disabled")
-  }
-
-  console.log("script tknData:", tknData.innerText)
-  console.log("script artCode type:", artCode.type)
-  console.log("script artCode:", artCode.textContent)
 }
 
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
+  lib.src = localStorage.getItem("newSrc")
   // Retrieve data from local storage if available
   const storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
-    update(...Object.values(storedData))
+    updateContent(...Object.values(storedData))
   }
 
-  tokenIdInput.addEventListener("keypress", (event) => {
-    if (event.key === "Enter") {
-      grabData()
-    }
-  })
+  console.log("library:", storedData._codeType)
+  console.log("library in local storage:", localStorage.getItem("newSrc"))
+  console.log("Outer HTML of the script:", lib.outerHTML)
+})
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      clearLocalStorage()
-      location.reload()
-    }
-  })
+tokenIdInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    grabData()
+  }
+})
 
-  detail.addEventListener("click", function () {
-    panel.classList.toggle("open")
-  })
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    clearLocalStorage()
+    location.reload()
+  }
+})
+
+detail.addEventListener("click", function () {
+  panel.classList.toggle("open")
 })

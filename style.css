@@ -32,9 +32,9 @@ p {
 .panel {
   position: fixed;
   bottom: -100%;
-  right: 0;
-  width: 50vw;
-  max-height: 50vh;
+  right: 5px;
+  max-width: 400px;
+  max-height: 400px;
   overflow: scroll;
   padding: 10px;
   background-color: #171717;
@@ -42,7 +42,7 @@ p {
   border-radius: 10px;
   z-index: 999;
   transition: bottom 0.3s ease;
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 .panel.open {
