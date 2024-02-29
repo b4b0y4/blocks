@@ -10,7 +10,7 @@ import {
 } from "./constants/ab.js"
 
 // Initialize Ethereum provider
-const provider = new ethers.providers.JsonRpcProvider()
+const provider = new ethers.providers.JsonRpcProvider("")
 
 // Initialize contracts array
 const contracts = [
@@ -24,8 +24,9 @@ const tokenIdInput = document.getElementById("tokenId")
 const lib = document.getElementById("lib")
 const tknData = document.getElementById("tknData")
 const artCode = document.getElementById("artCode")
-const panel = document.querySelector(".panel")
 const detail = document.getElementById("detail")
+const panel = document.querySelector(".panel")
+const dataPanel = document.querySelector(".data-panel")
 
 // Variables to store contract data
 let _tokenId = ""
@@ -130,6 +131,7 @@ function updateTag(_codeType) {
   // Update artCode type
   if (_codeType === "processing") {
     artCode.type = "application/processing"
+    localStorage.setItem("newType", artCode.type)
   }
 }
 
@@ -157,12 +159,15 @@ function updateContent(_tokenId, _hash, _script, _detail, _codeType) {
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
   lib.src = localStorage.getItem("newSrc")
+  artCode.type = localStorage.getItem("newType")
   // Retrieve data from local storage if available
   const storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
     updateContent(...Object.values(storedData))
   }
 
+  // console.log("tokenData script:", tknData.outerHTML)
+  // console.log("artCode script:", artCode.outerHTML)
   console.log("library:", storedData._codeType)
   console.log("library in local storage:", localStorage.getItem("newSrc"))
   console.log("Outer HTML of the script:", lib.outerHTML)
@@ -184,3 +189,69 @@ document.addEventListener("keydown", (event) => {
 detail.addEventListener("click", function () {
   panel.classList.toggle("open")
 })
+
+document.addEventListener("keypress", function (event) {
+  if (event.key === "\\") {
+    dataPanel.classList.toggle("open")
+  }
+})
+
+fetch("data.txt")
+  .then((response) => response.text())
+  .then((data) => {
+    // Split the text into lines using regex pattern
+    const lines = data.split(/\n(?=\d+ - )/)
+    dataPanel.innerHTML = lines.join("<br>")
+  })
+  .catch((error) => {
+    console.error("Error reading file:", error)
+  })
+
+/*******************************************
+ *       FUNCTION TO GET ALL ART BLOCKS
+ * **********************************************/
+
+async function fetchBlocks() {
+  let All = ""
+
+  for (let i = 3; i < 374; i++) {
+    try {
+      const tkns = await contracts[1].projectShowAllTokens(i)
+      const _detail = await contracts[1].projectDetails(i.toString())
+      let lastValue = (tkns[tkns.length - 1].toNumber() + 1)
+        .toString()
+        .substring(i.toString().length)
+        .replace(/^0+/, "")
+      All += `${i} - ${_detail[0]} / ${_detail[1]} - ${lastValue} editions\n`
+    } catch (error) {
+      console.log(`No tokens found for project ${i}`)
+      continue
+    }
+  }
+  console.log(All)
+
+  let consecutiveNoTokens = 0
+  let i = 374
+  while (true) {
+    try {
+      const tkns = await contracts[2].projectStateData(i)
+      consecutiveNoTokens = 0
+      const _detail = await contracts[2].projectDetails(i.toString())
+      let lastValue = tkns[0]
+      All += `${i} - ${_detail[0]} / ${_detail[1]} - ${lastValue} editions\n`
+    } catch (error) {
+      console.log(`No tokens found for project ${i}`)
+      consecutiveNoTokens++
+      if (consecutiveNoTokens >= 2) {
+        console.log(
+          "No tokens found for two consecutive projects. Exiting loop."
+        )
+        break
+      }
+    }
+    i++
+  }
+  console.log(All)
+}
+
+// fetchBlocks()
