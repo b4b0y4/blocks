@@ -27,6 +27,7 @@ const artCode = document.getElementById("artCode")
 const detail = document.getElementById("detail")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
+const dataContent = document.getElementById("dataContent")
 
 // Variables to store contract data
 let _tokenId = ""
@@ -127,12 +128,6 @@ function updateTag(_codeType) {
   } else {
     lib.src = ""
   }
-
-  // Update artCode type
-  if (_codeType === "processing") {
-    artCode.type = "application/processing"
-    localStorage.setItem("newType", artCode.type)
-  }
 }
 
 // Function to update UI elements
@@ -159,7 +154,6 @@ function updateContent(_tokenId, _hash, _script, _detail, _codeType) {
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
   lib.src = localStorage.getItem("newSrc")
-  artCode.type = localStorage.getItem("newType")
   // Retrieve data from local storage if available
   const storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
@@ -186,22 +180,46 @@ document.addEventListener("keydown", (event) => {
   }
 })
 
-detail.addEventListener("click", function () {
+detail.addEventListener("click", () => {
   panel.classList.toggle("open")
 })
 
-document.addEventListener("keypress", function (event) {
+document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     dataPanel.classList.toggle("open")
   }
 })
 
+// Fetch data from "data.txt" and display it
 fetch("data.txt")
   .then((response) => response.text())
   .then((data) => {
-    // Split the text into lines using regex pattern
-    const lines = data.split(/\n(?=\d+ - )/)
-    dataPanel.innerHTML = lines.join("<br>")
+    // Split the text into lines
+    const lines = data.split("\n")
+
+    // Function to display lines
+    function displayLines(lines) {
+      dataContent.innerHTML = lines.join("<br>")
+    }
+
+    // Function to filter lines based on search query
+    function filterLines(query) {
+      const filteredLines = lines.filter((line) =>
+        line.toLowerCase().includes(query.toLowerCase())
+      )
+      displayLines(filteredLines)
+    }
+
+    // Event listener for input changes in search field
+    document
+      .getElementById("searchInput")
+      .addEventListener("input", function (event) {
+        const query = event.target.value.trim()
+        filterLines(query)
+      })
+
+    // Display all lines initially
+    displayLines(lines)
   })
   .catch((error) => {
     console.error("Error reading file:", error)

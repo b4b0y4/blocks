@@ -8,27 +8,40 @@ body {
   margin: 0;
   padding: 0;
   background-color: #171717;
+  overflow: hidden;
 }
 
 .data-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: absolute;
-  top: 8px;
-  bottom: 30px;
-  right: -400px;
-  width: 400px;
+  bottom: 40px;
+  right: -100%;
+  max-width: 400px;
+  max-height: 600px;
   background-color: #171717;
   color: white;
+  padding: 10px 10px 0 10px;
   border-radius: 10px;
   opacity: 0.9;
   transition: right 0.3s ease-in-out;
   overflow-y: auto;
-  padding: 10px;
-  box-sizing: border-box;
-  z-index: 1000;
+  overflow-x: hidden;
+  z-index: 200;
 }
 
 .data-panel.open {
-  right: 8px;
+  right: 5px;
+}
+
+#searchInput {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  margin-top: 10px;
+  text-align: start;
+  padding: 5px;
 }
 
 .show-container {
@@ -37,7 +50,7 @@ body {
   position: fixed;
   bottom: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 100;
   background-color: #171717;
   border-radius: 5px;
   padding: 2px;
@@ -51,7 +64,7 @@ p {
 }
 
 .panel {
-  position: fixed;
+  position: absolute;
   bottom: -100%;
   right: 5px;
   max-width: 400px;
@@ -61,7 +74,7 @@ p {
   background-color: #171717;
   color: white;
   border-radius: 10px;
-  z-index: 999;
+  z-index: 200;
   transition: bottom 0.3s ease;
   opacity: 0.8;
 }
@@ -78,6 +91,7 @@ input {
   border: 1px solid white;
   border-radius: 5px;
   padding: 2px;
+  outline: none;
 }
 
 canvas {
