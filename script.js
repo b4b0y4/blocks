@@ -9,7 +9,7 @@ import {
 } from "./constants/ab.js"
 
 // Initialize Ethereum provider
-const provider = new ethers.JsonRpcProvider("")
+const provider = new ethers.JsonRpcProvider("") // Add RPC URL
 
 // Initialize contracts array
 const contracts = [
@@ -30,6 +30,7 @@ const search = document.getElementById("searchInput")
 const predefinedLibraries = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   processing:
     "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
@@ -80,7 +81,7 @@ async function grabData() {
 
     // Extract library name
     _codeType = ""
-    if (projectInfo[0].includes("@")) {
+    if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
       _codeType = projectInfo[0].split("@")[0].trim()
     } else {
       _codeType = JSON.parse(projectInfo[0]).type
@@ -165,17 +166,13 @@ async function injectFrame() {
     const frameArt = localStorage.getItem("newArt")
 
     // Generate the content dynamically
-    let scriptTag = ""
-    if (frameSrc) {
-      scriptTag = `<script src='${frameSrc}'></script>`
-    }
+    const scriptTag = frameSrc ? `<script src='${frameSrc}'></script>` : ""
 
     const dynamicContent = `<!DOCTYPE html>
           <html lang='en'>
           <head>
           <meta charset='UTF-8'>
           <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-          <title>New Content</title>
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
           <style type="text/css">
@@ -217,39 +214,6 @@ async function injectFrame() {
   }
 }
 
-// Fetch data from "data.txt" and display it
-fetch("data.txt")
-  .then((response) => response.text())
-  .then((data) => {
-    // Split the text into lines
-    const lines = data.split("\n")
-
-    // Function to display lines
-    function displayLines(lines) {
-      dataContent.innerHTML = lines.join("<br>")
-    }
-
-    // Function to filter lines based on search query
-    function filterLines(query) {
-      const filteredLines = lines.filter((line) =>
-        line.toLowerCase().includes(query.toLowerCase())
-      )
-      displayLines(filteredLines)
-    }
-
-    // Event listener for search field
-    search.addEventListener("input", function (event) {
-      const query = event.target.value.trim()
-      filterLines(query)
-    })
-
-    // Display all lines initially
-    displayLines(lines)
-  })
-  .catch((error) => {
-    console.error("Error reading file:", error)
-  })
-
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
   // Retrieve data from local storage if available
@@ -286,9 +250,93 @@ document.addEventListener("keypress", (event) => {
   }
 })
 
-/*******************************************
- *       FUNCTION TO GET ALL ART BLOCKS
- * **********************************************/
+/****************************************************
+ *        FUNCTION TO ACCESS BLOCKS DATA
+ ***************************************************/
+
+// Fetch data from "data.txt" and display it
+fetch("data.txt")
+  .then((response) => response.text())
+  .then((data) => {
+    // Split the text into lines
+    const lines = data.split("\n")
+
+    // Function to display lines
+    function displayLines(lines) {
+      dataContent.innerHTML = lines.join("<br>")
+    }
+
+    // Function to filter lines based on search query
+    function filterLines(query) {
+      const filteredLines = lines.filter((line) =>
+        line.toLowerCase().includes(query.toLowerCase())
+      )
+      displayLines(filteredLines)
+    }
+
+    // Event listener for search field
+    search.addEventListener("input", function (event) {
+      const query = event.target.value.trim()
+      filterLines(query)
+    })
+
+    // Display all lines initially
+    displayLines(lines)
+  })
+  .catch((error) => {
+    console.error("Error reading file:", error)
+  })
+
+/****************************************************
+ *          FUNCTION TO SAVE THE OUTPUT
+ * *************************************************/
+
+async function saveContentAsFile(content, filename) {
+  // Prompt the user to enter a filename
+  const userFilename = prompt("Enter a filename:", filename)
+
+  // If the user cancels the prompt or leaves the filename blank, return early
+  if (!userFilename) {
+    return
+  }
+
+  // Create a Blob containing the content
+  const blob = new Blob([content], { type: "text/html" })
+
+  // Create a temporary URL for the Blob
+  const url = window.URL.createObjectURL(blob)
+
+  // Create a temporary <a> element to trigger the download
+  const link = document.createElement("a")
+  link.href = url
+  link.download = userFilename
+
+  // Append the <a> element to the document body
+  document.body.appendChild(link)
+
+  // Programmatically trigger the click event on the <a> element
+  link.click()
+
+  // Clean up
+  window.URL.revokeObjectURL(url)
+  link.remove()
+}
+
+// Function to handle the button click event
+function handleSaveButtonClick() {
+  const dynamicContent =
+    document.getElementById("frame").contentDocument.documentElement.outerHTML
+  saveContentAsFile(dynamicContent, "block.html")
+}
+
+// Attach the handleSaveButtonClick
+document
+  .getElementById("saveButton")
+  .addEventListener("click", handleSaveButtonClick)
+
+/****************************************************
+ *           FUNCTION TO GET ALL ART BLOCKS
+ * *************************************************/
 
 // Art Blocks V1
 async function fetchV1Blocks() {
@@ -362,3 +410,7 @@ async function fetchv3Blocks() {
   }
   console.log(All)
 }
+
+// fetchv1Blocks()
+// fetchv2Blocks()
+// fetchv3Blocks()
