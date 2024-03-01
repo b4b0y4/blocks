@@ -1,5 +1,4 @@
-// Import ethers library and contract ABIs
-import { ethers } from "./constants/ethers-5.6.esm.min.js"
+import { ethers } from "./constants/ethers.min.js"
 import {
   abiV1,
   abiV2,
@@ -10,7 +9,7 @@ import {
 } from "./constants/ab.js"
 
 // Initialize Ethereum provider
-const provider = new ethers.providers.JsonRpcProvider("")
+const provider = new ethers.JsonRpcProvider("")
 
 // Initialize contracts array
 const contracts = [
@@ -22,13 +21,23 @@ const contracts = [
 // DOM elements
 const tokenIdInput = document.getElementById("tokenId")
 const lib = document.getElementById("lib")
-const tknData = document.getElementById("tknData")
+const tokenIdHash = document.getElementById("tknData")
 const artCode = document.getElementById("artCode")
 const detail = document.getElementById("detail")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
 const dataContent = document.getElementById("dataContent")
 const search = document.getElementById("searchInput")
+
+// Libraries
+const predefinedLibraries = {
+  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+  processing:
+    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
+  tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
+  regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+}
 
 // Variables to store contract data
 let _tokenId = ""
@@ -49,26 +58,26 @@ async function grabData() {
   try {
     clearLocalStorage()
 
-    // Determine contract index based on token ID
-    let contractIndex = 0
+    // Determine contract
+    let contract = 0
     if (_tokenId >= 3000000 && _tokenId < 374000000) {
-      contractIndex = 1
+      contract = 1
     } else if (_tokenId >= 374000000) {
-      contractIndex = 2
+      contract = 2
     }
-    const contractToUse = contracts[contractIndex]
+    const contractToUse = contracts[contract]
 
     // Fetch contract data
-    _hash = await (contractIndex === 0
+    _hash = await (contract === 0
       ? contractToUse.showTokenHashes(_tokenId)
       : contractToUse.tokenIdToHash(_tokenId))
 
     const projId = await contractToUse.tokenIdToProjectId(_tokenId)
-    const projectInfo = await (contractIndex === 2
+    const projectInfo = await (contract === 2
       ? contractToUse.projectScriptDetails(projId.toString())
       : contractToUse.projectScriptInfo(projId.toString()))
 
-    // Extract library name from _codeType
+    // Extract library name
     _codeType = ""
     if (projectInfo[0].includes("@")) {
       _codeType = projectInfo[0].split("@")[0].trim()
@@ -80,10 +89,7 @@ async function grabData() {
     _script = ""
     for (
       let i = 0;
-      i <
-      (contractIndex === 2
-        ? projectInfo[2].toNumber()
-        : projectInfo[1].toNumber());
+      i < (contract === 2 ? projectInfo[2] : projectInfo[1]);
       i++
     ) {
       const scrpt = await contractToUse.projectScriptByIndex(
@@ -102,45 +108,28 @@ async function grabData() {
       JSON.stringify({ _tokenId, _hash, _script, _detail, _codeType })
     )
 
-    // Update library
-    updateTag(_codeType)
-
     location.reload()
   } catch (error) {
     console.error("Error:", error)
   }
 }
 
-// Function to update tags
-function updateTag(_codeType) {
-  const predefinedLibraries = {
-    p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
-    three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
-    processing:
-      "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
-    tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-    regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
-  }
-
-  // Update library based on _codeType
+// Function to update UI
+function update(_tokenId, _hash, _script, _detail, _codeType) {
+  // Update library source
   if (predefinedLibraries[_codeType]) {
     lib.src = predefinedLibraries[_codeType]
     localStorage.setItem("newSrc", predefinedLibraries[_codeType])
   } else {
     lib.src = ""
   }
-}
 
-// Function to update UI elements
-function updateContent(_tokenId, _hash, _script, _detail, _codeType) {
-  tokenIdInput.placeholder = `${_tokenId} `
-
-  // Update tknData content
+  // Update tokenIdHash content
   const tokenData =
     _tokenId < 3000000
       ? `{ tokenId: "${_tokenId}", hashes: ["${_hash}"] };`
       : `{ tokenId: "${_tokenId}", hash: "${_hash}" };`
-  tknData.textContent = `let tokenData = ${tokenData}`
+  tokenIdHash.textContent = `let tokenData = ${tokenData}`
 
   // Update artCode content
   artCode.textContent = _script
@@ -154,22 +143,21 @@ function updateContent(_tokenId, _hash, _script, _detail, _codeType) {
     detail.innerText = `${_detail[0]} #${Id} / ${_detail[1]}`
     panel.innerText = _detail[2]
   }
+  tokenIdInput.placeholder = `${_tokenId} `
 }
 
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
-  lib.src = localStorage.getItem("newSrc")
   // Retrieve data from local storage if available
   const storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
-    updateContent(...Object.values(storedData))
+    update(...Object.values(storedData))
   }
 
   console.log("library:", storedData._codeType)
-  console.log("library in local storage:", localStorage.getItem("newSrc"))
-  console.log("Outer HTML of library script:", lib.outerHTML)
-  // console.log("tokenData script:", tknData.outerHTML)
-  // console.log("artCode script:", artCode.outerHTML)
+  // console.log("library script:", lib.outerHTML)
+  // console.log("tokenData script:", tokenIdHash.outerHTML)
+  // console.log("art script:", artCode.outerHTML)
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
