@@ -28,6 +28,7 @@ const detail = document.getElementById("detail")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
 const dataContent = document.getElementById("dataContent")
+const search = document.getElementById("searchInput")
 
 // Variables to store contract data
 let _tokenId = ""
@@ -132,7 +133,7 @@ function updateTag(_codeType) {
 
 // Function to update UI elements
 function updateContent(_tokenId, _hash, _script, _detail, _codeType) {
-  tokenIdInput.placeholder = _tokenId
+  tokenIdInput.placeholder = `${_tokenId} `
 
   // Update tknData content
   const tokenData =
@@ -146,7 +147,11 @@ function updateContent(_tokenId, _hash, _script, _detail, _codeType) {
 
   // Update detail content
   if (_detail) {
-    detail.innerText = `${_detail[0]} / ${_detail[1]}`
+    let Id =
+      _tokenId < 1000000
+        ? _tokenId
+        : parseInt(_tokenId.toString().slice(-6).replace(/^0+/, ""))
+    detail.innerText = `${_detail[0]} #${Id} / ${_detail[1]}`
     panel.innerText = _detail[2]
   }
 }
@@ -160,11 +165,11 @@ window.addEventListener("DOMContentLoaded", () => {
     updateContent(...Object.values(storedData))
   }
 
-  // console.log("tokenData script:", tknData.outerHTML)
-  // console.log("artCode script:", artCode.outerHTML)
   console.log("library:", storedData._codeType)
   console.log("library in local storage:", localStorage.getItem("newSrc"))
-  console.log("Outer HTML of the script:", lib.outerHTML)
+  console.log("Outer HTML of library script:", lib.outerHTML)
+  // console.log("tokenData script:", tknData.outerHTML)
+  // console.log("artCode script:", artCode.outerHTML)
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
@@ -210,13 +215,11 @@ fetch("data.txt")
       displayLines(filteredLines)
     }
 
-    // Event listener for input changes in search field
-    document
-      .getElementById("searchInput")
-      .addEventListener("input", function (event) {
-        const query = event.target.value.trim()
-        filterLines(query)
-      })
+    // Event listener for search field
+    search.addEventListener("input", function (event) {
+      const query = event.target.value.trim()
+      filterLines(query)
+    })
 
     // Display all lines initially
     displayLines(lines)
@@ -229,16 +232,21 @@ fetch("data.txt")
  *       FUNCTION TO GET ALL ART BLOCKS
  * **********************************************/
 
-async function fetchBlocks() {
+// Art Blocks V1
+async function fetchV1Blocks() {
   let All = ""
-
-  for (let i = 3; i < 374; i++) {
+  for (let i = 0; i < 3; i++) {
     try {
-      const tkns = await contracts[1].projectShowAllTokens(i)
-      const _detail = await contracts[1].projectDetails(i.toString())
-      let lastValue = (tkns[tkns.length - 1].toNumber() + 1)
+      const tkns = await contracts[0].projectShowAllTokens(i)
+      const _detail = await contracts[0].projectDetails(i.toString())
+
+      let lastValue = ""
+      if (i < 1) {
+        lastValue = tkns[tkns.length - 1].toNumber() + 1
+      }
+      lastValue = (tkns[tkns.length - 1].toNumber() + 1)
         .toString()
-        .substring(i.toString().length)
+        .slice(-6)
         .replace(/^0+/, "")
       All += `${i} - ${_detail[0]} / ${_detail[1]} - ${lastValue} editions\n`
     } catch (error) {
@@ -247,7 +255,32 @@ async function fetchBlocks() {
     }
   }
   console.log(All)
+}
 
+// Art Blocks V2
+async function fetchV2Blocks() {
+  let All = ""
+  for (let i = 3; i < 374; i++) {
+    try {
+      const tkns = await contracts[1].projectShowAllTokens(i)
+      const _detail = await contracts[1].projectDetails(i.toString())
+
+      let lastValue = (tkns[tkns.length - 1].toNumber() + 1)
+        .toString()
+        .slice(-6)
+        .replace(/^0+/, "")
+      All += `${i} - ${_detail[0]} / ${_detail[1]} - ${lastValue} editions\n`
+    } catch (error) {
+      console.log(`No tokens found for project ${i}`)
+      continue
+    }
+  }
+  console.log(All)
+}
+
+// Art Blocks V3
+async function fetchv3Blocks() {
+  let All = ""
   let consecutiveNoTokens = 0
   let i = 374
   while (true) {
@@ -272,4 +305,6 @@ async function fetchBlocks() {
   console.log(All)
 }
 
-// fetchBlocks()
+// fetchV1Blocks()
+// fetchV2Blocks()
+// fetchV3Blocks()

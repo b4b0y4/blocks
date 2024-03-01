@@ -61,6 +61,7 @@ p {
   line-height: 0;
   margin: 0 10px;
   color: white;
+  cursor: help;
 }
 
 .panel {
