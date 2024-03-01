@@ -1,17 +1,10 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta charset="utf-8" />
-  <script id="lib" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js"></script> -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js"></script> -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js"></script> -->
   <link rel="stylesheet" href="./style.css" />
-  <script id="lib" src=""></script>
-  <script id="tknData"></script>
-  <script id="artCode" type=""></script>
 </head>
 
 <body>
@@ -25,12 +18,14 @@
   <div class="panel"></div>
   <div class="data-panel">
     <div id="dataContent"></div>
-    <input id="searchInput" type="text" placeholder=" Search...">
+    <input id="searchInput" class="search" type="text" placeholder=" Search...">
   </div>
 
-  <canvas></canvas>
+  <div class="frame-container">
+    <iframe id="frame" src="about:blank"></iframe>
+  </div>
 
-  <script src="./index.js" type="module"></script>
+  <script src="./script.js" type="module"></script>
 </body>
 
 </html>

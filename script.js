@@ -20,9 +20,6 @@ const contracts = [
 
 // DOM elements
 const tokenIdInput = document.getElementById("tokenId")
-const lib = document.getElementById("lib")
-const tokenIdHash = document.getElementById("tknData")
-const artCode = document.getElementById("artCode")
 const detail = document.getElementById("detail")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
@@ -32,11 +29,13 @@ const search = document.getElementById("searchInput")
 // Libraries
 const predefinedLibraries = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   processing:
     "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
   tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  js: "",
 }
 
 // Variables to store contract data
@@ -50,6 +49,8 @@ let _codeType = ""
 function clearLocalStorage() {
   localStorage.removeItem("contractData")
   localStorage.removeItem("newSrc")
+  localStorage.removeItem("newIdHash")
+  localStorage.removeItem("newArt")
 }
 
 // Function to get and store data from ethereum
@@ -102,12 +103,21 @@ async function grabData() {
     // Fetch project details
     _detail = await contractToUse.projectDetails(projId.toString())
 
+    if (_detail) {
+      let Id =
+        _tokenId < 1000000
+          ? _tokenId
+          : parseInt(_tokenId.toString().slice(-6).replace(/^0+/, ""))
+      detail.innerText = `${_detail[0]} #${Id} / ${_detail[1]}`
+      panel.innerText = _detail[2]
+    }
+
     // Store data in local storage
     localStorage.setItem(
       "contractData",
       JSON.stringify({ _tokenId, _hash, _script, _detail, _codeType })
     )
-
+    update(_tokenId, _hash, _script, _detail, _codeType)
     location.reload()
   } catch (error) {
     console.error("Error:", error)
@@ -117,22 +127,18 @@ async function grabData() {
 // Function to update UI
 function update(_tokenId, _hash, _script, _detail, _codeType) {
   // Update library source
-  if (predefinedLibraries[_codeType]) {
-    lib.src = predefinedLibraries[_codeType]
-    localStorage.setItem("newSrc", predefinedLibraries[_codeType])
-  } else {
-    lib.src = ""
-  }
+  localStorage.setItem("newSrc", predefinedLibraries[_codeType])
 
   // Update tokenIdHash content
-  const tokenData =
+  const tknData =
     _tokenId < 3000000
       ? `{ tokenId: "${_tokenId}", hashes: ["${_hash}"] };`
       : `{ tokenId: "${_tokenId}", hash: "${_hash}" };`
-  tokenIdHash.textContent = `let tokenData = ${tokenData}`
+
+  localStorage.setItem("newIdHash", `let tokenData = ${tknData}`)
 
   // Update artCode content
-  artCode.textContent = _script
+  localStorage.setItem("newArt", _script)
 
   // Update detail content
   if (_detail) {
@@ -144,44 +150,72 @@ function update(_tokenId, _hash, _script, _detail, _codeType) {
     panel.innerText = _detail[2]
   }
   tokenIdInput.placeholder = `${_tokenId} `
+  injectFrame()
 }
 
-// Event listener when the DOM content is loaded
-window.addEventListener("DOMContentLoaded", () => {
-  // Retrieve data from local storage if available
-  const storedData = JSON.parse(localStorage.getItem("contractData"))
-  if (storedData) {
-    update(...Object.values(storedData))
+// Function to inject content into the iframe
+async function injectFrame() {
+  const frame = document.getElementById("frame")
+  const iframeDocument = frame.contentDocument || frame.contentWindow.document
+
+  try {
+    // Retrieve the value of 'newSrc', 'newIdHash', and 'newArt' from localStorage
+    const frameSrc = localStorage.getItem("newSrc")
+    const frameIdHash = localStorage.getItem("newIdHash")
+    const frameArt = localStorage.getItem("newArt")
+
+    // Generate the content dynamically
+    let scriptTag = ""
+    if (frameSrc) {
+      scriptTag = `<script src='${frameSrc}'></script>`
+    }
+
+    const dynamicContent = `<!DOCTYPE html>
+          <html lang='en'>
+          <head>
+          <meta charset='UTF-8'>
+          <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+          <title>New Content</title>
+          <script src='${frameSrc}'></script>
+          <script>${frameIdHash}</script>
+          <style type="text/css">
+              html {
+                  height: 100%;
+              }
+              
+              body {
+                  min-height: 100%;
+                  margin: 0;
+                  padding: 0;
+                  background-color: #171717;
+              }
+
+              canvas {
+                  padding: 0;
+                  margin: auto;
+                  display: block;
+                  position: absolute;
+                  top: 0;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+              }
+          </style>
+          </head>
+          <body>
+          <canvas></canvas>
+          <script>${frameArt}</script>
+          </body>
+          </html>`
+
+    // Write the generated content to the iframe
+    iframeDocument.open()
+    iframeDocument.write(dynamicContent)
+    iframeDocument.close()
+  } catch (error) {
+    console.error("Error:", error)
   }
-
-  console.log("library:", storedData._codeType)
-  // console.log("library script:", lib.outerHTML)
-  // console.log("tokenData script:", tokenIdHash.outerHTML)
-  // console.log("art script:", artCode.outerHTML)
-})
-
-tokenIdInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    grabData()
-  }
-})
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    clearLocalStorage()
-    location.reload()
-  }
-})
-
-detail.addEventListener("click", () => {
-  panel.classList.toggle("open")
-})
-
-document.addEventListener("keypress", (event) => {
-  if (event.key === "\\") {
-    dataPanel.classList.toggle("open")
-  }
-})
+}
 
 // Fetch data from "data.txt" and display it
 fetch("data.txt")
@@ -215,6 +249,42 @@ fetch("data.txt")
   .catch((error) => {
     console.error("Error reading file:", error)
   })
+
+// Event listener when the DOM content is loaded
+window.addEventListener("DOMContentLoaded", () => {
+  // Retrieve data from local storage if available
+  const storedData = JSON.parse(localStorage.getItem("contractData"))
+  if (storedData) {
+    update(...Object.values(storedData))
+  }
+
+  console.log("lib source:", localStorage.getItem("newSrc"))
+  console.log("Id an Hash:", localStorage.getItem("newIdHash"))
+  console.log("code:", localStorage.getItem("newArt"))
+})
+
+tokenIdInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    grabData()
+  }
+})
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    clearLocalStorage()
+    location.reload()
+  }
+})
+
+detail.addEventListener("click", () => {
+  panel.classList.toggle("open")
+})
+
+document.addEventListener("keypress", (event) => {
+  if (event.key === "\\") {
+    dataPanel.classList.toggle("open")
+  }
+})
 
 /*******************************************
  *       FUNCTION TO GET ALL ART BLOCKS
@@ -292,7 +362,3 @@ async function fetchv3Blocks() {
   }
   console.log(All)
 }
-
-// fetchV1Blocks()
-// fetchV2Blocks()
-// fetchV3Blocks()
