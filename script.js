@@ -55,6 +55,7 @@ function clearLocalStorage() {
   localStorage.removeItem("newSrc")
   localStorage.removeItem("newIdHash")
   localStorage.removeItem("newArt")
+  localStorage.removeItem("newType")
 }
 
 // Function to get and store data from ethereum
@@ -142,6 +143,11 @@ function update(_tokenId, _hash, _script, _detail, _codeType) {
   localStorage.setItem("newIdHash", `let tokenData = ${tknData}`)
 
   // Update artCode content
+  let process = ""
+  if (_codeType === "processing") {
+    process = "application/processing"
+  }
+  localStorage.setItem("newType", process)
   localStorage.setItem("newArt", _script)
 
   // Update detail content
@@ -167,9 +173,11 @@ async function injectFrame() {
     const frameSrc = localStorage.getItem("newSrc")
     const frameIdHash = localStorage.getItem("newIdHash")
     const frameArt = localStorage.getItem("newArt")
+    const frameType = localStorage.getItem("newType")
 
     // Generate the content dynamically
-    const scriptTag = frameSrc ? `<script src='${frameSrc}'></script>` : ""
+    const scriptSrc = frameSrc ? `<script src='${frameSrc}'></script>` : ""
+    const scriptType = frameType ? `<script type='${frameType}'></script>` : ""
 
     const dynamicContent = `<!DOCTYPE html>
           <html lang='en'>
@@ -204,7 +212,8 @@ async function injectFrame() {
           </head>
           <body>
           <canvas></canvas>
-          <script>${frameArt}</script>
+          <script type='${frameType}'>${frameArt}</script>
+          <canvas></canvas>
           </body>
           </html>`
 
@@ -345,20 +354,16 @@ document
 async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
-
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 600; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
-
     try {
       const _detail = await contracts[n].projectDetails(i.toString())
-
       let tkns
       if (n === 2) {
         tkns = await contracts[n].projectStateData(i)
       } else {
         tkns = await contracts[n].projectShowAllTokens(i)
       }
-
       if (n === 2 || tkns.length !== 0) {
         All += `${i} - ${_detail[0]} / ${_detail[1]} - ${
           n === 2 ? tkns[0] : tkns.length
@@ -372,7 +377,6 @@ async function fetchBlocks() {
       console.log(`Error fetching data for project ${i}: ${error}`)
       consecutiveNoTokens++
     }
-
     if (consecutiveNoTokens >= 2) {
       console.log("No tokens found for two consecutive projects. Exiting loop.")
       break
