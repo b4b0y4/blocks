@@ -11,4 +11,3 @@ Add your RPC URL in the `script.js` file
 - Click the name/artist to view detailed information.
 - Click the star icon (★) to save the HTML file.
 - Press escape key to clear the page.
-- Clear cache from time to time.

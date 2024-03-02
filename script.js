@@ -166,9 +166,6 @@ async function injectFrame() {
     const frameType = localStorage.getItem("newType")
 
     // Generate the content dynamically
-    const scriptSrc = frameSrc ? `<script src='${frameSrc}'></script>` : ""
-    const scriptType = frameType ? `<script type='${frameType}'></script>` : ""
-
     const dynamicContent = `<!DOCTYPE html>
           <html lang='en'>
           <head>
@@ -341,7 +338,7 @@ document
 async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
-  for (let i = 0; i < 600; i++) {
+  for (let i = 168; i < 1690; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const _detail = await contracts[n].projectDetails(i.toString())
