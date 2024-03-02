@@ -34,6 +34,7 @@ const predefinedLibraries = {
   three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   processing:
     "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
+  tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
   js: "",
@@ -225,6 +226,7 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("lib source:", localStorage.getItem("newSrc"))
   console.log("Id an Hash:", localStorage.getItem("newIdHash"))
   console.log("code:", localStorage.getItem("newArt"))
+  console.log("library:", storedData._codeType)
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
@@ -338,64 +340,21 @@ document
  *           FUNCTION TO GET ALL ART BLOCKS
  * *************************************************/
 
-// Art Blocks V1
-async function fetchV1Blocks() {
-  let All = ""
-  for (let i = 0; i < 3; i++) {
-    try {
-      const tkns = await contracts[0].projectShowAllTokens(i)
-      const _detail = await contracts[0].projectDetails(i.toString())
-
-      let lastValue = ""
-      if (i < 1) {
-        lastValue = tkns[tkns.length - 1].toNumber() + 1
-      }
-      lastValue = (tkns[tkns.length - 1].toNumber() + 1)
-        .toString()
-        .slice(-6)
-        .replace(/^0+/, "")
-      All += `${i} - ${_detail[0]} / ${_detail[1]} - ${lastValue} editions\n`
-    } catch (error) {
-      console.log(`No tokens found for project ${i}`)
-      continue
-    }
-  }
-  console.log(All)
-}
-
-// Art Blocks V2
-async function fetchV2Blocks() {
-  let All = ""
-  for (let i = 3; i < 374; i++) {
-    try {
-      const tkns = await contracts[1].projectShowAllTokens(i)
-      const _detail = await contracts[1].projectDetails(i.toString())
-
-      let lastValue = (tkns[tkns.length - 1].toNumber() + 1)
-        .toString()
-        .slice(-6)
-        .replace(/^0+/, "")
-      All += `${i} - ${_detail[0]} / ${_detail[1]} - ${lastValue} editions\n`
-    } catch (error) {
-      console.log(`No tokens found for project ${i}`)
-      continue
-    }
-  }
-  console.log(All)
-}
-
-// Art Blocks V3
-async function fetchv3Blocks() {
+async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
-  let i = 374
-  while (true) {
+  for (let i = 0; i < 1000; i++) {
+    const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
-      const tkns = await contracts[2].projectStateData(i)
+      const _detail = await contracts[n].projectDetails(i.toString())
+      if (n === 2) {
+        let tkns = await contracts[n].projectStateData(i)
+        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns[0]} editions\n`
+      } else {
+        let tkns = await contracts[n].projectShowAllTokens(i)
+        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.length} editions\n`
+      }
       consecutiveNoTokens = 0
-      const _detail = await contracts[2].projectDetails(i.toString())
-      let lastValue = tkns[0]
-      All += `${i} - ${_detail[0]} / ${_detail[1]} - ${lastValue} editions\n`
     } catch (error) {
       console.log(`No tokens found for project ${i}`)
       consecutiveNoTokens++
@@ -406,11 +365,8 @@ async function fetchv3Blocks() {
         break
       }
     }
-    i++
   }
   console.log(All)
 }
 
-// fetchv1Blocks()
-// fetchv2Blocks()
-// fetchv3Blocks()
+// fetchBlocks()
