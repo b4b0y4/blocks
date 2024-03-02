@@ -108,15 +108,6 @@ async function grabData() {
     // Fetch project details
     _detail = await contractToUse.projectDetails(projId.toString())
 
-    if (_detail) {
-      let Id =
-        _tokenId < 1000000
-          ? _tokenId
-          : parseInt(_tokenId.toString().slice(-6).replace(/^0+/, ""))
-      detail.innerText = `${_detail[0]} #${Id} / ${_detail[1]}`
-      panel.innerText = _detail[2]
-    }
-
     // Store data in local storage
     localStorage.setItem(
       "contractData",
@@ -169,7 +160,6 @@ async function injectFrame() {
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
 
   try {
-    // Retrieve the value of 'newSrc', 'newIdHash', and 'newArt' from localStorage
     const frameSrc = localStorage.getItem("newSrc")
     const frameIdHash = localStorage.getItem("newIdHash")
     const frameArt = localStorage.getItem("newArt")
@@ -228,7 +218,6 @@ async function injectFrame() {
 
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
-  // Retrieve data from local storage if available
   const storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
     update(...Object.values(storedData))
@@ -236,6 +225,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   console.log("lib source:", localStorage.getItem("newSrc"))
   console.log("Id an Hash:", localStorage.getItem("newIdHash"))
+  console.log("code type:", localStorage.getItem("newType"))
   console.log("code:", localStorage.getItem("newArt"))
   console.log("library:", storedData._codeType)
 })
@@ -271,7 +261,6 @@ document.addEventListener("keypress", (event) => {
 fetch("data.txt")
   .then((response) => response.text())
   .then((data) => {
-    // Split the text into lines
     const lines = data.split("\n")
 
     // Function to display lines
@@ -305,10 +294,8 @@ fetch("data.txt")
  * *************************************************/
 
 async function saveContentAsFile(content, filename) {
-  // Prompt the user to enter a filename
   const userFilename = prompt("Enter a filename:", filename)
 
-  // If the user cancels the prompt or leaves the filename blank, return early
   if (!userFilename) {
     return
   }
