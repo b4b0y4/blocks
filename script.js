@@ -9,7 +9,9 @@ import {
 } from "./constants/ab.js"
 
 // Initialize Ethereum provider
-const provider = new ethers.JsonRpcProvider("") // Add RPC URL
+const provider = new ethers.JsonRpcProvider(
+  "https://eth-mainnet.g.alchemy.com/v2/"
+) // Add RPC URL
 
 // Initialize contracts array
 const contracts = [
@@ -343,27 +345,37 @@ document
 async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
+
   for (let i = 0; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
+
     try {
       const _detail = await contracts[n].projectDetails(i.toString())
+
+      let tkns
       if (n === 2) {
-        let tkns = await contracts[n].projectStateData(i)
-        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns[0]} editions\n`
+        tkns = await contracts[n].projectStateData(i)
       } else {
-        let tkns = await contracts[n].projectShowAllTokens(i)
-        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.length} editions\n`
+        tkns = await contracts[n].projectShowAllTokens(i)
       }
-      consecutiveNoTokens = 0
+
+      if (n === 2 || tkns.length !== 0) {
+        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${
+          n === 2 ? tkns[0] : tkns.length
+        } editions\n`
+        consecutiveNoTokens = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        consecutiveNoTokens++
+      }
     } catch (error) {
-      console.log(`No tokens found for project ${i}`)
+      console.log(`Error fetching data for project ${i}: ${error}`)
       consecutiveNoTokens++
-      if (consecutiveNoTokens >= 2) {
-        console.log(
-          "No tokens found for two consecutive projects. Exiting loop."
-        )
-        break
-      }
+    }
+
+    if (consecutiveNoTokens >= 2) {
+      console.log("No tokens found for two consecutive projects. Exiting loop.")
+      break
     }
   }
   console.log(All)
