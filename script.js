@@ -228,8 +228,25 @@ window.addEventListener("DOMContentLoaded", () => {
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
+  const allowedKeys = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "Delete",
+    "Enter",
+  ]
   if (event.key === "Enter") {
     grabData()
+  }
+  if (!allowedKeys.includes(event.key)) {
+    event.preventDefault()
   }
 })
 
@@ -247,6 +264,37 @@ detail.addEventListener("click", () => {
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     dataPanel.classList.toggle("open")
+  }
+})
+
+// Add event listener for keypress event
+tokenIdInput.addEventListener("keypress", function (event) {
+  // Get the pressed key
+  const key = event.key
+
+  // Allow only numeric characters (0-9) and specific keys (backspace, delete, arrow keys, etc.)
+  const allowedKeys = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "ArrowLeft",
+    "ArrowRight",
+    "Backspace",
+    "Delete",
+    "Tab",
+    "Enter",
+  ]
+
+  // Prevent the default action if the pressed key is not allowed
+  if (!allowedKeys.includes(key)) {
+    event.preventDefault()
   }
 })
 
@@ -338,7 +386,7 @@ document
 async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
-  for (let i = 168; i < 1690; i++) {
+  for (let i = 0; i < 800; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const _detail = await contracts[n].projectDetails(i.toString())
@@ -348,20 +396,28 @@ async function fetchBlocks() {
       } else {
         tkns = await contracts[n].projectShowAllTokens(i)
       }
-      if (n === 2 || tkns.length !== 0) {
-        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${
-          n === 2 ? tkns[0] : tkns.length
-        } editions\n`
-        consecutiveNoTokens = 0
+      if (n === 2) {
+        if (tkns.invocations !== BigInt(0)) {
+          All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.invocations} minted\n`
+          consecutiveNoTokens = 0
+        } else {
+          console.log(`No tokens found for project ${i}`)
+          consecutiveNoTokens++
+        }
       } else {
-        console.log(`No tokens found for project ${i}`)
-        consecutiveNoTokens++
+        if (tkns.length !== 0) {
+          All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.length} minted\n`
+          consecutiveNoTokens = 0
+        } else {
+          console.log(`No tokens found for project ${i}`)
+          consecutiveNoTokens++
+        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}: ${error}`)
       consecutiveNoTokens++
     }
-    if (consecutiveNoTokens >= 2) {
+    if (consecutiveNoTokens >= 5) {
       console.log("No tokens found for two consecutive projects. Exiting loop.")
       break
     }
