@@ -42,14 +42,9 @@ const predefinedLibraries = {
   paper:
     "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
   js: "",
+  svg: "",
+  custom: "",
 }
-
-// Variables to store contract data
-let _tokenId = ""
-let _hash = ""
-let _script = ""
-let _detail = ""
-let _codeType = ""
 
 // Function to clear local storage
 function clearLocalStorage() {
@@ -60,17 +55,7 @@ function clearLocalStorage() {
   localStorage.removeItem("newType")
 }
 
-function getTokenValue() {
-  if (tokenIdInput.value === "") {
-    _tokenId = constructedNumber
-  } else {
-    _tokenId = tokenIdInput.value
-  }
-}
-
-// Function to get and store data from ethereum
-async function grabData() {
-  getTokenValue()
+async function grabData(_tokenId) {
   try {
     clearLocalStorage()
 
@@ -84,7 +69,7 @@ async function grabData() {
     const contractToUse = contracts[contract]
 
     // Fetch contract data
-    _hash = await (contract === 0
+    let _hash = await (contract === 0
       ? contractToUse.showTokenHashes(_tokenId)
       : contractToUse.tokenIdToHash(_tokenId))
 
@@ -93,16 +78,8 @@ async function grabData() {
       ? contractToUse.projectScriptDetails(projId.toString())
       : contractToUse.projectScriptInfo(projId.toString()))
 
-    // Extract library name
-    _codeType = ""
-    if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
-      _codeType = projectInfo[0].split("@")[0].trim()
-    } else {
-      _codeType = JSON.parse(projectInfo[0]).type
-    }
-
     // Construct script
-    _script = ""
+    let _script = ""
     for (
       let i = 0;
       i < (contract === 2 ? projectInfo[2] : projectInfo[1]);
@@ -116,7 +93,15 @@ async function grabData() {
     }
 
     // Fetch project details
-    _detail = await contractToUse.projectDetails(projId.toString())
+    let _detail = await contractToUse.projectDetails(projId.toString())
+
+    // Extract library name
+    let _codeType = ""
+    if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
+      _codeType = projectInfo[0].split("@")[0].trim()
+    } else {
+      _codeType = JSON.parse(projectInfo[0]).type
+    }
 
     // Store data in local storage
     localStorage.setItem(
@@ -176,7 +161,11 @@ async function injectFrame() {
     const frameType = localStorage.getItem("newType")
 
     // Generate the content dynamically
-    const dynamicContent = `<!DOCTYPE html>
+    let dynamicContent
+    if (storedData._tokenId > 136000000 && storedData._tokenId < 136001023) {
+      dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
+    } else {
+      dynamicContent = `<!DOCTYPE html>
           <html lang='en'>
           <head>
           <meta charset='UTF-8'>
@@ -213,7 +202,9 @@ async function injectFrame() {
           <canvas></canvas>
           </body>
           </html>`
+    }
 
+    console.log(dynamicContent)
     // Write the generated content to the iframe
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
@@ -222,10 +213,10 @@ async function injectFrame() {
     console.error("Error:", error)
   }
 }
-
+let storedData = {}
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
-  const storedData = JSON.parse(localStorage.getItem("contractData"))
+  storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
     update(...Object.values(storedData))
   }
@@ -235,7 +226,6 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("code type:", localStorage.getItem("newType"))
   console.log("code:", localStorage.getItem("newArt"))
   console.log("library:", storedData._codeType)
-  console.log("token id:", storedData._tokenId)
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
@@ -256,7 +246,7 @@ tokenIdInput.addEventListener("keypress", (event) => {
     "Enter",
   ]
   if (event.key === "Enter") {
-    grabData()
+    grabData(tokenIdInput.value)
   }
 
   if (!allowedKeys.includes(event.key)) {
@@ -364,72 +354,86 @@ document
 
 /***************************************************
  *        FUNCTION TO GET RANDOM TOKEN ID
- * *************************************************/
+ **************************************************/
 
-let constructedNumber
-
+// Function to process a line and extract a constructed number
 function processLine(line) {
-  const regex = /^(\d+)\s*-\s*[^0-9]*-\s*(\d+)\s*/
+  const regex = /^(\d+).*?(\d+)\s*minted/
   const matches = line.match(regex)
-  if (matches) {
-    const firstNumber = parseInt(matches[1])
-    const secondNumber = parseInt(matches[2])
-    const randomSecondNumber = Math.floor(Math.random() * secondNumber - 1)
-    constructedNumber = firstNumber * 1000000 + randomSecondNumber
-    return constructedNumber
-  } else {
-    return null
+  if (!matches) return null
+
+  // Extract numbers from the regex matches
+  const firstNumber = parseInt(matches[1])
+  const secondNumber = parseInt(matches[2])
+  // Generate a random second number based on the second number extracted
+  const randomSecondNumber = Math.floor(Math.random() * (secondNumber - 1))
+
+  return (firstNumber * 1000000 + randomSecondNumber).toString()
+}
+
+// Function to fetch data from "data.txt", process a random line, and call grabData
+async function fetchAndProcessRandomLine() {
+  try {
+    const response = await fetch("data.txt")
+    if (!response.ok) throw new Error("Network response was not ok")
+
+    const lines = (await response.text()).split("\n")
+    const randomLine = lines[Math.floor(Math.random() * lines.length)]
+
+    const constructedNumber = processLine(randomLine)
+
+    if (constructedNumber) {
+      console.log("Randomly selected line:", randomLine)
+      console.log("Constructed Number:", constructedNumber)
+
+      grabData(constructedNumber)
+    } else {
+      console.log("Invalid line format.")
+      throw new Error("Invalid line format")
+    }
+  } catch (error) {
+    console.error("There was a problem with the fetch operation:", error)
+    throw error
   }
 }
 
-function fetchAndProcessRandomLine() {
-  return new Promise((resolve, reject) => {
-    // Fetch the contents of the data.txt file
-    fetch("data.txt")
-      .then((response) => {
-        // Check if the response is successful
-        if (!response.ok) {
-          throw new Error("Network response was not ok")
-        }
-        return response.text()
-      })
-      .then((data) => {
-        // Split the data into lines
-        const lines = data.split("\n")
-        // Generate a random index to select a random line
-        const randomIndex = Math.floor(Math.random() * lines.length)
-        // Get the random line from the lines array
-        const randomLine = lines[randomIndex]
-        // Process the random line to get the constructed number
-        const constructedNumber = processLine(randomLine)
-        // Check if the constructed number is valid
-        if (constructedNumber !== null) {
-          console.log("Randomly selected line:", randomLine)
-          console.log("Constructed Number:", constructedNumber)
-          // Resolve the Promise with the constructed number
-          resolve(constructedNumber)
-        } else {
-          console.log("Invalid line format.")
-          reject(new Error("Invalid line format"))
-        }
-      })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error)
-        reject(error)
-      })
-  })
+document
+  .getElementById("randomButton")
+  .addEventListener("click", fetchAndProcessRandomLine)
+
+/****************************************************
+ *          FUNCTIONS TO GET NEXTID TOKEN
+ * *************************************************/
+
+function incrementTokenId() {
+  storedData._tokenId = storedData._tokenId
+    ? (parseInt(storedData._tokenId) + 1).toString()
+    : "1"
+
+  grabData(storedData._tokenId)
+  console.log(storedData._tokenId)
 }
 
-// Add an event listener to the randomButton element
-document.getElementById("randomButton").addEventListener("click", (event) => {
-  fetchAndProcessRandomLine()
-    .then((constructedNumber) => {
-      grabData()
-    })
-    .catch((error) => {
-      console.error("Error occurred:", error)
-    })
-})
+function decrementTokenId() {
+  storedData._tokenId = storedData._tokenId
+    ? Math.max(parseInt(storedData._tokenId) - 1, 0).toString()
+    : "0"
+
+  grabData(storedData._tokenId)
+  console.log(storedData._tokenId)
+}
+
+document
+  .getElementById("incrementButton")
+  .addEventListener("click", function () {
+    incrementTokenId()
+  })
+
+document
+  .getElementById("decrementButton")
+  .addEventListener("click", function () {
+    decrementTokenId()
+  })
 
 /****************************************************
  *           FUNCTION TO GET ALL ART BLOCKS
