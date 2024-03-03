@@ -39,6 +39,8 @@ const predefinedLibraries = {
   tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  paper:
+    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
   js: "",
 }
 
@@ -58,13 +60,17 @@ function clearLocalStorage() {
   localStorage.removeItem("newType")
 }
 
-// Function to get and store data from ethereum
-async function grabData() {
+function getTokenValue() {
   if (tokenIdInput.value === "") {
     _tokenId = constructedNumber
   } else {
     _tokenId = tokenIdInput.value
   }
+}
+
+// Function to get and store data from ethereum
+async function grabData() {
+  getTokenValue()
   try {
     clearLocalStorage()
 
@@ -229,6 +235,7 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("code type:", localStorage.getItem("newType"))
   console.log("code:", localStorage.getItem("newArt"))
   console.log("library:", storedData._codeType)
+  console.log("token id:", storedData._tokenId)
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
@@ -243,12 +250,15 @@ tokenIdInput.addEventListener("keypress", (event) => {
     "7",
     "8",
     "9",
+    "ArrowLeft",
+    "ArrowRight",
     "Delete",
     "Enter",
   ]
   if (event.key === "Enter") {
     grabData()
   }
+
   if (!allowedKeys.includes(event.key)) {
     event.preventDefault()
   }
@@ -268,37 +278,6 @@ detail.addEventListener("click", () => {
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     dataPanel.classList.toggle("open")
-  }
-})
-
-// Add event listener for keypress event
-tokenIdInput.addEventListener("keypress", (event) => {
-  // Get the pressed key
-  const key = event.key
-
-  // Allow only numeric characters (0-9) and specific keys (backspace, delete, arrow keys, etc.)
-  const allowedKeys = [
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "ArrowLeft",
-    "ArrowRight",
-    "Backspace",
-    "Delete",
-    "Tab",
-    "Enter",
-  ]
-
-  // Prevent the default action if the pressed key is not allowed
-  if (!allowedKeys.includes(key)) {
-    event.preventDefault()
   }
 })
 

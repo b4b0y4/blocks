@@ -92,10 +92,13 @@ input {
   border-radius: 5px;
   padding: 2px;
   outline: none;
+  margin: 0 3px;
 }
 
 .save,
-.random {
+.random,
+#decrementButton,
+#incrementButton {
   background-color: #171717;
   color: white;
   border: none;
@@ -106,8 +109,15 @@ input {
 }
 
 .save:hover,
-.random:hover {
+.random:hover,
+#decrementButton:hover,
+#incrementButton:hover {
   transform: scale(1.2);
+}
+
+#decrementButton,
+#incrementButton {
+  margin: 0;
 }
 
 .frame-container {
