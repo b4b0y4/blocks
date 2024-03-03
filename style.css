@@ -54,7 +54,6 @@ body {
   border-radius: 5px;
   padding: 2px;
   opacity: 0.6;
-  margin-right: 7px;
 }
 
 p {
@@ -95,7 +94,8 @@ input {
   outline: none;
 }
 
-.save {
+.save,
+.random {
   background-color: #171717;
   color: white;
   border: none;
@@ -105,8 +105,9 @@ input {
   transition: transform 0.3s ease;
 }
 
-.save:hover {
-  transform: scale(1.3);
+.save:hover,
+.random:hover {
+  transform: scale(1.2);
 }
 
 .frame-container {

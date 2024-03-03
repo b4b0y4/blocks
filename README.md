@@ -7,7 +7,7 @@ This application allows you to retrieve **all** Art Blocks, directly from ethere
 Add your RPC URL in the `script.js` file
 
 - Press `\` to show a list of all Art Blocks.
-- Enter/Paste a token Id and press enter.
+- Enter/Paste a token Id and press enter, or click (⌘) to get a random one.
 - Click the name/artist to view detailed information.
-- Click the star icon (★) to save the HTML file.
+- Click (☆) to save the HTML file.
 - Press escape key to clear the page.

@@ -60,7 +60,11 @@ function clearLocalStorage() {
 
 // Function to get and store data from ethereum
 async function grabData() {
-  _tokenId = tokenIdInput.value
+  if (tokenIdInput.value === "") {
+    _tokenId = constructedNumber
+  } else {
+    _tokenId = tokenIdInput.value
+  }
   try {
     clearLocalStorage()
 
@@ -268,7 +272,7 @@ document.addEventListener("keypress", (event) => {
 })
 
 // Add event listener for keypress event
-tokenIdInput.addEventListener("keypress", function (event) {
+tokenIdInput.addEventListener("keypress", (event) => {
   // Get the pressed key
   const key = event.key
 
@@ -379,6 +383,75 @@ document
   .getElementById("saveButton")
   .addEventListener("click", handleSaveButtonClick)
 
+/***************************************************
+ *        FUNCTION TO GET RANDOM TOKEN ID
+ * *************************************************/
+
+let constructedNumber
+
+function processLine(line) {
+  const regex = /^(\d+)\s*-\s*[^0-9]*-\s*(\d+)\s*/
+  const matches = line.match(regex)
+  if (matches) {
+    const firstNumber = parseInt(matches[1])
+    const secondNumber = parseInt(matches[2])
+    const randomSecondNumber = Math.floor(Math.random() * secondNumber - 1)
+    constructedNumber = firstNumber * 1000000 + randomSecondNumber
+    return constructedNumber
+  } else {
+    return null
+  }
+}
+
+function fetchAndProcessRandomLine() {
+  return new Promise((resolve, reject) => {
+    // Fetch the contents of the data.txt file
+    fetch("data.txt")
+      .then((response) => {
+        // Check if the response is successful
+        if (!response.ok) {
+          throw new Error("Network response was not ok")
+        }
+        return response.text()
+      })
+      .then((data) => {
+        // Split the data into lines
+        const lines = data.split("\n")
+        // Generate a random index to select a random line
+        const randomIndex = Math.floor(Math.random() * lines.length)
+        // Get the random line from the lines array
+        const randomLine = lines[randomIndex]
+        // Process the random line to get the constructed number
+        const constructedNumber = processLine(randomLine)
+        // Check if the constructed number is valid
+        if (constructedNumber !== null) {
+          console.log("Randomly selected line:", randomLine)
+          console.log("Constructed Number:", constructedNumber)
+          // Resolve the Promise with the constructed number
+          resolve(constructedNumber)
+        } else {
+          console.log("Invalid line format.")
+          reject(new Error("Invalid line format"))
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error)
+        reject(error)
+      })
+  })
+}
+
+// Add an event listener to the randomButton element
+document.getElementById("randomButton").addEventListener("click", (event) => {
+  fetchAndProcessRandomLine()
+    .then((constructedNumber) => {
+      grabData()
+    })
+    .catch((error) => {
+      console.error("Error occurred:", error)
+    })
+})
+
 /****************************************************
  *           FUNCTION TO GET ALL ART BLOCKS
  * *************************************************/
@@ -386,7 +459,7 @@ document
 async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
-  for (let i = 0; i < 800; i++) {
+  for (let i = 168; i < 800; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const _detail = await contracts[n].projectDetails(i.toString())
