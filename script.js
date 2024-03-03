@@ -219,7 +219,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (storedData) {
     update(...Object.values(storedData))
   }
-
+  tokenIdInput.focus()
   console.log("lib source:", localStorage.getItem("newSrc"))
   console.log("Id an Hash:", localStorage.getItem("newIdHash"))
   console.log("code type:", localStorage.getItem("newType"))
