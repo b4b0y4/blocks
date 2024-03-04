@@ -55,6 +55,9 @@ function clearLocalStorage() {
   localStorage.removeItem("newType")
 }
 
+/****************************************************
+ *        FUNCTION TO GET DATA FROM ETHEREUM
+ ***************************************************/
 async function grabData(tokenId) {
   try {
     clearLocalStorage()
@@ -117,7 +120,9 @@ async function grabData(tokenId) {
   }
 }
 
-// Function to update UI
+/****************************************************
+ *              FUNCTION TO UPDATE UI
+ ***************************************************/
 function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update library source
   localStorage.setItem("newSrc", predefinedLibraries[codeLib])
@@ -144,13 +149,29 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, ""))
   info.innerText = `${detail[0]} #${Id} / ${detail[1]}`
-  panel.innerText = `${detail[2]}\n\nowner: ${owner}`
+  panel.innerText = `${detail[2]}\n\nOwner: ${owner}`
   tokenIdInput.placeholder = `${tokenId} `
-
+  resolveENS(owner, detail)
   injectFrame()
 }
 
-// Function to inject content into the iframe
+// Get ENS name if available
+async function resolveENS(owner, detail) {
+  try {
+    const ensName = await provider.lookupAddress(owner)
+    if (ensName) {
+      panel.innerText = `${detail[2]}\n\nOwner: ${ensName}`
+    } else {
+      panel.innerText = `${detail[2]}\n\nOwner: ${owner}`
+    }
+  } catch (error) {
+    console.log("Error getting ENS name:", error)
+  }
+}
+
+/****************************************************
+ *        FUNCTION TO INJECT INTO IFRAME
+ ***************************************************/
 async function injectFrame() {
   const frame = document.getElementById("frame")
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
@@ -214,6 +235,10 @@ async function injectFrame() {
     console.error("Error:", error)
   }
 }
+
+/****************************************************
+ *                     EVENTS
+ ***************************************************/
 let storedData = {}
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
@@ -275,7 +300,6 @@ document.addEventListener("keypress", (event) => {
 /****************************************************
  *        FUNCTION TO ACCESS BLOCKS DATA
  ***************************************************/
-
 // Fetch data from "data.txt" and display it
 fetch("data.txt")
   .then((response) => response.text())
