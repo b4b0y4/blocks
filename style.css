@@ -77,7 +77,7 @@ input {
   overflow: scroll;
   padding: 10px;
   background-color: #171717;
-  color: #a2a2a2;
+  color: #b2b2b2;
   border-radius: 10px;
   z-index: 200;
   transition: bottom 0.3s ease;
@@ -98,7 +98,7 @@ input {
   max-width: 450px;
   max-height: 500px;
   background-color: #171717;
-  color: #a2a2a2;
+  color: #b2b2b2;
   padding: 10px 10px 0 10px;
   border-radius: 10px;
   opacity: 0.9;
@@ -112,13 +112,23 @@ input {
   right: 5px;
 }
 
-.search {
+.search-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: sticky;
   bottom: 0;
+  width: 100%;
+  padding: 5px 0;
+  background-color: #171717;
+  margin-top: 5px;
+}
+
+.search {
   text-align: start;
   padding: 5px;
   width: 100%;
-  margin-top: 10px;
+  margin: 0;
 }
 
 .frame-container {
