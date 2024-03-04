@@ -1,6 +1,7 @@
-# Art Block Renderer
+# Art Blocks Renderer
 
 This application allows you to retrieve all Art Blocks main collections (curated & presents), directly from ethereum.
+
 View information about each one and save a HTML file of your favorites.
 
 ## Usage
