@@ -41,6 +41,7 @@ const predefinedLibraries = {
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
   paper:
     "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
   js: "",
   svg: "",
   custom: "",
