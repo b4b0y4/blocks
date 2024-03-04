@@ -11,39 +11,6 @@ body {
   overflow: hidden;
 }
 
-.data-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
-  bottom: 30px;
-  right: -100%;
-  max-width: 450px;
-  max-height: 500px;
-  background-color: #171717;
-  color: white;
-  padding: 10px 10px 0 10px;
-  border-radius: 10px;
-  opacity: 0.9;
-  transition: right 0.3s ease-in-out;
-  overflow-y: auto;
-  overflow-x: hidden;
-  z-index: 200;
-}
-
-.data-panel.open {
-  right: 5px;
-}
-
-.search {
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  margin-top: 10px;
-  text-align: start;
-  padding: 5px;
-}
-
 .show-container {
   display: flex;
   align-items: center;
@@ -61,26 +28,6 @@ p {
   margin: 0;
   color: white;
   cursor: help;
-}
-
-.panel {
-  position: absolute;
-  bottom: -100%;
-  right: 5px;
-  max-width: 450px;
-  max-height: 500px;
-  overflow: scroll;
-  padding: 10px;
-  background-color: #171717;
-  color: white;
-  border-radius: 10px;
-  z-index: 200;
-  transition: bottom 0.3s ease;
-  opacity: 0.9;
-}
-
-.panel.open {
-  bottom: 30px;
 }
 
 input {
@@ -111,7 +58,8 @@ input {
 .save:hover,
 .random:hover,
 #decrementButton:hover,
-#incrementButton:hover {
+#incrementButton:hover,
+#updateList:hover {
   transform: scale(1.3);
 }
 
@@ -120,6 +68,83 @@ input {
   margin: 0;
   padding: 0;
   font-size: 1.3em;
+}
+
+.panel {
+  position: absolute;
+  bottom: -100%;
+  right: 5px;
+  max-width: 450px;
+  max-height: 500px;
+  overflow: scroll;
+  padding: 10px;
+  background-color: #171717;
+  color: white;
+  border-radius: 10px;
+  z-index: 200;
+  transition: bottom 0.3s ease;
+  opacity: 0.9;
+}
+
+.panel.open {
+  bottom: 30px;
+}
+
+.data-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  bottom: 30px;
+  right: -100%;
+  max-width: 450px;
+  max-height: 500px;
+  background-color: #171717;
+  color: white;
+  padding: 10px 10px 0 10px;
+  border-radius: 10px;
+  opacity: 0.9;
+  transition: right 0.3s ease-in-out;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 200;
+}
+
+.data-panel.open {
+  right: 5px;
+}
+
+.search-update {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #171717;
+}
+
+.search {
+  width: 100%;
+  margin-right: 10px;
+}
+
+.search-input {
+  text-align: start;
+  padding: 5px;
+  width: 100%;
+}
+
+#updateList {
+  background-color: #171717;
+  color: white;
+  border: none;
+  font-size: 1.2em;
+  margin-left: 10px;
+  outline: none;
+  opacity: 0.6;
+  transition: transform 0.3s ease;
 }
 
 .frame-container {

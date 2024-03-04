@@ -468,7 +468,7 @@ document
 async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
-  for (let i = 168; i < 800; i++) {
+  for (let i = 0; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const _detail = await contracts[n].projectDetails(i.toString())
@@ -504,7 +504,34 @@ async function fetchBlocks() {
       break
     }
   }
+
   console.log(All)
+  return All
 }
+
+function downloadList(data, filename) {
+  const blob = new Blob([data], { type: "text/plain" })
+
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+
+  document.body.appendChild(link)
+
+  link.click()
+
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+async function fetchBlocksAndDownload() {
+  const data = await fetchBlocks()
+  downloadList(data, "data.txt")
+}
+
+document
+  .getElementById("updateList")
+  .addEventListener("click", fetchBlocksAndDownload)
 
 // fetchBlocks()
