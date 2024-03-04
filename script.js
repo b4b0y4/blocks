@@ -336,7 +336,6 @@ fetch("data.txt")
 /****************************************************
  *          FUNCTION TO SAVE THE OUTPUT
  * *************************************************/
-
 async function saveContentAsFile(content, filename) {
   const userFilename = prompt("Enter a filename:", filename)
 
@@ -381,7 +380,6 @@ document
 /***************************************************
  *        FUNCTION TO GET RANDOM TOKEN ID
  **************************************************/
-
 // Function to process a line and extract a constructed number
 function processLine(line) {
   const regex = /^(\d+).*?(\d+)\s*minted/
@@ -430,7 +428,6 @@ document
 /****************************************************
  *          FUNCTIONS TO GET NEXTID TOKEN
  * *************************************************/
-
 function incrementTokenId() {
   storedData.tokenId = storedData.tokenId
     ? (parseInt(storedData.tokenId) + 1).toString()
@@ -464,7 +461,6 @@ document
 /****************************************************
  *           FUNCTION TO GET ALL ART BLOCKS
  * *************************************************/
-
 async function fetchBlocks() {
   let All = ""
   let consecutiveNoTokens = 0
@@ -504,34 +500,7 @@ async function fetchBlocks() {
       break
     }
   }
-
   console.log(All)
-  return All
 }
-
-function downloadList(data, filename) {
-  const blob = new Blob([data], { type: "text/plain" })
-
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement("a")
-  link.href = url
-  link.download = filename
-
-  document.body.appendChild(link)
-
-  link.click()
-
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
-}
-
-async function fetchBlocksAndDownload() {
-  const data = await fetchBlocks()
-  downloadList(data, "data.txt")
-}
-
-document
-  .getElementById("updateList")
-  .addEventListener("click", fetchBlocksAndDownload)
 
 // fetchBlocks()
