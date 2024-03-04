@@ -289,12 +289,18 @@ document.addEventListener("keydown", (event) => {
 })
 
 info.addEventListener("click", () => {
-  panel.classList.toggle("open")
+  panel.classList.toggle("active")
+  if (dataPanel.classList.contains("active")) {
+    dataPanel.classList.remove("active")
+  }
 })
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
-    dataPanel.classList.toggle("open")
+    dataPanel.classList.toggle("active")
+  }
+  if (panel.classList.contains("active")) {
+    panel.classList.remove("active")
   }
 })
 
