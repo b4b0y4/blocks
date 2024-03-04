@@ -10,7 +10,7 @@ import {
 
 // Initialize Ethereum provider
 const provider = new ethers.JsonRpcProvider(
-  "https://eth-mainnet.g.alchemy.com/v2/"
+  "https://eth-mainnet.g.alchemy.com/v2/bFi7WKB0ttDBsLvQ0x8adOZ4G3Fugnyr"
 ) // Add RPC URL
 
 // Initialize contracts array
