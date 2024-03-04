@@ -22,7 +22,7 @@ const contracts = [
 
 // DOM elements
 const tokenIdInput = document.getElementById("tokenId")
-const detail = document.getElementById("detail")
+const info = document.getElementById("info")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
 const dataContent = document.getElementById("dataContent")
@@ -55,31 +55,31 @@ function clearLocalStorage() {
   localStorage.removeItem("newType")
 }
 
-async function grabData(_tokenId) {
+async function grabData(tokenId) {
   try {
     clearLocalStorage()
 
     // Determine contract
     let contract = 0
-    if (_tokenId >= 3000000 && _tokenId < 374000000) {
+    if (tokenId >= 3000000 && tokenId < 374000000) {
       contract = 1
-    } else if (_tokenId >= 374000000) {
+    } else if (tokenId >= 374000000) {
       contract = 2
     }
     const contractToUse = contracts[contract]
 
     // Fetch contract data
-    let _hash = await (contract === 0
-      ? contractToUse.showTokenHashes(_tokenId)
-      : contractToUse.tokenIdToHash(_tokenId))
+    let hash = await (contract === 0
+      ? contractToUse.showTokenHashes(tokenId)
+      : contractToUse.tokenIdToHash(tokenId))
 
-    const projId = await contractToUse.tokenIdToProjectId(_tokenId)
+    const projId = await contractToUse.tokenIdToProjectId(tokenId)
     const projectInfo = await (contract === 2
       ? contractToUse.projectScriptDetails(projId.toString())
       : contractToUse.projectScriptInfo(projId.toString()))
 
     // Construct script
-    let _script = ""
+    let script = ""
     for (
       let i = 0;
       i < (contract === 2 ? projectInfo[2] : projectInfo[1]);
@@ -89,26 +89,28 @@ async function grabData(_tokenId) {
         projId.toString(),
         i
       )
-      _script += scrpt
+      script += scrpt
     }
 
     // Fetch project details
-    let _detail = await contractToUse.projectDetails(projId.toString())
+    let detail = await contractToUse.projectDetails(projId.toString())
+
+    // Get the owner
+    let owner = await contractToUse.ownerOf(tokenId)
 
     // Extract library name
-    let _codeType = ""
+    let codeLib = ""
     if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
-      _codeType = projectInfo[0].split("@")[0].trim()
+      codeLib = projectInfo[0].split("@")[0].trim()
     } else {
-      _codeType = JSON.parse(projectInfo[0]).type
+      codeLib = JSON.parse(projectInfo[0]).type
     }
 
     // Store data in local storage
     localStorage.setItem(
       "contractData",
-      JSON.stringify({ _tokenId, _hash, _script, _detail, _codeType })
+      JSON.stringify({ tokenId, hash, script, detail, owner, codeLib })
     )
-    update(_tokenId, _hash, _script, _detail, _codeType)
     location.reload()
   } catch (error) {
     console.error("Error:", error)
@@ -116,36 +118,35 @@ async function grabData(_tokenId) {
 }
 
 // Function to update UI
-function update(_tokenId, _hash, _script, _detail, _codeType) {
+function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update library source
-  localStorage.setItem("newSrc", predefinedLibraries[_codeType])
+  localStorage.setItem("newSrc", predefinedLibraries[codeLib])
 
   // Update tokenIdHash content
   const tknData =
-    _tokenId < 3000000
-      ? `{ tokenId: "${_tokenId}", hashes: ["${_hash}"] };`
-      : `{ tokenId: "${_tokenId}", hash: "${_hash}" };`
+    tokenId < 3000000
+      ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] };`
+      : `{ tokenId: "${tokenId}", hash: "${hash}" };`
 
   localStorage.setItem("newIdHash", `let tokenData = ${tknData}`)
 
   // Update artCode content
   let process = ""
-  if (_codeType === "processing") {
+  if (codeLib === "processing") {
     process = "application/processing"
   }
   localStorage.setItem("newType", process)
-  localStorage.setItem("newArt", _script)
+  localStorage.setItem("newArt", script)
 
   // Update detail content
-  if (_detail) {
-    let Id =
-      _tokenId < 1000000
-        ? _tokenId
-        : parseInt(_tokenId.toString().slice(-6).replace(/^0+/, ""))
-    detail.innerText = `${_detail[0]} #${Id} / ${_detail[1]}`
-    panel.innerText = _detail[2]
-  }
-  tokenIdInput.placeholder = `${_tokenId} `
+  let Id =
+    tokenId < 1000000
+      ? tokenId
+      : parseInt(tokenId.toString().slice(-6).replace(/^0+/, ""))
+  info.innerText = `${detail[0]} #${Id} / ${detail[1]}`
+  panel.innerText = `${detail[2]}\n\nowner: ${owner}`
+  tokenIdInput.placeholder = `${tokenId} `
+
   injectFrame()
 }
 
@@ -162,7 +163,7 @@ async function injectFrame() {
 
     // Generate the content dynamically
     let dynamicContent
-    if (storedData._tokenId > 136000000 && storedData._tokenId < 136001023) {
+    if (storedData.tokenId > 136000000 && storedData.tokenId < 136001023) {
       dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
     } else {
       dynamicContent = `<!DOCTYPE html>
@@ -225,7 +226,7 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("Id an Hash:", localStorage.getItem("newIdHash"))
   console.log("code type:", localStorage.getItem("newType"))
   console.log("code:", localStorage.getItem("newArt"))
-  console.log("library:", storedData._codeType)
+  console.log("library:", storedData.codeLib)
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
@@ -261,7 +262,7 @@ document.addEventListener("keydown", (event) => {
   }
 })
 
-detail.addEventListener("click", () => {
+info.addEventListener("click", () => {
   panel.classList.toggle("open")
 })
 
@@ -406,21 +407,21 @@ document
  * *************************************************/
 
 function incrementTokenId() {
-  storedData._tokenId = storedData._tokenId
-    ? (parseInt(storedData._tokenId) + 1).toString()
+  storedData.tokenId = storedData.tokenId
+    ? (parseInt(storedData.tokenId) + 1).toString()
     : "1"
 
-  grabData(storedData._tokenId)
-  console.log(storedData._tokenId)
+  grabData(storedData.tokenId)
+  console.log(storedData.tokenId)
 }
 
 function decrementTokenId() {
-  storedData._tokenId = storedData._tokenId
-    ? Math.max(parseInt(storedData._tokenId) - 1, 0).toString()
+  storedData.tokenId = storedData.tokenId
+    ? Math.max(parseInt(storedData.tokenId) - 1, 0).toString()
     : "0"
 
-  grabData(storedData._tokenId)
-  console.log(storedData._tokenId)
+  grabData(storedData.tokenId)
+  console.log(storedData.tokenId)
 }
 
 document
