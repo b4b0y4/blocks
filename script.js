@@ -150,7 +150,6 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, ""))
   info.innerText = `${detail[0]} #${Id} / ${detail[1]}`
-  panel.innerText = `${detail[2]}\n\nOwner: ${owner}`
   tokenIdInput.placeholder = `${tokenId} `
   resolveENS(owner, detail)
   injectFrame()
@@ -161,9 +160,9 @@ async function resolveENS(owner, detail) {
   try {
     const ensName = await provider.lookupAddress(owner)
     if (ensName) {
-      panel.innerText = `${detail[2]}\n\nOwner: ${ensName}`
+      panel.innerText = `${detail[2]}\n\n\nOwned by: ${ensName}`
     } else {
-      panel.innerText = `${detail[2]}\n\nOwner: ${owner}`
+      panel.innerText = `${detail[2]}\n\n\nOwned by: ${owner}`
     }
   } catch (error) {
     console.log("Error getting ENS name:", error)
