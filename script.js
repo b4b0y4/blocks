@@ -8,10 +8,20 @@ import {
   contractAddressV3,
 } from "./constants/ab.js"
 
+// DOM elements
+const rpcUrlInput = document.getElementById("rpcUrl")
+const tokenIdInput = document.getElementById("tokenId")
+const infoBox = document.getElementById("infoBox")
+const info = document.getElementById("info")
+const panel = document.querySelector(".panel")
+const dataPanel = document.querySelector(".data-panel")
+const dataContent = document.getElementById("dataContent")
+const search = document.getElementById("searchInput")
+
+const rpcUrl = localStorage.getItem("rpcUrl")
+
 // Initialize Ethereum provider
-const provider = new ethers.JsonRpcProvider(
-  "https://eth-mainnet.g.alchemy.com/v2/bFi7WKB0ttDBsLvQ0x8adOZ4G3Fugnyr"
-) // Add RPC URL
+const provider = new ethers.JsonRpcProvider(rpcUrl)
 
 // Initialize contracts array
 const contracts = [
@@ -19,14 +29,6 @@ const contracts = [
   { abi: abiV2, address: contractAddressV2 },
   { abi: abiV3, address: contractAddressV3 },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
-
-// DOM elements
-const tokenIdInput = document.getElementById("tokenId")
-const info = document.getElementById("info")
-const panel = document.querySelector(".panel")
-const dataPanel = document.querySelector(".data-panel")
-const dataContent = document.getElementById("dataContent")
-const search = document.getElementById("searchInput")
 
 // Libraries
 const predefinedLibraries = {
@@ -252,6 +254,24 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("code type:", localStorage.getItem("newType"))
   console.log("code:", localStorage.getItem("newArt"))
   console.log("library:", storedData.codeLib)
+})
+
+rpcUrlInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    localStorage.setItem("rpcUrl", rpcUrlInput.value)
+    rpcUrlInput.style.display = "none"
+    location.reload()
+  }
+})
+
+window.addEventListener("load", () => {
+  if (!rpcUrl) {
+    rpcUrlInput.style.display = "block"
+    infoBox.style.display = "none"
+  }
+  if (rpcUrl) {
+    rpcUrlInput.style.display = "none"
+  }
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {

@@ -6,8 +6,7 @@ View information about each one and save a HTML file of your favorites.
 
 ## Usage
 
-Add your RPC URL in the `script.js` file
-
+- Add your RPC URL.
 - Press `\` to show a list of all Art Blocks.
 - Enter/Paste a token Id and press `enter`, or click (⌘) to get a random one.
 - Click (name/artist) to view detailed information.
