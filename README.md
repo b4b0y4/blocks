@@ -1,6 +1,6 @@
-# Art Blocks Renderer
+# Art Blocks Generator
 
-This application allows you to retrieve all Art Blocks main collections (curated & presents), directly from ethereum.
+This application allows you to generate all of Art Blocks main collections (curated & presents), directly from ethereum.
 
 View information about each one and save a HTML file of your favorites.
 
