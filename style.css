@@ -45,7 +45,7 @@ body {
   transition: transform 0.3s ease;
 }
 
-p:hover {
+.info:hover {
   transform: scale(1.02);
 }
 
@@ -97,8 +97,8 @@ input {
 .panel {
   display: block;
   position: absolute;
-  bottom: 44px;
-  right: 5px;
+  bottom: 38px;
+  right: 0;
   max-width: 450px;
   max-height: 500px;
   padding: 10px;
@@ -118,8 +118,8 @@ input {
   flex-direction: column;
   align-items: center;
   position: absolute;
-  bottom: 44px;
-  right: 5px;
+  bottom: 38px;
+  right: 0;
   max-width: 450px;
   max-height: 500px;
   background-color: #171717;
@@ -170,6 +170,5 @@ input {
     max-width: 100%;
     max-height: 60%;
     bottom: 10vh;
-    right: 0;
   }
 }
