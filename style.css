@@ -26,8 +26,7 @@ body {
 
 p {
   line-height: 0;
-  margin: 0;
-  padding: 10px 0;
+  margin: 10px 0;
   color: #a2a2a2;
   cursor: pointer;
   transition: transform 0.3s ease;
@@ -89,11 +88,12 @@ input {
   right: 5px;
   max-width: 450px;
   max-height: 500px;
-  overflow: scroll;
   padding: 10px;
   background-color: #171717;
   color: #b2b2b2;
   border-radius: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 200;
   opacity: 0;
   visibility: hidden;
@@ -162,9 +162,8 @@ input {
 @media (max-width: 600px) {
   .panel,
   .data-panel {
-    max-width: 100%;
+    max-width: 95%;
     max-height: 60%;
     right: 0;
-    bottom: 50px;
   }
 }
