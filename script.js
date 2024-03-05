@@ -184,7 +184,7 @@ async function injectFrame() {
 
     // Generate the content dynamically
     let dynamicContent
-    if (storedData.tokenId > 136000000 && storedData.tokenId < 136001023) {
+    if (storedData.codeLib === "custom") {
       dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
     } else {
       dynamicContent = `<!DOCTYPE html>
