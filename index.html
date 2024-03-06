@@ -5,15 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta charset="utf-8" />
   <link rel="stylesheet" href="./style.css" />
+  <title>blocksGenerator</title>
 </head>
 
 <body>
   <div class="container">
+
     <div class="frame-container">
-      <iframe id="frame" src="about:blank"></iframe>
+      <iframe id="frame" class="frame" src="about:blank"></iframe>
     </div>
 
-    <div class="show-container">
+    <div class="detail-container">
       <label for="rpcUrl"></label>
       <input id="rpcUrl" class="rpc-url" placeholder="paste rpc url " autocomplete="off" />
       <div id="infoBox" class="info-box">
@@ -35,7 +37,7 @@
     <div class="panel"></div>
     <div class="data-panel">
       <div id="dataContent"></div>
-      <div class="search-div"><input id="searchInput" class="search" type="text" placeholder=" Search..."
+      <div class="search-container"><input id="searchInput" class="search" type="text" placeholder=" Search..."
           autocomplete="off"></div>
     </div>
   </div>

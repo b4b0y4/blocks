@@ -21,13 +21,13 @@ body {
   height: 100%;
 }
 
-#frame {
+.frame {
   width: 100%;
   height: 100%;
   border: none;
 }
 
-.show-container {
+.detail-container {
   height: 30px;
   width: 100%;
   display: flex;
@@ -155,7 +155,7 @@ input {
   visibility: visible;
 }
 
-.search-div {
+.search-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,7 +175,7 @@ input {
 }
 
 @media (max-width: 600px) {
-  .show-container {
+  .detail-container {
     flex-wrap: wrap;
     justify-content: center;
     height: 60px;

@@ -18,9 +18,8 @@ const dataPanel = document.querySelector(".data-panel")
 const dataContent = document.getElementById("dataContent")
 const search = document.getElementById("searchInput")
 
-const rpcUrl = localStorage.getItem("rpcUrl")
-
 // Initialize Ethereum provider
+const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
 
 // Initialize contracts array
@@ -146,7 +145,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   localStorage.setItem("newType", process)
   localStorage.setItem("newArt", script)
 
-  // Update detail content
+  // Update info content
   let Id =
     tokenId < 1000000
       ? tokenId
@@ -157,7 +156,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   injectFrame()
 }
 
-// Get ENS name if available
+// Get ENS name for owner if available
 async function resolveENS(owner, detail) {
   try {
     const ensName = await provider.lookupAddress(owner)
@@ -181,16 +180,15 @@ async function injectFrame() {
   try {
     const frameSrc = localStorage.getItem("newSrc")
     const frameIdHash = localStorage.getItem("newIdHash")
-    const frameArt = localStorage.getItem("newArt")
     const frameType = localStorage.getItem("newType")
+    const frameArt = localStorage.getItem("newArt")
 
     // Generate the content dynamically
     let dynamicContent
     if (storedData.codeLib === "custom") {
       dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
     } else {
-      dynamicContent = `<!DOCTYPE html>
-          <html lang='en'>
+      dynamicContent = `<html>
           <head>
           <meta charset='UTF-8'>
           <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -473,18 +471,14 @@ function decrementTokenId() {
 
 document
   .getElementById("incrementButton")
-  .addEventListener("click", function () {
-    incrementTokenId()
-  })
+  .addEventListener("click", incrementTokenId)
 
 document
   .getElementById("decrementButton")
-  .addEventListener("click", function () {
-    decrementTokenId()
-  })
+  .addEventListener("click", decrementTokenId)
 
 /****************************************************
- *           FUNCTION TO GET ALL ART BLOCKS
+ *         FUNCTION TO UPDATE ART BLOCKS LIST
  * *************************************************/
 async function fetchBlocks() {
   let All = ""
