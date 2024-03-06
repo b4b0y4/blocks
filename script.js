@@ -486,36 +486,25 @@ async function fetchBlocks() {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const _detail = await contracts[n].projectDetails(i.toString())
-      let tkns
-      if (n === 2) {
-        tkns = await contracts[n].projectStateData(i)
+      const tkns =
+        n === 2
+          ? await contracts[n].projectStateData(i)
+          : await contracts[n].projectTokenInfo(i)
+
+      if (tkns.invocations !== BigInt(0)) {
+        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.invocations} minted\n`
+        consecutiveNoTokens = 0
       } else {
-        tkns = await contracts[n].projectShowAllTokens(i)
+        console.log(`No tokens found for project ${i}`)
+        consecutiveNoTokens++
       }
-      if (n === 2) {
-        if (tkns.invocations !== BigInt(0)) {
-          All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.invocations} minted\n`
-          consecutiveNoTokens = 0
-        } else {
-          console.log(`No tokens found for project ${i}`)
-          consecutiveNoTokens++
-        }
-      } else {
-        if (tkns.length !== 0) {
-          All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.length} minted\n`
-          consecutiveNoTokens = 0
-        } else {
-          console.log(`No tokens found for project ${i}`)
-          consecutiveNoTokens++
-        }
+      if (consecutiveNoTokens >= 5) {
+        console.log("No tokens found for 5 consecutive projects. Exiting loop.")
+        break
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}: ${error}`)
       consecutiveNoTokens++
-    }
-    if (consecutiveNoTokens >= 5) {
-      console.log("No tokens found for two consecutive projects. Exiting loop.")
-      break
     }
   }
   console.log(All)
