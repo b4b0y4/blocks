@@ -149,7 +149,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   let id =
     tokenId < 1000000
       ? tokenId
-      : parseInt(tokenId.toString().slice(-6).replace(/^0+/, ""))
+      : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
   info.innerText = `${detail[0]} #${id} / ${detail[1]}`
   tokenIdInput.placeholder = `${tokenId} `
   resolveENS(owner, detail)
@@ -297,8 +297,8 @@ tokenIdInput.addEventListener("keypress", (event) => {
   }
 })
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
+document.addEventListener("keypress", (event) => {
+  if (event.key === "|") {
     clearLocalStorage()
     location.reload()
   }

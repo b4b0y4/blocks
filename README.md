@@ -12,4 +12,4 @@ View information about each one and save a HTML file of your favorites.
 - Click (name/artist) to view detailed information.
 - Click (>) or (<) to navigate to next or previous.
 - Click (★) to save a HTML file.
-- Press `esc` to clear the page.
+- Press `|` to clear the page.
