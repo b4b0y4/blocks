@@ -30,19 +30,29 @@ const contracts = [
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
+const p5lib = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"
+const threelib =
+  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"
+const processinglib =
+  "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js"
+const tonelib = "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js"
+const paperlib =
+  "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js"
+const regllib = "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js"
+const zdoglib = "https://unpkg.com/zdog@1/dist/zdog.dist.min.js"
+
 const predefinedLibraries = {
-  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
-  p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
-  threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
-  three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
-  processing:
-    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
-  tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
-  paper:
-    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
-  zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
+  p5js: p5lib,
+  p5: p5lib,
+  threejs: threelib,
+  three: threelib,
+  tonejs: tonelib,
+  tone: tonelib,
+  paperjs: paperlib,
+  paper: paperlib,
+  processing: processinglib,
+  regl: regllib,
+  zdog: zdoglib,
   js: "",
   svg: "",
   custom: "",
@@ -123,7 +133,7 @@ async function grabData(tokenId) {
 }
 
 /****************************************************
- *              FUNCTION TO UPDATE UI
+ *              FUNCTIONS TO UPDATE UI
  ***************************************************/
 function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update library source
@@ -176,56 +186,65 @@ async function resolveENS(owner, detail) {
 async function injectFrame() {
   const frame = document.getElementById("frame")
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
-
   try {
     const frameSrc = localStorage.getItem("Src")
     const frameIdHash = localStorage.getItem("IdHash")
     const frameType = localStorage.getItem("Type")
     const frameArt = localStorage.getItem("Art")
+    const frameStyle = `<style type="text/css">
+          html {
+            height: 100%;
+          }
+          body {
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #171717;
+          }
+          canvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+          }
+      </style>`
 
     // Generate the content dynamically
     let dynamicContent
     if (storedData.codeLib === "custom") {
       dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
-    } else {
+    } else if (frameType) {
       dynamicContent = `<html>
           <head>
-          <meta charset='UTF-8'>
-          <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+          <meta name='viewport' content='width=device-width, initial-scale=1',  maximum-scale=1">
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
-          <style type="text/css">
-              html {
-                  height: 100%;
-              }
-              
-              body {
-                  min-height: 100%;
-                  margin: 0;
-                  padding: 0;
-                  background-color: #171717;
-              }
-
-              canvas {
-                  padding: 0;
-                  margin: auto;
-                  display: block;
-                  position: absolute;
-                  top: 0;
-                  bottom: 0;
-                  left: 0;
-                  right: 0;
-              }
-          </style>
+          ${frameStyle}
           </head>
           <body>
-          <canvas></canvas>
           <script type='${frameType}'>${frameArt}</script>
           <canvas></canvas>
           </body>
           </html>`
+    } else {
+      dynamicContent = `<html>
+          <head>
+          <meta name='viewport' content='width=device-width, initial-scale=1',  maximum-scale=1">
+          <script src='${frameSrc}'></script>
+          <script>${frameIdHash}</script>
+          ${frameStyle}
+          </head>
+          <body>
+          <canvas></canvas>
+          <script>${frameArt}</script>
+          </body>
+          </html>`
     }
-
+    console.log(dynamicContent)
     // Write the generated content to the iframe
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
@@ -321,7 +340,7 @@ document.addEventListener("keypress", (event) => {
 })
 
 /****************************************************
- *        FUNCTION TO ACCESS BLOCKS DATA
+ *       FUNCTION TO ACCESS BLOCKS DATA LIST
  ***************************************************/
 // Fetch data from "data.txt" and display it
 fetch("data.txt")
@@ -364,7 +383,6 @@ async function saveContentAsFile(content, filename) {
   if (!userFilename) {
     return
   }
-
   // Create a Blob containing the content
   const blob = new Blob([content], { type: "text/html" })
 
@@ -379,7 +397,7 @@ async function saveContentAsFile(content, filename) {
   // Append the <a> element to the document body
   document.body.appendChild(link)
 
-  // Programmatically trigger the click event on the <a> element
+  // Programmatically trigger the click event
   link.click()
 
   // Clean up
@@ -400,7 +418,7 @@ document
   .addEventListener("click", handleSaveButtonClick)
 
 /***************************************************
- *        FUNCTION TO GET RANDOM TOKEN ID
+ *        FUNCTIONS TO GET RANDOM TOKEN ID
  **************************************************/
 // Function to process a line and extract a constructed number
 function processLine(line) {
