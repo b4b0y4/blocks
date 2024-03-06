@@ -176,9 +176,12 @@ input {
 
 @media (max-width: 600px) {
   .detail-container {
-    flex-wrap: wrap;
-    justify-content: center;
     height: 60px;
+  }
+
+  .info-box {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .panel,
