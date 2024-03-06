@@ -51,10 +51,10 @@ const predefinedLibraries = {
 // Function to clear local storage
 function clearLocalStorage() {
   localStorage.removeItem("contractData")
-  localStorage.removeItem("newSrc")
-  localStorage.removeItem("newIdHash")
-  localStorage.removeItem("newArt")
-  localStorage.removeItem("newType")
+  localStorage.removeItem("Src")
+  localStorage.removeItem("IdHash")
+  localStorage.removeItem("Type")
+  localStorage.removeItem("Art")
 }
 
 /****************************************************
@@ -127,7 +127,7 @@ async function grabData(tokenId) {
  ***************************************************/
 function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update library source
-  localStorage.setItem("newSrc", predefinedLibraries[codeLib])
+  localStorage.setItem("Src", predefinedLibraries[codeLib])
 
   // Update tokenIdHash content
   const tknData =
@@ -135,22 +135,22 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] };`
       : `{ tokenId: "${tokenId}", hash: "${hash}" };`
 
-  localStorage.setItem("newIdHash", `let tokenData = ${tknData}`)
+  localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
 
-  // Update artCode content
+  // Update artCode
   let process = ""
   if (codeLib === "processing") {
     process = "application/processing"
   }
-  localStorage.setItem("newType", process)
-  localStorage.setItem("newArt", script)
+  localStorage.setItem("Type", process)
+  localStorage.setItem("Art", script)
 
   // Update info content
-  let Id =
+  let id =
     tokenId < 1000000
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, ""))
-  info.innerText = `${detail[0]} #${Id} / ${detail[1]}`
+  info.innerText = `${detail[0]} #${id} / ${detail[1]}`
   tokenIdInput.placeholder = `${tokenId} `
   resolveENS(owner, detail)
   injectFrame()
@@ -163,7 +163,7 @@ async function resolveENS(owner, detail) {
     if (ensName) {
       panel.innerText = `${detail[2]}\n\nOwned by: ${ensName}`
     } else {
-      panel.innerHTML = `${detail[2]}<br><br>Owned by: <p style="font-size: 0.8em">${owner}</p>`
+      panel.innerHTML = `${detail[2]}<br><br>Owned by: <span style="font-size: 0.8em">${owner}</span>`
     }
   } catch (error) {
     console.log("Error getting ENS name:", error)
@@ -178,10 +178,10 @@ async function injectFrame() {
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
 
   try {
-    const frameSrc = localStorage.getItem("newSrc")
-    const frameIdHash = localStorage.getItem("newIdHash")
-    const frameType = localStorage.getItem("newType")
-    const frameArt = localStorage.getItem("newArt")
+    const frameSrc = localStorage.getItem("Src")
+    const frameIdHash = localStorage.getItem("IdHash")
+    const frameType = localStorage.getItem("Type")
+    const frameArt = localStorage.getItem("Art")
 
     // Generate the content dynamically
     let dynamicContent
@@ -226,7 +226,6 @@ async function injectFrame() {
           </html>`
     }
 
-    console.log(dynamicContent)
     // Write the generated content to the iframe
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
@@ -247,10 +246,10 @@ window.addEventListener("DOMContentLoaded", () => {
     update(...Object.values(storedData))
   }
   tokenIdInput.focus()
-  console.log("lib source:", localStorage.getItem("newSrc"))
-  console.log("Id an Hash:", localStorage.getItem("newIdHash"))
-  console.log("code type:", localStorage.getItem("newType"))
-  console.log("code:", localStorage.getItem("newArt"))
+  console.log("lib source:", localStorage.getItem("Src"))
+  console.log("Id an Hash:", localStorage.getItem("IdHash"))
+  console.log("code type:", localStorage.getItem("Type"))
+  console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
 })
 

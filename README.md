@@ -11,5 +11,5 @@ View information about each one and save a HTML file of your favorites.
 - Enter/Paste a token Id and press `enter`, or click (⌘) to get a random one.
 - Click (name/artist) to view detailed information.
 - Click (>) or (<) to navigate to next or previous.
-- Click (☆) to save a HTML file.
+- Click (★) to save a HTML file.
 - Press `esc` to clear the page.

@@ -53,6 +53,7 @@ body {
 .info {
   color: #a2a2a2;
   cursor: pointer;
+  padding: 5px;
   transition: transform 0.3s ease;
 }
 
@@ -176,6 +177,7 @@ input {
 
 @media (max-width: 600px) {
   .detail-container {
+    justify-content: center;
     height: 60px;
   }
 
@@ -188,6 +190,6 @@ input {
   .data-panel {
     max-width: 100%;
     max-height: 60%;
-    bottom: 60px;
+    bottom: 57px;
   }
 }
