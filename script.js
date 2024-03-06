@@ -378,7 +378,14 @@ fetch("data.txt")
  *          FUNCTION TO SAVE THE OUTPUT
  * *************************************************/
 async function saveContentAsFile(content, filename) {
-  const userFilename = prompt("Enter a filename:", filename)
+  let id =
+    storedData.tokenId < 1000000
+      ? storedData.tokenId
+      : parseInt(storedData.tokenId.toString().slice(-6).replace(/^0+/, "")) ||
+        0
+  const defaultname = `${storedData.detail[0]}#${id}.html`
+
+  const userFilename = prompt("Enter a filename:", filename || defaultname)
 
   if (!userFilename) {
     return
@@ -409,7 +416,7 @@ async function saveContentAsFile(content, filename) {
 function handleSaveButtonClick() {
   const dynamicContent =
     document.getElementById("frame").contentDocument.documentElement.outerHTML
-  saveContentAsFile(dynamicContent, "block.html")
+  saveContentAsFile(dynamicContent)
 }
 
 // Attach the handleSaveButtonClick
