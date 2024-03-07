@@ -30,29 +30,21 @@ const contracts = [
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
-const p5lib = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"
-const threelib =
-  "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"
-const processinglib =
-  "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js"
-const tonelib = "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js"
-const paperlib =
-  "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js"
-const regllib = "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js"
-const zdoglib = "https://unpkg.com/zdog@1/dist/zdog.dist.min.js"
-
 const predefinedLibraries = {
-  p5js: p5lib,
-  p5: p5lib,
-  threejs: threelib,
-  three: threelib,
-  tonejs: tonelib,
-  tone: tonelib,
-  paperjs: paperlib,
-  paper: paperlib,
-  processing: processinglib,
-  regl: regllib,
-  zdog: zdoglib,
+  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+  three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+  tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
+  tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
+  paperjs:
+    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  paper:
+    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  processing:
+    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
+  regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
   js: "",
   svg: "",
   custom: "",
@@ -135,6 +127,7 @@ async function grabData(tokenId) {
 /****************************************************
  *              FUNCTIONS TO UPDATE UI
  ***************************************************/
+let id
 function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update library source
   localStorage.setItem("Src", predefinedLibraries[codeLib])
@@ -156,7 +149,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   localStorage.setItem("Art", script)
 
   // Update info content
-  let id =
+  id =
     tokenId < 1000000
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
@@ -244,7 +237,7 @@ async function injectFrame() {
           </body>
           </html>`
     }
-    console.log(dynamicContent)
+    // console.log(dynamicContent)
     // Write the generated content to the iframe
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
@@ -265,10 +258,10 @@ window.addEventListener("DOMContentLoaded", () => {
     update(...Object.values(storedData))
   }
   tokenIdInput.focus()
-  console.log("lib source:", localStorage.getItem("Src"))
-  console.log("Id an Hash:", localStorage.getItem("IdHash"))
+  // console.log("lib source:", localStorage.getItem("Src"))
+  // console.log("Id an Hash:", localStorage.getItem("IdHash"))
   console.log("code type:", localStorage.getItem("Type"))
-  console.log("Art script:", localStorage.getItem("Art"))
+  // console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
 })
 
@@ -281,13 +274,9 @@ rpcUrlInput.addEventListener("keypress", (event) => {
 })
 
 window.addEventListener("load", () => {
-  if (!rpcUrl) {
-    rpcUrlInput.style.display = "block"
-    infoBox.style.display = "none"
-  }
-  if (rpcUrl) {
-    rpcUrlInput.style.display = "none"
-  }
+  rpcUrl
+    ? (rpcUrlInput.style.display = "none")
+    : ((rpcUrlInput.style.display = "block"), (infoBox.style.display = "none"))
 })
 
 tokenIdInput.addEventListener("keypress", (event) => {
@@ -308,7 +297,9 @@ tokenIdInput.addEventListener("keypress", (event) => {
     "Enter",
   ]
   if (event.key === "Enter") {
-    grabData(tokenIdInput.value)
+    tokenIdInput.value.trim() === ""
+      ? fetchAndProcessRandomLine()
+      : grabData(tokenIdInput.value)
   }
 
   if (!allowedKeys.includes(event.key)) {
@@ -325,17 +316,19 @@ document.addEventListener("keypress", (event) => {
 
 info.addEventListener("click", () => {
   panel.classList.toggle("active")
-  if (dataPanel.classList.contains("active")) {
-    dataPanel.classList.remove("active")
-  }
+  tokenIdInput.focus()
+  dataPanel.classList.contains("active")
+    ? dataPanel.classList.remove("active")
+    : null
 })
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     dataPanel.classList.toggle("active")
-  }
-  if (panel.classList.contains("active")) {
-    panel.classList.remove("active")
+    dataPanel.classList.contains("active")
+      ? search.focus()
+      : tokenIdInput.focus()
+    panel.classList.contains("active") ? panel.classList.remove("active") : null
   }
 })
 
@@ -362,7 +355,7 @@ fetch("data.txt")
     }
 
     // Event listener for search field
-    search.addEventListener("input", function (event) {
+    search.addEventListener("input", (event) => {
       const query = event.target.value.trim()
       filterLines(query)
     })
@@ -378,13 +371,7 @@ fetch("data.txt")
  *          FUNCTION TO SAVE THE OUTPUT
  * *************************************************/
 async function saveContentAsFile(content, filename) {
-  let id =
-    storedData.tokenId < 1000000
-      ? storedData.tokenId
-      : parseInt(storedData.tokenId.toString().slice(-6).replace(/^0+/, "")) ||
-        0
-  const defaultname = `${storedData.detail[0]}#${id}.html`
-
+  const defaultname = `${storedData.detail[0]} #${id}.html`
   const userFilename = prompt("Enter a filename:", filename || defaultname)
 
   if (!userFilename) {
@@ -427,7 +414,7 @@ document
 /***************************************************
  *        FUNCTIONS TO GET RANDOM TOKEN ID
  **************************************************/
-// Function to process a line and extract a constructed number
+// Function to process a line and extract a number
 function processLine(line) {
   const regex = /^(\d+).*?(\d+)\s*minted/
   const matches = line.match(regex)
@@ -436,7 +423,7 @@ function processLine(line) {
   // Extract numbers from the regex matches
   const firstNumber = parseInt(matches[1])
   const secondNumber = parseInt(matches[2])
-  // Generate a random second number based on the second number extracted
+  // Generate a random second number
   const randomSecondNumber = Math.floor(Math.random() * (secondNumber - 1))
 
   return (firstNumber * 1000000 + randomSecondNumber).toString()
@@ -510,14 +497,14 @@ async function fetchBlocks() {
   for (let i = 0; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
-      const _detail = await contracts[n].projectDetails(i.toString())
+      const detail = await contracts[n].projectDetails(i.toString())
       const tkns =
         n === 2
           ? await contracts[n].projectStateData(i)
           : await contracts[n].projectTokenInfo(i)
 
       if (tkns.invocations !== BigInt(0)) {
-        All += `${i} - ${_detail[0]} / ${_detail[1]} - ${tkns.invocations} minted\n`
+        All += `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         consecutiveNoTokens = 0
       } else {
         console.log(`No tokens found for project ${i}`)
@@ -534,5 +521,4 @@ async function fetchBlocks() {
   }
   console.log(All)
 }
-
 // fetchBlocks()

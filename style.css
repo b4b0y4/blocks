@@ -27,7 +27,7 @@ body {
   border: none;
 }
 
-.detail-container {
+.interaction-container {
   height: 30px;
   width: 100%;
   display: flex;
@@ -40,7 +40,7 @@ body {
 
 .rpc-url {
   display: none;
-  width: 200px;
+  width: 250px;
   margin-right: 15px;
 }
 
@@ -48,6 +48,7 @@ body {
   display: flex;
   justify-content: end;
   align-items: center;
+  margin-right: 10px;
 }
 
 .info {
@@ -90,10 +91,6 @@ input {
   outline: none;
   cursor: pointer;
   transition: transform 0.3s ease;
-}
-
-.random {
-  margin-right: 10px;
 }
 
 .save:hover,
@@ -176,7 +173,7 @@ input {
 }
 
 @media (max-width: 600px) {
-  .detail-container {
+  .interaction-container {
     justify-content: center;
     height: 60px;
   }
@@ -184,6 +181,7 @@ input {
   .info-box {
     justify-content: center;
     flex-wrap: wrap;
+    margin-right: 0;
   }
 
   .panel,
