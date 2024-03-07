@@ -16,6 +16,7 @@ const info = document.getElementById("info")
 const list = document.getElementById("listButton")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
+const panelContent = document.getElementById("panelContent")
 const dataContent = document.getElementById("dataContent")
 const search = document.getElementById("searchInput")
 
@@ -167,9 +168,9 @@ async function resolveENS(owner, detail) {
   try {
     const ensName = await provider.lookupAddress(owner)
     if (ensName) {
-      panel.innerText = `${detail[2]}\n\nOwned by: ${ensName}`
+      panelContent.innerText = `${detail[2]}\n\nOwned by: ${ensName}`
     } else {
-      panel.innerHTML = `${detail[2]}<br><br>Owned by: <span style="font-size: 0.8em">${owner}</span>`
+      panelContent.innerHTML = `${detail[2]}<br><br>Owned by: <span style="font-size: 0.8em">${owner}</span>`
     }
   } catch (error) {
     console.log("Error getting ENS name:", error)
@@ -266,6 +267,8 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
+  console.log("type of detail:", storedData.detail[2])
+  console.log("type of owner:", typeof owner)
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
@@ -492,7 +495,7 @@ document
   .addEventListener("click", incrementTokenId)
 
 document.addEventListener("keypress", (event) => {
-  event.key === ">" ? incrementTokenId() : nul
+  event.key === ">" ? incrementTokenId() : null
 })
 
 document
