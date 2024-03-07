@@ -156,7 +156,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
   info.innerText = `${detail[0]} #${id} / ${detail[1]}`
-  tokenIdInput.placeholder = `${tokenId} `
+  tokenIdInput.placeholder = `${tokenId}`
   resolveENS(owner, detail)
   injectFrame()
 }
