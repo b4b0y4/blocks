@@ -175,6 +175,10 @@ input {
 
 @media (max-width: 600px) {
   .container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: calc(100vh - constant(safe-area-inset-bottom));
   }
 
