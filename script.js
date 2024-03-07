@@ -13,6 +13,7 @@ const rpcUrlInput = document.getElementById("rpcUrl")
 const tokenIdInput = document.getElementById("tokenId")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
+const list = document.getElementById("listButton")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
 const dataContent = document.getElementById("dataContent")
@@ -303,7 +304,6 @@ tokenIdInput.addEventListener("keypress", (event) => {
       ? fetchAndProcessRandomLine()
       : grabData(tokenIdInput.value)
   }
-
   if (!allowedKeys.includes(event.key)) {
     event.preventDefault()
   }
@@ -318,7 +318,6 @@ document.addEventListener("keypress", (event) => {
 
 info.addEventListener("click", () => {
   panel.classList.toggle("active")
-  tokenIdInput.focus()
   dataPanel.classList.contains("active")
     ? dataPanel.classList.remove("active")
     : null
@@ -326,12 +325,18 @@ info.addEventListener("click", () => {
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
+    event.preventDefault()
     dataPanel.classList.toggle("active")
     dataPanel.classList.contains("active")
       ? search.focus()
       : tokenIdInput.focus()
     panel.classList.contains("active") ? panel.classList.remove("active") : null
   }
+})
+
+list.addEventListener("click", () => {
+  dataPanel.classList.toggle("active")
+  panel.classList.contains("active") ? panel.classList.remove("active") : null
 })
 
 /****************************************************
@@ -486,9 +491,17 @@ document
   .getElementById("incrementButton")
   .addEventListener("click", incrementTokenId)
 
+document.addEventListener("keypress", (event) => {
+  event.key === ">" ? incrementTokenId() : nul
+})
+
 document
   .getElementById("decrementButton")
   .addEventListener("click", decrementTokenId)
+
+document.addEventListener("keypress", (event) => {
+  event.key === "<" ? decrementTokenId() : null
+})
 
 /****************************************************
  *         FUNCTION TO UPDATE ART BLOCKS LIST
