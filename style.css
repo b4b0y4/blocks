@@ -20,6 +20,7 @@ body {
 
 .frame-container {
   height: 100%;
+  width: 100%;
 }
 
 .frame {
@@ -114,7 +115,7 @@ input {
   align-items: center;
   position: absolute;
   bottom: 38px;
-  right: 0;
+  right: -450px;
   max-width: 450px;
   max-height: 500px;
   background-color: #171717;
@@ -138,6 +139,7 @@ input {
 .data-panel.active {
   opacity: 0.95;
   visibility: visible;
+  right: 0;
 }
 
 #panelContent {
@@ -198,7 +200,7 @@ input {
   }
 
   input {
-    font-size: 1.1em;
+    font-size: 1em;
     width: 130px;
   }
 

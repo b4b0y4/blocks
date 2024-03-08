@@ -169,9 +169,9 @@ async function resolveENS(owner, detail) {
   try {
     const ensName = await provider.lookupAddress(owner)
     if (ensName) {
-      panelContent.innerText = `${detail[2]}\n\nOwned by: ${ensName}`
+      panelContent.innerText = `${detail[2]}\n\n${detail[3]}\n\nOwned by: ${ensName}`
     } else {
-      panelContent.innerHTML = `${detail[2]}<br><br>Owned by: <span style="font-size: 0.8em">${owner}</span>`
+      panelContent.innerHTML = `${detail[2]}<br><br>${detail[3]}<br><br>Owned by: <span style="font-size: 0.8em">${owner}</span>`
     }
   } catch (error) {
     console.log("Error getting ENS name:", error)
