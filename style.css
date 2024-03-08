@@ -42,7 +42,7 @@ body {
 .rpc-url {
   display: none;
   width: 250px;
-  margin-right: 15px;
+  margin-right: 10px;
 }
 
 .info-box {
@@ -50,7 +50,7 @@ body {
   justify-content: end;
   align-items: center;
   height: 100%;
-  margin-right: 15px;
+  margin-right: 10px;
 }
 
 .info {
@@ -121,6 +121,7 @@ input {
   color: #b2b2b2;
   padding: 10px;
   border-radius: 10px;
+  box-shadow: -5px -5px 10px rgba(0, 0, 0, 0.6);
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 200;
@@ -164,6 +165,18 @@ input {
 }
 
 @media (max-width: 600px) {
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 50;
+    display: none;
+  }
+
   .container {
     position: fixed;
     top: 0;

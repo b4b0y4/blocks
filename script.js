@@ -14,6 +14,7 @@ const tokenIdInput = document.getElementById("tokenId")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
 const list = document.getElementById("listButton")
+const overlay = document.querySelector(".overlay")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
 const panelContent = document.getElementById("panelContent")
@@ -218,6 +219,7 @@ async function injectFrame() {
       dynamicContent = `<html>
           <head>
           <meta name='viewport' content='width=device-width, initial-scale=1',  maximum-scale=1">
+          <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
           ${frameStyle}
@@ -231,6 +233,7 @@ async function injectFrame() {
       dynamicContent = `<html>
           <head>
           <meta name='viewport' content='width=device-width, initial-scale=1',  maximum-scale=1">
+          <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
           ${frameStyle}
@@ -267,8 +270,6 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
-  console.log("type of detail:", storedData.detail[2])
-  console.log("type of owner:", typeof owner)
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
@@ -321,9 +322,11 @@ document.addEventListener("keypress", (event) => {
 
 info.addEventListener("click", () => {
   panel.classList.toggle("active")
+  overlay.style.display = "block"
   dataPanel.classList.contains("active")
     ? dataPanel.classList.remove("active")
     : null
+  !panel.classList.contains("active") ? (overlay.style.display = "none") : null
 })
 
 document.addEventListener("keypress", (event) => {
@@ -339,7 +342,11 @@ document.addEventListener("keypress", (event) => {
 
 list.addEventListener("click", () => {
   dataPanel.classList.toggle("active")
+  overlay.style.display = "block"
   panel.classList.contains("active") ? panel.classList.remove("active") : null
+  !dataPanel.classList.contains("active")
+    ? (overlay.style.display = "none")
+    : null
 })
 
 /****************************************************
