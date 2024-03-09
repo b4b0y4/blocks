@@ -127,6 +127,7 @@ input {
   overflow-x: hidden;
   z-index: 75;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -137,6 +138,7 @@ input {
 .panel.active,
 .data-panel.active {
   opacity: 0.9;
+  pointer-events: auto;
 }
 
 #panelContent {
