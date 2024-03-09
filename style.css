@@ -179,14 +179,14 @@ input {
     display: none;
   }
 
-  .container {
+  /* .container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     overflow-y: auto;
-  }
+  } */
 
   .interaction-container {
     justify-content: center;
