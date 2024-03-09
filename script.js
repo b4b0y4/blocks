@@ -323,36 +323,40 @@ document.addEventListener("keypress", (event) => {
 info.addEventListener("click", () => {
   panel.classList.toggle("active")
   overlay.style.display = "block"
-  !dataPanel.classList.contains("active")
-    ? (overlay.style.display = "none")
-    : null
+
   dataPanel.classList.contains("active")
     ? dataPanel.classList.remove("active")
     : null
+
+  !panel.classList.contains("active") ? (overlay.style.display = "none") : null
 })
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     event.preventDefault()
     dataPanel.classList.toggle("active")
-    !dataPanel.classList.contains("active")
-      ? (overlay.style.display = "none")
-      : null
 
     dataPanel.classList.contains("active")
       ? search.focus()
       : tokenIdInput.focus()
+
     panel.classList.contains("active") ? panel.classList.remove("active") : null
+
+    !dataPanel.classList.contains("active")
+      ? (overlay.style.display = "none")
+      : null
   }
 })
 
 list.addEventListener("click", () => {
   dataPanel.classList.toggle("active")
   overlay.style.display = "block"
+
+  panel.classList.contains("active") ? panel.classList.remove("active") : null
+
   !dataPanel.classList.contains("active")
     ? (overlay.style.display = "none")
     : null
-  panel.classList.contains("active") ? panel.classList.remove("active") : null
 })
 
 /****************************************************
