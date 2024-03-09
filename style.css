@@ -115,7 +115,7 @@ input {
   align-items: center;
   position: absolute;
   bottom: 38px;
-  right: -450px;
+  right: 0;
   max-width: 450px;
   max-height: 500px;
   background-color: #171717;
@@ -125,9 +125,9 @@ input {
   box-shadow: -5px -5px 10px rgba(0, 0, 0, 0.6);
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 200;
+  z-index: 75;
   opacity: 0;
-  visibility: hidden;
+  pointer-events: none;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -138,8 +138,7 @@ input {
 .panel.active,
 .data-panel.active {
   opacity: 0.95;
-  visibility: visible;
-  right: 0;
+  pointer-events: auto;
 }
 
 #panelContent {
@@ -179,14 +178,14 @@ input {
     display: none;
   }
 
-  /* .container {
+  .container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     overflow-y: auto;
-  } */
+  }
 
   .interaction-container {
     justify-content: center;
@@ -217,7 +216,7 @@ input {
   .data-panel {
     max-width: 100%;
     max-height: 60%;
-    bottom: 75px;
     left: 0;
+    bottom: 75px;
   }
 }
