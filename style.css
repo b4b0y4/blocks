@@ -110,7 +110,7 @@ input {
 
 .panel,
 .data-panel {
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   position: absolute;
@@ -126,7 +126,8 @@ input {
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 75;
-  opacity: 0.9;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .data-panel {
@@ -135,7 +136,7 @@ input {
 
 .panel.active,
 .data-panel.active {
-  display: flex;
+  opacity: 0.9;
 }
 
 #panelContent {
