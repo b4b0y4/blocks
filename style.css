@@ -123,7 +123,7 @@ input {
   position: absolute;
   bottom: 38px;
   right: 0;
-  max-width: 450px;
+  max-width: 400px;
   max-height: 500px;
   background-color: #171717;
   color: #b2b2b2;
@@ -165,8 +165,22 @@ input {
   margin-top: 5px;
 }
 
+.magnify {
+  border: 2px solid #b2b2b2;
+  border-right: none;
+  border-radius: 5px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 4px;
+  margin-right: -2px;
+}
+
 .search {
   text-align: start;
+  border: 2px solid #b2b2b2;
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   padding: 5px;
   width: 100%;
   margin: 0;
@@ -210,6 +224,10 @@ input {
     width: 130px;
   }
 
+  .magnify {
+    font-size: 1.3em;
+  }
+
   .save,
   .random,
   .list,
@@ -223,6 +241,6 @@ input {
     max-width: 100%;
     max-height: 60%;
     left: 0;
-    bottom: 10%;
+    bottom: 9%;
   }
 }
