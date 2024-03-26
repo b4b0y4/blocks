@@ -294,13 +294,12 @@ document.addEventListener("keypress", (event) => {
 
 info.addEventListener("click", () => {
   panel.classList.toggle("active")
-  overlay.style.display = "block"
-
-  dataPanel.classList.contains("active")
-    ? dataPanel.classList.remove("active")
-    : null
-
-  !panel.classList.contains("active") ? (overlay.style.display = "none") : null
+  if (panel.classList.contains("active")) {
+    dataPanel.classList.remove("active")
+    overlay.style.display = "block"
+  } else {
+    overlay.style.display = "none"
+  }
 })
 
 document.addEventListener("keypress", (event) => {
@@ -313,9 +312,9 @@ document.addEventListener("keypress", (event) => {
 search.addEventListener("focus", togglePanel)
 
 function togglePanel() {
+  search.focus()
   dataPanel.classList.toggle("active")
   if (dataPanel.classList.contains("active")) {
-    search.focus()
     panel.classList.remove("active")
     overlay.style.display = "block"
   } else {
@@ -357,11 +356,10 @@ fetch("data.txt")
       const isNumber = /^\d+$/.test(searchQuery)
       if (isNumber) {
         grabData(searchQuery)
-        return // Exit early if searchQuery is only a number
+        return
       }
 
       const panelNumber = parseInt(panelContent.match(/\d+/)[0])
-
       const searchNumber = parseInt(searchQuery.match(/\d+/)[0])
 
       let tokenId
@@ -382,7 +380,7 @@ fetch("data.txt")
       filterLines(query)
     })
 
-    search.addEventListener("keydown", (event) => {
+    search.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
         const query = search.value.trim()
         search.value.trim() === ""
