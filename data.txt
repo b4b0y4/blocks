@@ -180,7 +180,7 @@
 183 - Quarantine / Owen Moore - 128 minted
 184 - Swing / Eltono - 310 minted
 185 - little boxes on the hillsides, child / LIA - 777 minted
-187 - THE SOURCE CoDE / Ofir Liberman - 179 minted
+187 - THE SOURCE CoDE / Ofir Liberman - 180 minted
 188 - Blockbob Rorschach / eBoy - 1024 minted
 189 - CryptoNewYorker / Qian Qian - 1000 minted
 190 - Mental pathways / fabianospeziari x donnoh - 128 minted
@@ -194,7 +194,7 @@
 198 - Coquina / Jacob Gold - 387 minted
 199 - Prismatic / Eliya Stein - 218 minted
 200 - Saturazione / Stefano Contiero - 111 minted
-201 - 24 Heures / Alexis André - 129 minted
+201 - 24 Heures / Alexis André - 136 minted
 202 - Beauty of Skateboarding / JEANVASCRIPT - 360 minted
 203 - Scoundrels / Kristy Glas - 2048 minted
 204 - Edifice / Ben Kovach - 976 minted
@@ -213,7 +213,7 @@
 217 - Paths / Darien Brito - 523 minted
 218 - Squares and Triangles / Maksim Hapeyenka - 80 minted
 219 - Time Atlas 🌐 / Paolo Tonon - 412 minted
-220 - geVIENNAratives / CryptoWiener - 1729 minted
+220 - geVIENNAratives / CryptoWiener - 1742 minted
 221 - Spiromorphs / SAB - 200 minted
 222 - Pieces of Me / r4v3n - 222 minted
 223 - Dream Engine / REMO x DCsan - 474 minted
@@ -394,7 +394,7 @@
 407 - The Harvest / Per Kristian Stoveland - 400 minted
 408 - NimTeens / Bryan Brinkman - 400 minted
 409 - Tout tracé / Florian Zumbrunn - 300 minted
-410 - Jenim / Orr Kislev & Alona Rodeh - 134 minted
+410 - Jenim / Orr Kislev & Alona Rodeh - 135 minted
 411 - Symbol 1 / Emily Weil - 153 minted
 412 - Cerebellum / Laya Mathikshara & Santiago - 300 minted
 413 - Longing / phenomena - 247 minted
@@ -429,7 +429,7 @@
 442 - Systems Madness / Claudia Hart and Andrew Blanton - 42 minted
 443 - Dendro / Vebjørn Isaksen - 275 minted
 444 - Meaningless / Amy Goodchild - 270 minted
-445 - Assembly / Tezumie - 83 minted
+445 - Assembly / Tezumie - 84 minted
 446 - Invisibles / Ismahelio - 200 minted
 447 - Semblance / rahul iyer - 185 minted
 448 - Bright / Heeey - 360 minted
@@ -447,19 +447,19 @@
 460 - Exstasis / Grant Oesterling - 111 minted
 461 - Sonoran Roadways / Jake Rockland - 54 minted
 462 - Gumbo / Mathias Isaksen - 400 minted
-463 - l.o / Night Sea - 172 minted
+463 - l.o / Night Sea - 174 minted
 464 - Kubikino / Carolina Melis - 320 minted
-465 - Escherly Seeds / Martijn Cohen - 24 minted
+465 - Escherly Seeds / Martijn Cohen - 27 minted
 466 - Torrent / Jeres - 300 minted
-467 - Glasshouse INAT / Aleksandra Jovanić - 16 minted
+467 - Glasshouse INAT / Aleksandra Jovanić - 17 minted
 468 - Woman, Life, Freedom / Armaghan Fatemi - 35 minted
 469 - Twos / Emily Edelman - 64 minted
 470 - Forecast / Manuel Larino - 365 minted
 471 - This Is Not A Rock / Nicole Vella - 350 minted
 472 - because unless until / ixnayokay - 650 minted
-473 - Fluiroso / Sebastián Brocher (CryptoArte) - 93 minted
+473 - Fluiroso / Sebastián Brocher (CryptoArte) - 101 minted
 474 - Lumina / DistCollective - 78 minted
-475 - Recollection / Robert Hodgin - 163 minted
+475 - Recollection / Robert Hodgin - 166 minted
 476 - Life and Love and Nothing / Nat Sarkissian - 200 minted
 477 - siempre en mí, siempre en ti / Marcelo Soria-Rodríguez - 200 minted
 478 - Lucky Clover / Sputniko! - 38 minted

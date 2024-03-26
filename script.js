@@ -218,7 +218,7 @@ async function injectFrame() {
     } else if (frameType) {
       dynamicContent = `<html>
           <head>
-          <meta name='viewport' content='width=device-width, initial-scale=1',  maximum-scale=1">
+          <meta name='viewport' content='width=device-width, initial-scale=1', minimum-scale=1.0, maximum-scale=1, user-scalable=no">
           <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
@@ -232,7 +232,7 @@ async function injectFrame() {
     } else {
       dynamicContent = `<html>
           <head>
-          <meta name='viewport' content='width=device-width, initial-scale=1',  maximum-scale=1">
+          <meta name='viewport' content='width=device-width, initial-scale=1', minimum-scale=1.0, maximum-scale=1, user-scalable=no">
           <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
