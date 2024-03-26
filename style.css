@@ -139,29 +139,25 @@ body {
   justify-content: center;
   align-items: center;
   position: sticky;
-  bottom: 0;
-  width: 100%;
-  padding: 10px 0;
+  font-size: 0.9em;
 }
 
 .search-icon {
   position: absolute;
-  font-size: 0.8em;
   top: 50%;
-  left: 5px;
+  left: 6px;
   transform: translateY(-50%);
-  color: #a2a2a2;
+  color: #757575;
 }
 
 .search-input {
   border: 1.5px solid #b2b2b2;
-  font-size: 0.9em;
   background-color: #171717;
   color: #a2a2a2;
   width: 100px;
   text-align: end;
   border-radius: 5px;
-  padding: 2px 5px;
+  padding: 3px 5px;
   outline: none;
 }
 
@@ -198,18 +194,16 @@ body {
   }
 
   .search-icon {
-    font-size: 0.9em;
-    left: 10px;
+    left: 8px;
   }
 
   .search-input {
-    padding: 5px 10px;
+    padding: 4px 8px;
     border: 2px solid #b2b2b2;
   }
 
   .save,
   .random,
-  .list,
   .previous,
   .next {
     font-size: 1.3em;
