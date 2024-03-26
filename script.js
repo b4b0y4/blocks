@@ -13,7 +13,6 @@ const rpcUrlInput = document.getElementById("rpcUrl")
 const tokenIdInput = document.getElementById("tokenId")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
-const list = document.getElementById("listButton")
 const overlay = document.querySelector(".overlay")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
@@ -159,7 +158,8 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
   info.innerText = `${detail[0]} #${id} / ${detail[1]}`
-  tokenIdInput.placeholder = `${tokenId}`
+  // tokenIdInput.placeholder = `${tokenId}`
+  search.placeholder = `${tokenId}`
   resolveENS(owner, detail)
   injectFrame()
 }
@@ -264,7 +264,6 @@ window.addEventListener("DOMContentLoaded", () => {
   if (storedData) {
     update(...Object.values(storedData))
   }
-  tokenIdInput.focus()
   // console.log("lib source:", localStorage.getItem("Src"))
   // console.log("Id an Hash:", localStorage.getItem("IdHash"))
   console.log("code type:", localStorage.getItem("Type"))
@@ -284,33 +283,6 @@ window.addEventListener("load", () => {
   rpcUrl
     ? (rpcUrlInput.style.display = "none")
     : ((rpcUrlInput.style.display = "block"), (infoBox.style.display = "none"))
-})
-
-tokenIdInput.addEventListener("keypress", (event) => {
-  const allowedKeys = [
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "ArrowLeft",
-    "ArrowRight",
-    "Delete",
-    "Enter",
-  ]
-  if (event.key === "Enter") {
-    tokenIdInput.value.trim() === ""
-      ? fetchAndProcessRandomLine()
-      : grabData(tokenIdInput.value)
-  }
-  if (!allowedKeys.includes(event.key)) {
-    event.preventDefault()
-  }
 })
 
 document.addEventListener("keypress", (event) => {
@@ -334,29 +306,27 @@ info.addEventListener("click", () => {
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     event.preventDefault()
-    dataPanel.classList.toggle("active")
-
-    dataPanel.classList.contains("active")
-      ? search.focus()
-      : tokenIdInput.focus()
-
-    panel.classList.contains("active") ? panel.classList.remove("active") : null
-
-    !dataPanel.classList.contains("active")
-      ? (overlay.style.display = "none")
-      : null
+    togglePanel()
   }
 })
 
-list.addEventListener("click", () => {
+search.addEventListener("focus", togglePanel)
+
+function togglePanel() {
   dataPanel.classList.toggle("active")
-  overlay.style.display = "block"
+  if (dataPanel.classList.contains("active")) {
+    search.focus()
+    panel.classList.remove("active")
+    overlay.style.display = "block"
+  } else {
+    overlay.style.display = "none"
+  }
+}
 
-  panel.classList.contains("active") ? panel.classList.remove("active") : null
-
-  !dataPanel.classList.contains("active")
-    ? (overlay.style.display = "none")
-    : null
+overlay.addEventListener("click", () => {
+  dataPanel.classList.remove("active")
+  panel.classList.remove("active")
+  overlay.style.display = "none"
 })
 
 /****************************************************
@@ -381,10 +351,44 @@ fetch("data.txt")
       displayLines(filteredLines)
     }
 
+    // Function to extract token ID
+    function getTokenId(panelContent, searchQuery) {
+      // Check if the search query is only a number
+      const isNumber = /^\d+$/.test(searchQuery)
+      if (isNumber) {
+        grabData(searchQuery)
+        return // Exit early if searchQuery is only a number
+      }
+
+      const panelNumber = parseInt(panelContent.match(/\d+/)[0])
+
+      const searchNumber = parseInt(searchQuery.match(/\d+/)[0])
+
+      let tokenId
+      if (panelNumber === 0) {
+        tokenId = searchNumber.toString()
+      } else {
+        tokenId = (panelNumber * 1000000 + searchNumber)
+          .toString()
+          .padStart(6, "0")
+      }
+
+      grabData(tokenId)
+    }
+
     // Event listener for search field
     search.addEventListener("input", (event) => {
-      const query = event.target.value.trim()
+      const query = event.target.value.trim().split("#")[0].trim()
       filterLines(query)
+    })
+
+    search.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        const query = search.value.trim()
+        search.value.trim() === ""
+          ? fetchAndProcessRandomLine()
+          : getTokenId(dataContent.innerHTML, query)
+      }
     })
 
     // Display all lines initially
@@ -528,7 +532,7 @@ document.addEventListener("keypress", (event) => {
  * *************************************************/
 async function fetchBlocks() {
   let All = ""
-  for (let i = 488; i < 1000; i++) {
+  for (let i = 0; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const detail = await contracts[n].projectDetails(i.toString())

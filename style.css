@@ -70,21 +70,8 @@ body {
   align-items: center;
 }
 
-input {
-  font-size: 0.9em;
-  background-color: #171717;
-  color: #a2a2a2;
-  width: 100px;
-  text-align: end;
-  border: 1.5px solid #a2a2a2;
-  border-radius: 5px;
-  padding: 2px 5px;
-  outline: none;
-}
-
 .save,
 .random,
-.list,
 .previous,
 .next {
   background-color: transparent;
@@ -108,7 +95,6 @@ input {
 
 .save:hover,
 .random:hover,
-.list:hover,
 .previous:hover,
 .next:hover {
   transform: scale(1.2);
@@ -120,25 +106,21 @@ input {
   flex-direction: column;
   align-items: center;
   position: absolute;
-  bottom: 38.5px;
-  right: 0;
+  bottom: 43.5px;
+  right: 5px;
   max-width: 400px;
   max-height: 500px;
   background-color: #171717;
   color: #b2b2b2;
   padding: 10px;
   border-radius: 10px;
-  box-shadow: -4px -4px 8px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 75;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease-in-out;
-}
-
-.data-panel {
-  padding-bottom: 0;
 }
 
 .panel.active,
@@ -160,38 +142,42 @@ input {
   bottom: 0;
   width: 100%;
   padding: 10px 0;
-  background-color: #171717;
-  margin-top: 5px;
 }
 
 .search-icon {
   position: absolute;
+  font-size: 0.8em;
   top: 50%;
-  left: 10px;
+  left: 5px;
   transform: translateY(-50%);
-  color: #b2b2b2;
+  color: #a2a2a2;
 }
 
 .search-input {
-  text-align: start;
-  border: 2px solid #b2b2b2;
-  padding: 5px 5px 5px 30px;
+  border: 1.5px solid #b2b2b2;
+  font-size: 0.9em;
+  background-color: #171717;
+  color: #a2a2a2;
+  width: 100px;
+  text-align: end;
+  border-radius: 5px;
+  padding: 2px 5px;
+  outline: none;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 50;
 }
 
 @media (max-width: 600px) {
-  .overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
-    z-index: 50;
-  }
-
   .container {
     position: fixed;
     top: 0;
@@ -211,7 +197,12 @@ input {
     justify-content: space-evenly;
   }
 
-  input {
+  .search-icon {
+    font-size: 0.9em;
+    left: 10px;
+  }
+
+  .search-input {
     padding: 5px 10px;
     border: 2px solid #b2b2b2;
   }
@@ -228,6 +219,7 @@ input {
   .data-panel {
     max-width: 100%;
     max-height: 60%;
+    right: 0;
     left: 0;
     bottom: 80px;
   }
