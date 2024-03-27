@@ -10,7 +10,7 @@ import {
 
 // DOM elements
 const rpcUrlInput = document.getElementById("rpcUrl")
-const tokenIdInput = document.getElementById("tokenId")
+const frame = document.getElementById("frame")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
 const overlay = document.querySelector(".overlay")
@@ -182,7 +182,6 @@ async function resolveENS(owner, detail) {
  *        FUNCTION TO INJECT INTO IFRAME
  ***************************************************/
 async function injectFrame() {
-  const frame = document.getElementById("frame")
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
   try {
     const frameSrc = localStorage.getItem("Src")
@@ -218,7 +217,7 @@ async function injectFrame() {
     } else if (frameType) {
       dynamicContent = `<html>
           <head>
-          <meta name='viewport' content='width=device-width, initial-scale=1', minimum-scale=1.0, maximum-scale=1, user-scalable=no">
+          <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
           <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
@@ -232,7 +231,7 @@ async function injectFrame() {
     } else {
       dynamicContent = `<html>
           <head>
-          <meta name='viewport' content='width=device-width, initial-scale=1', minimum-scale=1.0, maximum-scale=1, user-scalable=no">
+          <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
           <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
           <script>${frameIdHash}</script>
