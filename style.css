@@ -7,7 +7,7 @@ body {
   min-height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #171717;
+  background-color: #141414;
 }
 
 .container {
@@ -35,7 +35,7 @@ body {
   display: flex;
   justify-content: end;
   align-items: center;
-  background-color: #171717;
+  background-color: #141414;
   z-index: 100;
   padding: 5px;
 }
@@ -57,12 +57,15 @@ body {
   color: #a2a2a2;
   margin-right: 10px;
   font-size: 1.1em;
+  padding: 5px 10px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: color 0.3s ease-in-out;
 }
 
 .info:hover {
-  transform: scale(1.02);
+  background-color: #202020;
+  color: #a2a2a2;
 }
 
 .button-container {
@@ -75,29 +78,31 @@ body {
 .previous,
 .next {
   background-color: transparent;
-  font-size: 1.2em;
+  font-size: 1.1em;
   color: #a2a2a2;
   border: none;
-  padding: 0;
-  margin: 0 10px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0 5px;
   outline: none;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: color 0.3s ease-in-out;
 }
 
 .previous {
-  margin: 0 3px 0 10px;
+  margin: 0 3px 0 5px;
 }
 
 .next {
-  margin: 0 10px 0 3px;
+  margin: 0 5px 0 3px;
 }
 
 .save:hover,
 .random:hover,
 .previous:hover,
 .next:hover {
-  transform: scale(1.2);
+  background-color: #202020;
+  color: #a2a2a2;
 }
 
 .panel,
@@ -110,8 +115,8 @@ body {
   right: 5px;
   max-width: 400px;
   max-height: 500px;
-  background-color: #171717;
-  color: #b2b2b2;
+  background-color: #141414;
+  color: #a2a2a2;
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
@@ -139,25 +144,25 @@ body {
   justify-content: center;
   align-items: center;
   position: sticky;
-  font-size: 0.9em;
 }
 
 .search-icon {
   position: absolute;
   top: 50%;
-  left: 6px;
+  left: 8px;
   transform: translateY(-50%);
-  color: #b2b2b2;
+  color: #a2a2a2;
 }
 
 .search-input {
-  border: 1.5px solid #b2b2b2;
-  background-color: #171717;
+  border: none;
+  background-color: #202020;
   color: #a2a2a2;
-  width: 100px;
+  font-size: 1em;
+  width: 120px;
   text-align: end;
   border-radius: 5px;
-  padding: 3px 5px;
+  padding: 5px;
   outline: none;
 }
 
@@ -191,22 +196,22 @@ body {
   .info-box {
     flex-direction: column;
     justify-content: space-evenly;
+    padding: 0;
   }
 
-  .search-icon {
-    left: 8px;
+  .info {
+    margin-right: 0;
   }
 
   .search-input {
-    padding: 4px 8px;
-    border: 2px solid #b2b2b2;
+    padding: 6px;
   }
 
   .save,
   .random,
   .previous,
   .next {
-    font-size: 1.3em;
+    font-size: 1.2em;
   }
 
   .panel,
