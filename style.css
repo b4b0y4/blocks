@@ -44,6 +44,13 @@ body {
   display: none;
   width: 250px;
   margin-right: 10px;
+  border: none;
+  background-color: #202020;
+  color: #a2a2a2;
+  font-size: 1em;
+  text-align: end;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .info-box {
@@ -57,7 +64,7 @@ body {
   color: #a2a2a2;
   margin-right: 10px;
   font-size: 1.1em;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 5px;
   cursor: pointer;
   transition: color 0.3s ease-in-out;
@@ -82,9 +89,8 @@ body {
   color: #a2a2a2;
   border: none;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 4px 8px;
   margin: 0 5px;
-  outline: none;
   cursor: pointer;
   transition: color 0.3s ease-in-out;
 }
@@ -102,7 +108,13 @@ body {
 .previous:hover,
 .next:hover {
   background-color: #202020;
-  color: #a2a2a2;
+}
+
+.save:focus,
+.random:focus,
+.previous:focus,
+.next:focus {
+  outline: 0.5px solid #a2a2a2;
 }
 
 .panel,
@@ -160,10 +172,14 @@ body {
   color: #a2a2a2;
   font-size: 1em;
   width: 120px;
-  text-align: end;
+  text-align: start;
   border-radius: 5px;
   padding: 5px;
-  outline: none;
+  padding-left: 30px;
+}
+
+.search-input:focus {
+  outline: 0.5px solid #a2a2a2;
 }
 
 .overlay {
@@ -205,6 +221,7 @@ body {
 
   .search-input {
     padding: 6px;
+    padding-left: 30px;
   }
 
   .save,
@@ -212,6 +229,7 @@ body {
   .previous,
   .next {
     font-size: 1.2em;
+    padding: 4.5px 9px;
   }
 
   .panel,

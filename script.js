@@ -3,9 +3,19 @@ import {
   abiV1,
   abiV2,
   abiV3,
+  abiEXPLORE,
+  abiABXPACE,
+  abiABXPACE2,
+  abiABXBM,
+  abiBM,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
+  contractAddressEXPLORE,
+  contractAddressABXPACE,
+  contractAddressABXPACE2,
+  contractAddressABXBM,
+  contractAddressBM,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -29,6 +39,11 @@ const contracts = [
   { abi: abiV1, address: contractAddressV1 },
   { abi: abiV2, address: contractAddressV2 },
   { abi: abiV3, address: contractAddressV3 },
+  { abi: abiEXPLORE, address: contractAddressEXPLORE },
+  { abi: abiABXPACE, address: contractAddressABXPACE },
+  { abi: abiABXPACE2, address: contractAddressABXPACE2 },
+  { abi: abiABXBM, address: contractAddressABXBM },
+  { abi: abiBM, address: contractAddressBM },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -49,6 +64,10 @@ const predefinedLibraries = {
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
   "a-frame":
     "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
+  babylonjs:
+    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+  babylon:
+    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   js: "",
   svg: "",
   custom: "",
@@ -56,6 +75,7 @@ const predefinedLibraries = {
 
 // Function to clear local storage
 function clearLocalStorage() {
+  localStorage.removeItem("Contract")
   localStorage.removeItem("contractData")
   localStorage.removeItem("Src")
   localStorage.removeItem("IdHash")
@@ -66,37 +86,28 @@ function clearLocalStorage() {
 /****************************************************
  *        FUNCTION TO GET DATA FROM ETHEREUM
  ***************************************************/
-async function grabData(tokenId) {
+async function grabData(tokenId, contract) {
   try {
     clearLocalStorage()
-
-    // Determine contract
-    let contract = 0
-    if (tokenId >= 3000000 && tokenId < 374000000) {
-      contract = 1
-    } else if (tokenId >= 374000000) {
-      contract = 2
-    }
-    const contractToUse = contracts[contract]
+    localStorage.setItem("Contract", contract)
 
     // Fetch contract data
     let hash = await (contract === 0
-      ? contractToUse.showTokenHashes(tokenId)
-      : contractToUse.tokenIdToHash(tokenId))
+      ? contracts[contract].showTokenHashes(tokenId)
+      : contracts[contract].tokenIdToHash(tokenId))
 
-    const projId = await contractToUse.tokenIdToProjectId(tokenId)
-    const projectInfo = await (contract === 2
-      ? contractToUse.projectScriptDetails(projId.toString())
-      : contractToUse.projectScriptInfo(projId.toString()))
+    const projId = await contracts[contract].tokenIdToProjectId(tokenId)
+    const projectInfo = await (contract === 0 ||
+    contract === 1 ||
+    contract === 4 ||
+    contract === 7
+      ? contracts[contract].projectScriptInfo(projId.toString())
+      : contracts[contract].projectScriptDetails(projId.toString()))
 
     // Construct script
     let script = ""
-    for (
-      let i = 0;
-      i < (contract === 2 ? projectInfo[2] : projectInfo[1]);
-      i++
-    ) {
-      const scrpt = await contractToUse.projectScriptByIndex(
+    for (let i = 0; i < projectInfo.scriptCount; i++) {
+      const scrpt = await contracts[contract].projectScriptByIndex(
         projId.toString(),
         i
       )
@@ -104,10 +115,10 @@ async function grabData(tokenId) {
     }
 
     // Fetch project details
-    let detail = await contractToUse.projectDetails(projId.toString())
+    let detail = await contracts[contract].projectDetails(projId.toString())
 
     // Get the owner
-    let owner = await contractToUse.ownerOf(tokenId)
+    let owner = await contracts[contract].ownerOf(tokenId)
 
     // Extract library name
     let codeLib = ""
@@ -120,7 +131,14 @@ async function grabData(tokenId) {
     // Store data in local storage
     localStorage.setItem(
       "contractData",
-      JSON.stringify({ tokenId, hash, script, detail, owner, codeLib })
+      JSON.stringify({
+        tokenId,
+        hash,
+        script,
+        detail,
+        owner,
+        codeLib,
+      })
     )
     location.reload()
   } catch (error) {
@@ -196,7 +214,7 @@ async function injectFrame() {
             min-height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #171717;
+            background-color: #141414;
           }
           canvas {
             padding: 0;
@@ -238,7 +256,7 @@ async function injectFrame() {
           ${frameStyle}
           </head>
           <body>
-          <canvas></canvas>
+          <canvas id="babylon-canvas"></canvas>
           <script>${frameArt}</script>
           </body>
           </html>`
@@ -254,15 +272,116 @@ async function injectFrame() {
 }
 
 /****************************************************
+ *       FUNCTION TO SEARCH BLOCKS DATA LIST
+ ***************************************************/
+// Fetch data from "data.txt" and display it
+fetch("data.txt")
+  .then((response) => response.text())
+  .then((data) => {
+    const lines = data.split("\n")
+
+    // Function to display lines
+    function displayLines(lines) {
+      dataContent.innerHTML = lines.join("<br>")
+    }
+
+    // Function to filter lines based on search query
+    function filterLines(query) {
+      const filteredLines = lines.filter((line) =>
+        line.toLowerCase().includes(query.toLowerCase())
+      )
+      displayLines(filteredLines)
+    }
+
+    // Function to extract token ID
+    function getTokenId(panelContent, searchQuery) {
+      // Check if the search query is only a number
+      const isNumber = /^\d+$/.test(searchQuery)
+      if (isNumber) {
+        let contract = 0
+        if (searchQuery >= 3000000 && searchQuery < 374000000) {
+          contract = 1
+        } else if (searchQuery >= 374000000) {
+          contract = 2
+        }
+
+        console.log(searchQuery, contract)
+        grabData(searchQuery, contract)
+        localStorage.setItem("Contract", contract)
+        return
+      }
+
+      const panelNumber = parseInt(panelContent.match(/\d+/)[0])
+      const panelContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
+      const searchNumber = parseInt(searchQuery.match(/\d+/)[0])
+
+      let tokenId
+      if (panelNumber === 0) {
+        tokenId = searchNumber.toString()
+      } else {
+        tokenId = (panelNumber * 1000000 + searchNumber)
+          .toString()
+          .padStart(6, "0")
+      }
+
+      let contract
+      if (panelContract === "EXPLORE") {
+        contract = 3
+      } else if (panelContract === "ABXPACE" && tokenId < 5000000) {
+        contract = 4
+      } else if (panelContract === "ABXPACE" && tokenId >= 5000000) {
+        contract = 5
+      } else if (panelContract === "ABXBM") {
+        contract = 6
+      } else if (panelContract === "BM") {
+        contract = 7
+      } else if (tokenId < 3000000) {
+        contract = 0
+      } else if (tokenId >= 3000000 && tokenId < 374000000) {
+        contract = 1
+      } else if (tokenId >= 374000000) {
+        contract = 2
+      }
+
+      console.log(tokenId, contract)
+      grabData(tokenId, contract)
+      localStorage.setItem("Contract", contract)
+    }
+
+    // Event listener for search field
+    search.addEventListener("input", (event) => {
+      const query = event.target.value.trim().split("#")[0].trim()
+      filterLines(query)
+    })
+
+    search.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        const query = search.value.trim()
+        search.value.trim() === ""
+          ? fetchAndProcessRandomLine()
+          : getTokenId(dataContent.innerHTML, query)
+      }
+    })
+
+    // Display all lines initially
+    displayLines(lines)
+  })
+  .catch((error) => {
+    console.error("Error reading file:", error)
+  })
+
+/****************************************************
  *                     EVENTS
  ***************************************************/
 let storedData = {}
+let storedContract = localStorage.getItem("Contract")
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
   storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
     update(...Object.values(storedData))
   }
+  console.log("contract:", storedContract)
   // console.log("lib source:", localStorage.getItem("Src"))
   // console.log("Id an Hash:", localStorage.getItem("IdHash"))
   console.log("code type:", localStorage.getItem("Type"))
@@ -326,74 +445,6 @@ overlay.addEventListener("click", () => {
   panel.classList.remove("active")
   overlay.style.display = "none"
 })
-
-/****************************************************
- *       FUNCTION TO ACCESS BLOCKS DATA LIST
- ***************************************************/
-// Fetch data from "data.txt" and display it
-fetch("data.txt")
-  .then((response) => response.text())
-  .then((data) => {
-    const lines = data.split("\n")
-
-    // Function to display lines
-    function displayLines(lines) {
-      dataContent.innerHTML = lines.join("<br>")
-    }
-
-    // Function to filter lines based on search query
-    function filterLines(query) {
-      const filteredLines = lines.filter((line) =>
-        line.toLowerCase().includes(query.toLowerCase())
-      )
-      displayLines(filteredLines)
-    }
-
-    // Function to extract token ID
-    function getTokenId(panelContent, searchQuery) {
-      // Check if the search query is only a number
-      const isNumber = /^\d+$/.test(searchQuery)
-      if (isNumber) {
-        grabData(searchQuery)
-        return
-      }
-
-      const panelNumber = parseInt(panelContent.match(/\d+/)[0])
-      const searchNumber = parseInt(searchQuery.match(/\d+/)[0])
-
-      let tokenId
-      if (panelNumber === 0) {
-        tokenId = searchNumber.toString()
-      } else {
-        tokenId = (panelNumber * 1000000 + searchNumber)
-          .toString()
-          .padStart(6, "0")
-      }
-
-      grabData(tokenId)
-    }
-
-    // Event listener for search field
-    search.addEventListener("input", (event) => {
-      const query = event.target.value.trim().split("#")[0].trim()
-      filterLines(query)
-    })
-
-    search.addEventListener("keypress", (event) => {
-      if (event.key === "Enter") {
-        const query = search.value.trim()
-        search.value.trim() === ""
-          ? fetchAndProcessRandomLine()
-          : getTokenId(dataContent.innerHTML, query)
-      }
-    })
-
-    // Display all lines initially
-    displayLines(lines)
-  })
-  .catch((error) => {
-    console.error("Error reading file:", error)
-  })
 
 /****************************************************
  *          FUNCTION TO SAVE THE OUTPUT
@@ -471,8 +522,9 @@ async function fetchAndProcessRandomLine() {
     if (constructedNumber) {
       console.log("Randomly selected line:", randomLine)
       console.log("Constructed Number:", constructedNumber)
+      console.log("Contract:", contract)
 
-      grabData(constructedNumber)
+      // grabData(constructedNumber)
     } else {
       console.log("Invalid line format.")
       throw new Error("Invalid line format")
@@ -495,8 +547,8 @@ function incrementTokenId() {
     ? (parseInt(storedData.tokenId) + 1).toString()
     : "1"
 
-  grabData(storedData.tokenId)
-  console.log(storedData.tokenId)
+  grabData(storedData.tokenId, parseInt(storedContract))
+  console.log(storedData.tokenId, parseInt(storedContract))
 }
 
 function decrementTokenId() {
@@ -504,8 +556,8 @@ function decrementTokenId() {
     ? Math.max(parseInt(storedData.tokenId) - 1, 0).toString()
     : "0"
 
-  grabData(storedData.tokenId)
-  console.log(storedData.tokenId)
+  grabData(storedData.tokenId, parseInt(storedContract))
+  console.log(storedData.tokenId, parseInt(storedContract))
 }
 
 document
@@ -529,6 +581,7 @@ document.addEventListener("keypress", (event) => {
  * *************************************************/
 async function fetchBlocks() {
   let All = ""
+  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
@@ -542,6 +595,10 @@ async function fetchBlocks() {
         All += `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
       } else {
         console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
@@ -551,3 +608,108 @@ async function fetchBlocks() {
   console.log(All)
 }
 // fetchBlocks()
+
+async function fetchEXPLORE() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[3].projectDetails(i.toString())
+      const tkns = await contracts[3].projectStateData(i)
+      if (tkns.invocations) {
+        All += `EXPLORE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchEXPLORE()
+
+async function fetchABXPACE() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    const n = i < 5 ? 4 : 5
+    try {
+      const detail = await contracts[n].projectDetails(i.toString())
+      const tkns =
+        n === 4
+          ? await contracts[n].projectTokenInfo(i)
+          : await contracts[n].projectStateData(i)
+
+      if (tkns.invocations) {
+        All += `ABXPACE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchABXPACE()
+
+async function fetchABXBM() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[6].projectDetails(i.toString())
+      const tkns = await contracts[6].projectStateData(i)
+      if (tkns.invocations) {
+        All += `ABXBM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchABXBM()
+
+async function fetchBM() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[7].projectDetails(i.toString())
+      const tkns = await contracts[7].projectTokenInfo(i)
+      if (tkns.invocations) {
+        All += `BM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchBM()

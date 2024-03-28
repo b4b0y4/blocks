@@ -475,3 +475,104 @@
 489 - Balance / Kelly Milligan x Amber Vittoria - 250 minted
 490 - Twist / Rafaël Rozendaal - 250 minted
 493 - Melancholic Magical Maiden / Emi Kusano - 300 minted
+
+EXPLORE 0 - Friendship Bracelets / Alexis André - 38664 minted
+EXPLORE 1 - Marfa Yucca / Daniel Calderon Arenas - 390 minted
+EXPLORE 2 - marfaMESH / Harvey Rayner | patterndotco - 343 minted
+
+ABXPACE 0 - Petro National / John Gerrard - 196 minted
+ABXPACE 1 - Floating World Genesis / A.A. Murakami - 250 minted
+ABXPACE 2 - QWERTY / Tara Donovan - 500 minted
+ABXPACE 3 - Contractions / Loie Hollowell - 280 minted
+ABXPACE 4 - New Worlds / Robert Whitman - 500 minted
+ABXPACE 5 - PRELUDES / Trevor Paglen - 250 minted
+ABXPACE 6 - World Flag / John Gerrard - 195 minted
+ABXPACE 7 - Schema / DRIFT with Jeff Davis - 300 minted
+
+ABXBM 0 - Metropolis / mpkoz - 940 minted
+ABXBM 1 - 923 EMPTY ROOMS / Casey REAS - 924 minted
+
+BM 1 - Stellaraum / Alida Sun - 66 minted
+BM 2 - Parnassus / mpkoz - 100 minted
+BM 3 - Inflection / Jeff Davis - 96 minted
+BM 4 - Kaleidoscope / Loren Bednar - 100 minted
+BM 5 - Lux / Jason Ting - 64 minted
+BM 6 - Network C / Casey REAS - 100 minted
+BM 7 - The Nursery / Sputniko! - 100 minted
+BM 8 - FOLIO / Matt DesLauriers - 100 minted
+BM 9 - Inprecision / Thomas Lin Pedersen - 100 minted
+BM 10 - Off Script / Emily Xie - 100 minted
+BM 11 - Formation / Jeff Davis - 100 minted
+BM 12 - translucent panes / fingacode - 431 minted
+BM 13 - Wirwar / Bart Simons - 100 minted
+BM 14 - KERNELS / Julian Hespenheide - 190 minted
+BM 15 - Brise Soleil  / Jorge Ledezma - 100 minted
+BM 16 - Orchids / Luke Shannon - 400 minted
+BM 17 - Rubicon / Mario Carrillo - 266 minted
+BM 18 - nth culture / fingacode - 100 minted
+BM 19 - Pohualli / Fahad Karim - 100 minted
+BM 20 - Underwater / Monica Rizzolli - 100 minted
+BM 21 - Infinito / Stefano Contiero - 100 minted
+BM 22 - Bosque de Chapultepec / Daniel Calderon Arenas - 100 minted
+BM 23 - ToSolaris / Iskra Velitchkova - 100 minted
+BM 24 - Glaciations / Anna Lucia - 100 minted
+BM 25 - 1935 / William Mapan - 100 minted
+BM 26 - lūmen / p1xelfool - 100 minted
+BM 27 - lo que no está / Marcelo Soria-Rodríguez - 100 minted
+BM 28 - 100 Untitled Spaces / Snowfro - 100 minted
+BM 29 - 100 Sunsets / Zach Lieberman - 100 minted
+BM 30 - Transcendence / Jeff Davis - 10 minted
+BM 31 - Caminos / Juan Rodríguez García - 1000 minted
+BM 32 - Color Streams / r4v3n - 370 minted
+BM 33 - Limn / RalenArc - 200 minted
+BM 34 - Velum / Harvey Rayner | patterndotco - 100 minted
+BM 35 - Cage / John Provencher - 162 minted
+BM 36 - Sunset from the Bluffs / Nat Sarkissian - 100 minted
+BM 37 - Intricada / Camille Roux - 270 minted
+BM 38 - Passages / Aaron Penne x Boreta - 100 minted
+BM 39 - Cantera / mrkswcz - 100 minted
+BM 40 - immprint / imma - 315 minted
+BM 41 - Agar / Emily Edelman - 100 minted
+BM 42 - L'Appel / Alexis André - 100 minted
+BM 43 - LED / Jeff Davis - 100 minted
+BM 44 - Event Horizon / Kim Asendorf - 100 minted
+BM 45 - Orbifold / Kjetil Golid - 100 minted
+BM 46 - FULL_SPECTRUM / Lars Wander - 100 minted
+BM 47 - Sparkling Goodbye / Licia He - 100 minted
+BM 48 - Undercurrents / Melissa Wiederrecht - 100 minted
+BM 49 - Margaret / qubibi - 100 minted
+BM 50 - Nature finds a way. / Spongenuity. - 100 minted
+BM 51 - Marching Resonances / Shunsuke Takawo - 100 minted
+BM 52 - Kumono Shingou / zancan - 100 minted
+BM 53 - Hanabi / ykxotkx - 82 minted
+BM 54 - Square Symphony / Okazz - 100 minted
+BM 55 - Public Art / 0xhaiku - 94 minted
+BM 56 - Dream Logic / Ngozi - 100 minted
+BM 57 - Epiphanies / Jimena Buena Vida - 201 minted
+BM 58 - If You Could Do It All Again / Nicole Vella - 120 minted
+BM 59 - Esquejes / Pedro Falco - 169 minted
+BM 60 - 1 + 1 = 3 / Stefano Contiero - 112 minted
+BM 61 - Apophenies / Cory Haber - 100 minted
+BM 62 - Vertigo Las Luces / Guido Corallo - 79 minted
+BM 63 - Cuadro / Jeff Davis - 89 minted
+BM 64 - Dolor Gravitacional / Jorge Ledezma - 63 minted
+BM 65 - Subtraction, Reconfiguration / Juan Pedro Vallejo - 100 minted
+BM 66 - Delirium Blooms / Leonardo Solaas - 89 minted
+BM 67 - KARNE / Lolo Armdz - 70 minted
+BM 68 - BLINK / Patricio Gonzalez Vivo & Jen Lowe - 70 minted
+BM 69 - Souls from Gaia / Tamara Moura Costa - 61 minted
+BM 70 - Desde Lejos / Thomas Noya - 70 minted
+BM 71 - Liminal / Julien Espagnon - 85 minted
+BM 72 - SPINᵗ / NumbersInMotion - 52 minted
+BM 73 - Topology / Rikard Lindström - 29 minted
+BM 74 - Descent / Andreas Gysin - 100 minted
+BM 75 - Enlace / Aranda/Lasch - 100 minted
+BM 76 - Odysseys / Florian Zumbrunn - 100 minted
+BM 77 - a temporary arrangement of material / Martin Grasser - 100 minted
+BM 78 - Lightbreak / Luke Shannon - 100 minted
+BM 79 - Figs. / Sarah Ridgley - 100 minted
+BM 80 - Brava / Anna Carreras - 100 minted
+BM 81 - The Destination / Camille Roux x Matthieu Segret - 100 minted
+BM 82 - Encore / rudxane - 100 minted
+BM 83 - Notes / Maya Man - 100 minted
+BM 84 - Culmination / Jeff Davis - 100 minted
