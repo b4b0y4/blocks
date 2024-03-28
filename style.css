@@ -61,6 +61,8 @@ body {
 }
 
 .info {
+  display: flex;
+  align-items: center;
   color: #a2a2a2;
   margin-right: 10px;
   font-size: 1.1em;
@@ -70,9 +72,21 @@ body {
   transition: color 0.3s ease-in-out;
 }
 
+.info span {
+  font-size: 0.6em;
+  padding: 5px;
+  background-color: #202020;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
 .info:hover {
   background-color: #202020;
   color: #a2a2a2;
+}
+
+.info:hover span {
+  background-color: #141414;
 }
 
 .button-container {

@@ -1,6 +1,6 @@
 # Blocks Render
 
-This application allows you to generate all of Art Blocks main collections (curated & presents), directly from ethereum.
+This application allows you to generate all Art Blocks collections (curated, presents, explorations, Art Blocks × Pace, Art Blocks × Bright Moments) as well as Bright Moments collections, directly from ethereum.
 
 View information about each one and save a HTML file of your favorites.
 

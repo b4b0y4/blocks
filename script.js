@@ -171,11 +171,27 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   localStorage.setItem("Art", script)
 
   // Update info content
+
+  let collection
+  if (storedContract == 0 || storedContract == 1 || storedContract == 2) {
+    collection = "AB"
+  } else if (storedContract == 3) {
+    collection = "EXPLORE"
+  } else if (storedContract == 4 && tokenId < 5000000) {
+    collection = "ABXPACE"
+  } else if (storedContract == 5 && tokenId >= 5000000) {
+    collection = "ABXPACE"
+  } else if (storedContract == 6) {
+    collection = "ABXBM"
+  } else if (storedContract == 7) {
+    collection = "BM"
+  }
+
   id =
     tokenId < 1000000
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
-  info.innerText = `${detail[0]} #${id} / ${detail[1]}`
+  info.innerHTML = `${detail[0]} #${id} / ${detail[1]}  <span>${collection}</span>`
   // tokenIdInput.placeholder = `${tokenId}`
   search.placeholder = `${tokenId}`
   resolveENS(owner, detail)
@@ -382,9 +398,9 @@ window.addEventListener("DOMContentLoaded", () => {
     update(...Object.values(storedData))
   }
   console.log("contract:", storedContract)
-  console.log("lib source:", localStorage.getItem("Src"))
-  console.log("Id an Hash:", localStorage.getItem("IdHash"))
-  console.log("code type:", localStorage.getItem("Type"))
+  // console.log("lib source:", localStorage.getItem("Src"))
+  // console.log("Id an Hash:", localStorage.getItem("IdHash"))
+  // console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
 })
@@ -615,6 +631,7 @@ async function fetchBlocks() {
 
       if (tkns.invocations) {
         All += `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
         noToken++
@@ -640,6 +657,7 @@ async function fetchEXPLORE() {
       const tkns = await contracts[3].projectStateData(i)
       if (tkns.invocations) {
         All += `EXPLORE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
         noToken++
@@ -670,6 +688,7 @@ async function fetchABXPACE() {
 
       if (tkns.invocations) {
         All += `ABXPACE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
         noToken++
@@ -695,6 +714,7 @@ async function fetchABXBM() {
       const tkns = await contracts[6].projectStateData(i)
       if (tkns.invocations) {
         All += `ABXBM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
         noToken++
@@ -720,6 +740,7 @@ async function fetchBM() {
       const tkns = await contracts[7].projectTokenInfo(i)
       if (tkns.invocations) {
         All += `BM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
         noToken++
