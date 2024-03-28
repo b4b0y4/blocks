@@ -176,7 +176,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   if (storedContract == 0 || storedContract == 1 || storedContract == 2) {
     collection = "AB"
   } else if (storedContract == 3) {
-    collection = "EXPLORE"
+    collection = "EXP"
   } else if (storedContract == 4 && tokenId < 5000000) {
     collection = "ABXPACE"
   } else if (storedContract == 5 && tokenId >= 5000000) {
