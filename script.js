@@ -313,7 +313,7 @@ fetch("data.txt")
 
       const panelNumber = parseInt(panelContent.match(/\d+/)[0])
       const panelContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
-      const searchNumber = parseInt(searchQuery.match(/\d+/)[0])
+      const searchNumber = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
 
       let tokenId
       if (panelNumber === 0) {
