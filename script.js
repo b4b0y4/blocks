@@ -156,7 +156,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
 
   // Update tokenIdHash content
   const tknData =
-    tokenId < 3000000
+    tokenId < 3000000 && storedContract === 0
       ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] };`
       : `{ tokenId: "${tokenId}", hash: "${hash}" };`
 
@@ -382,8 +382,8 @@ window.addEventListener("DOMContentLoaded", () => {
     update(...Object.values(storedData))
   }
   console.log("contract:", storedContract)
-  // console.log("lib source:", localStorage.getItem("Src"))
-  // console.log("Id an Hash:", localStorage.getItem("IdHash"))
+  console.log("lib source:", localStorage.getItem("Src"))
+  console.log("Id an Hash:", localStorage.getItem("IdHash"))
   console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
