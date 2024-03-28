@@ -75,7 +75,7 @@ body {
 .info span {
   font-size: 0.6em;
   padding: 5px;
-  background-color: #202020;
+  background-color: black;
   border-radius: 5px;
   margin-left: 8px;
 }
@@ -83,10 +83,6 @@ body {
 .info:hover {
   background-color: #202020;
   color: #a2a2a2;
-}
-
-.info:hover span {
-  background-color: #141414;
 }
 
 .button-container {
