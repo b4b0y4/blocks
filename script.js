@@ -495,17 +495,40 @@ document
  **************************************************/
 // Function to process a line and extract a number
 function processLine(line) {
-  const regex = /^(\d+).*?(\d+)\s*minted/
+  const regex = /^([A-Z\s]+)?(\d+).*?(\d+)\s*minted/
+
   const matches = line.match(regex)
   if (!matches) return null
 
   // Extract numbers from the regex matches
-  const firstNumber = parseInt(matches[1])
-  const secondNumber = parseInt(matches[2])
+  const _contract = matches[1]
+  const firstNumber = parseInt(matches[2])
+  const secondNumber = parseInt(matches[3])
   // Generate a random second number
   const randomSecondNumber = Math.floor(Math.random() * (secondNumber - 1))
 
-  return (firstNumber * 1000000 + randomSecondNumber).toString()
+  const randomToken = (firstNumber * 1000000 + randomSecondNumber).toString()
+
+  let contract
+  if (_contract === "EXPLORE ") {
+    contract = 3
+  } else if (_contract === "ABXPACE " && randomToken < 5000000) {
+    contract = 4
+  } else if (_contract === "ABXPACE " && randomToken >= 5000000) {
+    contract = 5
+  } else if (_contract === "ABXBM ") {
+    contract = 6
+  } else if (_contract === "BM ") {
+    contract = 7
+  } else if (randomToken < 3000000) {
+    contract = 0
+  } else if (randomToken >= 3000000 && randomToken < 374000000) {
+    contract = 1
+  } else if (randomToken >= 374000000) {
+    contract = 2
+  }
+
+  return [randomToken, parseInt(contract)]
 }
 
 // Function to fetch data from "data.txt", process a random line, and call grabData
@@ -517,14 +540,13 @@ async function fetchAndProcessRandomLine() {
     const lines = (await response.text()).split("\n")
     const randomLine = lines[Math.floor(Math.random() * lines.length)]
 
-    const constructedNumber = processLine(randomLine)
+    let constructedNumber = processLine(randomLine)
 
     if (constructedNumber) {
       console.log("Randomly selected line:", randomLine)
-      console.log("Constructed Number:", constructedNumber)
-      console.log("Contract:", contract)
+      console.log("Constructed Number/Contract:", constructedNumber)
 
-      // grabData(constructedNumber)
+      grabData(constructedNumber[0], constructedNumber[1])
     } else {
       console.log("Invalid line format.")
       throw new Error("Invalid line format")
