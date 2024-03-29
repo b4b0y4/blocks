@@ -475,12 +475,9 @@
 489 - Balance / Kelly Milligan x Amber Vittoria - 250 minted
 490 - Twist / Rafaël Rozendaal - 250 minted
 493 - Melancholic Magical Maiden / Emi Kusano - 300 minted
-
-
-EXPLORE 0 - Friendship Bracelets / Alexis André - 38664 minted
-EXPLORE 1 - Marfa Yucca / Daniel Calderon Arenas - 390 minted
-EXPLORE 2 - marfaMESH / Harvey Rayner | patterndotco - 343 minted
-
+EXP 0 - Friendship Bracelets / Alexis André - 38664 minted
+EXP 1 - Marfa Yucca / Daniel Calderon Arenas - 390 minted
+EXP 2 - marfaMESH / Harvey Rayner | patterndotco - 343 minted
 ABXPACE 0 - Petro National / John Gerrard - 196 minted
 ABXPACE 1 - Floating World Genesis / A.A. Murakami - 250 minted
 ABXPACE 2 - QWERTY / Tara Donovan - 500 minted
@@ -489,10 +486,8 @@ ABXPACE 4 - New Worlds / Robert Whitman - 500 minted
 ABXPACE 5 - PRELUDES / Trevor Paglen - 250 minted
 ABXPACE 6 - World Flag / John Gerrard - 195 minted
 ABXPACE 7 - Schema / DRIFT with Jeff Davis - 300 minted
-
 ABXBM 0 - Metropolis / mpkoz - 940 minted
 ABXBM 1 - 923 EMPTY ROOMS / Casey REAS - 924 minted
-
 BM 1 - Stellaraum / Alida Sun - 66 minted
 BM 2 - Parnassus / mpkoz - 100 minted
 BM 3 - Inflection / Jeff Davis - 96 minted

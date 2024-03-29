@@ -178,11 +178,11 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   } else if (storedContract == 3) {
     collection = "EXP"
   } else if (storedContract == 4 && tokenId < 5000000) {
-    collection = "ABXPACE"
+    collection = "AB &times; PACE"
   } else if (storedContract == 5 && tokenId >= 5000000) {
-    collection = "ABXPACE"
+    collection = "AB &times; PACE"
   } else if (storedContract == 6) {
-    collection = "ABXBM"
+    collection = "AB &times; BM"
   } else if (storedContract == 7) {
     collection = "BM"
   }
@@ -656,7 +656,7 @@ async function fetchEXPLORE() {
       const detail = await contracts[3].projectDetails(i.toString())
       const tkns = await contracts[3].projectStateData(i)
       if (tkns.invocations) {
-        All += `EXPLORE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        All += `EXP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
