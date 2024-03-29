@@ -40,6 +40,10 @@ body {
   padding: 5px;
 }
 
+::placeholder {
+  color: #757575;
+}
+
 .rpc-url {
   display: none;
   width: 250px;
