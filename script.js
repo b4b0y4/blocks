@@ -156,11 +156,11 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
 
   // Update tokenIdHash content
   const tknData =
-    tokenId < 3000000 && storedContract === 0
-      ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] };`
-      : `{ tokenId: "${tokenId}", hash: "${hash}" };`
+    tokenId < 3000000 && storedContract == 0
+      ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
+      : `{ tokenId: "${tokenId}", hash: "${hash}" }`
 
-  localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
+  localStorage.setItem("IdHash", `tokenData = ${tknData}`)
 
   // Update artCode
   let process = ""
@@ -191,8 +191,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
     tokenId < 1000000
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
-  info.innerHTML = `${detail[0]} #${id} / ${detail[1]}  <span>${collection}</span>`
-  // tokenIdInput.placeholder = `${tokenId}`
+  info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
   search.placeholder = `${tokenId}`
   resolveENS(owner, detail)
   injectFrame()
@@ -252,12 +251,11 @@ async function injectFrame() {
       dynamicContent = `<html>
           <head>
           <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-          <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
-          <script>${frameIdHash}</script>
           ${frameStyle}
           </head>
           <body>
+          <script>${frameIdHash};</script>
           <script type='${frameType}'>${frameArt}</script>
           <canvas></canvas>
           </body>
@@ -268,7 +266,7 @@ async function injectFrame() {
           <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
           <meta charset="utf-8"/>
           <script src='${frameSrc}'></script>
-          <script>${frameIdHash}</script>
+          <script>${frameIdHash};</script>
           ${frameStyle}
           </head>
           <body>
@@ -399,7 +397,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   console.log("contract:", storedContract)
   // console.log("lib source:", localStorage.getItem("Src"))
-  // console.log("Id an Hash:", localStorage.getItem("IdHash"))
+  console.log("Id an Hash:", localStorage.getItem("IdHash"))
   // console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
@@ -620,7 +618,7 @@ document.addEventListener("keypress", (event) => {
 async function fetchBlocks() {
   let All = ""
   let noToken = 0
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 100; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const detail = await contracts[n].projectDetails(i.toString())

@@ -53,6 +53,10 @@ body {
   padding: 5px;
 }
 
+.rpc-url:focus {
+  outline: 0.5px solid #a2a2a2;
+}
+
 .info-box {
   display: flex;
   justify-content: end;
@@ -76,6 +80,7 @@ body {
   font-size: 0.5em;
   padding: 3px;
   background-color: #202020;
+  color: #757575;
   border-radius: 5px;
   margin-left: 8px;
 }
@@ -96,7 +101,7 @@ body {
 .next {
   background-color: transparent;
   font-size: 1.1em;
-  color: #a2a2a2;
+  color: #757575;
   border: none;
   border-radius: 5px;
   padding: 3.25px 6.5px;
@@ -152,7 +157,7 @@ body {
 
 .panel.active,
 .data-panel.active {
-  opacity: 0.9;
+  opacity: 0.95;
   pointer-events: auto;
 }
 
