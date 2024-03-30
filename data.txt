@@ -572,3 +572,31 @@ BM 81 - The Destination / Camille Roux x Matthieu Segret - 100 minted
 BM 82 - Encore / rudxane - 100 minted
 BM 83 - Notes / Maya Man - 100 minted
 BM 84 - Culmination / Jeff Davis - 100 minted
+PLOTS 0 - Streamlines / NumbersInMotion - 500 minted
+PLOTS 1 - Implosion / Generative Artworks - 256 minted
+PLOTS 2 - Really Random Rock / DCA - 350 minted
+PLOTS 3 - Diatom / Joshua Schachter - 102 minted
+PLOTS 4 - Lines Walking / Lars Wander - 44 minted
+PLOTS 5 - Coalescence / Beervangeer - 135 minted
+PLOTS 6 - Shattered / @greweb - 100 minted
+PLOTS 7 - Brickwork / WAWAA - 145 minted
+PLOTS 8 - spectral / oppos - 63 minted
+PLOTS 9 - Delicate Chaos / moving.drawing - 168 minted
+PLOTS 10 - Azulejos / PZS - 90 minted
+PLOTS 11 - Petri Dish / James Dalessandro - 38 minted
+PLOTS 12 - Pseudofigure / conundrumer - 144 minted
+PLOTS 13 - Reservation / Generative Artworks - 50 minted
+PLOTS 14 - Endless (5,607,250 to Infinity) / Modnar Wolf x NumbersInMotion - 2557 minted
+PLOTS 15 - Shields / r4v3n - 100 minted
+PLOTS 16 - Structures / Julien Gachadoat - 256 minted
+PLOTS 17 - Happenstance I: CTC / Generative Artworks - 30 minted
+PLOTS 18 - Beginnings / 0xPhiiil - 40 minted
+PLOTS 19 - Scribbled Daydreams / minimizer - 200 minted
+PLOTS 20 - Generative Alchemy / Eliya Stein - 38 minted
+PLOTS 21 - Scratch / Matto - 64 minted
+PLOTS 22 - Stroomlijn / Bart Simons - 38 minted
+PLOTS 23 - pattern.dst /  - 1 minted
+PLOTS 24 - Lissajous / Michael G Devereux - 13 minted
+PLOTS 25 - Happenstance II: Framed / Generative Artworks - 15 minted
+PLOTS 26 - Field Recordings / Jacob Gold - 13 minted
+PLOTSII 0 - Time Between the Lines is Thread Through the Mind / Matto - 38 minted
