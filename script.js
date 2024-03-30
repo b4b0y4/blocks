@@ -397,7 +397,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   console.log("contract:", storedContract)
   // console.log("lib source:", localStorage.getItem("Src"))
-  console.log("Id an Hash:", localStorage.getItem("IdHash"))
+  // console.log("Id an Hash:", localStorage.getItem("IdHash"))
   // console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
   console.log("library:", storedData.codeLib)
@@ -618,7 +618,7 @@ document.addEventListener("keypress", (event) => {
 async function fetchBlocks() {
   let All = ""
   let noToken = 0
-  for (let i = 100; i < 1000; i++) {
+  for (let i = 0; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const detail = await contracts[n].projectDetails(i.toString())
