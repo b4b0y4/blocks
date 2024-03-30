@@ -312,49 +312,38 @@ fetch("data.txt")
       // Check if the search query is only a number
       const isNumber = /^\d+$/.test(searchQuery)
       if (isNumber) {
-        let contract = 0
-        if (searchQuery >= 3000000 && searchQuery < 374000000) {
-          contract = 1
-        } else if (searchQuery >= 374000000) {
-          contract = 2
-        }
-
-        console.log(searchQuery, contract)
+        let contract =
+          searchQuery < 3000000 ? 0 : searchQuery < 374000000 ? 1 : 2
         grabData(searchQuery, contract)
         localStorage.setItem("Contract", contract)
         return
       }
 
+      // Extract panel number and contract from panelContent
       const panelNumber = parseInt(panelContent.match(/\d+/)[0])
       const panelContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
+
+      // Extract search number from searchQuery
       const searchNumber = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
 
-      let tokenId
-      if (panelNumber === 0) {
-        tokenId = searchNumber.toString()
-      } else {
-        tokenId = (panelNumber * 1000000 + searchNumber)
-          .toString()
-          .padStart(6, "0")
-      }
+      // Calculate tokenId
+      const tokenId =
+        panelNumber === 0
+          ? searchNumber.toString()
+          : (panelNumber * 1000000 + searchNumber).toString().padStart(6, "0")
 
+      // Define contract based on panelContract and tokenId
       let contract
-      if (panelContract === "EXPLORE") {
+      if (panelContract === "EXP") {
         contract = 3
-      } else if (panelContract === "ABXPACE" && tokenId < 5000000) {
-        contract = 4
-      } else if (panelContract === "ABXPACE" && tokenId >= 5000000) {
-        contract = 5
+      } else if (panelContract === "ABXPACE") {
+        contract = tokenId < 5000000 ? 4 : 5
       } else if (panelContract === "ABXBM") {
         contract = 6
       } else if (panelContract === "BM") {
         contract = 7
-      } else if (tokenId < 3000000) {
-        contract = 0
-      } else if (tokenId >= 3000000 && tokenId < 374000000) {
-        contract = 1
-      } else if (tokenId >= 374000000) {
-        contract = 2
+      } else {
+        contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
       }
 
       console.log(tokenId, contract)
@@ -524,22 +513,16 @@ function processLine(line) {
   const randomToken = (firstNumber * 1000000 + randomSecondNumber).toString()
 
   let contract
-  if (_contract === "EXPLORE ") {
+  if (_contract === "EXP ") {
     contract = 3
-  } else if (_contract === "ABXPACE " && randomToken < 5000000) {
-    contract = 4
-  } else if (_contract === "ABXPACE " && randomToken >= 5000000) {
-    contract = 5
+  } else if (_contract === "ABXPACE ") {
+    contract = randomToken < 5000000 ? 4 : 5
   } else if (_contract === "ABXBM ") {
     contract = 6
   } else if (_contract === "BM ") {
     contract = 7
-  } else if (randomToken < 3000000) {
-    contract = 0
-  } else if (randomToken >= 3000000 && randomToken < 374000000) {
-    contract = 1
-  } else if (randomToken >= 374000000) {
-    contract = 2
+  } else {
+    contract = randomToken < 3000000 ? 0 : randomToken < 374000000 ? 1 : 2
   }
 
   return [randomToken, parseInt(contract)]
