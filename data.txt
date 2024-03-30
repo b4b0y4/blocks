@@ -213,10 +213,10 @@
 217 - Paths / Darien Brito - 523 minted
 218 - Squares and Triangles / Maksim Hapeyenka - 80 minted
 219 - Time Atlas 🌐 / Paolo Tonon - 412 minted
-220 - geVIENNAratives / CryptoWiener - 1806 minted
+220 - geVIENNAratives / CryptoWiener - 2048 minted
 221 - Spiromorphs / SAB - 200 minted
 222 - Pieces of Me / r4v3n - 222 minted
-223 - Dream Engine / REMO x DCsan - 474 minted
+223 - Dream Engine / REMO x DCsan - 475 minted
 224 - Tropism / Neel Shivdasani - 500 minted
 225 - Vortex / Jen Stark - 1000 minted
 226 - Getijde / Bart Simons - 222 minted
@@ -457,7 +457,7 @@
 470 - Forecast / Manuel Larino - 365 minted
 471 - This Is Not A Rock / Nicole Vella - 350 minted
 472 - because unless until / ixnayokay - 650 minted
-473 - Fluiroso / Sebastián Brocher (CryptoArte) - 102 minted
+473 - Fluiroso / Sebastián Brocher (CryptoArte) - 103 minted
 474 - Lumina / DistCollective - 78 minted
 475 - Recollection / Robert Hodgin - 166 minted
 476 - Life and Love and Nothing / Nat Sarkissian - 200 minted
