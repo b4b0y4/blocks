@@ -418,7 +418,7 @@ window.addEventListener("load", () => {
 })
 
 document.addEventListener("keypress", (event) => {
-  if (event.key === "|") {
+  if (event.key === "\\") {
     clearLocalStorage()
     location.reload()
   }
@@ -435,7 +435,7 @@ info.addEventListener("click", () => {
 })
 
 document.addEventListener("keypress", (event) => {
-  if (event.key === "\\") {
+  if (event.key === "/") {
     event.preventDefault()
     togglePanel()
   }

@@ -185,12 +185,24 @@ body {
   color: #757575;
 }
 
+.key-short {
+  position: absolute;
+  font-size: 0.7em;
+  top: 50%;
+  right: 7px;
+  transform: translateY(-50%);
+  color: #757575;
+  background-color: #141414;
+  border-radius: 5px;
+  padding: 2px 7px;
+}
+
 .search-input {
   border: none;
   background-color: #202020;
   color: #a2a2a2;
   font-size: 1em;
-  width: 100px;
+  width: 105px;
   text-align: start;
   border-radius: 5px;
   padding: 4px;
