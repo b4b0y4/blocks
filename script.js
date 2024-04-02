@@ -434,6 +434,16 @@ info.addEventListener("click", () => {
   }
 })
 
+document.querySelector(".search-icon").addEventListener("click", () => {
+  dataPanel.classList.toggle("active")
+  if (dataPanel.classList.contains("active")) {
+    panel.classList.remove("active")
+    overlay.style.display = "block"
+  } else {
+    overlay.style.display = "none"
+  }
+})
+
 document.addEventListener("keypress", (event) => {
   if (event.key === "/") {
     event.preventDefault()

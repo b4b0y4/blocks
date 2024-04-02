@@ -83,7 +83,7 @@ body {
 .info span {
   font-size: 0.5em;
   padding: 3px;
-  background-color: #202020;
+  background-color: #303030;
   color: #757575;
   border-radius: 5px;
   margin-left: 8px;
@@ -91,7 +91,6 @@ body {
 
 .info:hover {
   background-color: #202020;
-  color: #a2a2a2;
 }
 
 .button-container {
@@ -183,6 +182,20 @@ body {
   left: 7px;
   transform: translateY(-50%);
   color: #757575;
+  cursor: pointer;
+}
+
+.key-short {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  transform: translateY(-50%);
+  font-size: 0.6em;
+  color: #757575;
+  background-color: #303030;
+  padding: 2.5px 7px;
+  border-radius: 5px;
+  cursor: default;
 }
 
 .search-input {
@@ -190,11 +203,10 @@ body {
   background-color: #202020;
   color: #a2a2a2;
   font-size: 1em;
-  width: 85px;
+  width: 80px;
   text-align: start;
   border-radius: 5px;
-  padding: 4px;
-  padding-left: 30px;
+  padding: 4px 30px;
 }
 
 .search-input:hover {
@@ -243,8 +255,7 @@ body {
   }
 
   .search-input {
-    padding: 6px;
-    padding-left: 30px;
+    padding: 6px 30px;
   }
 
   .save,
