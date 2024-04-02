@@ -409,7 +409,7 @@
 422 - SKEUOMORPHS / itsgalo - 300 minted
 423 - Solar Transits / Robert Hodgin - 400 minted
 424 - Worlds Within / Jason Ting - 256 minted
-425 - Mellifera / artplusbrad - 56 minted
+425 - Mellifera / artplusbrad - 58 minted
 426 - Cargo / Kim Asendorf - 1000 minted
 427 - transparency / usnea - 29 minted
 428 - Memories of Digital Data / Kazuhiro Tanimoto - 450 minted
@@ -458,7 +458,7 @@
 471 - This Is Not A Rock / Nicole Vella - 350 minted
 472 - because unless until / ixnayokay - 650 minted
 473 - Fluiroso / Sebastián Brocher (CryptoArte) - 103 minted
-474 - Lumina / DistCollective - 78 minted
+474 - Lumina / DistCollective - 79 minted
 475 - Recollection / Robert Hodgin - 166 minted
 476 - Life and Love and Nothing / Nat Sarkissian - 200 minted
 477 - siempre en mí, siempre en ti / Marcelo Soria-Rodríguez - 200 minted

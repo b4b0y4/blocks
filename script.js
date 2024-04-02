@@ -199,7 +199,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
   info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
-  search.placeholder = `${tokenId}`
+  // search.placeholder = `${tokenId}`
   resolveENS(owner, detail)
   injectFrame()
 }
@@ -437,22 +437,27 @@ info.addEventListener("click", () => {
 document.addEventListener("keypress", (event) => {
   if (event.key === "/") {
     event.preventDefault()
-    togglePanel()
+    search.focus()
+    dataPanel.classList.toggle("active")
+    if (dataPanel.classList.contains("active")) {
+      panel.classList.remove("active")
+      overlay.style.display = "block"
+    } else {
+      overlay.style.display = "none"
+    }
   }
 })
 
-search.addEventListener("focus", togglePanel)
-
-function togglePanel() {
-  search.focus()
-  dataPanel.classList.toggle("active")
-  if (dataPanel.classList.contains("active")) {
+search.addEventListener("input", () => {
+  if (search.value.trim() !== "") {
+    dataPanel.classList.add("active")
     panel.classList.remove("active")
     overlay.style.display = "block"
   } else {
+    dataPanel.classList.remove("active")
     overlay.style.display = "none"
   }
-}
+})
 
 overlay.addEventListener("click", () => {
   dataPanel.classList.remove("active")
