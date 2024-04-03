@@ -33,6 +33,7 @@ const dataPanel = document.querySelector(".data-panel")
 const panelContent = document.getElementById("panelContent")
 const dataContent = document.getElementById("dataContent")
 const search = document.getElementById("searchInput")
+const keyShort = document.querySelector(".key-short")
 
 // Initialize Ethereum provider
 const rpcUrl = localStorage.getItem("rpcUrl")
@@ -199,7 +200,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
   info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
-  // search.placeholder = `${tokenId}`
+  search.placeholder = `${tokenId}`
   resolveENS(owner, detail)
   injectFrame()
 }
@@ -429,6 +430,7 @@ info.addEventListener("click", () => {
   if (panel.classList.contains("active")) {
     dataPanel.classList.remove("active")
     overlay.style.display = "block"
+    keyShort.style.display = "block"
   } else {
     overlay.style.display = "none"
   }
@@ -452,8 +454,10 @@ document.addEventListener("keypress", (event) => {
     if (dataPanel.classList.contains("active")) {
       panel.classList.remove("active")
       overlay.style.display = "block"
+      keyShort.style.display = "none"
     } else {
       overlay.style.display = "none"
+      keyShort.style.display = "block"
     }
   }
 })
@@ -463,9 +467,11 @@ search.addEventListener("input", () => {
     dataPanel.classList.add("active")
     panel.classList.remove("active")
     overlay.style.display = "block"
+    keyShort.style.display = "none"
   } else {
     dataPanel.classList.remove("active")
     overlay.style.display = "none"
+    keyShort.style.display = "block"
   }
 })
 
