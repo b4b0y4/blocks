@@ -71,6 +71,7 @@ const predefinedLibraries = {
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
   "a-frame":
     "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
+  twemoji: "https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js",
   babylonjs:
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   babylon:
@@ -485,8 +486,11 @@ overlay.addEventListener("click", () => {
  *          FUNCTION TO SAVE THE OUTPUT
  * *************************************************/
 async function saveContentAsFile(content, filename) {
-  const defaultname = `${storedData.detail[0]} #${id}.html`
-  const userFilename = prompt("Enter a filename:", filename || defaultname)
+  const defaultName = `${storedData.detail[0].replace(/\s+/g, "-")}#${id}.html`
+
+  let userFilename = filename || defaultName
+
+  userFilename = prompt("Enter a filename:", userFilename)
 
   if (!userFilename) {
     return
