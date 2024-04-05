@@ -76,7 +76,7 @@ body {
   font-size: 1.1em;
   padding: 4px 8px;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: default;
   transition: color 0.3s ease-in-out;
 }
 
@@ -109,7 +109,7 @@ body {
   border-radius: 5px;
   padding: 3.25px 6.5px;
   margin: 0 5px;
-  cursor: pointer;
+  cursor: default;
   transition: color 0.3s ease-in-out;
 }
 
@@ -182,7 +182,7 @@ body {
   left: 7px;
   transform: translateY(-50%);
   color: #757575;
-  cursor: pointer;
+  cursor: default;
 }
 
 .key-short {

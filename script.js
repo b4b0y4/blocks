@@ -28,6 +28,9 @@ const frame = document.getElementById("frame")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
 const overlay = document.querySelector(".overlay")
+const save = document.getElementById("saveButton")
+const inc = document.getElementById("incrementButton")
+const dec = document.getElementById("decrementButton")
 const panel = document.querySelector(".panel")
 const dataPanel = document.querySelector(".data-panel")
 const panelContent = document.getElementById("panelContent")
@@ -397,6 +400,15 @@ window.addEventListener("DOMContentLoaded", () => {
   if (storedData) {
     update(...Object.values(storedData))
   }
+
+  storedData
+    ? ((inc.style.display = "block"),
+      (dec.style.display = "block"),
+      (save.style.display = "block"))
+    : ((inc.style.display = "none"),
+      (dec.style.display = "none"),
+      (save.style.display = "none"))
+
   console.log("contract:", storedContract)
   // console.log("lib source:", localStorage.getItem("Src"))
   // console.log("Id an Hash:", localStorage.getItem("IdHash"))
@@ -525,9 +537,7 @@ function handleSaveButtonClick() {
 }
 
 // Attach the handleSaveButtonClick
-document
-  .getElementById("saveButton")
-  .addEventListener("click", handleSaveButtonClick)
+save.addEventListener("click", handleSaveButtonClick)
 
 /***************************************************
  *        FUNCTIONS TO GET RANDOM TOKEN ID
@@ -599,7 +609,7 @@ document
   .addEventListener("click", fetchAndProcessRandomLine)
 
 /****************************************************
- *          FUNCTIONS TO GET NEXTID TOKEN
+ *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
  * *************************************************/
 function incrementTokenId() {
   storedData.tokenId = storedData.tokenId
@@ -619,17 +629,13 @@ function decrementTokenId() {
   console.log(storedData.tokenId, parseInt(storedContract))
 }
 
-document
-  .getElementById("incrementButton")
-  .addEventListener("click", incrementTokenId)
+inc.addEventListener("click", incrementTokenId)
 
 document.addEventListener("keypress", (event) => {
   event.key === ">" ? incrementTokenId() : null
 })
 
-document
-  .getElementById("decrementButton")
-  .addEventListener("click", decrementTokenId)
+dec.addEventListener("click", decrementTokenId)
 
 document.addEventListener("keypress", (event) => {
   event.key === "<" ? decrementTokenId() : null
