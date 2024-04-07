@@ -204,19 +204,19 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
   info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
-  search.placeholder = `${tokenId}`
-  resolveENS(owner, detail)
+  resolveENS(owner, detail, tokenId)
   injectFrame()
 }
 
 // Get ENS name for owner if available
-async function resolveENS(owner, detail) {
+async function resolveENS(owner, detail, tokenId) {
   try {
     const ensName = await provider.lookupAddress(owner)
+    const style = `target="_blank" style="text-decoration: none; color: #a2a2a2;" onmouseover="this.style.filter='brightness(70%)';" onmouseout="this.style.filter='brightness(100%)';"`
     if (ensName) {
-      panelContent.innerText = `${detail[2]}\n\n${detail[3]}\n\nOwned by: ${ensName}`
+      panelContent.innerHTML = `${detail[2]}<br><a href="${detail[3]}" ${style}>${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" ${style}>${ensName}</a><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" ${style}>${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     } else {
-      panelContent.innerHTML = `${detail[2]}<br><br>${detail[3]}<br><br>Owned by: <span style="font-size: 0.8em">${owner}</span>`
+      panelContent.innerHTML = `${detail[2]}<br><a href="${detail[3]}" ${style}>${detail[3]}</a><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" ${style}>${owner}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" ${style}>${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     }
   } catch (error) {
     console.log("Error getting ENS name:", error)
