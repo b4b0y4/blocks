@@ -631,14 +631,14 @@ function decrementTokenId() {
 
 inc.addEventListener("click", incrementTokenId)
 
-document.addEventListener("keypress", (event) => {
-  event.key === ">" ? incrementTokenId() : null
+document.addEventListener("keydown", (event) => {
+  event.key === "ArrowRight" ? incrementTokenId() : null
 })
 
 dec.addEventListener("click", decrementTokenId)
 
-document.addEventListener("keypress", (event) => {
-  event.key === "<" ? decrementTokenId() : null
+document.addEventListener("keydown", (event) => {
+  event.key === "ArrowLeft" ? decrementTokenId() : null
 })
 
 /****************************************************
