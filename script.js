@@ -12,6 +12,7 @@ import {
   abiPLOTS2,
   abiSTBYS,
   abiATP,
+  abiGRAILS,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -24,6 +25,7 @@ import {
   contractAddressPLOTS2,
   contractAddressSTBYS,
   contractAddressATP,
+  contractAddressGRAILS,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -60,6 +62,7 @@ const contracts = [
   { abi: abiPLOTS2, address: contractAddressPLOTS2 },
   { abi: abiSTBYS, address: contractAddressSTBYS },
   { abi: abiATP, address: contractAddressATP },
+  { abi: abiGRAILS, address: contractAddressGRAILS },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -119,7 +122,8 @@ async function grabData(tokenId, contract) {
     contract === 5 ||
     contract === 6 ||
     contract === 9 ||
-    contract === 10
+    contract === 10 ||
+    contract === 12
       ? contracts[contract].projectScriptDetails(projId.toString())
       : contracts[contract].projectScriptInfo(projId.toString()))
 
@@ -208,6 +212,8 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? "Sotheby's"
       : storedContract == 11
       ? "ATP"
+      : storedContract == 12
+      ? "GRAIL"
       : null
 
   id =
@@ -365,14 +371,16 @@ fetch("data.txt")
         contract = 6
       } else if (panelContract === "BM") {
         contract = 7
-      } else if (panelContract === "PLOTS") {
+      } else if (panelContract === "PLOT") {
         contract = 8
-      } else if (panelContract === "PLOTSII") {
+      } else if (panelContract === "PLOTII") {
         contract = 9
       } else if (panelContract === "STBYS") {
         contract = 10
       } else if (panelContract === "ATP") {
         contract = 11
+      } else if (panelContract === "GRAILS") {
+        contract = 12
       } else {
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
       }
@@ -559,7 +567,7 @@ save.addEventListener("click", handleSaveButtonClick)
  **************************************************/
 // Function to process a line and extract a number
 function processLine(line) {
-  const regex = /^([A-Z\s]+)?(\d+).*?(\d+)\s*minted/
+  const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
 
   const matches = line.match(regex)
   if (!matches) return null
@@ -574,18 +582,24 @@ function processLine(line) {
   const randomToken = (firstNumber * 1000000 + randomSecondNumber).toString()
 
   let contract
-  if (_contract === "EXP ") {
+  if (_contract == "EXP") {
     contract = 3
-  } else if (_contract === "ABXPACE ") {
+  } else if (_contract == "ABXPACE") {
     contract = randomToken < 5000000 ? 4 : 5
-  } else if (_contract === "ABXBM ") {
+  } else if (_contract == "ABXBM") {
     contract = 6
-  } else if (_contract === "BM ") {
+  } else if (_contract == "BM") {
     contract = 7
-  } else if (_contract === "PLOTS ") {
+  } else if (_contract == "PLOT") {
     contract = 8
-  } else if (_contract === "PLOTSII ") {
+  } else if (_contract == "PLOTII") {
     contract = 9
+  } else if (_contract == "STBYS") {
+    contract = 10
+  } else if (_contract == "ATP") {
+    contract = 11
+  } else if (_contract == "GRAILS") {
+    contract = 12
   } else {
     contract = randomToken < 3000000 ? 0 : randomToken < 374000000 ? 1 : 2
   }
@@ -902,3 +916,29 @@ async function fetchATP() {
   console.log(All)
 }
 // fetchATP()
+
+async function fetchGRAILS() {
+  let All = ""
+  let noToken = 0
+  for (let i = 1; i < 1000; i++) {
+    try {
+      const detail = await contracts[12].projectDetails(i.toString())
+      const tkns = await contracts[12].projectStateData(i)
+      if (tkns.invocations) {
+        All += `GRAILS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchGRAILS()

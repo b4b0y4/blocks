@@ -602,3 +602,5 @@ PLOT 26 - Field Recordings / Jacob Gold - 14 minted
 PLOTII 0 - Time Between the Lines is Thread Through the Mind / Matto - 38 minted
 STBYS 0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted
 ATP 0 - LOVE / Martin Grasser - 300 minted
+GRAILS 1 - Fold / rudxane - 400 minted
+GRAILS 2 - Atlas / Eric De Giuli - 333 minted
