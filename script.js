@@ -10,6 +10,8 @@ import {
   abiBM,
   abiPLOTS,
   abiPLOTS2,
+  abiSTBYS,
+  abiATP,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -20,6 +22,8 @@ import {
   contractAddressBM,
   contractAddressPLOTS,
   contractAddressPLOTS2,
+  contractAddressSTBYS,
+  contractAddressATP,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -54,6 +58,8 @@ const contracts = [
   { abi: abiBM, address: contractAddressBM },
   { abi: abiPLOTS, address: contractAddressPLOTS },
   { abi: abiPLOTS2, address: contractAddressPLOTS2 },
+  { abi: abiSTBYS, address: contractAddressSTBYS },
+  { abi: abiATP, address: contractAddressATP },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -112,7 +118,8 @@ async function grabData(tokenId, contract) {
     contract === 3 ||
     contract === 5 ||
     contract === 6 ||
-    contract === 9
+    contract === 9 ||
+    contract === 10
       ? contracts[contract].projectScriptDetails(projId.toString())
       : contracts[contract].projectScriptInfo(projId.toString()))
 
@@ -196,7 +203,11 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       : storedContract == 7
       ? "BM"
       : storedContract == 8 || storedContract == 9
-      ? "PLOTS"
+      ? "PLOT"
+      : storedContract == 10
+      ? "Sotheby's"
+      : storedContract == 11
+      ? "ATP"
       : null
 
   id =
@@ -358,6 +369,10 @@ fetch("data.txt")
         contract = 8
       } else if (panelContract === "PLOTSII") {
         contract = 9
+      } else if (panelContract === "STBYS") {
+        contract = 10
+      } else if (panelContract === "ATP") {
+        contract = 11
       } else {
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
       }
@@ -675,7 +690,7 @@ async function fetchBlocks() {
 }
 // fetchBlocks()
 
-async function fetchEXPLORE() {
+async function fetchEXP() {
   let All = ""
   let noToken = 0
   for (let i = 0; i < 1000; i++) {
@@ -699,7 +714,7 @@ async function fetchEXPLORE() {
   }
   console.log(All)
 }
-// fetchEXPLORE()
+// fetchEXP()
 
 async function fetchABXPACE() {
   let All = ""
@@ -784,7 +799,7 @@ async function fetchBM() {
 }
 // fetchBM()
 
-async function fetchPLOTS() {
+async function fetchPLOT() {
   let All = ""
   let noToken = 0
   for (let i = 0; i < 1000; i++) {
@@ -792,7 +807,7 @@ async function fetchPLOTS() {
       const detail = await contracts[8].projectDetails(i.toString())
       const tkns = await contracts[8].projectTokenInfo(i)
       if (tkns.invocations) {
-        All += `PLOTS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        All += `PLOT ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
@@ -808,8 +823,9 @@ async function fetchPLOTS() {
   }
   console.log(All)
 }
-// fetchPLOTS()
-async function fetchPLOTS2() {
+// fetchPLOT()
+
+async function fetchPLOT2() {
   let All = ""
   let noToken = 0
   for (let i = 0; i < 1000; i++) {
@@ -817,7 +833,7 @@ async function fetchPLOTS2() {
       const detail = await contracts[9].projectDetails(i.toString())
       const tkns = await contracts[9].projectStateData(i)
       if (tkns.invocations) {
-        All += `PLOTSII ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        All += `PLOTII ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
@@ -833,4 +849,56 @@ async function fetchPLOTS2() {
   }
   console.log(All)
 }
-// fetchPLOTS2()
+// fetchPLOT2()
+
+async function fetchSTBYS() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[10].projectDetails(i.toString())
+      const tkns = await contracts[10].projectStateData(i)
+      if (tkns.invocations) {
+        All += `STBYS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchSTBYS()
+
+async function fetchATP() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[11].projectDetails(i.toString())
+      const tkns = await contracts[11].projectTokenInfo(i)
+      if (tkns.invocations) {
+        All += `ATP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchATP()
