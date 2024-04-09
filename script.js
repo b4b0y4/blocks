@@ -432,7 +432,7 @@ window.addEventListener("load", () => {
 })
 
 document.addEventListener("keypress", (event) => {
-  if (event.key === "\\") {
+  if (event.key === "|") {
     clearLocalStorage()
     location.reload()
   }
@@ -460,7 +460,7 @@ document.querySelector(".search-icon").addEventListener("click", () => {
 })
 
 document.addEventListener("keypress", (event) => {
-  if (event.key === "/") {
+  if (event.key === "\\") {
     event.preventDefault()
     search.focus()
     dataPanel.classList.toggle("active")
