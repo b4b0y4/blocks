@@ -315,138 +315,133 @@ async function injectFrame() {
 }
 
 /****************************************************
- *       FUNCTION TO SEARCH BLOCKS DATA LIST
+ *          FUNCTION TO SEARCH AND GET TOKEN
  ***************************************************/
-// Fetch data from "data.txt" and display it
+// Function to display lines
+function displayLines(lines) {
+  dataContent.innerHTML = lines.join("<br>")
+}
+
+// Function to filter lines based on search query
+function filterLines(lines, query) {
+  const filteredLines = lines.filter((line) =>
+    line.toLowerCase().includes(query.toLowerCase())
+  )
+  displayLines(filteredLines)
+}
+
+// Function to extract token ID and contract
+function getToken(panelContent, searchQuery) {
+  if (searchQuery.includes(",")) {
+    const [query, query2] = searchQuery
+      .split(",")
+      .map((str) => str.trim().toUpperCase())
+    let contract
+    switch (query2) {
+      case "EXP":
+        contract = 3
+        break
+      case "ABXPACE":
+        contract = query < 5000000 ? 4 : 5
+        break
+      case "ABXBM":
+        contract = 6
+        break
+      case "BM":
+        contract = 7
+        break
+      case "PLOT":
+        contract = 8
+        break
+      case "PLOTII":
+        contract = 9
+        break
+      case "STBYS":
+        contract = 10
+        break
+      case "ATP":
+        contract = 11
+        break
+      case "GRAIL":
+        contract = 12
+        break
+      default:
+        contract = query < 3000000 ? 0 : query < 374000000 ? 1 : 2
+    }
+    grabData(query, contract)
+    localStorage.setItem("Contract", contract)
+  } else if (/^\d+$/.test(searchQuery)) {
+    let contract = searchQuery < 3000000 ? 0 : searchQuery < 374000000 ? 1 : 2
+    grabData(searchQuery, contract)
+    localStorage.setItem("Contract", contract)
+  } else {
+    const panelNumber = parseInt(panelContent.match(/\d+/)[0])
+    const panelContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
+    const searchNumber = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
+    const tokenId =
+      panelNumber === 0
+        ? searchNumber.toString()
+        : (panelNumber * 1000000 + searchNumber).toString().padStart(6, "0")
+    let contract
+    switch (panelContract) {
+      case "EXP":
+        contract = 3
+        break
+      case "ABXPACE":
+        contract = tokenId < 5000000 ? 4 : 5
+        break
+      case "ABXBM":
+        contract = 6
+        break
+      case "BM":
+        contract = 7
+        break
+      case "PLOT":
+        contract = 8
+        break
+      case "PLOTII":
+        contract = 9
+        break
+      case "STBYS":
+        contract = 10
+        break
+      case "ATP":
+        contract = 11
+        break
+      case "GRAIL":
+        contract = 12
+        break
+      default:
+        contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
+    }
+    console.log(tokenId, contract)
+    grabData(tokenId, contract)
+    localStorage.setItem("Contract", contract)
+  }
+}
+
+// Fetching data
 fetch("data.txt")
   .then((response) => response.text())
   .then((data) => {
     const lines = data.split("\n")
-
-    // Function to display lines
-    function displayLines(lines) {
-      dataContent.innerHTML = lines.join("<br>")
-    }
-
-    // Function to filter lines based on search query
-    function filterLines(query) {
-      const filteredLines = lines.filter((line) =>
-        line.toLowerCase().includes(query.toLowerCase())
-      )
-      displayLines(filteredLines)
-    }
-
-    // Function to extract token ID
-    function getTokenId(panelContent, searchQuery) {
-      if (searchQuery.includes(",")) {
-        const [query, query2] = searchQuery
-          .split(",")
-          .map((str) => str.trim().toUpperCase())
-        let contract
-        switch (query2) {
-          case "EXP":
-            contract = 3
-            break
-          case "ABXPACE":
-            contract = query < 5000000 ? 4 : 5
-            break
-          case "ABXBM":
-            contract = 6
-            break
-          case "BM":
-            contract = 7
-            break
-          case "PLOT":
-            contract = 8
-            break
-          case "PLOTII":
-            contract = 9
-            break
-          case "STBYS":
-            contract = 10
-            break
-          case "ATP":
-            contract = 11
-            break
-          case "GRAIL":
-            contract = 12
-            break
-          default:
-            // Handle unknown panelContract
-            contract = 0
-        }
-        grabData(query, contract)
-        localStorage.setItem("Contract", contract)
-      } else {
-        // Check if the search query is only a number
-        const isNumber = /^\d+$/.test(searchQuery)
-        if (isNumber) {
-          let contract =
-            searchQuery < 3000000 ? 0 : searchQuery < 374000000 ? 1 : 2
-          grabData(searchQuery, contract)
-          localStorage.setItem("Contract", contract)
-        }
-      }
-
-      // Extract panel number and contract from panelContent
-      const panelNumber = parseInt(panelContent.match(/\d+/)[0])
-      const panelContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
-
-      // Extract search number from searchQuery
-      const searchNumber = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
-
-      // Calculate tokenId
-      const tokenId =
-        panelNumber === 0
-          ? searchNumber.toString()
-          : (panelNumber * 1000000 + searchNumber).toString().padStart(6, "0")
-
-      // Define contract based on panelContract and tokenId
-      let contract
-      if (panelContract === "EXP") {
-        contract = 3
-      } else if (panelContract === "ABXPACE") {
-        contract = tokenId < 5000000 ? 4 : 5
-      } else if (panelContract === "ABXBM") {
-        contract = 6
-      } else if (panelContract === "BM") {
-        contract = 7
-      } else if (panelContract === "PLOT") {
-        contract = 8
-      } else if (panelContract === "PLOTII") {
-        contract = 9
-      } else if (panelContract === "STBYS") {
-        contract = 10
-      } else if (panelContract === "ATP") {
-        contract = 11
-      } else if (panelContract === "GRAIL") {
-        contract = 12
-      } else {
-        contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
-      }
-
-      console.log(tokenId, contract)
-      grabData(tokenId, contract)
-      localStorage.setItem("Contract", contract)
-    }
+    // Display all lines initially
+    displayLines(lines)
 
     // Event listener for search field
     search.addEventListener("input", (event) => {
       const query = event.target.value.trim().split("#")[0].trim()
-      filterLines(query)
+      filterLines(lines, query)
     })
 
     search.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
         const query = search.value.trim()
-        search.value.trim() === ""
+        query === ""
           ? fetchAndProcessRandomLine()
-          : getTokenId(dataContent.innerHTML, query)
+          : getToken(dataContent.innerHTML, query)
       }
     })
-
-    // Display all lines initially
-    displayLines(lines)
   })
   .catch((error) => {
     console.error("Error reading file:", error)
@@ -700,14 +695,14 @@ function decrementTokenId() {
 
 inc.addEventListener("click", incrementTokenId)
 
-document.addEventListener("keydown", (event) => {
-  event.key === "ArrowRight" ? incrementTokenId() : null
+document.addEventListener("keypress", (event) => {
+  event.key === ">" ? incrementTokenId() : null
 })
 
 dec.addEventListener("click", decrementTokenId)
 
-document.addEventListener("keydown", (event) => {
-  event.key === "ArrowLeft" ? decrementTokenId() : null
+document.addEventListener("keypress", (event) => {
+  event.key === "<" ? decrementTokenId() : null
 })
 
 /****************************************************
