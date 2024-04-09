@@ -595,7 +595,6 @@ PLOT 19 - Scribbled Daydreams / minimizer - 200 minted
 PLOT 20 - Generative Alchemy / Eliya Stein - 38 minted
 PLOT 21 - Scratch / Matto - 64 minted
 PLOT 22 - Stroomlijn / Bart Simons - 38 minted
-PLOT 23 - pattern.dst /  - 1 minted
 PLOT 24 - Lissajous / Michael G Devereux - 13 minted
 PLOT 25 - Happenstance II: Framed / Generative Artworks - 15 minted
 PLOT 26 - Field Recordings / Jacob Gold - 14 minted

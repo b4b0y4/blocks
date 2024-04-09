@@ -29,6 +29,7 @@ import {
 } from "./constants/ab.js"
 
 // DOM elements
+const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
 const infoBox = document.getElementById("infoBox")
@@ -229,11 +230,10 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
 async function resolveENS(owner, detail, tokenId) {
   try {
     const ensName = await provider.lookupAddress(owner)
-    const style = `target="_blank" style="text-decoration: none; color: #a2a2a2;" onmouseover="this.style.filter='brightness(70%)';" onmouseout="this.style.filter='brightness(100%)';"`
     if (ensName) {
-      panelContent.innerHTML = `${detail[2]}<br><br ><span style="font-size: 0.85em"><a href="${detail[3]}" ${style}>${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" ${style}>${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" ${style}>${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
+      panelContent.innerHTML = `${detail[2]}<br><br ><span style="font-size: 0.85em"><a href="${detail[3]}" ${style}>${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     } else {
-      panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" ${style}>${detail[3]}</a></span><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" ${style}>${owner}</a><br><br>Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" ${style}>${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
+      panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a></span><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a><br><br>Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     }
   } catch (error) {
     console.log("Error getting ENS name:", error)
@@ -471,7 +471,7 @@ window.addEventListener("DOMContentLoaded", () => {
       (dec.style.display = "none"),
       (save.style.display = "none"))
 
-  console.log("contract:", storedContract)
+  // console.log("contract:", storedContract)
   // console.log("lib source:", localStorage.getItem("Src"))
   // console.log("Id an Hash:", localStorage.getItem("IdHash"))
   // console.log("code type:", localStorage.getItem("Type"))
@@ -489,8 +489,11 @@ rpcUrlInput.addEventListener("keypress", (event) => {
 
 window.addEventListener("load", () => {
   rpcUrl
-    ? (rpcUrlInput.style.display = "none")
-    : ((rpcUrlInput.style.display = "block"), (infoBox.style.display = "none"))
+    ? ((rpcUrlInput.style.display = "none"),
+      (instruction.style.display = "none"))
+    : ((rpcUrlInput.style.display = "block"),
+      (instruction.style.display = "block"),
+      (infoBox.style.display = "none"))
 })
 
 document.addEventListener("keypress", (event) => {
@@ -611,9 +614,7 @@ function processLine(line) {
   const matches = line.match(regex)
   if (!matches) return null
 
-  // Extract number from the regex matches
   const id = parseInt(matches[3])
-  // Generate a random number
   const randomToken = `#${Math.floor(Math.random() * (id - 1))}`
 
   console.log("Random token:", randomToken)

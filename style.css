@@ -44,6 +44,30 @@ body {
   color: #757575;
 }
 
+p {
+  line-height: 1.5em;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding-left: 10px;
+}
+
+li {
+  line-height: 1.5em;
+}
+
+a {
+  text-decoration: none;
+  color: #a2a2a2;
+  transition: filter 0.3s ease-in-out;
+}
+
+a:hover {
+  filter: brightness(70%);
+}
+
 .rpc-url {
   display: none;
   width: 250px;
@@ -135,6 +159,7 @@ body {
   outline: 0.5px solid #a2a2a2;
 }
 
+.instruction,
 .panel,
 .data-panel {
   display: flex;
@@ -156,6 +181,12 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease-in-out;
+}
+
+.instruction {
+  display: none;
+  opacity: 0.95;
+  pointer-events: auto;
 }
 
 .panel.active,
