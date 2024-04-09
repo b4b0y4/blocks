@@ -315,7 +315,7 @@ async function injectFrame() {
 }
 
 /****************************************************
- *          FUNCTION TO SEARCH AND GET TOKEN
+ *          FUNCTIONS TO SEARCH AND GET TOKEN
  ***************************************************/
 // Function to display lines
 function displayLines(lines) {
@@ -414,7 +414,7 @@ function getToken(panelContent, searchQuery) {
       default:
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
     }
-    console.log(tokenId, contract)
+    console.log("tokenId, contract:", tokenId, contract)
     grabData(tokenId, contract)
     localStorage.setItem("Contract", contract)
   }
@@ -607,39 +607,13 @@ function processLine(line) {
   const matches = line.match(regex)
   if (!matches) return null
 
-  // Extract numbers from the regex matches
-  const _contract = matches[1]
-  const firstNumber = parseInt(matches[2])
-  const secondNumber = parseInt(matches[3])
-  // Generate a random second number
-  const randomSecondNumber = Math.floor(Math.random() * (secondNumber - 1))
+  // Extract number from the regex matches
+  const id = parseInt(matches[3])
+  // Generate a random number
+  const randomToken = `#${Math.floor(Math.random() * (id - 1))}`
 
-  const randomToken = (firstNumber * 1000000 + randomSecondNumber).toString()
-
-  let contract
-  if (_contract == "EXP") {
-    contract = 3
-  } else if (_contract == "ABXPACE") {
-    contract = randomToken < 5000000 ? 4 : 5
-  } else if (_contract == "ABXBM") {
-    contract = 6
-  } else if (_contract == "BM") {
-    contract = 7
-  } else if (_contract == "PLOT") {
-    contract = 8
-  } else if (_contract == "PLOTII") {
-    contract = 9
-  } else if (_contract == "STBYS") {
-    contract = 10
-  } else if (_contract == "ATP") {
-    contract = 11
-  } else if (_contract == "GRAIL") {
-    contract = 12
-  } else {
-    contract = randomToken < 3000000 ? 0 : randomToken < 374000000 ? 1 : 2
-  }
-
-  return [randomToken, parseInt(contract)]
+  console.log("Random token:", randomToken)
+  getToken(line, randomToken)
 }
 
 // Function to fetch data from "data.txt", process a random line, and call grabData
@@ -651,17 +625,8 @@ async function fetchAndProcessRandomLine() {
     const lines = (await response.text()).split("\n")
     const randomLine = lines[Math.floor(Math.random() * lines.length)]
 
-    let constructedNumber = processLine(randomLine)
-
-    if (constructedNumber) {
-      console.log("Randomly selected line:", randomLine)
-      console.log("Constructed Number/Contract:", constructedNumber)
-
-      grabData(constructedNumber[0], constructedNumber[1])
-    } else {
-      console.log("Invalid line format.")
-      throw new Error("Invalid line format")
-    }
+    console.log("Randomly selected line:", randomLine)
+    processLine(randomLine)
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error)
     throw error
