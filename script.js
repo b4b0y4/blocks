@@ -375,15 +375,15 @@ function getToken(panelContent, searchQuery) {
     grabData(searchQuery, contract)
     localStorage.setItem("Contract", contract)
   } else {
-    const panelNumber = parseInt(panelContent.match(/\d+/)[0])
-    const panelContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
-    const searchNumber = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
+    const projId = parseInt(panelContent.match(/\d+/)[0])
+    const listContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
+    const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
     const tokenId =
-      panelNumber === 0
-        ? searchNumber.toString()
-        : (panelNumber * 1000000 + searchNumber).toString().padStart(6, "0")
+      projId === 0
+        ? searchId.toString()
+        : (projId * 1000000 + searchId).toString().padStart(6, "0")
     let contract
-    switch (panelContract) {
+    switch (listContract) {
       case "EXP":
         contract = 3
         break
