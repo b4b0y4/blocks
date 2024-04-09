@@ -338,14 +338,54 @@ fetch("data.txt")
 
     // Function to extract token ID
     function getTokenId(panelContent, searchQuery) {
-      // Check if the search query is only a number
-      const isNumber = /^\d+$/.test(searchQuery)
-      if (isNumber) {
-        let contract =
-          searchQuery < 3000000 ? 0 : searchQuery < 374000000 ? 1 : 2
-        grabData(searchQuery, contract)
+      if (searchQuery.includes(",")) {
+        const [query, query2] = searchQuery
+          .split(",")
+          .map((str) => str.trim().toUpperCase())
+        let contract
+        switch (query2) {
+          case "EXP":
+            contract = 3
+            break
+          case "ABXPACE":
+            contract = query < 5000000 ? 4 : 5
+            break
+          case "ABXBM":
+            contract = 6
+            break
+          case "BM":
+            contract = 7
+            break
+          case "PLOT":
+            contract = 8
+            break
+          case "PLOTII":
+            contract = 9
+            break
+          case "STBYS":
+            contract = 10
+            break
+          case "ATP":
+            contract = 11
+            break
+          case "GRAIL":
+            contract = 12
+            break
+          default:
+            // Handle unknown panelContract
+            contract = 0
+        }
+        grabData(query, contract)
         localStorage.setItem("Contract", contract)
-        return
+      } else {
+        // Check if the search query is only a number
+        const isNumber = /^\d+$/.test(searchQuery)
+        if (isNumber) {
+          let contract =
+            searchQuery < 3000000 ? 0 : searchQuery < 374000000 ? 1 : 2
+          grabData(searchQuery, contract)
+          localStorage.setItem("Contract", contract)
+        }
       }
 
       // Extract panel number and contract from panelContent
@@ -379,7 +419,7 @@ fetch("data.txt")
         contract = 10
       } else if (panelContract === "ATP") {
         contract = 11
-      } else if (panelContract === "GRAILS") {
+      } else if (panelContract === "GRAIL") {
         contract = 12
       } else {
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
@@ -598,7 +638,7 @@ function processLine(line) {
     contract = 10
   } else if (_contract == "ATP") {
     contract = 11
-  } else if (_contract == "GRAILS") {
+  } else if (_contract == "GRAIL") {
     contract = 12
   } else {
     contract = randomToken < 3000000 ? 0 : randomToken < 374000000 ? 1 : 2
@@ -925,7 +965,7 @@ async function fetchGRAILS() {
       const detail = await contracts[12].projectDetails(i.toString())
       const tkns = await contracts[12].projectStateData(i)
       if (tkns.invocations) {
-        All += `GRAILS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        All += `GRAIL ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
