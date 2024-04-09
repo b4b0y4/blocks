@@ -368,10 +368,14 @@ function getToken(panelContent, searchQuery) {
       default:
         contract = query < 3000000 ? 0 : query < 374000000 ? 1 : 2
     }
+
+    console.log("tokenId, contract:", query, contract)
     grabData(query, contract)
     localStorage.setItem("Contract", contract)
   } else if (/^\d+$/.test(searchQuery)) {
     let contract = searchQuery < 3000000 ? 0 : searchQuery < 374000000 ? 1 : 2
+
+    console.log("tokenId, contract:", searchQuery, contract)
     grabData(searchQuery, contract)
     localStorage.setItem("Contract", contract)
   } else {
