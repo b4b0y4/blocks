@@ -184,7 +184,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
       : `{ tokenId: "${tokenId}", hash: "${hash}" }`
 
-  localStorage.setItem("IdHash", `tokenData = ${tknData}`)
+  localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
 
   // Update artCode
   let process = ""
