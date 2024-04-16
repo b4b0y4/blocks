@@ -208,13 +208,13 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       : storedContract == 7
       ? "BM"
       : storedContract == 8 || storedContract == 9
-      ? "PLOT"
+      ? "Plot"
       : storedContract == 10
-      ? "Sotheby's"
+      ? "Soth's"
       : storedContract == 11
       ? "ATP"
       : storedContract == 12
-      ? "GRAIL"
+      ? "Grail"
       : null
 
   id =

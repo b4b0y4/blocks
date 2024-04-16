@@ -163,7 +163,7 @@
 165 - Gravity 16 / Jimmy Herdberg - 1024 minted
 166 - Ouroboros / Shane Rich | raregonzo - 1024 minted
 167 - Blaschke Ballet / NumbersInMotion - 600 minted
-168 - Bloom / Blockchance - 284 minted
+168 - Bloom / Blockchance - 285 minted
 169 - Augmented Sequence / toiminto - 1024 minted
 170 - Chroma Theory / Paweł Dudko - 106 minted
 171 - Himinn / Sarah Ridgley - 536 minted
@@ -194,7 +194,7 @@
 198 - Coquina / Jacob Gold - 387 minted
 199 - Prismatic / Eliya Stein - 218 minted
 200 - Saturazione / Stefano Contiero - 111 minted
-201 - 24 Heures / Alexis André - 136 minted
+201 - 24 Heures / Alexis André - 137 minted
 202 - Beauty of Skateboarding / JEANVASCRIPT - 360 minted
 203 - Scoundrels / Kristy Glas - 2048 minted
 204 - Edifice / Ben Kovach - 976 minted
@@ -449,16 +449,16 @@
 462 - Gumbo / Mathias Isaksen - 400 minted
 463 - l.o / Night Sea - 174 minted
 464 - Kubikino / Carolina Melis - 320 minted
-465 - Escherly Seeds / Martijn Cohen - 27 minted
+465 - Escherly Seeds / Martijn Cohen - 28 minted
 466 - Torrent / Jeres - 300 minted
-467 - Glasshouse INAT / Aleksandra Jovanić - 17 minted
+467 - Glasshouse INAT / Aleksandra Jovanić - 18 minted
 468 - Woman, Life, Freedom / Armaghan Fatemi - 35 minted
 469 - Twos / Emily Edelman - 64 minted
 470 - Forecast / Manuel Larino - 365 minted
 471 - This Is Not A Rock / Nicole Vella - 350 minted
 472 - because unless until / ixnayokay - 650 minted
-473 - Fluiroso / Sebastián Brocher (CryptoArte) - 103 minted
-474 - Lumina / DistCollective - 79 minted
+473 - Fluiroso / Sebastián Brocher (CryptoArte) - 105 minted
+474 - Lumina / DistCollective - 80 minted
 475 - Recollection / Robert Hodgin - 166 minted
 476 - Life and Love and Nothing / Nat Sarkissian - 200 minted
 477 - siempre en mí, siempre en ti / Marcelo Soria-Rodríguez - 200 minted
