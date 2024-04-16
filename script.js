@@ -198,23 +198,23 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
 
   let collection =
     storedContract == 0 || storedContract == 1 || storedContract == 2
-      ? "AB"
+      ? `<img src="./img/artblocks.svg"/>`
       : storedContract == 3
-      ? "EXP"
+      ? `<img src="./img/artblocks.svg"/> exp`
       : storedContract == 4 || storedContract == 5
-      ? "AB &times; PACE"
+      ? `<img src="./img/artblocks.svg"/> &times; <img src="./img/pace.png"/>`
       : storedContract == 6
-      ? "AB &times; BM"
+      ? `<img src="./img/artblocks.svg"/> &times; <img src="./img/bm.png"/>`
       : storedContract == 7
-      ? "BM"
+      ? `<img src="./img/bm.png"/>`
       : storedContract == 8 || storedContract == 9
-      ? "Plot"
+      ? `<img src="./img/plot.png"/>`
       : storedContract == 10
-      ? "Soth's"
+      ? `<img src="./img/soth.png"/>`
       : storedContract == 11
-      ? "ATP"
+      ? `<img src="./img/atp.png"/>`
       : storedContract == 12
-      ? "Grail"
+      ? `<img src="./img/grail.png"/>`
       : null
 
   id =

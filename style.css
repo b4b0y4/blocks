@@ -111,6 +111,13 @@ a:hover {
   color: #757575;
   border-radius: 5px;
   margin-left: 8px;
+  display: inline-block;
+}
+
+.info img {
+  max-height: 12.5px;
+  /* border-radius: 5px; */
+  vertical-align: middle;
 }
 
 .info:hover {
