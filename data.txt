@@ -603,3 +603,18 @@ STBYS 0 - Themes and Variations / Vera Molnár, in collaboration with Martin Gra
 ATP 0 - LOVE / Martin Grasser - 300 minted
 GRAIL 1 - Fold / rudxane - 400 minted
 GRAIL 2 - Atlas / Eric De Giuli - 333 minted
+VCA 1 - Concrete Letters / makio135 - 200 minted
+VCA 2 - A Tender Count(ing) / Lisa Orth - 200 minted
+VCA 3 - The Art behind the Code / Luca Ionescu - 5 minted
+VCA 5 - Petrography Case / Orr Kislev - 200 minted
+VCA 6 - Décorés / Alexis André - 200 minted
+VCA 7 - Spatial Curvatures / DistCollective - 200 minted
+VCA 8 - Drifting Dreams / Licia He - 325 minted
+VCA 10 - Suma / Aleksandra Jovanić - 85 minted
+VCA 11 - Chronicles / encapsuled - 17 minted
+VCA 12 - la caverna / Marcelo Soria-Rodríguez - 150 minted
+VCA 13 - Spensieratezza / Emanuele Pasin - 9 minted
+VCA 15 - Linea Recta / Moodsoup - 150 minted
+VCA 17 - Transition / William Watkins - 100 minted
+VCA 18 - JaggedMemories / Shunsuke Takawo - 50 minted
+VCA 19 - [classifieds] / fingacode - 24 minted

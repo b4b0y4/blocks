@@ -13,6 +13,7 @@ import {
   abiSTBYS,
   abiATP,
   abiGRAILS,
+  abiVCA,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -26,6 +27,7 @@ import {
   contractAddressSTBYS,
   contractAddressATP,
   contractAddressGRAILS,
+  contractAddressVCA,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -64,6 +66,7 @@ const contracts = [
   { abi: abiSTBYS, address: contractAddressSTBYS },
   { abi: abiATP, address: contractAddressATP },
   { abi: abiGRAILS, address: contractAddressGRAILS },
+  { abi: abiVCA, address: contractAddressVCA },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -198,23 +201,25 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
 
   let collection =
     storedContract == 0 || storedContract == 1 || storedContract == 2
-      ? `<img src="./img/artblocks.svg"/>`
+      ? "ab"
       : storedContract == 3
-      ? `<img src="./img/artblocks.svg"/> exp`
+      ? "exp"
       : storedContract == 4 || storedContract == 5
-      ? `<img src="./img/artblocks.svg"/> &times; <img src="./img/pace.png"/>`
+      ? "ab &times; pace"
       : storedContract == 6
-      ? `<img src="./img/artblocks.svg"/> &times; <img src="./img/bm.png"/>`
+      ? "ab &times; bm"
       : storedContract == 7
-      ? `<img src="./img/bm.png"/>`
+      ? "bm"
       : storedContract == 8 || storedContract == 9
-      ? `<img src="./img/plot.png"/>`
+      ? "plot"
       : storedContract == 10
-      ? `<img src="./img/soth.png"/>`
+      ? "soth's"
       : storedContract == 11
-      ? `<img src="./img/atp.png"/>`
+      ? "atp"
       : storedContract == 12
-      ? `<img src="./img/grail.png"/>`
+      ? "grail"
+      : storedContract == 13
+      ? "vca"
       : null
 
   id =
@@ -365,6 +370,9 @@ function getToken(panelContent, searchQuery) {
       case "GRAIL":
         contract = 12
         break
+      case "VCA":
+        contract = 13
+        break
       default:
         contract = query < 3000000 ? 0 : query < 374000000 ? 1 : 2
     }
@@ -414,6 +422,9 @@ function getToken(panelContent, searchQuery) {
         break
       case "GRAIL":
         contract = 12
+        break
+      case "VCA":
+        contract = 13
         break
       default:
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
@@ -947,3 +958,29 @@ async function fetchGRAILS() {
   console.log(All)
 }
 // fetchGRAILS()
+
+async function fetchVCA() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[13].projectDetails(i.toString())
+      const tkns = await contracts[13].projectTokenInfo(i)
+      if (tkns.invocations) {
+        All += `VCA ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchVCA()
