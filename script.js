@@ -208,8 +208,9 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
 
   let collection =
     storedContract == 15 ||
-    (storedContract == 1 && tokenId < 96000000 && tokenId >= 95000000) ||
-    (storedContract == 1 && tokenId >= 189000000 && tokenId < 190000000)
+    (storedContract == 1 &&
+      ((tokenId < 96000000 && tokenId >= 95000000) ||
+        (tokenId >= 189000000 && tokenId < 190000000)))
       ? "citizen"
       : storedContract == 0 || storedContract == 1 || storedContract == 2
       ? "ab"
@@ -224,7 +225,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       : storedContract == 8 || storedContract == 9
       ? "plot"
       : storedContract == 10
-      ? "soth's"
+      ? "stbys"
       : storedContract == 11
       ? "atp"
       : storedContract == 12
