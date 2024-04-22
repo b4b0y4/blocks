@@ -462,7 +462,7 @@
 475 - Recollection / Robert Hodgin - 166 minted
 476 - Life and Love and Nothing / Nat Sarkissian - 200 minted
 477 - siempre en mí, siempre en ti / Marcelo Soria-Rodríguez - 200 minted
-478 - Lucky Clover / Sputniko! - 38 minted
+478 - Lucky Clover / Sputniko! - 39 minted
 479 - Bakhoor Assandal / Melissa Wiederrecht - 200 minted
 480 - Axo / jiwa - 400 minted
 481 - Immaterial / Bjørn Staal - 280 minted
@@ -488,6 +488,7 @@ ABXPACE 6 - World Flag / John Gerrard - 195 minted
 ABXPACE 7 - Schema / DRIFT with Jeff Davis - 300 minted
 ABXBM 0 - Metropolis / mpkoz - 940 minted
 ABXBM 1 - 923 EMPTY ROOMS / Casey REAS - 924 minted
+BM 0 - Finale / Bright Moments - 1000 minted
 BM 1 - Stellaraum / Alida Sun - 66 minted
 BM 2 - Parnassus / mpkoz - 100 minted
 BM 3 - Inflection / Jeff Davis - 96 minted
@@ -572,6 +573,14 @@ BM 81 - The Destination / Camille Roux x Matthieu Segret - 100 minted
 BM 82 - Encore / rudxane - 100 minted
 BM 83 - Notes / Maya Man - 100 minted
 BM 84 - Culmination / Jeff Davis - 100 minted
+CITIZEN 0 - CryptoGalactican / Qian Qian - 1000 minted
+CITIZEN 3 - CryptoBerliner / Qian Qian - 1000 minted
+CITIZEN 4 - CryptoLondoner / Qian Qian - 1000 minted
+CITIZEN 5 - CryptoMexa / Qian Qian - 1000 minted
+CITIZEN 6 - CryptoTokyoite / Qian Qian - 1000 minted
+CITIZEN 7 - CryptoPatagonian / Qian Qian - 1000 minted
+CITIZEN 8 - CryptoParisian / Qian Qian - 1000 minted
+CITIZEN 9 - CryptoVenezian / Qian Qian - 1000 minted
 PLOT 0 - Streamlines / NumbersInMotion - 500 minted
 PLOT 1 - Implosion / Generative Artworks - 256 minted
 PLOT 2 - Really Random Rock / DCA - 350 minted

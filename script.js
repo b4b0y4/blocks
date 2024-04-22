@@ -14,6 +14,8 @@ import {
   abiATP,
   abiGRAILS,
   abiVCA,
+  abiBMF,
+  abiCITIZEN,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -28,6 +30,8 @@ import {
   contractAddressATP,
   contractAddressGRAILS,
   contractAddressVCA,
+  contractAddressBMF,
+  contractAddressCITIZEN,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -67,6 +71,8 @@ const contracts = [
   { abi: abiATP, address: contractAddressATP },
   { abi: abiGRAILS, address: contractAddressGRAILS },
   { abi: abiVCA, address: contractAddressVCA },
+  { abi: abiBMF, address: contractAddressBMF },
+  { abi: abiCITIZEN, address: contractAddressCITIZEN },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -127,7 +133,8 @@ async function grabData(tokenId, contract) {
     contract === 6 ||
     contract === 9 ||
     contract === 10 ||
-    contract === 12
+    contract === 12 ||
+    contract === 14
       ? contracts[contract].projectScriptDetails(projId.toString())
       : contracts[contract].projectScriptInfo(projId.toString()))
 
@@ -200,7 +207,11 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update info content
 
   let collection =
-    storedContract == 0 || storedContract == 1 || storedContract == 2
+    storedContract == 15 ||
+    (storedContract == 1 && tokenId < 96000000 && tokenId >= 95000000) ||
+    (storedContract == 1 && tokenId >= 189000000 && tokenId < 190000000)
+      ? "citizen"
+      : storedContract == 0 || storedContract == 1 || storedContract == 2
       ? "ab"
       : storedContract == 3
       ? "exp"
@@ -208,7 +219,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? "ab &times; pace"
       : storedContract == 6
       ? "ab &times; bm"
-      : storedContract == 7
+      : storedContract == 7 || storedContract == 14
       ? "bm"
       : storedContract == 8 || storedContract == 9
       ? "plot"
@@ -353,7 +364,7 @@ function getToken(panelContent, searchQuery) {
         contract = 6
         break
       case "BM":
-        contract = 7
+        contract = query < 1000000 ? 14 : 7
         break
       case "PLOT":
         contract = 8
@@ -372,6 +383,9 @@ function getToken(panelContent, searchQuery) {
         break
       case "VCA":
         contract = 13
+        break
+      case "CITIZEN":
+        contract = 15
         break
       default:
         contract = query < 3000000 ? 0 : query < 374000000 ? 1 : 2
@@ -406,7 +420,7 @@ function getToken(panelContent, searchQuery) {
         contract = 6
         break
       case "BM":
-        contract = 7
+        contract = tokenId < 1000000 ? 14 : 7
         break
       case "PLOT":
         contract = 8
@@ -426,10 +440,14 @@ function getToken(panelContent, searchQuery) {
       case "VCA":
         contract = 13
         break
+      case "CITIZEN":
+        contract = 15
+        break
       default:
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
     }
-    console.log("tokenId, contract:", tokenId, contract)
+    console.log("Contract:", contract)
+    console.log("Token Id:", tokenId)
     grabData(tokenId, contract)
     localStorage.setItem("Contract", contract)
   }
@@ -487,7 +505,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // console.log("Id an Hash:", localStorage.getItem("IdHash"))
   // console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
-  console.log("library:", storedData.codeLib)
+  // console.log("library:", storedData.codeLib)
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
@@ -692,7 +710,7 @@ document.addEventListener("keypress", (event) => {
 async function fetchBlocks() {
   let All = ""
   let noToken = 0
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 223; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const detail = await contracts[n].projectDetails(i.toString())
@@ -806,10 +824,15 @@ async function fetchABXBM() {
 async function fetchBM() {
   let All = ""
   let noToken = 0
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 100; i++) {
+    const n = i < 1 ? 14 : 7
     try {
-      const detail = await contracts[7].projectDetails(i.toString())
-      const tkns = await contracts[7].projectTokenInfo(i)
+      const detail = await contracts[n].projectDetails(i.toString())
+      const tkns =
+        n === 14
+          ? await contracts[n].projectStateData(i)
+          : await contracts[n].projectTokenInfo(i)
+
       if (tkns.invocations) {
         All += `BM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
@@ -828,6 +851,32 @@ async function fetchBM() {
   console.log(All)
 }
 // fetchBM()
+
+async function fetchCITIZEN() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[15].projectDetails(i.toString())
+      const tkns = await contracts[15].projectTokenInfo(i)
+      if (tkns.invocations) {
+        All += `CITIZEN ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchCITIZEN()
 
 async function fetchPLOT() {
   let All = ""
