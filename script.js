@@ -235,41 +235,37 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
     tokenId < 1000000
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
-  info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
+
+  // get artist name for bm finale
+  let logs = []
+  if (storedContract == 14) {
+    frame.contentWindow.console.log = function (message) {
+      console.log("Log from iframe:", message)
+      if (logs.length === 0) {
+        message = message.replace(/Artist\s*\d+\.\s*/, "")
+        message = message.replace(/\s*--.*/, "")
+      }
+      logs.push(message)
+
+      info.innerHTML = `${detail[0]} #${id} / ${logs[0]} <span>${collection}</span>`
+    }
+  } else {
+    info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
+  }
 
   resolveENS(owner, detail, tokenId)
   injectFrame()
-}
-
-// get artist name for bm finale
-let logs = []
-if (storedContract == 14) {
-  frame.contentWindow.console.log = function (message) {
-    console.log("Log from iframe:", message)
-    if (logs.length === 0) {
-      message = message.replace(/Artist\s*\d+\.\s*/, "")
-      message = message.replace(/--.*/, "")
-    }
-    logs.push(message)
-  }
 }
 
 // Get ENS name for owner if available
 async function resolveENS(owner, detail, tokenId) {
   try {
     const ensName = await provider.lookupAddress(owner)
-    if (storedContract == 14) {
-      if (ensName) {
-        panelContent.innerHTML = `${logs[0]}<br>${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
-      } else {
-        panelContent.innerHTML = `${logs[0]}<br>${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a></span><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a><br><br>Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
-      }
+
+    if (ensName) {
+      panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     } else {
-      if (ensName) {
-        panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
-      } else {
-        panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a></span><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a><br><br>Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
-      }
+      panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a></span><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a><br><br>Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     }
   } catch (error) {
     console.log("Error getting ENS name:", error)
@@ -700,7 +696,8 @@ function incrementTokenId() {
     : "1"
 
   grabData(storedData.tokenId, parseInt(storedContract))
-  console.log(storedData.tokenId, parseInt(storedContract))
+  console.log("Contract:", parseInt(storedContract))
+  console.log("Token Id:", storedData.tokenId)
 }
 
 function decrementTokenId() {
@@ -709,7 +706,8 @@ function decrementTokenId() {
     : "0"
 
   grabData(storedData.tokenId, parseInt(storedContract))
-  console.log(storedData.tokenId, parseInt(storedContract))
+  console.log("Contract:", parseInt(storedContract))
+  console.log("Token Id:", storedData.tokenId)
 }
 
 inc.addEventListener("click", incrementTokenId)
