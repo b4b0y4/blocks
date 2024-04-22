@@ -248,7 +248,7 @@ async function resolveENS(owner, detail, tokenId) {
   try {
     const ensName = await provider.lookupAddress(owner)
     if (ensName) {
-      panelContent.innerHTML = `${detail[2]}<br><br ><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
+      panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     } else {
       panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a></span><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a><br><br>Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
     }
