@@ -74,6 +74,7 @@ const contracts = [
   { abi: abiBMF, address: contractAddressBMF },
   { abi: abiCITIZEN, address: contractAddressCITIZEN },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
+let storedContract = localStorage.getItem("Contract")
 
 // Libraries
 const predefinedLibraries = {
@@ -235,19 +236,22 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? tokenId
       : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
   info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
+
   resolveENS(owner, detail, tokenId)
   injectFrame()
 }
 
 // get artist name for bm finale
 let logs = []
-frame.contentWindow.console.log = function (message) {
-  console.log("Log from iframe:", message)
-  if (logs.length === 0) {
-    message = message.replace(/Artist\s*\d+\.\s*/, "")
-    message = message.replace(/--.*/, "")
+if (storedContract == 14) {
+  frame.contentWindow.console.log = function (message) {
+    console.log("Log from iframe:", message)
+    if (logs.length === 0) {
+      message = message.replace(/Artist\s*\d+\.\s*/, "")
+      message = message.replace(/--.*/, "")
+    }
+    logs.push(message)
   }
-  logs.push(message)
 }
 
 // Get ENS name for owner if available
@@ -501,7 +505,6 @@ fetch("data.txt")
  *                     EVENTS
  ***************************************************/
 let storedData = {}
-let storedContract = localStorage.getItem("Contract")
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
   storedData = JSON.parse(localStorage.getItem("contractData"))
