@@ -50,6 +50,7 @@ const panelContent = document.getElementById("panelContent")
 const dataContent = document.getElementById("dataContent")
 const search = document.getElementById("searchInput")
 const keyShort = document.querySelector(".key-short")
+const spin = document.querySelector(".spinner")
 
 // Initialize Ethereum provider
 const rpcUrl = localStorage.getItem("rpcUrl")
@@ -119,6 +120,7 @@ function clearLocalStorage() {
  ***************************************************/
 async function grabData(tokenId, contract) {
   try {
+    spin.style.display = "block"
     clearLocalStorage()
     localStorage.setItem("Contract", contract)
 
@@ -341,6 +343,7 @@ async function injectFrame() {
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
     iframeDocument.close()
+    spin.style.display = "none"
   } catch (error) {
     console.error("Error:", error)
   }
