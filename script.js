@@ -650,10 +650,7 @@ function handleSaveButtonClick() {
 }
 
 // Attach the handleSaveButtonClick
-save.addEventListener("click", () => {
-  save.classList.add("clicked")
-  handleSaveButtonClick()
-})
+save.addEventListener("click", handleSaveButtonClick)
 
 /***************************************************
  *        FUNCTIONS TO GET RANDOM TOKEN ID
@@ -689,10 +686,9 @@ async function fetchAndProcessRandomLine() {
   }
 }
 
-document.getElementById("randomButton").addEventListener("click", () => {
-  document.getElementById("randomButton").classList.add("clicked")
-  fetchAndProcessRandomLine()
-})
+document
+  .getElementById("randomButton")
+  .addEventListener("click", fetchAndProcessRandomLine)
 
 /****************************************************
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
@@ -717,19 +713,13 @@ function decrementTokenId() {
   console.log("Token Id:", storedData.tokenId)
 }
 
-inc.addEventListener("click", () => {
-  inc.classList.add("clicked")
-  incrementTokenId()
-})
+inc.addEventListener("click", incrementTokenId)
 
 document.addEventListener("keypress", (event) => {
   event.key === ">" ? incrementTokenId() : null
 })
 
-dec.addEventListener("click", () => {
-  dec.classList.add("clicked")
-  decrementTokenId()
-})
+dec.addEventListener("click", decrementTokenId)
 
 document.addEventListener("keypress", (event) => {
   event.key === "<" ? decrementTokenId() : null

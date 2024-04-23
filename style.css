@@ -61,17 +61,12 @@ li {
 a {
   text-decoration: none;
   color: #a2a2a2;
-  padding: 2px;
-  border-radius: 5px;
   transition: filter 0.3s ease-in-out;
+  outline: none;
 }
 
 a:hover {
   filter: brightness(70%);
-}
-
-a:focus {
-  outline: 0.5px solid #a2a2a2;
 }
 
 .rpc-url {
@@ -158,20 +153,6 @@ a:focus {
 .previous:hover,
 .next:hover {
   background-color: #202020;
-}
-
-.save:focus,
-.random:focus,
-.previous:focus,
-.next:focus {
-  outline: 0.5px solid #a2a2a2;
-}
-
-.save.clicked:focus,
-.random.clicked:focus,
-.previous.clicked:focus,
-.next.clicked:focus {
-  outline: none;
 }
 
 .instruction,
