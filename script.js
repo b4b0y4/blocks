@@ -13,9 +13,10 @@ import {
   abiSTBYS,
   abiATP,
   abiGRAILS,
-  abiVCA,
   abiBMF,
   abiCITIZEN,
+  abiAOI,
+  abiVCA,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -29,9 +30,10 @@ import {
   contractAddressSTBYS,
   contractAddressATP,
   contractAddressGRAILS,
-  contractAddressVCA,
   contractAddressBMF,
   contractAddressCITIZEN,
+  contractAddressAOI,
+  contractAddressVCA,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -71,9 +73,10 @@ const contracts = [
   { abi: abiSTBYS, address: contractAddressSTBYS },
   { abi: abiATP, address: contractAddressATP },
   { abi: abiGRAILS, address: contractAddressGRAILS },
-  { abi: abiVCA, address: contractAddressVCA },
   { abi: abiBMF, address: contractAddressBMF },
   { abi: abiCITIZEN, address: contractAddressCITIZEN },
+  { abi: abiAOI, address: contractAddressAOI },
+  { abi: abiVCA, address: contractAddressVCA },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 let storedContract = localStorage.getItem("Contract")
 
@@ -115,9 +118,9 @@ function clearLocalStorage() {
   localStorage.removeItem("Art")
 }
 
-/****************************************************
+/***************************************************
  *        FUNCTION TO GET DATA FROM ETHEREUM
- ***************************************************/
+ **************************************************/
 async function grabData(tokenId, contract) {
   try {
     spin.style.display = "block"
@@ -130,16 +133,15 @@ async function grabData(tokenId, contract) {
       : contracts[contract].tokenIdToHash(tokenId))
 
     const projId = await contracts[contract].tokenIdToProjectId(tokenId)
-    const projectInfo = await (contract === 2 ||
-    contract === 3 ||
-    contract === 5 ||
-    contract === 6 ||
-    contract === 9 ||
-    contract === 10 ||
-    contract === 12 ||
-    contract === 14
-      ? contracts[contract].projectScriptDetails(projId.toString())
-      : contracts[contract].projectScriptInfo(projId.toString()))
+    const projectInfo = await (contract === 1 ||
+    contract === 4 ||
+    contract === 7 ||
+    contract === 8 ||
+    contract === 11 ||
+    contract === 14 ||
+    contract === 16
+      ? contracts[contract].projectScriptInfo(projId.toString())
+      : contracts[contract].projectScriptDetails(projId.toString()))
 
     // Construct script
     let script = ""
@@ -183,9 +185,9 @@ async function grabData(tokenId, contract) {
   }
 }
 
-/****************************************************
+/***************************************************
  *              FUNCTIONS TO UPDATE UI
- ***************************************************/
+ **************************************************/
 let id
 function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update library source
@@ -217,7 +219,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? "ab&times;pace"
       : storedContract == 6
       ? "ab&times;bm"
-      : storedContract == 7 || storedContract == 14
+      : storedContract == 7 || storedContract == 13
       ? "bm"
       : storedContract == 8 || storedContract == 9
       ? "plot"
@@ -227,10 +229,12 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? "atp"
       : storedContract == 12
       ? "grail"
-      : storedContract == 13
-      ? "vca"
-      : storedContract == 15
+      : storedContract == 14
       ? "citizen"
+      : storedContract == 15
+      ? "aoi"
+      : storedContract == 16
+      ? "vca"
       : null
 
   id =
@@ -240,7 +244,7 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
 
   // get artist name for bm finale
   let logs = []
-  if (storedContract == 14) {
+  if (storedContract == 13) {
     frame.contentWindow.console.log = function (message) {
       console.log("Log from iframe:", message)
       if (logs.length === 0) {
@@ -274,9 +278,9 @@ async function resolveENS(owner, detail, tokenId) {
   }
 }
 
-/****************************************************
+/***************************************************
  *        FUNCTION TO INJECT INTO IFRAME
- ***************************************************/
+ **************************************************/
 async function injectFrame() {
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
   try {
@@ -349,9 +353,9 @@ async function injectFrame() {
   }
 }
 
-/****************************************************
+/***************************************************
  *          FUNCTIONS TO SEARCH AND GET TOKEN
- ***************************************************/
+ **************************************************/
 // Function to display lines
 function displayLines(lines) {
   dataContent.innerHTML = lines.join("<br>")
@@ -383,7 +387,7 @@ function getToken(panelContent, searchQuery) {
         contract = 6
         break
       case "BM":
-        contract = query < 1000000 ? 14 : 7
+        contract = query < 1000000 ? 13 : 7
         break
       case "PLOT":
         contract = 8
@@ -400,11 +404,14 @@ function getToken(panelContent, searchQuery) {
       case "GRAIL":
         contract = 12
         break
-      case "VCA":
-        contract = 13
-        break
       case "CITIZEN":
+        contract = 14
+        break
+      case "AOI":
         contract = 15
+        break
+      case "VCA":
+        contract = 16
         break
       default:
         contract = query < 3000000 ? 0 : query < 374000000 ? 1 : 2
@@ -440,7 +447,7 @@ function getToken(panelContent, searchQuery) {
         contract = 6
         break
       case "BM":
-        contract = tokenId < 1000000 ? 14 : 7
+        contract = tokenId < 1000000 ? 13 : 7
         break
       case "PLOT":
         contract = 8
@@ -457,11 +464,14 @@ function getToken(panelContent, searchQuery) {
       case "GRAIL":
         contract = 12
         break
-      case "VCA":
-        contract = 13
-        break
       case "CITIZEN":
+        contract = 14
+        break
+      case "AOI":
         contract = 15
+        break
+      case "VCA":
+        contract = 16
         break
       default:
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
@@ -500,9 +510,9 @@ fetch("data.txt")
     console.error("Error reading file:", error)
   })
 
-/****************************************************
+/***************************************************
  *                     EVENTS
- ***************************************************/
+ **************************************************/
 let storedData = {}
 // Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
@@ -607,9 +617,9 @@ overlay.addEventListener("click", () => {
   overlay.style.display = "none"
 })
 
-/****************************************************
+/***************************************************
  *          FUNCTION TO SAVE THE OUTPUT
- * *************************************************/
+ **************************************************/
 async function saveContentAsFile(content, filename) {
   const defaultName = `${storedData.detail[0].replace(/\s+/g, "-")}#${id}.html`
 
@@ -690,9 +700,9 @@ document
   .getElementById("randomButton")
   .addEventListener("click", fetchAndProcessRandomLine)
 
-/****************************************************
+/***************************************************
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
- * *************************************************/
+ **************************************************/
 function incrementTokenId() {
   storedData.tokenId = storedData.tokenId
     ? (parseInt(storedData.tokenId) + 1).toString()
@@ -725,9 +735,9 @@ document.addEventListener("keypress", (event) => {
   event.key === "<" ? decrementTokenId() : null
 })
 
-/****************************************************
+/***************************************************
  *         FUNCTION TO UPDATE ART BLOCKS LIST
- * *************************************************/
+ **************************************************/
 async function fetchBlocks() {
   let All = ""
   let noToken = 0
@@ -846,7 +856,7 @@ async function fetchBM() {
   let All = ""
   let noToken = 0
   for (let i = 0; i < 100; i++) {
-    const n = i < 1 ? 14 : 7
+    const n = i < 1 ? 13 : 7
     try {
       const detail = await contracts[n].projectDetails(i.toString())
       const tkns =
@@ -878,8 +888,8 @@ async function fetchCITIZEN() {
   let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
-      const detail = await contracts[15].projectDetails(i.toString())
-      const tkns = await contracts[15].projectTokenInfo(i)
+      const detail = await contracts[14].projectDetails(i.toString())
+      const tkns = await contracts[14].projectTokenInfo(i)
       if (tkns.invocations) {
         All += `CITIZEN ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
@@ -1029,13 +1039,39 @@ async function fetchGRAILS() {
 }
 // fetchGRAILS()
 
+async function fetchAOI() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[15].projectDetails(i.toString())
+      const tkns = await contracts[15].projectStateData(i)
+      if (tkns.invocations) {
+        All += `AOI ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchAOI()
+
 async function fetchVCA() {
   let All = ""
   let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
-      const detail = await contracts[13].projectDetails(i.toString())
-      const tkns = await contracts[13].projectTokenInfo(i)
+      const detail = await contracts[16].projectDetails(i.toString())
+      const tkns = await contracts[16].projectTokenInfo(i)
       if (tkns.invocations) {
         All += `VCA ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
