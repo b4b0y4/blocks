@@ -256,7 +256,7 @@ a:hover {
   width: 80px;
   text-align: start;
   border-radius: 5px;
-  padding: 4px 28px 4px 28px;
+  padding: 4px 30px 4px 30px;
 }
 
 .search-input:hover {
@@ -305,7 +305,7 @@ a:hover {
   }
 
   .search-input {
-    padding: 6px 7px 6px 28px;
+    padding: 6px 30px 6px 30px;
   }
 
   .save,
