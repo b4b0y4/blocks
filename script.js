@@ -17,6 +17,7 @@ import {
   abiCITIZEN,
   abiAOI,
   abiVCA,
+  abiSDAO,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -34,6 +35,7 @@ import {
   contractAddressCITIZEN,
   contractAddressAOI,
   contractAddressVCA,
+  contractAddressSDAO,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -77,6 +79,7 @@ const contracts = [
   { abi: abiCITIZEN, address: contractAddressCITIZEN },
   { abi: abiAOI, address: contractAddressAOI },
   { abi: abiVCA, address: contractAddressVCA },
+  { abi: abiSDAO, address: contractAddressSDAO },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 let storedContract = localStorage.getItem("Contract")
 
@@ -235,6 +238,8 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? "aoi"
       : storedContract == 16
       ? "vca"
+      : storedContract == 17
+      ? "sdao"
       : null
 
   id =
@@ -413,6 +418,9 @@ function getToken(panelContent, searchQuery) {
       case "VCA":
         contract = 16
         break
+      case "SDAO":
+        contract = 17
+        break
       default:
         contract = query < 3000000 ? 0 : query < 374000000 ? 1 : 2
     }
@@ -472,6 +480,9 @@ function getToken(panelContent, searchQuery) {
         break
       case "VCA":
         contract = 16
+        break
+      case "SDAO":
+        contract = 17
         break
       default:
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
@@ -1090,3 +1101,29 @@ async function fetchVCA() {
   console.log(All)
 }
 // fetchVCA()
+
+async function fetchSDAO() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[17].projectDetails(i.toString())
+      const tkns = await contracts[17].projectStateData(i)
+      if (tkns.invocations) {
+        All += `SDAO ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchSDAO()

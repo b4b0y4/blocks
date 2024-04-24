@@ -612,6 +612,7 @@ STBYS 0 - Themes and Variations / Vera Molnár, in collaboration with Martin Gra
 ATP 0 - LOVE / Martin Grasser - 300 minted
 GRAIL 1 - Fold / rudxane - 400 minted
 GRAIL 2 - Atlas / Eric De Giuli - 333 minted
+SDAO 0 - Elevate Heart / Daniel Calderon Arenas - 1000 minted
 AOI 0 - Pursuit / Per Kristian Stoveland - 200 minted
 AOI 1 - Echo of Intensity / Per Kristian Stoveland - 1595 minted
 AOI 2 - /// / Snowfro - 2000 minted
