@@ -18,6 +18,8 @@ import {
   abiAOI,
   abiVCA,
   abiSDAO,
+  abiMINTS,
+  abiTDG,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -36,6 +38,8 @@ import {
   contractAddressAOI,
   contractAddressVCA,
   contractAddressSDAO,
+  contractAddressMINTS,
+  contractAddressTDG,
 } from "./constants/ab.js"
 
 // DOM elements
@@ -80,6 +84,8 @@ const contracts = [
   { abi: abiAOI, address: contractAddressAOI },
   { abi: abiVCA, address: contractAddressVCA },
   { abi: abiSDAO, address: contractAddressSDAO },
+  { abi: abiMINTS, address: contractAddressMINTS },
+  { abi: abiTDG, address: contractAddressTDG },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 let storedContract = localStorage.getItem("Contract")
 
@@ -126,6 +132,7 @@ function clearLocalStorage() {
  **************************************************/
 async function grabData(tokenId, contract) {
   try {
+    keyShort.style.display = "none"
     spin.style.display = "block"
     clearLocalStorage()
     localStorage.setItem("Contract", contract)
@@ -142,7 +149,8 @@ async function grabData(tokenId, contract) {
     contract === 8 ||
     contract === 11 ||
     contract === 14 ||
-    contract === 16
+    contract === 16 ||
+    contract === 18
       ? contracts[contract].projectScriptInfo(projId.toString())
       : contracts[contract].projectScriptDetails(projId.toString()))
 
@@ -240,6 +248,10 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       ? "vca"
       : storedContract == 17
       ? "sdao"
+      : storedContract == 18
+      ? "mints"
+      : storedContract == 19
+      ? "tdg"
       : null
 
   id =
@@ -353,6 +365,7 @@ async function injectFrame() {
     iframeDocument.write(dynamicContent)
     iframeDocument.close()
     spin.style.display = "none"
+    keyShort.style.display = "block"
   } catch (error) {
     console.error("Error:", error)
   }
@@ -421,6 +434,12 @@ function getToken(panelContent, searchQuery) {
       case "SDAO":
         contract = 17
         break
+      case "MINTS":
+        contract = 18
+        break
+      case "TDG":
+        contract = 19
+        break
       default:
         contract = query < 3000000 ? 0 : query < 374000000 ? 1 : 2
     }
@@ -483,6 +502,12 @@ function getToken(panelContent, searchQuery) {
         break
       case "SDAO":
         contract = 17
+        break
+      case "MINTS":
+        contract = 18
+        break
+      case "TDG":
+        contract = 19
         break
       default:
         contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
@@ -871,7 +896,7 @@ async function fetchBM() {
     try {
       const detail = await contracts[n].projectDetails(i.toString())
       const tkns =
-        n === 14
+        n === 13
           ? await contracts[n].projectStateData(i)
           : await contracts[n].projectTokenInfo(i)
 
@@ -1127,3 +1152,55 @@ async function fetchSDAO() {
   console.log(All)
 }
 // fetchSDAO()
+
+async function fetchMINTS() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[18].projectDetails(i.toString())
+      const tkns = await contracts[18].projectTokenInfo(i)
+      if (tkns.invocations) {
+        All += `MINTS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchMINTS()
+
+async function fetchTDG() {
+  let All = ""
+  let noToken = 0
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[19].projectDetails(i.toString())
+      const tkns = await contracts[19].projectStateData(i)
+      if (tkns.invocations) {
+        All += `TDG ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        noToken = 0
+      } else {
+        console.log(`No tokens found for project ${i}`)
+        noToken++
+        if (noToken === 5) {
+          break
+        }
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(All)
+}
+// fetchTDG()

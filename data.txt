@@ -331,7 +331,7 @@
 339 - Ieva / Shvembldr - 500 minted
 340 - Vahria / Darien Brito - 299 minted
 341 - RASTER / itsgalo - 400 minted
-342 - Being Yourself While Fitting In / LIA - 54 minted
+342 - Being Yourself While Fitting In / LIA - 55 minted
 343 - Balletic / Motus Art - 200 minted
 344 - Glass / Eric De Giuli - 300 minted
 345 - 3 Minute Meditations / thetechnocratic - 159 minted
@@ -451,8 +451,8 @@
 464 - Kubikino / Carolina Melis - 320 minted
 465 - Escherly Seeds / Martijn Cohen - 28 minted
 466 - Torrent / Jeres - 300 minted
-467 - Glasshouse INAT / Aleksandra Jovanić - 18 minted
-468 - Woman, Life, Freedom / Armaghan Fatemi - 35 minted
+467 - Glasshouse INAT / Aleksandra Jovanić - 19 minted
+468 - Woman, Life, Freedom / Armaghan Fatemi - 36 minted
 469 - Twos / Emily Edelman - 64 minted
 470 - Forecast / Manuel Larino - 365 minted
 471 - This Is Not A Rock / Nicole Vella - 350 minted
@@ -462,7 +462,7 @@
 475 - Recollection / Robert Hodgin - 166 minted
 476 - Life and Love and Nothing / Nat Sarkissian - 200 minted
 477 - siempre en mí, siempre en ti / Marcelo Soria-Rodríguez - 200 minted
-478 - Lucky Clover / Sputniko! - 39 minted
+478 - Lucky Clover / Sputniko! - 40 minted
 479 - Bakhoor Assandal / Melissa Wiederrecht - 200 minted
 480 - Axo / jiwa - 400 minted
 481 - Immaterial / Bjørn Staal - 280 minted
@@ -588,7 +588,7 @@ PLOT 3 - Diatom / Joshua Schachter - 102 minted
 PLOT 4 - Lines Walking / Lars Wander - 44 minted
 PLOT 5 - Coalescence / Beervangeer - 135 minted
 PLOT 6 - Shattered / @greweb - 100 minted
-PLOT 7 - Brickwork / WAWAA - 145 minted
+PLOT 7 - Brickwork / WAWAA - 146 minted
 PLOT 8 - spectral / oppos - 63 minted
 PLOT 9 - Delicate Chaos / moving.drawing - 168 minted
 PLOT 10 - Azulejos / PZS - 90 minted
@@ -605,8 +605,8 @@ PLOT 20 - Generative Alchemy / Eliya Stein - 38 minted
 PLOT 21 - Scratch / Matto - 64 minted
 PLOT 22 - Stroomlijn / Bart Simons - 38 minted
 PLOT 24 - Lissajous / Michael G Devereux - 13 minted
-PLOT 25 - Happenstance II: Framed / Generative Artworks - 15 minted
-PLOT 26 - Field Recordings / Jacob Gold - 14 minted
+PLOT 25 - Happenstance II: Framed / Generative Artworks - 16 minted
+PLOT 26 - Field Recordings / Jacob Gold - 15 minted
 PLOTII 0 - Time Between the Lines is Thread Through the Mind / Matto - 38 minted
 STBYS 0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted
 ATP 0 - LOVE / Martin Grasser - 300 minted
@@ -633,3 +633,6 @@ VCA 15 - Linea Recta / Moodsoup - 150 minted
 VCA 17 - Transition / William Watkins - 100 minted
 VCA 18 - JaggedMemories / Shunsuke Takawo - 50 minted
 VCA 19 - [classifieds] / fingacode - 24 minted
+MINTS 0 - The Colors That Heal / Ryan Green - 142 minted
+TDG 1 - Filigree – Collector's Edition / Matt DesLauriers - 10 minted
+TDG 2 - Filigree – Digital Edition / Matt DesLauriers - 90 minted
