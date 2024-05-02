@@ -639,7 +639,6 @@ search.addEventListener("input", () => {
     panel.classList.remove("active")
     overlay.style.display = "block"
     keyShort.style.display = "none"
-    document.querySelector(".mode").style.display = "none"
   } else {
     dataPanel.classList.remove("active")
     overlay.style.display = "none"

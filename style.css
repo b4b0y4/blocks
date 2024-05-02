@@ -1,12 +1,4 @@
-[data-theme="light"] {
-  --color-bg: #f4f4f4;
-  --color-txt: #686868;
-  --color-btn: #9a9999;
-  --color-hvr: #e7e7e7;
-  --color-span: #d4d3d4;
-}
-
-[data-theme="dark"] {
+:root {
   --color-bg: #141414;
   --color-txt: #a2a2a2;
   --color-btn: #757575;
@@ -144,8 +136,7 @@ a:hover {
 .save,
 .random,
 .previous,
-.next,
-.mode {
+.next {
   background-color: transparent;
   font-size: 1.1em;
   color: var(--color-btn);
@@ -170,8 +161,7 @@ a:hover {
 .save:hover,
 .random:hover,
 .previous:hover,
-.next:hover,
-.mode:hover {
+.next:hover {
   background-color: var(--color-hvr);
 }
 
@@ -203,15 +193,6 @@ a:hover {
   display: none;
   opacity: 0.95;
   pointer-events: auto;
-}
-
-.mode {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  margin: 0;
-  padding: 4px 5px;
-  border-radius: 20px;
 }
 
 .panel.active,
