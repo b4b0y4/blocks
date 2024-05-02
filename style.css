@@ -239,7 +239,7 @@ a:hover {
 .spinner {
   display: none;
   position: absolute;
-  right: 5px;
+  right: 7px;
   border: 3px solid rgba(0, 0, 0, 0.1);
   border-left-color: var(--color-btn);
   border-radius: 50%;
@@ -325,9 +325,7 @@ a:hover {
   .panel,
   .data-panel {
     max-width: 100%;
-    max-height: calc(
-      100% - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 105px
-    );
+    max-height: calc(100% - 105px);
     right: 0;
     left: 0;
     bottom: 90px;
