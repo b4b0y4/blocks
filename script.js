@@ -1,4 +1,4 @@
-import { ethers } from "./constants/ethers.min.js"
+import { ethers } from "./ethers.min.js"
 import {
   abiV1,
   abiV2,
@@ -40,7 +40,7 @@ import {
   contractAddressSDAO,
   contractAddressMINTS,
   contractAddressTDG,
-} from "./constants/ab.js"
+} from "./contracts.js"
 
 // DOM elements
 const instruction = document.querySelector(".instruction")
