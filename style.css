@@ -305,14 +305,14 @@ a:hover {
 }
 
 @media (max-width: 600px) {
-  /* .container {
-    position: fixed;
+  .container {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     overflow-y: auto;
-  } */
+  }
 
   .interaction-container {
     justify-content: center;
