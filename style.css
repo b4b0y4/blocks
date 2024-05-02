@@ -1,10 +1,9 @@
 [data-theme="light"] {
   --color-bg: #f4f4f4;
-  --color-txt: #404040;
-  --color-btn: #5b5c5e;
-  --color-hvr: #dbdbde;
-  --color-span: #e8e7e7;
-  --color-sdw: 40, 42, 52;
+  --color-txt: #686868;
+  --color-btn: #9a9999;
+  --color-hvr: #e7e7e7;
+  --color-span: #d4d3d4;
 }
 
 [data-theme="dark"] {
