@@ -1,3 +1,20 @@
+[data-theme="light"] {
+  --color-bg: #f4f4f4;
+  --color-txt: #404040;
+  --color-btn: #5b5c5e;
+  --color-hvr: #dbdbde;
+  --color-span: #e8e7e7;
+  --color-sdw: 40, 42, 52;
+}
+
+[data-theme="dark"] {
+  --color-bg: #141414;
+  --color-txt: #a2a2a2;
+  --color-btn: #757575;
+  --color-hvr: #202020;
+  --color-span: #303030;
+}
+
 html {
   height: 100%;
 }
@@ -7,7 +24,7 @@ body {
   min-height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #141414;
+  background-color: var(--color-bg);
 }
 
 .container {
@@ -35,13 +52,13 @@ body {
   display: flex;
   justify-content: end;
   align-items: center;
-  background-color: #141414;
+  background-color: var(--color-bg);
   z-index: 100;
   padding: 5px;
 }
 
 ::placeholder {
-  color: #757575;
+  color: var(--color-btn);
 }
 
 p {
@@ -60,7 +77,7 @@ li {
 
 a {
   text-decoration: none;
-  color: #a2a2a2;
+  color: var(--color-txt);
   transition: filter 0.3s ease-in-out;
   outline: none;
 }
@@ -74,16 +91,18 @@ a:hover {
   width: 250px;
   margin-right: 10px;
   border: none;
-  background-color: #202020;
-  color: #a2a2a2;
+  background-color: var(--color-hvr);
+  color: var(--color-btn);
   font-size: 1em;
   text-align: end;
   border-radius: 5px;
   padding: 5px;
+  outline: 0.5px solid transparent;
+  transition: outline-color 0.3s ease-in-out;
 }
 
 .rpc-url:focus {
-  outline: 0.5px solid #a2a2a2;
+  outline-color: var(--color-txt);
 }
 
 .info-box {
@@ -96,27 +115,26 @@ a:hover {
 .info {
   display: flex;
   align-items: center;
-  color: #a2a2a2;
+  color: var(--color-txt);
   margin-right: 10px;
   font-size: 1.1em;
   padding: 4px 8px;
-  border-radius: 5px;
   cursor: default;
-  transition: color 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 
 .info span {
   font-size: 0.5em;
   padding: 3px;
-  background-color: #303030;
-  color: #757575;
+  background-color: var(--color-span);
+  color: var(--color-btn);
   border-radius: 5px;
   margin-left: 8px;
   display: inline-block;
 }
 
 .info:hover {
-  background-color: #202020;
+  transform: scale(1.01);
 }
 
 .button-container {
@@ -127,16 +145,17 @@ a:hover {
 .save,
 .random,
 .previous,
-.next {
+.next,
+.mode {
   background-color: transparent;
   font-size: 1.1em;
-  color: #757575;
+  color: var(--color-btn);
   border: none;
   border-radius: 5px;
   padding: 3.25px 6.5px;
   margin: 0 5px;
   cursor: default;
-  transition: color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
   outline: none;
 }
 
@@ -151,8 +170,9 @@ a:hover {
 .save:hover,
 .random:hover,
 .previous:hover,
-.next:hover {
-  background-color: #202020;
+.next:hover,
+.mode:hover {
+  background-color: var(--color-hvr);
 }
 
 .instruction,
@@ -166,8 +186,8 @@ a:hover {
   right: 5px;
   max-width: 450px;
   max-height: 500px;
-  background-color: #141414;
-  color: #a2a2a2;
+  background-color: var(--color-bg);
+  color: var(--color-txt);
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
@@ -183,6 +203,15 @@ a:hover {
   display: none;
   opacity: 0.95;
   pointer-events: auto;
+}
+
+.mode {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  margin: 0;
+  padding: 4px 5px;
+  border-radius: 20px;
 }
 
 .panel.active,
@@ -218,8 +247,8 @@ a:hover {
   right: 7px;
   transform: translateY(-50%);
   font-size: 0.6em;
-  color: #757575;
-  background-color: #303030;
+  color: var(--color-btn);
+  background-color: var(--color-span);
   padding: 2.5px 7px;
   border-radius: 5px;
   cursor: default;
@@ -230,7 +259,7 @@ a:hover {
   position: absolute;
   right: 5px;
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #757575;
+  border-left-color: var(--color-btn);
   border-radius: 50%;
   width: 15px;
   height: 15px;
@@ -245,22 +274,20 @@ a:hover {
 
 .search-input {
   border: none;
-  background-color: #202020;
-  color: #a2a2a2;
+  background-color: var(--color-hvr);
+  color: var(--color-btn);
   font-size: 1em;
   width: 80px;
   text-align: start;
   border-radius: 5px;
   padding: 4px 30px 4px 30px;
-  transition: outline 0.3s ease-in-out;
+  outline: 0.5px solid transparent;
+  transition: outline-color 0.3s ease-in-out;
 }
 
-.search-input:hover {
-  outline: 0.5px solid #a2a2a2;
-}
-
+.search-input:hover,
 .search-input:focus {
-  outline: 0.5px solid #a2a2a2;
+  outline-color: var(--color-txt);
 }
 
 .overlay {

@@ -313,7 +313,7 @@ async function injectFrame() {
             min-height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #141414;
+            background-color: var(--color-bg);
           }
           canvas {
             padding: 0;
@@ -640,6 +640,7 @@ search.addEventListener("input", () => {
     panel.classList.remove("active")
     overlay.style.display = "block"
     keyShort.style.display = "none"
+    document.querySelector(".mode").style.display = "none"
   } else {
     dataPanel.classList.remove("active")
     overlay.style.display = "none"
