@@ -519,7 +519,7 @@ function getToken(panelContent, searchQuery) {
 }
 
 // Fetching data
-fetch("data.txt")
+fetch("list.txt")
   .then((response) => response.text())
   .then((data) => {
     const lines = data.split("\n")
@@ -714,10 +714,10 @@ function processLine(line) {
   getToken(line, randomToken)
 }
 
-// Function to fetch data from "data.txt", process a random line, and call grabData
+// Function to fetch data from "list.txt", process a random line, and call grabData
 async function fetchAndProcessRandomLine() {
   try {
-    const response = await fetch("data.txt")
+    const response = await fetch("list.txt")
     if (!response.ok) throw new Error("Network response was not ok")
 
     const lines = (await response.text()).split("\n")
