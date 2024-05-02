@@ -277,7 +277,7 @@ a:hover {
 .search-input {
   border: none;
   background-color: var(--color-hvr);
-  color: var(--color-btn);
+  color: var(--color-txt);
   font-size: 1em;
   width: 80px;
   text-align: start;

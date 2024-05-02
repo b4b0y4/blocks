@@ -143,7 +143,8 @@ async function grabData(tokenId, contract) {
       : contracts[contract].tokenIdToHash(tokenId))
 
     const projId = await contracts[contract].tokenIdToProjectId(tokenId)
-    const projectInfo = await (contract === 1 ||
+    const projectInfo = await (contract === 0 ||
+    contract === 1 ||
     contract === 4 ||
     contract === 7 ||
     contract === 8 ||
@@ -447,13 +448,12 @@ function getToken(panelContent, searchQuery) {
     console.log("Contract:", contract)
     console.log("Token Id:", query)
     grabData(query, contract)
-    localStorage.setItem("Contract", contract)
   } else if (/^\d+$/.test(searchQuery)) {
     let contract = searchQuery < 3000000 ? 0 : searchQuery < 374000000 ? 1 : 2
 
-    console.log("tokenId, contract:", searchQuery, contract)
+    console.log("contract:", contract)
+    console.log("tokenId:", searchQuery)
     grabData(searchQuery, contract)
-    localStorage.setItem("Contract", contract)
   } else {
     const projId = parseInt(panelContent.match(/\d+/)[0])
     const listContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
@@ -515,7 +515,6 @@ function getToken(panelContent, searchQuery) {
     console.log("Contract:", contract)
     console.log("Token Id:", tokenId)
     grabData(tokenId, contract)
-    localStorage.setItem("Contract", contract)
   }
 }
 
