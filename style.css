@@ -326,7 +326,7 @@ a:hover {
   .data-panel {
     max-width: 100%;
     max-height: calc(
-      100% - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 90px
+      100% - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 95px
     );
     right: 0;
     left: 0;
