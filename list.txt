@@ -634,5 +634,5 @@ VCA 17 - Transition / William Watkins - 100 minted
 VCA 18 - JaggedMemories / Shunsuke Takawo - 50 minted
 VCA 19 - [classifieds] / fingacode - 24 minted
 MINTS 0 - The Colors That Heal / Ryan Green - 142 minted
-TDG 1 - Filigree – Collector's Edition / Matt DesLauriers - 10 minted
-TDG 2 - Filigree – Digital Edition / Matt DesLauriers - 90 minted
+TDG 1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted
+TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted

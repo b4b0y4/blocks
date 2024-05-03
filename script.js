@@ -179,6 +179,24 @@ async function grabData(tokenId, contract) {
       codeLib = JSON.parse(projectInfo[0]).type
     }
 
+    // Get number of works
+    let edition = ""
+    let remaining = ""
+    const invo = await (contract === 0 ||
+    contract === 1 ||
+    contract === 4 ||
+    contract === 7 ||
+    contract === 8 ||
+    contract === 11 ||
+    contract === 14 ||
+    contract === 16 ||
+    contract === 18
+      ? contracts[contract].projectTokenInfo(projId.toString())
+      : contracts[contract].projectStateData(projId.toString()))
+
+    edition = invo.maxInvocations.toString()
+    remaining = (invo.maxInvocations - invo.invocations).toString()
+
     // Store data in local storage
     localStorage.setItem(
       "contractData",
@@ -189,6 +207,8 @@ async function grabData(tokenId, contract) {
         detail,
         owner,
         codeLib,
+        edition,
+        remaining,
       })
     )
     location.reload()
@@ -201,7 +221,16 @@ async function grabData(tokenId, contract) {
  *              FUNCTIONS TO UPDATE UI
  **************************************************/
 let id
-function update(tokenId, hash, script, detail, owner, codeLib) {
+function update(
+  tokenId,
+  hash,
+  script,
+  detail,
+  owner,
+  codeLib,
+  edition,
+  remaining
+) {
   // Update library source
   localStorage.setItem("Src", predefinedLibraries[codeLib])
 
@@ -224,35 +253,33 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
   // Update info content
   let collection =
     storedContract == 0 || storedContract == 1 || storedContract == 2
-      ? "ab"
+      ? "Art Blocks"
       : storedContract == 3
-      ? "exp"
+      ? "Explorations"
       : storedContract == 4 || storedContract == 5
-      ? "ab&times;pace"
+      ? "Art Blocks &times; Pace"
       : storedContract == 6
-      ? "ab&times;bm"
-      : storedContract == 7 || storedContract == 13
-      ? "bm"
+      ? "Art Blocks &times; Bright Moments"
+      : storedContract == 7 || storedContract == 13 || storedContract == 14
+      ? "Bright Moments"
       : storedContract == 8 || storedContract == 9
-      ? "plot"
+      ? "Plottables"
       : storedContract == 10
-      ? "stbys"
+      ? "Sotheby's"
       : storedContract == 11
-      ? "atp"
+      ? "ATP"
       : storedContract == 12
-      ? "grail"
-      : storedContract == 14
-      ? "citizen"
+      ? "Grailers"
       : storedContract == 15
-      ? "aoi"
+      ? "AOI"
       : storedContract == 16
-      ? "vca"
+      ? "Vertical Crypto Art"
       : storedContract == 17
-      ? "sdao"
+      ? "SquiggleDAO"
       : storedContract == 18
-      ? "mints"
+      ? "Endaoment"
       : storedContract == 19
-      ? "tdg"
+      ? "The Disruptive Gallery"
       : null
 
   id =
@@ -271,26 +298,53 @@ function update(tokenId, hash, script, detail, owner, codeLib) {
       }
       logs.push(message)
 
-      info.innerHTML = `${detail[0]} #${id} / ${logs[0]} <span>${collection}</span>`
+      info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
     }
   } else {
-    info.innerHTML = `${detail[0]} #${id} / ${detail[1]} <span>${collection}</span>`
+    info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
   }
 
-  resolveENS(owner, detail, tokenId)
+  resolveENS(owner, detail, tokenId, collection, edition, remaining)
   injectFrame()
 }
 
 // Get ENS name for owner if available
-async function resolveENS(owner, detail, tokenId) {
+async function resolveENS(
+  owner,
+  detail,
+  tokenId,
+  collection,
+  edition,
+  remaining
+) {
   try {
     const ensName = await provider.lookupAddress(owner)
 
-    if (ensName) {
-      panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a><br><br>Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a></span><br><br><span style="font-size: 0.75em">Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
-    } else {
-      panelContent.innerHTML = `${detail[2]}<br><br><span style="font-size: 0.85em"><a href="${detail[3]}" target="_blank">${detail[3]}</a></span><br><br><span style="font-size: 0.75em">Owner: <a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a><br><br>Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>Token ID: ${tokenId}</span>`
-    }
+    const ownerLink = ensName
+      ? `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a>`
+      : `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
+
+    const mintedOut =
+      remaining == 0
+        ? `Edition of ${edition} works.`
+        : `Edition of ${edition} works, ${remaining} remaining.`
+
+    const panelContentHTML = `
+      <p>
+        <span style="font-size: 1.5em">${detail[0]}</span><br>
+        ${detail[1]} ● ${collection}<br>
+        ${mintedOut} 
+      </p><br>
+      <p>
+        ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
+      </p><br>
+      <p class="mini">
+        Owner: ${ownerLink}<br>
+        Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>
+        Token ID: <a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a>
+      </p>
+    `
+    panelContent.innerHTML = panelContentHTML
   } catch (error) {
     console.log("Error getting ENS name:", error)
   }
@@ -771,12 +825,12 @@ document.addEventListener("keypress", (event) => {
 })
 
 /***************************************************
- *         FUNCTION TO UPDATE ART BLOCKS LIST
+ *         FUNCTION TO UPDATE THE LIST
  **************************************************/
 async function fetchBlocks() {
-  let All = ""
+  let list = ""
   let noToken = 0
-  for (let i = 223; i < 1000; i++) {
+  for (let i = 342; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
       const detail = await contracts[n].projectDetails(i.toString())
@@ -786,7 +840,7 @@ async function fetchBlocks() {
           : await contracts[n].projectTokenInfo(i)
 
       if (tkns.invocations) {
-        All += `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        list += `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
         noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
@@ -800,7 +854,7 @@ async function fetchBlocks() {
       break
     }
   }
-  console.log(All)
+  console.log(list)
 }
 // fetchBlocks()
 
