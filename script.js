@@ -511,11 +511,25 @@ function getToken(panelContent, searchQuery) {
   } else {
     const projId = parseInt(panelContent.match(/\d+/)[0])
     const listContract = panelContent.match(/^[A-Za-z0-9]+/)[0]
-    const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
-    const tokenId =
-      projId === 0
-        ? searchId.toString()
-        : (projId * 1000000 + searchId).toString().padStart(6, "0")
+
+    let tokenId
+    if (!searchQuery.includes("#")) {
+      const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
+      const matches = panelContent.match(regex)
+      const token = parseInt(matches[3])
+      const randomToken = Math.floor(Math.random() * (token - 1))
+      tokenId =
+        projId === 0
+          ? randomToken.toString()
+          : (projId * 1000000 + randomToken).toString().padStart(6, "0")
+    } else {
+      const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
+      tokenId =
+        projId === 0
+          ? searchId.toString()
+          : (projId * 1000000 + searchId).toString().padStart(6, "0")
+    }
+
     let contract
     switch (listContract) {
       case "EXP":
