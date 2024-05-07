@@ -360,61 +360,52 @@ async function injectFrame() {
     const frameIdHash = localStorage.getItem("IdHash")
     const frameType = localStorage.getItem("Type")
     const frameArt = localStorage.getItem("Art")
-    const frameStyle = `<style type="text/css">
-          html {
-            height: 100%;
-          }
-          body {
-            min-height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: var(--color-bg);
-          }
-          canvas {
-            padding: 0;
-            margin: auto;
-            display: block;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-          }
-      </style>`
 
-    // Generate the content dynamically
+    const frameHead = `<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
+    <script src='${frameSrc}'></script>
+    <script>${frameIdHash};</script>
+    <style type="text/css">
+      html {
+        height: 100%;
+      }
+      body {
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: var(--color-bg);
+      }
+      canvas {
+        padding: 0;
+        margin: auto;
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    </style>
+    </head>`
+
+    const frameBody = frameType
+      ? `<body>
+    <script type='${frameType}'>${frameArt}</script>
+    <canvas></canvas>
+    </body>`
+      : `<body>
+    <canvas id="babylon-canvas"></canvas>
+    <script>${frameArt}</script>
+    </body>`
+
     let dynamicContent
     if (storedData.codeLib === "custom") {
       dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
-    } else if (frameType) {
-      dynamicContent = `<html>
-          <head>
-          <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-          <script src='${frameSrc}'></script>
-          ${frameStyle}
-          </head>
-          <body>
-          <script>${frameIdHash};</script>
-          <script type='${frameType}'>${frameArt}</script>
-          <canvas></canvas>
-          </body>
-          </html>`
     } else {
-      dynamicContent = `<html>
-          <head>
-          <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-          <meta charset="utf-8"/>
-          <script src='${frameSrc}'></script>
-          <script>${frameIdHash};</script>
-          ${frameStyle}
-          </head>
-          <body>
-          <canvas id="babylon-canvas"></canvas>
-          <script>${frameArt}</script>
-          </body>
-          </html>`
+      dynamicContent = `<html>${frameHead}${frameBody}</html>`
     }
     // console.log(dynamicContent)
+
     // Write the generated content to the iframe
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
@@ -429,7 +420,6 @@ async function injectFrame() {
 /***************************************************
  *          FUNCTIONS TO SEARCH AND GET TOKEN
  **************************************************/
-
 const list = [
   "0 - Chromie Squiggle / Snowfro - 9998 minted",
   "1 - Genesis / DCA - 512 minted",
@@ -1071,34 +1061,19 @@ const list = [
   "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
 ]
 
-// Function to display lines
-function displayLines(lines) {
-  const panel =
-    "<div>" + lines.map((line) => `<p>${line}</p>`).join("") + "</div>"
-  dataContent.innerHTML = panel
-}
-
-// Function to filter lines based on search query
-function filterLines(lines, query) {
-  const filteredLines = lines.filter((line) =>
-    line.toLowerCase().includes(query.toLowerCase())
-  )
-  displayLines(filteredLines)
-}
-
 function getToken(panelContent, searchQuery) {
   const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
 
   if (searchQuery.includes(",")) {
-    handleCommaSeparatedQuery(searchQuery, textContent)
+    handleCommaSeparatedQuery(textContent, searchQuery)
   } else if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery)
   } else {
-    handleOtherQuery(searchQuery, textContent)
+    handleOtherQuery(textContent, searchQuery)
   }
 }
 
-function handleCommaSeparatedQuery(searchQuery, textContent) {
+function handleCommaSeparatedQuery(textContent, searchQuery) {
   const [tokenId, query2] = searchQuery
     .split(",")
     .map((str) => str.trim().toUpperCase())
@@ -1118,7 +1093,7 @@ function handleNumericQuery(tokenId) {
   grabData(tokenId, contract)
 }
 
-function handleOtherQuery(searchQuery, textContent) {
+function handleOtherQuery(textContent, searchQuery) {
   const projId = parseInt(textContent.match(/\d+/)[0])
   const listContract = textContent.match(/^[A-Za-z0-9]+/)[0]
   let tokenId
@@ -1151,52 +1126,52 @@ function getContractFromList(contract, tokenId) {
   switch (contract) {
     case "EXP":
       return 3
-      break
     case "ABXPACE":
       return tokenId < 5000000 ? 4 : 5
-      break
     case "ABXBM":
       return 6
-      break
     case "BM":
       return tokenId < 1000000 ? 13 : 7
-      break
     case "PLOT":
       return 8
-      break
     case "PLOTII":
       return 9
-      break
     case "STBYS":
       return 10
-      break
     case "ATP":
       return 11
-      break
     case "GRAIL":
       return 12
-      break
     case "CITIZEN":
       return 14
-      break
     case "AOI":
       return 15
-      break
     case "VCA":
       return 16
-      break
     case "SDAO":
       return 17
-      break
     case "MINTS":
       return 18
-      break
     case "TDG":
       return 19
-      break
     default:
       return tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
   }
+}
+
+// function to show the list
+function displayLines(lines) {
+  const panel =
+    "<div>" + lines.map((line) => `<p>${line}</p>`).join("") + "</div>"
+  dataContent.innerHTML = panel
+}
+
+// function to filter the list
+function filterLines(lines, query) {
+  const filteredLines = lines.filter((line) =>
+    line.toLowerCase().includes(query.toLowerCase())
+  )
+  displayLines(filteredLines)
 }
 
 // Display all lines initially
@@ -1314,8 +1289,7 @@ async function saveContentAsFile(content, filename) {
 
 // Function to handle the button click event
 function handleSaveButtonClick() {
-  const dynamicContent =
-    document.getElementById("frame").contentDocument.documentElement.outerHTML
+  const dynamicContent = frame.contentDocument.documentElement.outerHTML
   saveContentAsFile(dynamicContent)
 }
 
@@ -1433,7 +1407,7 @@ overlay.addEventListener("click", () => {
  *         FUNCTION TO UPDATE THE LIST
  **************************************************/
 async function fetchBlocks() {
-  let list = ""
+  let list = []
   let noToken = 0
   for (let i = 342; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
@@ -1445,7 +1419,9 @@ async function fetchBlocks() {
           : await contracts[n].projectTokenInfo(i)
 
       if (tkns.invocations) {
-        list += `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
+        list.push(
+          `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
         noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
