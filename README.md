@@ -7,8 +7,12 @@ View information about each one and save a HTML file of your favorites.
 ## Usage
 
 - Add a RPC URL... you're good to go!
-- Type a token id or the name of the work follow by #(id) and press enter (tokenId, contractName also work!)
+- Press Enter/return
+  - (empty input): get a random token id.
+  - (token ID): get the corresponding Art Blocks work.
+  - (token ID, contract name): get the corresponding work.
+  - (work's name): get a random token ID for that collection.
+  - (work's name #ID): get the exact token for that collection.
 - keyboard shortcut:
-  - `enter/return` (with the input empty): get a random token ID.
-  - `<` / `>`: jump to previous / next token ID.
-  - `\`: clear the page.
+  - `<` / `>`: jump to previous / next token ID
+  - `\`: clear the page

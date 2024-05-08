@@ -250,12 +250,12 @@ function update(
   localStorage.setItem("Type", process)
   localStorage.setItem("Art", script)
 
-  // Update info content
-  let collection =
+  // Get platform/contract
+  let platform =
     storedContract == 0 || storedContract == 1 || storedContract == 2
       ? "Art Blocks"
       : storedContract == 3
-      ? "Explorations"
+      ? "Art Blocks Explorations"
       : storedContract == 4 || storedContract == 5
       ? "Art Blocks &times; Pace"
       : storedContract == 6
@@ -304,7 +304,7 @@ function update(
     info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
   }
 
-  resolveENS(owner, detail, tokenId, collection, edition, remaining)
+  resolveENS(owner, detail, tokenId, platform, edition, remaining)
   injectFrame()
 }
 
@@ -313,7 +313,7 @@ async function resolveENS(
   owner,
   detail,
   tokenId,
-  collection,
+  platform,
   edition,
   remaining
 ) {
@@ -331,8 +331,8 @@ async function resolveENS(
 
     const panelContentHTML = `
       <p>
-        <span style="font-size: 1.5em">${detail[0]}</span><br>
-        ${detail[1]} ● ${collection}<br>
+        <span style="font-size: 1.4em">${detail[0]}</span><br>
+        ${detail[1]} ● ${platform}<br>
         ${mintedOut} 
       </p><br>
       <p>
@@ -1018,7 +1018,7 @@ const list = [
   "PLOT 11 - Petri Dish / James Dalessandro - 38 minted",
   "PLOT 12 - Pseudofigure / conundrumer - 144 minted",
   "PLOT 13 - Reservation / Generative Artworks - 50 minted",
-  "PLOT 14 - Endless (5,607,250 to Infinity) / Modnar Wolf x NumbersInMotion - 2557 minted",
+  "PLOT 14 - Endless (5,607,250 to Infinity) / Modnar Wolf x NumbersInMotion - 2558 minted",
   "PLOT 15 - Shields / r4v3n - 100 minted",
   "PLOT 16 - Structures / Julien Gachadoat - 256 minted",
   "PLOT 17 - Happenstance I: CTC / Generative Artworks - 30 minted",
@@ -1036,6 +1036,9 @@ const list = [
   "GRAIL 1 - Fold / rudxane - 400 minted",
   "GRAIL 2 - Atlas / Eric De Giuli - 333 minted",
   "SDAO 0 - Elevate Heart / Daniel Calderon Arenas - 1000 minted",
+  "MINTS 0 - The Colors That Heal / Ryan Green - 142 minted",
+  "TDG 1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
+  "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
   "AOI 0 - Pursuit / Per Kristian Stoveland - 200 minted",
   "AOI 1 - Echo of Intensity / Per Kristian Stoveland - 1595 minted",
   "AOI 2 - /// / Snowfro - 2000 minted",
@@ -1056,9 +1059,6 @@ const list = [
   "VCA 17 - Transition / William Watkins - 100 minted",
   "VCA 18 - JaggedMemories / Shunsuke Takawo - 50 minted",
   "VCA 19 - [classifieds] / fingacode - 24 minted",
-  "MINTS 0 - The Colors That Heal / Ryan Green - 142 minted",
-  "TDG 1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
-  "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
 ]
 
 function getToken(panelContent, searchQuery) {
@@ -1406,9 +1406,8 @@ overlay.addEventListener("click", () => {
 /***************************************************
  *         FUNCTION TO UPDATE THE LIST
  **************************************************/
+let newList = []
 async function fetchBlocks() {
-  let list = []
-  let noToken = 0
   for (let i = 342; i < 1000; i++) {
     const n = i < 3 ? 0 : i < 374 ? 1 : 2
     try {
@@ -1419,55 +1418,43 @@ async function fetchBlocks() {
           : await contracts[n].projectTokenInfo(i)
 
       if (tkns.invocations) {
-        list.push(
+        newList.push(
           `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
         )
-        noToken = 0
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(list)
+  console.log(newList)
 }
 // fetchBlocks()
 
 async function fetchEXP() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[3].projectDetails(i.toString())
       const tkns = await contracts[3].projectStateData(i)
       if (tkns.invocations) {
-        All += `EXP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `EXP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchEXP()
 
 async function fetchABXPACE() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     const n = i < 5 ? 4 : 5
     try {
@@ -1478,53 +1465,44 @@ async function fetchABXPACE() {
           : await contracts[n].projectStateData(i)
 
       if (tkns.invocations) {
-        All += `ABXPACE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `ABXPACE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchABXPACE()
 
 async function fetchABXBM() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[6].projectDetails(i.toString())
       const tkns = await contracts[6].projectStateData(i)
       if (tkns.invocations) {
-        All += `ABXBM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `ABXBM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchABXBM()
 
 async function fetchBM() {
-  let All = ""
-  let noToken = 0
+  let token
   for (let i = 0; i < 100; i++) {
     const n = i < 1 ? 13 : 7
     try {
@@ -1535,12 +1513,14 @@ async function fetchBM() {
           : await contracts[n].projectTokenInfo(i)
 
       if (tkns.invocations) {
-        All += `BM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `BM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+        token = 0
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
+        token++
+        if (token == 5) {
           break
         }
       }
@@ -1549,24 +1529,25 @@ async function fetchBM() {
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchBM()
 
 async function fetchCITIZEN() {
-  let All = ""
-  let noToken = 0
+  let token
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[14].projectDetails(i.toString())
       const tkns = await contracts[14].projectTokenInfo(i)
       if (tkns.invocations) {
-        All += `CITIZEN ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `CITIZEN ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+        token = 0
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
+        token++
+        if (token == 5) {
           break
         }
       }
@@ -1575,24 +1556,26 @@ async function fetchCITIZEN() {
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchCITIZEN()
 
 async function fetchPLOT() {
-  let All = ""
-  let noToken = 0
+  let token
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[8].projectDetails(i.toString())
       const tkns = await contracts[8].projectTokenInfo(i)
       if (tkns.invocations) {
-        All += `PLOT ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `PLOT ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+        token = 0
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
+        token++
+        if (token == 5) {
+          fetchPLOT2()
           break
         }
       }
@@ -1601,154 +1584,137 @@ async function fetchPLOT() {
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchPLOT()
 
 async function fetchPLOT2() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[9].projectDetails(i.toString())
       const tkns = await contracts[9].projectStateData(i)
       if (tkns.invocations) {
-        All += `PLOTII ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `PLOTII ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchPLOT2()
 
 async function fetchSTBYS() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[10].projectDetails(i.toString())
       const tkns = await contracts[10].projectStateData(i)
       if (tkns.invocations) {
-        All += `STBYS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `STBYS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchSTBYS()
 
 async function fetchATP() {
-  let All = ""
-  let noToken = 0
+  let token
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[11].projectDetails(i.toString())
       const tkns = await contracts[11].projectTokenInfo(i)
       if (tkns.invocations) {
-        All += `ATP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `ATP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+        token = 0
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
+        token++
+        if (token == 5) {
           break
         }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
+
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchATP()
 
 async function fetchGRAILS() {
-  let All = ""
-  let noToken = 0
   for (let i = 1; i < 1000; i++) {
     try {
       const detail = await contracts[12].projectDetails(i.toString())
       const tkns = await contracts[12].projectStateData(i)
       if (tkns.invocations) {
-        All += `GRAIL ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `GRAIL ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchGRAILS()
 
 async function fetchAOI() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[15].projectDetails(i.toString())
       const tkns = await contracts[15].projectStateData(i)
       if (tkns.invocations) {
-        All += `AOI ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `AOI ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchAOI()
 
 async function fetchVCA() {
-  let All = ""
-  let noToken = 0
+  let token
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[16].projectDetails(i.toString())
       const tkns = await contracts[16].projectTokenInfo(i)
       if (tkns.invocations) {
-        All += `VCA ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `VCA ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+        token = 0
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
+        token++
+        if (token == 5) {
           break
         }
       }
@@ -1757,50 +1723,46 @@ async function fetchVCA() {
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchVCA()
 
 async function fetchSDAO() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[17].projectDetails(i.toString())
       const tkns = await contracts[17].projectStateData(i)
       if (tkns.invocations) {
-        All += `SDAO ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `SDAO ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchSDAO()
 
 async function fetchMINTS() {
-  let All = ""
-  let noToken = 0
+  let token
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[18].projectDetails(i.toString())
       const tkns = await contracts[18].projectTokenInfo(i)
       if (tkns.invocations) {
-        All += `MINTS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `MINTS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+        token = 0
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
+        token++
+        if (token == 5) {
           break
         }
       }
@@ -1809,32 +1771,27 @@ async function fetchMINTS() {
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchMINTS()
 
 async function fetchTDG() {
-  let All = ""
-  let noToken = 0
   for (let i = 0; i < 1000; i++) {
     try {
       const detail = await contracts[19].projectDetails(i.toString())
       const tkns = await contracts[19].projectStateData(i)
       if (tkns.invocations) {
-        All += `TDG ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted\n`
-        noToken = 0
+        newList.push(
+          `TDG ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
       } else {
         console.log(`No tokens found for project ${i}`)
-        noToken++
-        if (noToken === 5) {
-          break
-        }
       }
     } catch (error) {
       console.log(`Error fetching data for project ${i}`)
       break
     }
   }
-  console.log(All)
+  console.log(newList)
 }
 // fetchTDG()
