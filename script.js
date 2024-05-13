@@ -8,13 +8,13 @@ import {
   abiABXPACE2,
   abiABXBM,
   abiBM,
+  abiBMF,
+  abiCITIZEN,
   abiPLOTS,
   abiPLOTS2,
   abiSTBYS,
   abiATP,
   abiGRAILS,
-  abiBMF,
-  abiCITIZEN,
   abiAOI,
   abiVCA,
   abiSDAO,
@@ -30,13 +30,13 @@ import {
   contractAddressABXPACE2,
   contractAddressABXBM,
   contractAddressBM,
+  contractAddressBMF,
+  contractAddressCITIZEN,
   contractAddressPLOTS,
   contractAddressPLOTS2,
   contractAddressSTBYS,
   contractAddressATP,
   contractAddressGRAILS,
-  contractAddressBMF,
-  contractAddressCITIZEN,
   contractAddressAOI,
   contractAddressVCA,
   contractAddressSDAO,
@@ -78,13 +78,13 @@ const contracts = [
   { abi: abiABXPACE2, address: contractAddressABXPACE2 },
   { abi: abiABXBM, address: contractAddressABXBM },
   { abi: abiBM, address: contractAddressBM },
+  { abi: abiBMF, address: contractAddressBMF },
+  { abi: abiCITIZEN, address: contractAddressCITIZEN },
   { abi: abiPLOTS, address: contractAddressPLOTS },
   { abi: abiPLOTS2, address: contractAddressPLOTS2 },
   { abi: abiSTBYS, address: contractAddressSTBYS },
   { abi: abiATP, address: contractAddressATP },
   { abi: abiGRAILS, address: contractAddressGRAILS },
-  { abi: abiBMF, address: contractAddressBMF },
-  { abi: abiCITIZEN, address: contractAddressCITIZEN },
   { abi: abiAOI, address: contractAddressAOI },
   { abi: abiVCA, address: contractAddressVCA },
   { abi: abiSDAO, address: contractAddressSDAO },
@@ -789,7 +789,7 @@ async function grabData(tokenId, contract) {
     clearLocalStorage()
     localStorage.setItem("Contract", contract)
 
-    const isContractGen1 = [0, 1, 4, 7, 8, 11, 14, 16, 18].includes(contract)
+    const isContractGen1 = [0, 1, 4, 7, 9, 10, 13, 16, 18].includes(contract)
 
     const hash = await fetchHash(tokenId, contract)
     const projId = await fetchProjectId(tokenId, contract)
@@ -923,15 +923,15 @@ function update(
       ? "Art Blocks &times; Pace"
       : storedContract == 6
       ? "Art Blocks &times; Bright Moments"
-      : storedContract == 7 || storedContract == 13 || storedContract == 14
+      : storedContract == 7 || storedContract == 8 || storedContract == 9
       ? "Bright Moments"
-      : storedContract == 8 || storedContract == 9
+      : storedContract == 10 || storedContract == 11
       ? "Plottables"
-      : storedContract == 10
-      ? "Sotheby's"
-      : storedContract == 11
-      ? "ATP"
       : storedContract == 12
+      ? "Sotheby's"
+      : storedContract == 13
+      ? "ATP"
+      : storedContract == 14
       ? "Grailers"
       : storedContract == 15
       ? "AOI"
@@ -956,7 +956,7 @@ function update(
 
   // get artist name for bm finale
   let logs = []
-  if (storedContract == 13) {
+  if (storedContract == 8) {
     frame.contentWindow.console.log = function (message) {
       console.log("Log from iframe:", message)
       if (logs.length === 0) {
@@ -1158,18 +1158,18 @@ function getContractFromList(contract, tokenId) {
     case "ABXBM":
       return 6
     case "BM":
-      return tokenId < 1000000 ? 13 : 7
-    case "PLOT":
-      return 8
-    case "PLOTII":
-      return 9
-    case "STBYS":
-      return 10
-    case "ATP":
-      return 11
-    case "GRAIL":
-      return 12
+      return tokenId < 1000000 ? 8 : 7
     case "CITIZEN":
+      return 9
+    case "PLOT":
+      return 10
+    case "PLOTII":
+      return 11
+    case "STBYS":
+      return 12
+    case "ATP":
+      return 13
+    case "GRAIL":
       return 14
     case "AOI":
       return 15
@@ -1437,434 +1437,85 @@ overlay.addEventListener("click", () => {
 /***************************************************
  *         FUNCTION TO UPDATE THE LIST
  **************************************************/
-let newList = []
-async function fetchBlocks() {
-  for (let i = 342; i < 1000; i++) {
-    const n = i < 3 ? 0 : i < 374 ? 1 : 2
-    try {
-      const detail = await contracts[n].projectDetails(i.toString())
-      const tkns =
-        n === 2
-          ? await contracts[n].projectStateData(i)
-          : await contracts[n].projectTokenInfo(i)
-
-      if (tkns.invocations) {
-        newList.push(
-          `${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
+function getContractName(contract) {
+  const contractNames = {
+    3: "EXP",
+    4: "ABXPACE",
+    5: "ABXPACE",
+    6: "ABXBM",
+    7: "BM",
+    8: "BM",
+    9: "CITIZEN",
+    10: "PLOT",
+    11: "PLOTII",
+    12: "STBYS",
+    13: "ATP",
+    14: "GRAIL",
+    15: "AOI",
+    16: "VCA",
+    17: "SDAO",
+    18: "MINTS",
+    19: "TDG",
+    20: "VFA",
+    21: "UNITLDN",
   }
-  console.log(newList)
-}
-// fetchBlocks()
 
-async function fetchEXP() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[3].projectDetails(i.toString())
-      const tkns = await contracts[3].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `EXP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
+  return contractNames[contract] ? contractNames[contract] + " " : ""
+}
+
+async function fetchBloncks() {
+  const contractMappings = {
+    0: (i) => (i < 3 ? 0 : i < 374 ? 1 : 2),
+    1: (i) => (i < 3 ? 0 : i < 374 ? 1 : 2),
+    2: (i) => (i < 3 ? 0 : i < 374 ? 1 : 2),
+    4: (i) => (i < 5 ? 4 : 5),
+    5: (i) => (i < 5 ? 4 : 5),
+    7: (i) => (i < 1 ? 8 : 7),
+    8: (i) => (i < 1 ? 8 : 7),
   }
-  console.log(newList)
-}
-// fetchEXP()
-
-async function fetchABXPACE() {
-  for (let i = 0; i < 1000; i++) {
-    const n = i < 5 ? 4 : 5
-    try {
-      const detail = await contracts[n].projectDetails(i.toString())
-      const tkns =
-        n === 4
-          ? await contracts[n].projectTokenInfo(i)
-          : await contracts[n].projectStateData(i)
-
-      if (tkns.invocations) {
-        newList.push(
-          `ABXPACE ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchABXPACE()
-
-async function fetchABXBM() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[6].projectDetails(i.toString())
-      const tkns = await contracts[6].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `ABXBM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchABXBM()
-
-async function fetchBM() {
+  let newList = []
   let token
-  for (let i = 0; i < 100; i++) {
-    const n = i < 1 ? 13 : 7
-    try {
-      const detail = await contracts[n].projectDetails(i.toString())
-      const tkns =
-        n === 13
-          ? await contracts[n].projectStateData(i)
-          : await contracts[n].projectTokenInfo(i)
 
-      if (tkns.invocations) {
-        newList.push(
-          `BM ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-        token = 0
-      } else {
-        console.log(`No tokens found for project ${i}`)
-        token++
-        if (token == 5) {
-          break
+  // CONTRACTS
+  for (let n = 17; n < 22; n++) {
+    // PROJECT ID
+    for (let i = n === 14 ? 1 : 0; i < 1000; i++) {
+      if (contractMappings.hasOwnProperty(n)) {
+        n = contractMappings[n](i)
+      }
+      let contractName = getContractName(n)
+      try {
+        const detail = await contracts[n].projectDetails(i.toString())
+        const tkns = await (n === 0 ||
+        n === 1 ||
+        n === 4 ||
+        n === 7 ||
+        n === 9 ||
+        n === 10 ||
+        n === 13 ||
+        n === 16 ||
+        n === 18
+          ? contracts[n].projectTokenInfo(i)
+          : contracts[n].projectStateData(i))
+
+        if (tkns.invocations) {
+          newList.push(
+            `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+          )
+          token = 0
+        } else {
+          console.log(`No tokens found for project ${contractName}${i}`)
+          token++
+          if (token == 5) {
+            break
+          }
         }
+      } catch (error) {
+        console.log(`Error fetching data for project ${contractName}${i}`)
+        break
       }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
     }
+    console.log(newList)
   }
-  console.log(newList)
 }
-// fetchBM()
-
-async function fetchCITIZEN() {
-  let token
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[14].projectDetails(i.toString())
-      const tkns = await contracts[14].projectTokenInfo(i)
-      if (tkns.invocations) {
-        newList.push(
-          `CITIZEN ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-        token = 0
-      } else {
-        console.log(`No tokens found for project ${i}`)
-        token++
-        if (token == 5) {
-          break
-        }
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchCITIZEN()
-
-async function fetchPLOT() {
-  let token
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[8].projectDetails(i.toString())
-      const tkns = await contracts[8].projectTokenInfo(i)
-      if (tkns.invocations) {
-        newList.push(
-          `PLOT ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-        token = 0
-      } else {
-        console.log(`No tokens found for project ${i}`)
-        token++
-        if (token == 5) {
-          fetchPLOT2()
-          break
-        }
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchPLOT()
-
-async function fetchPLOT2() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[9].projectDetails(i.toString())
-      const tkns = await contracts[9].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `PLOTII ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchPLOT2()
-
-async function fetchSTBYS() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[10].projectDetails(i.toString())
-      const tkns = await contracts[10].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `STBYS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchSTBYS()
-
-async function fetchATP() {
-  let token
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[11].projectDetails(i.toString())
-      const tkns = await contracts[11].projectTokenInfo(i)
-      if (tkns.invocations) {
-        newList.push(
-          `ATP ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-        token = 0
-      } else {
-        console.log(`No tokens found for project ${i}`)
-        token++
-        if (token == 5) {
-          break
-        }
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchATP()
-
-async function fetchGRAILS() {
-  for (let i = 1; i < 1000; i++) {
-    try {
-      const detail = await contracts[12].projectDetails(i.toString())
-      const tkns = await contracts[12].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `GRAIL ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchGRAILS()
-
-async function fetchAOI() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[15].projectDetails(i.toString())
-      const tkns = await contracts[15].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `AOI ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchAOI()
-
-async function fetchVCA() {
-  let token
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[16].projectDetails(i.toString())
-      const tkns = await contracts[16].projectTokenInfo(i)
-      if (tkns.invocations) {
-        newList.push(
-          `VCA ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-        token = 0
-      } else {
-        console.log(`No tokens found for project ${i}`)
-        token++
-        if (token == 5) {
-          break
-        }
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchVCA()
-
-async function fetchSDAO() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[17].projectDetails(i.toString())
-      const tkns = await contracts[17].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `SDAO ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchSDAO()
-
-async function fetchMINTS() {
-  let token
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[18].projectDetails(i.toString())
-      const tkns = await contracts[18].projectTokenInfo(i)
-      if (tkns.invocations) {
-        newList.push(
-          `MINTS ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-        token = 0
-      } else {
-        console.log(`No tokens found for project ${i}`)
-        token++
-        if (token == 5) {
-          break
-        }
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchMINTS()
-
-async function fetchTDG() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[19].projectDetails(i.toString())
-      const tkns = await contracts[19].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `TDG ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchTDG()
-
-async function fetchVFA() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[20].projectDetails(i.toString())
-      const tkns = await contracts[20].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `VFA ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchVFA()
-
-async function fetchUNITLDN() {
-  for (let i = 0; i < 1000; i++) {
-    try {
-      const detail = await contracts[21].projectDetails(i.toString())
-      const tkns = await contracts[21].projectStateData(i)
-      if (tkns.invocations) {
-        newList.push(
-          `UNITLDN ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-        )
-      } else {
-        console.log(`No tokens found for project ${i}`)
-      }
-    } catch (error) {
-      console.log(`Error fetching data for project ${i}`)
-      break
-    }
-  }
-  console.log(newList)
-}
-// fetchUNITLDN()
+// fetchBloncks()
