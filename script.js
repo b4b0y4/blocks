@@ -20,6 +20,7 @@ import {
   abiSDAO,
   abiMINTS,
   abiTDG,
+  abiVFA,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -40,6 +41,7 @@ import {
   contractAddressSDAO,
   contractAddressMINTS,
   contractAddressTDG,
+  contractAddressVFA,
 } from "./contracts.js"
 
 // DOM elements
@@ -86,6 +88,7 @@ const contracts = [
   { abi: abiSDAO, address: contractAddressSDAO },
   { abi: abiMINTS, address: contractAddressMINTS },
   { abi: abiTDG, address: contractAddressTDG },
+  { abi: abiVFA, address: contractAddressVFA },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 let storedContract = localStorage.getItem("Contract")
 
@@ -117,309 +120,7 @@ const predefinedLibraries = {
   custom: "",
 }
 
-// Function to clear local storage
-function clearLocalStorage() {
-  localStorage.removeItem("Contract")
-  localStorage.removeItem("contractData")
-  localStorage.removeItem("Src")
-  localStorage.removeItem("IdHash")
-  localStorage.removeItem("Type")
-  localStorage.removeItem("Art")
-}
-
-/***************************************************
- *        FUNCTION TO GET DATA FROM ETHEREUM
- **************************************************/
-async function grabData(tokenId, contract) {
-  try {
-    keyShort.style.display = "none"
-    spin.style.display = "block"
-    clearLocalStorage()
-    localStorage.setItem("Contract", contract)
-
-    // Fetch contract data
-    let hash = await (contract === 0
-      ? contracts[contract].showTokenHashes(tokenId)
-      : contracts[contract].tokenIdToHash(tokenId))
-
-    const projId = await contracts[contract].tokenIdToProjectId(tokenId)
-    const projectInfo = await (contract === 0 ||
-    contract === 1 ||
-    contract === 4 ||
-    contract === 7 ||
-    contract === 8 ||
-    contract === 11 ||
-    contract === 14 ||
-    contract === 16 ||
-    contract === 18
-      ? contracts[contract].projectScriptInfo(projId.toString())
-      : contracts[contract].projectScriptDetails(projId.toString()))
-
-    // Construct script
-    let script = ""
-    for (let i = 0; i < projectInfo.scriptCount; i++) {
-      const scrpt = await contracts[contract].projectScriptByIndex(
-        projId.toString(),
-        i
-      )
-      script += scrpt
-    }
-
-    // Fetch project details
-    let detail = await contracts[contract].projectDetails(projId.toString())
-
-    // Get the owner
-    let owner = await contracts[contract].ownerOf(tokenId)
-
-    // Extract library name
-    let codeLib = ""
-    if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
-      codeLib = projectInfo[0].split("@")[0].trim()
-    } else {
-      codeLib = JSON.parse(projectInfo[0]).type
-    }
-
-    // Get number of works
-    let edition = ""
-    let remaining = ""
-    const invo = await (contract === 0 ||
-    contract === 1 ||
-    contract === 4 ||
-    contract === 7 ||
-    contract === 8 ||
-    contract === 11 ||
-    contract === 14 ||
-    contract === 16 ||
-    contract === 18
-      ? contracts[contract].projectTokenInfo(projId.toString())
-      : contracts[contract].projectStateData(projId.toString()))
-
-    edition = invo.maxInvocations.toString()
-    remaining = (invo.maxInvocations - invo.invocations).toString()
-
-    // Store data in local storage
-    localStorage.setItem(
-      "contractData",
-      JSON.stringify({
-        tokenId,
-        hash,
-        script,
-        detail,
-        owner,
-        codeLib,
-        edition,
-        remaining,
-      })
-    )
-    location.reload()
-  } catch (error) {
-    console.error("Error:", error)
-  }
-}
-
-/***************************************************
- *              FUNCTIONS TO UPDATE UI
- **************************************************/
-let id
-function update(
-  tokenId,
-  hash,
-  script,
-  detail,
-  owner,
-  codeLib,
-  edition,
-  remaining
-) {
-  // Update library source
-  localStorage.setItem("Src", predefinedLibraries[codeLib])
-
-  // Update tokenIdHash content
-  const tknData =
-    tokenId < 3000000 && storedContract == 0
-      ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
-      : `{ tokenId: "${tokenId}", hash: "${hash}" }`
-
-  localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
-
-  // Update artCode
-  let process = ""
-  if (codeLib === "processing") {
-    process = "application/processing"
-  }
-  localStorage.setItem("Type", process)
-  localStorage.setItem("Art", script)
-
-  // Get platform/contract
-  let platform =
-    storedContract == 0 || storedContract == 1 || storedContract == 2
-      ? "Art Blocks"
-      : storedContract == 3
-      ? "Art Blocks Explorations"
-      : storedContract == 4 || storedContract == 5
-      ? "Art Blocks &times; Pace"
-      : storedContract == 6
-      ? "Art Blocks &times; Bright Moments"
-      : storedContract == 7 || storedContract == 13 || storedContract == 14
-      ? "Bright Moments"
-      : storedContract == 8 || storedContract == 9
-      ? "Plottables"
-      : storedContract == 10
-      ? "Sotheby's"
-      : storedContract == 11
-      ? "ATP"
-      : storedContract == 12
-      ? "Grailers"
-      : storedContract == 15
-      ? "AOI"
-      : storedContract == 16
-      ? "Vertical Crypto Art"
-      : storedContract == 17
-      ? "SquiggleDAO"
-      : storedContract == 18
-      ? "Endaoment"
-      : storedContract == 19
-      ? "The Disruptive Gallery"
-      : null
-
-  id =
-    tokenId < 1000000
-      ? tokenId
-      : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
-
-  // get artist name for bm finale
-  let logs = []
-  if (storedContract == 13) {
-    frame.contentWindow.console.log = function (message) {
-      console.log("Log from iframe:", message)
-      if (logs.length === 0) {
-        message = message.replace(/Artist\s*\d+\.\s*/, "")
-        message = message.replace(/\s*--.*/, "")
-      }
-      logs.push(message)
-
-      info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
-    }
-  } else {
-    info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
-  }
-
-  resolveENS(owner, detail, tokenId, platform, edition, remaining)
-  injectFrame()
-}
-
-// Get ENS name for owner if available
-async function resolveENS(
-  owner,
-  detail,
-  tokenId,
-  platform,
-  edition,
-  remaining
-) {
-  try {
-    const ensName = await provider.lookupAddress(owner)
-
-    const ownerLink = ensName
-      ? `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a>`
-      : `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
-
-    const mintedOut =
-      remaining == 0
-        ? `Edition of ${edition} works.`
-        : `Edition of ${edition} works, ${remaining} remaining.`
-
-    const panelContentHTML = `
-      <p>
-        <span style="font-size: 1.4em">${detail[0]}</span><br>
-        ${detail[1]} ● ${platform}<br>
-        ${mintedOut} 
-      </p><br>
-      <p>
-        ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
-      </p><br>
-      <p class="mini">
-        Owner: ${ownerLink}<br>
-        Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>
-        Token ID: <a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a>
-      </p>
-    `
-    panelContent.innerHTML = panelContentHTML
-  } catch (error) {
-    console.log("Error getting ENS name:", error)
-  }
-}
-
-/***************************************************
- *        FUNCTION TO INJECT INTO IFRAME
- **************************************************/
-async function injectFrame() {
-  const iframeDocument = frame.contentDocument || frame.contentWindow.document
-  try {
-    const frameSrc = localStorage.getItem("Src")
-    const frameIdHash = localStorage.getItem("IdHash")
-    const frameType = localStorage.getItem("Type")
-    const frameArt = localStorage.getItem("Art")
-
-    const frameHead = `<head>
-    <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-    <script src='${frameSrc}'></script>
-    <script>${frameIdHash};</script>
-    <style type="text/css">
-      html {
-        height: 100%;
-      }
-      body {
-        min-height: 100%;
-        margin: 0;
-        padding: 0;
-        background-color: var(--color-bg);
-      }
-      canvas {
-        padding: 0;
-        margin: auto;
-        display: block;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-    </style>
-    </head>`
-
-    const frameBody = frameType
-      ? `<body>
-    <script type='${frameType}'>${frameArt}</script>
-    <canvas></canvas>
-    </body>`
-      : `<body>
-    <canvas id="babylon-canvas"></canvas>
-    <script>${frameArt}</script>
-    </body>`
-
-    let dynamicContent
-    if (storedData.codeLib === "custom") {
-      dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
-    } else {
-      dynamicContent = `<html>${frameHead}${frameBody}</html>`
-    }
-    // console.log(dynamicContent)
-
-    // Write the generated content to the iframe
-    iframeDocument.open()
-    iframeDocument.write(dynamicContent)
-    iframeDocument.close()
-    spin.style.display = "none"
-    keyShort.style.display = "block"
-  } catch (error) {
-    console.error("Error:", error)
-  }
-}
-
-/***************************************************
- *          FUNCTIONS TO SEARCH AND GET TOKEN
- **************************************************/
+// List of works
 const list = [
   "0 - Chromie Squiggle / Snowfro - 9998 minted",
   "1 - Genesis / DCA - 512 minted",
@@ -1039,6 +740,8 @@ const list = [
   "MINTS 0 - The Colors That Heal / Ryan Green - 142 minted",
   "TDG 1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
   "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
+  "VFA 0 - Fenestra / Rob Scalera - 41 minted",
+  "VFA 1 - Opuntia / Jake Rockland - 1 minted",
   "AOI 0 - Pursuit / Per Kristian Stoveland - 200 minted",
   "AOI 1 - Echo of Intensity / Per Kristian Stoveland - 1595 minted",
   "AOI 2 - /// / Snowfro - 2000 minted",
@@ -1060,6 +763,323 @@ const list = [
   "VCA 18 - JaggedMemories / Shunsuke Takawo - 50 minted",
   "VCA 19 - [classifieds] / fingacode - 24 minted",
 ]
+
+// Function to clear local storage
+function clearLocalStorage() {
+  localStorage.removeItem("Contract")
+  localStorage.removeItem("contractData")
+  localStorage.removeItem("Src")
+  localStorage.removeItem("IdHash")
+  localStorage.removeItem("Type")
+  localStorage.removeItem("Art")
+}
+
+/***************************************************
+ *        FUNCTIONS TO GET DATA FROM ETHEREUM
+ **************************************************/
+async function grabData(tokenId, contract) {
+  try {
+    keyShort.style.display = "none"
+    spin.style.display = "block"
+    clearLocalStorage()
+    localStorage.setItem("Contract", contract)
+
+    const isContractGen1 = [0, 1, 4, 7, 8, 11, 14, 16, 18].includes(contract)
+
+    const hash = await fetchHash(tokenId, contract)
+    const projId = await fetchProjectId(tokenId, contract)
+    const projectInfo = await fetchProjectInfo(projId, contract, isContractGen1)
+    const script = await constructScript(projId, projectInfo, contract)
+    const detail = await fetchProjectDetails(projId, contract)
+    const owner = await fetchOwner(tokenId, contract)
+    const codeLib = extractLibraryName(projectInfo)
+    const { edition, remaining } = await fetchEditionInfo(
+      projId,
+      contract,
+      isContractGen1
+    )
+
+    storeDataInLocalStorage({
+      tokenId,
+      hash,
+      script,
+      detail,
+      owner,
+      codeLib,
+      edition,
+      remaining,
+    })
+
+    location.reload()
+  } catch (error) {
+    console.error("Error:", error)
+  }
+}
+
+async function fetchHash(tokenId, contract) {
+  return contract === 0
+    ? contracts[contract].showTokenHashes(tokenId)
+    : contracts[contract].tokenIdToHash(tokenId)
+}
+
+async function fetchProjectId(tokenId, contract) {
+  return contracts[contract].tokenIdToProjectId(tokenId)
+}
+
+async function fetchProjectInfo(projId, contract, isContractGen1) {
+  return isContractGen1
+    ? contracts[contract].projectScriptInfo(projId.toString())
+    : contracts[contract].projectScriptDetails(projId.toString())
+}
+
+async function constructScript(projId, projectInfo, contract) {
+  let script = ""
+  for (let i = 0; i < projectInfo.scriptCount; i++) {
+    const scrpt = await contracts[contract].projectScriptByIndex(
+      projId.toString(),
+      i
+    )
+    script += scrpt
+  }
+  return script
+}
+
+async function fetchProjectDetails(projId, contract) {
+  return contracts[contract].projectDetails(projId.toString())
+}
+
+async function fetchOwner(tokenId, contract) {
+  return contracts[contract].ownerOf(tokenId)
+}
+
+function extractLibraryName(projectInfo) {
+  if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
+    return projectInfo[0].split("@")[0].trim()
+  } else {
+    return JSON.parse(projectInfo[0]).type
+  }
+}
+
+async function fetchEditionInfo(projId, contract, isContractGen1) {
+  const invo = await (isContractGen1
+    ? contracts[contract].projectTokenInfo(projId.toString())
+    : contracts[contract].projectStateData(projId.toString()))
+
+  return {
+    edition: invo.maxInvocations.toString(),
+    remaining: (invo.maxInvocations - invo.invocations).toString(),
+  }
+}
+
+function storeDataInLocalStorage(data) {
+  localStorage.setItem("contractData", JSON.stringify(data))
+}
+
+/***************************************************
+ *              FUNCTIONS TO UPDATE UI
+ **************************************************/
+let id
+function update(
+  tokenId,
+  hash,
+  script,
+  detail,
+  owner,
+  codeLib,
+  edition,
+  remaining
+) {
+  // Update library source
+  localStorage.setItem("Src", predefinedLibraries[codeLib])
+
+  // Update tokenIdHash content
+  const tknData =
+    tokenId < 3000000 && storedContract == 0
+      ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
+      : `{ tokenId: "${tokenId}", hash: "${hash}" }`
+
+  localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
+
+  // Update artCode
+  let process = ""
+  if (codeLib === "processing") {
+    process = "application/processing"
+  }
+  localStorage.setItem("Type", process)
+  localStorage.setItem("Art", script)
+
+  // Get platform/contract
+  let platform =
+    storedContract == 0 || storedContract == 1 || storedContract == 2
+      ? "Art Blocks"
+      : storedContract == 3
+      ? "Art Blocks Explorations"
+      : storedContract == 4 || storedContract == 5
+      ? "Art Blocks &times; Pace"
+      : storedContract == 6
+      ? "Art Blocks &times; Bright Moments"
+      : storedContract == 7 || storedContract == 13 || storedContract == 14
+      ? "Bright Moments"
+      : storedContract == 8 || storedContract == 9
+      ? "Plottables"
+      : storedContract == 10
+      ? "Sotheby's"
+      : storedContract == 11
+      ? "ATP"
+      : storedContract == 12
+      ? "Grailers"
+      : storedContract == 15
+      ? "AOI"
+      : storedContract == 16
+      ? "Vertical Crypto Art"
+      : storedContract == 17
+      ? "SquiggleDAO"
+      : storedContract == 18
+      ? "Endaoment"
+      : storedContract == 19
+      ? "The Disruptive Gallery"
+      : storedContract == 20
+      ? "Vertu Fine Art"
+      : null
+
+  id =
+    tokenId < 1000000
+      ? tokenId
+      : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
+
+  // get artist name for bm finale
+  let logs = []
+  if (storedContract == 13) {
+    frame.contentWindow.console.log = function (message) {
+      console.log("Log from iframe:", message)
+      if (logs.length === 0) {
+        message = message.replace(/Artist\s*\d+\.\s*/, "")
+        message = message.replace(/\s*--.*/, "")
+      }
+      logs.push(message)
+
+      info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
+    }
+  } else {
+    info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
+  }
+
+  resolveENS(owner, detail, tokenId, platform, edition, remaining)
+  injectFrame()
+}
+
+// Get ENS name for owner if available
+async function resolveENS(
+  owner,
+  detail,
+  tokenId,
+  platform,
+  edition,
+  remaining
+) {
+  try {
+    const ensName = await provider.lookupAddress(owner)
+
+    const ownerLink = ensName
+      ? `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a>`
+      : `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
+
+    const mintedOut =
+      remaining == 0
+        ? `Edition of ${edition} works.`
+        : `Edition of ${edition} works, ${remaining} remaining.`
+
+    const panelContentHTML = `
+      <p>
+        <span style="font-size: 1.4em">${detail[0]}</span><br>
+        ${detail[1]} ● ${platform}<br>
+        ${mintedOut} 
+      </p><br>
+      <p>
+        ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
+      </p><br>
+      <p class="mini">
+        Owner: ${ownerLink}<br>
+        Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>
+        Token ID: <a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a>
+      </p>
+    `
+    panelContent.innerHTML = panelContentHTML
+  } catch (error) {
+    console.log("Error getting ENS name:", error)
+  }
+}
+
+/***************************************************
+ *        FUNCTION TO INJECT INTO IFRAME
+ **************************************************/
+async function injectFrame() {
+  const iframeDocument = frame.contentDocument || frame.contentWindow.document
+  try {
+    const frameSrc = localStorage.getItem("Src")
+    const frameIdHash = localStorage.getItem("IdHash")
+    const frameType = localStorage.getItem("Type")
+    const frameArt = localStorage.getItem("Art")
+
+    const frameHead = `<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
+    <script src='${frameSrc}'></script>
+    <script>${frameIdHash};</script>
+    <style type="text/css">
+      html {
+        height: 100%;
+      }
+      body {
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: var(--color-bg);
+      }
+      canvas {
+        padding: 0;
+        margin: auto;
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    </style>
+    </head>`
+
+    const frameBody = frameType
+      ? `<body>
+    <script type='${frameType}'>${frameArt}</script>
+    <canvas></canvas>
+    </body>`
+      : `<body>
+    <canvas id="babylon-canvas"></canvas>
+    <script>${frameArt}</script>
+    </body>`
+
+    let dynamicContent
+    if (storedData.codeLib === "custom") {
+      dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
+    } else {
+      dynamicContent = `<html>${frameHead}${frameBody}</html>`
+    }
+    // console.log(dynamicContent)
+
+    // Write the generated content to the iframe
+    iframeDocument.open()
+    iframeDocument.write(dynamicContent)
+    iframeDocument.close()
+    spin.style.display = "none"
+    keyShort.style.display = "block"
+  } catch (error) {
+    console.error("Error:", error)
+  }
+}
+
+/***************************************************
+ *          FUNCTIONS TO SEARCH AND GET TOKEN
+ **************************************************/
 
 function getToken(panelContent, searchQuery) {
   const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
@@ -1154,6 +1174,8 @@ function getContractFromList(contract, tokenId) {
       return 18
     case "TDG":
       return 19
+    case "VFA":
+      return 20
     default:
       return tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
   }
@@ -1795,3 +1817,24 @@ async function fetchTDG() {
   console.log(newList)
 }
 // fetchTDG()
+
+async function fetchVFA() {
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[20].projectDetails(i.toString())
+      const tkns = await contracts[20].projectStateData(i)
+      if (tkns.invocations) {
+        newList.push(
+          `VFA ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+      } else {
+        console.log(`No tokens found for project ${i}`)
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(newList)
+}
+// fetchVFA()
