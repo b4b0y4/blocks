@@ -21,6 +21,7 @@ import {
   abiMINTS,
   abiTDG,
   abiVFA,
+  abiUNITLDN,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -42,6 +43,7 @@ import {
   contractAddressMINTS,
   contractAddressTDG,
   contractAddressVFA,
+  contractAddressUNITLDN,
 } from "./contracts.js"
 
 // DOM elements
@@ -89,6 +91,7 @@ const contracts = [
   { abi: abiMINTS, address: contractAddressMINTS },
   { abi: abiTDG, address: contractAddressTDG },
   { abi: abiVFA, address: contractAddressVFA },
+  { abi: abiUNITLDN, address: contractAddressUNITLDN },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 let storedContract = localStorage.getItem("Contract")
 
@@ -742,6 +745,8 @@ const list = [
   "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
   "VFA 0 - Fenestra / Rob Scalera - 41 minted",
   "VFA 1 - Opuntia / Jake Rockland - 1 minted",
+  "UNITLDN 1 - Disconnected / Stefano Contiero - 10 minted",
+  "UNITLDN 2 - Pressed Pause / Loren Bednar - 9 minted",
   "AOI 0 - Pursuit / Per Kristian Stoveland - 200 minted",
   "AOI 1 - Echo of Intensity / Per Kristian Stoveland - 1595 minted",
   "AOI 2 - /// / Snowfro - 2000 minted",
@@ -940,6 +945,8 @@ function update(
       ? "The Disruptive Gallery"
       : storedContract == 20
       ? "Vertu Fine Art"
+      : storedContract == 21
+      ? "Unit London"
       : null
 
   id =
@@ -1176,6 +1183,8 @@ function getContractFromList(contract, tokenId) {
       return 19
     case "VFA":
       return 20
+    case "UNITLDN":
+      return 21
     default:
       return tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
   }
@@ -1838,3 +1847,24 @@ async function fetchVFA() {
   console.log(newList)
 }
 // fetchVFA()
+
+async function fetchUNITLDN() {
+  for (let i = 0; i < 1000; i++) {
+    try {
+      const detail = await contracts[21].projectDetails(i.toString())
+      const tkns = await contracts[21].projectStateData(i)
+      if (tkns.invocations) {
+        newList.push(
+          `UNITLDN ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+        )
+      } else {
+        console.log(`No tokens found for project ${i}`)
+      }
+    } catch (error) {
+      console.log(`Error fetching data for project ${i}`)
+      break
+    }
+  }
+  console.log(newList)
+}
+// fetchUNITLDN()
