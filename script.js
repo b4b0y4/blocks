@@ -1092,7 +1092,7 @@ function getToken(panelContent, searchQuery) {
   const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
 
   if (searchQuery.includes(",")) {
-    handleCommaSeparatedQuery(textContent, searchQuery)
+    handleCommaSeparatedQuery(searchQuery)
   } else if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery)
   } else {
@@ -1100,7 +1100,7 @@ function getToken(panelContent, searchQuery) {
   }
 }
 
-function handleCommaSeparatedQuery(textContent, searchQuery) {
+function handleCommaSeparatedQuery(searchQuery) {
   const [tokenId, query2] = searchQuery
     .split(",")
     .map((str) => str.trim().toUpperCase())
@@ -1217,35 +1217,30 @@ search.addEventListener("input", (event) => {
 search.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     const query = search.value.trim()
-    query === "" ? getRandomLine(list) : getToken(dataContent.innerHTML, query)
+    query === "" ? getRandom(list) : getToken(dataContent.innerHTML, query)
   }
 })
 
 /***************************************************
- *        FUNCTIONS TO GET RANDOM TOKEN ID
+ *        FUNCTION TO GET RANDOM TOKEN ID
  **************************************************/
-function processLine(line) {
+function getRandom(lines) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
+  const randomLine = lines[Math.floor(Math.random() * lines.length)]
 
-  const matches = line.match(regex)
+  const matches = randomLine.match(regex)
   if (!matches) return null
 
   const id = parseInt(matches[3])
   const randomToken = `#${Math.floor(Math.random() * (id - 1))}`
 
-  console.log("Random token:", randomToken)
-  getToken(line, randomToken)
-}
-
-function getRandomLine(lines) {
-  const randomLine = lines[Math.floor(Math.random() * lines.length)]
-
   console.log("Randomly selected line:", randomLine)
-  processLine(randomLine)
+  console.log("Random token:", randomToken)
+  getToken(randomLine, randomToken)
 }
 
 document.getElementById("randomButton").addEventListener("click", () => {
-  getRandomLine(list)
+  getRandom(list)
 })
 
 /***************************************************
