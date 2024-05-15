@@ -1,8 +1,8 @@
 :root {
-  --color-bg: #2a2a2e;
-  --color-txt: #9a9a9c;
-  --color-btn: #6f6f71;
-  --color-hvr: #353539;
+  --color-bg: #e0e2e3;
+  --color-txt: #606161;
+  --color-btn: #939495;
+  --color-hvr: #d5d7d7;
 }
 
 html {
@@ -67,7 +67,7 @@ li {
 a {
   text-decoration: none;
   color: var(--color-txt);
-  filter: brightness(80%);
+  filter: brightness(140%);
   transition: filter 0.3s ease-in-out;
   outline: none;
 }
@@ -245,7 +245,7 @@ a:hover {
   font-size: 0.6em;
   color: var(--color-btn);
   background-color: var(--color-hvr);
-  filter: brightness(120%) saturate(100%);
+  filter: brightness(95%) saturate(100%);
   padding: 2.5px 7px;
   border-radius: 5px;
   cursor: default;
