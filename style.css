@@ -67,7 +67,7 @@ li {
 a {
   text-decoration: none;
   color: var(--color-txt);
-  filter: brightness(70%);
+  filter: brightness(80%);
   transition: filter 0.3s ease-in-out;
   outline: none;
 }
