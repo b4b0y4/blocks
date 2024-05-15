@@ -988,7 +988,7 @@ async function updatePanelInfo(
       : `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
 
     const mintedOut =
-      remaining === 0
+      remaining == 0
         ? `Edition of ${edition} works.`
         : `Edition of ${edition} works, ${remaining} remaining.`
 
