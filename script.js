@@ -818,6 +818,8 @@ async function grabData(tokenId, contract) {
     location.reload()
   } catch (error) {
     console.error("Error:", error)
+    search.placeholder = "Error"
+    spin.style.display = "none"
   }
 }
 
