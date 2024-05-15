@@ -817,7 +817,7 @@ async function grabData(tokenId, contract) {
 
     location.reload()
   } catch (error) {
-    console.error("Error:", error)
+    console.error("grabData:", error)
     search.placeholder = "Error"
     spin.style.display = "none"
   }
@@ -895,19 +895,17 @@ function update(
   edition,
   remaining
 ) {
-  updateLocalStorage(tokenId, hash, script, extLib)
+  pushItemToLocalStorage(tokenId, hash, script, extLib)
   const platform = determinePlatform(storedContract)
   let id = getShortenedId(tokenId)
   updateInfo(storedContract, detail, id)
-  updatePanelInfo(owner, detail, tokenId, platform, edition, remaining)
+  updatePanelContent(owner, detail, tokenId, platform, edition, remaining)
   injectFrame()
 }
 
-function updateLocalStorage(tokenId, hash, script, extLib) {
-  // Update library source
+function pushItemToLocalStorage(tokenId, hash, script, extLib) {
   localStorage.setItem("Src", predefinedLibraries[extLib])
 
-  // Update tokenIdHash content
   const tknData =
     tokenId < 3000000 && storedContract === 0
       ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
@@ -915,7 +913,6 @@ function updateLocalStorage(tokenId, hash, script, extLib) {
 
   localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
 
-  // Update art script
   const process = extLib === "processing" ? "application/processing" : ""
   localStorage.setItem("Type", process)
   localStorage.setItem("Art", script)
@@ -972,7 +969,7 @@ function updateInfo(storedContract, detail, id) {
   }
 }
 
-async function updatePanelInfo(
+async function updatePanelContent(
   owner,
   detail,
   tokenId,
@@ -1010,7 +1007,7 @@ async function updatePanelInfo(
 
     panelContent.innerHTML = panelContentHTML
   } catch (error) {
-    console.log("Error getting ENS name:", error)
+    console.log("updatePanelContent:", error)
   }
 }
 
@@ -1075,7 +1072,7 @@ async function injectFrame() {
     spin.style.display = "none"
     keyShort.style.display = "block"
   } catch (error) {
-    console.error("Error:", error)
+    console.error("injectFrame:", error)
   }
 }
 
