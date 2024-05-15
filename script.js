@@ -883,7 +883,6 @@ function storeDataInLocalStorage(data) {
 /***************************************************
  *              FUNCTIONS TO UPDATE UI
  **************************************************/
-let id
 function update(
   tokenId,
   hash,
@@ -894,69 +893,68 @@ function update(
   edition,
   remaining
 ) {
+  updateLocalStorage(tokenId, hash, script, extLib)
+  const platform = determinePlatform(storedContract)
+  let id = getShortenedId(tokenId)
+  updateInfo(storedContract, detail, id)
+  updatePanelInfo(owner, detail, tokenId, platform, edition, remaining)
+  injectFrame()
+}
+
+function updateLocalStorage(tokenId, hash, script, extLib) {
   // Update library source
   localStorage.setItem("Src", predefinedLibraries[extLib])
 
   // Update tokenIdHash content
   const tknData =
-    tokenId < 3000000 && storedContract == 0
+    tokenId < 3000000 && storedContract === 0
       ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
       : `{ tokenId: "${tokenId}", hash: "${hash}" }`
 
   localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
 
-  // Update artCode
-  let process = ""
-  if (extLib === "processing") {
-    process = "application/processing"
-  }
+  // Update art script
+  const process = extLib === "processing" ? "application/processing" : ""
   localStorage.setItem("Type", process)
   localStorage.setItem("Art", script)
+}
 
-  // Get platform/contract
-  let platform =
-    storedContract == 0 || storedContract == 1 || storedContract == 2
-      ? "Art Blocks"
-      : storedContract == 3
-      ? "Art Blocks Explorations"
-      : storedContract == 4 || storedContract == 5
-      ? "Art Blocks &times; Pace"
-      : storedContract == 6
-      ? "Art Blocks &times; Bright Moments"
-      : storedContract == 7 || storedContract == 8 || storedContract == 9
-      ? "Bright Moments"
-      : storedContract == 10 || storedContract == 11
-      ? "Plottables"
-      : storedContract == 12
-      ? "Sotheby's"
-      : storedContract == 13
-      ? "ATP"
-      : storedContract == 14
-      ? "Grailers"
-      : storedContract == 15
-      ? "AOI"
-      : storedContract == 16
-      ? "Vertical Crypto Art"
-      : storedContract == 17
-      ? "SquiggleDAO"
-      : storedContract == 18
-      ? "Endaoment"
-      : storedContract == 19
-      ? "The Disruptive Gallery"
-      : storedContract == 20
-      ? "Vertu Fine Art"
-      : storedContract == 21
-      ? "Unit London"
-      : null
+function determinePlatform(storedContract) {
+  const contractsData = {
+    0: "Art Blocks",
+    1: "Art Blocks",
+    2: "Art Blocks",
+    3: "Art Blocks Explorations",
+    4: "Art Blocks &times; Pace",
+    5: "Art Blocks &times; Pace",
+    6: "Art Blocks &times; Bright Moments",
+    7: "Bright Moments",
+    8: "Bright Moments",
+    9: "Bright Moments",
+    10: "Plottables",
+    12: "Sotheby's",
+    13: "ATP",
+    14: "Grailers",
+    15: "AOI",
+    16: "Vertical Crypto Art",
+    17: "SquiggleDAO",
+    18: "Endaoment",
+    19: "The Disruptive Gallery",
+    20: "Vertu Fine Art",
+    21: "Unit London",
+  }
 
-  id =
-    tokenId < 1000000
-      ? tokenId
-      : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
+  return contractsData[storedContract] || null
+}
 
-  // get artist name for bm finale
-  let logs = []
-  if (storedContract == 8) {
+function getShortenedId(tokenId) {
+  return tokenId < 1000000
+    ? tokenId
+    : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
+}
+
+function updateInfo(storedContract, detail, id) {
+  if (storedContract === 8) {
     frame.contentWindow.console.log = function (message) {
       console.log("Log from iframe:", message)
       if (logs.length === 0) {
@@ -970,13 +968,9 @@ function update(
   } else {
     info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
   }
-
-  resolveENS(owner, detail, tokenId, platform, edition, remaining)
-  injectFrame()
 }
 
-// Get ENS name for owner if available
-async function resolveENS(
+async function updatePanelInfo(
   owner,
   detail,
   tokenId,
@@ -992,7 +986,7 @@ async function resolveENS(
       : `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
 
     const mintedOut =
-      remaining == 0
+      remaining === 0
         ? `Edition of ${edition} works.`
         : `Edition of ${edition} works, ${remaining} remaining.`
 
@@ -1011,6 +1005,7 @@ async function resolveENS(
         Token ID: <a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a>
       </p>
     `
+
     panelContent.innerHTML = panelContentHTML
   } catch (error) {
     console.log("Error getting ENS name:", error)
@@ -1071,9 +1066,7 @@ async function injectFrame() {
     } else {
       dynamicContent = `<html>${frameHead}${frameBody}</html>`
     }
-    // console.log(dynamicContent)
 
-    // Write the generated content to the iframe
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
     iframeDocument.close()
@@ -1190,28 +1183,24 @@ function getContractFromList(contract, tokenId) {
   }
 }
 
-// function to show the list
-function displayLines(lines) {
+function displayList(lines) {
   const panel =
     "<div>" + lines.map((line) => `<p>${line}</p>`).join("") + "</div>"
   dataContent.innerHTML = panel
 }
 
-// function to filter the list
-function filterLines(lines, query) {
+function filterList(lines, query) {
   const filteredLines = lines.filter((line) =>
     line.toLowerCase().includes(query.toLowerCase())
   )
-  displayLines(filteredLines)
+  displayList(filteredLines)
 }
 
-// Display all lines initially
-displayLines(list)
+displayList(list)
 
-// Event listener for search field
 search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim()
-  filterLines(list, query)
+  filterList(list, query)
 })
 
 search.addEventListener("keypress", (event) => {
@@ -1314,20 +1303,17 @@ async function saveContentAsFile(content, filename) {
   link.remove()
 }
 
-// Function to handle the button click event
 function handleSaveButtonClick() {
   const dynamicContent = frame.contentDocument.documentElement.outerHTML
   saveContentAsFile(dynamicContent)
 }
 
-// Attach the handleSaveButtonClick
 save.addEventListener("click", handleSaveButtonClick)
 
 /***************************************************
  *                     EVENTS
  **************************************************/
 let storedData = {}
-// Event listener when the DOM content is loaded
 window.addEventListener("DOMContentLoaded", () => {
   storedData = JSON.parse(localStorage.getItem("contractData"))
   if (storedData) {
@@ -1350,14 +1336,6 @@ window.addEventListener("DOMContentLoaded", () => {
   // console.log("library:", storedData.extLib)
 })
 
-rpcUrlInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    localStorage.setItem("rpcUrl", rpcUrlInput.value)
-    rpcUrlInput.style.display = "none"
-    location.reload()
-  }
-})
-
 window.addEventListener("load", () => {
   rpcUrl
     ? ((rpcUrlInput.style.display = "none"),
@@ -1365,6 +1343,14 @@ window.addEventListener("load", () => {
     : ((rpcUrlInput.style.display = "block"),
       (instruction.style.display = "block"),
       (infoBox.style.display = "none"))
+})
+
+rpcUrlInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    localStorage.setItem("rpcUrl", rpcUrlInput.value)
+    rpcUrlInput.style.display = "none"
+    location.reload()
+  }
 })
 
 document.addEventListener("keypress", (event) => {
@@ -1463,6 +1449,7 @@ function getContractName(contract) {
   return contractNames[contract] ? contractNames[contract] + " " : ""
 }
 
+// fetchBloncks()
 async function fetchBloncks() {
   const contractMappings = {
     0: (i) => (i < 3 ? 0 : i < 374 ? 1 : 2),
@@ -1518,4 +1505,3 @@ async function fetchBloncks() {
     console.log(newList)
   }
 }
-// fetchBloncks()
