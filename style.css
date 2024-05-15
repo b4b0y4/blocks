@@ -3,6 +3,19 @@
   --color-txt: #606161;
   --color-btn: #939495;
   --color-hvr: #d5d7d7;
+  --color-key: #cacbcc;
+}
+
+:root.dark-mode {
+  --color-bg: #2a2a2e;
+  --color-txt: #9a9a9c;
+  --color-btn: #6f6f71;
+  --color-hvr: #353539;
+  --color-key: #2e2e33;
+}
+
+.no-flash {
+  visibility: hidden;
 }
 
 html {
@@ -66,14 +79,13 @@ li {
 
 a {
   text-decoration: none;
-  color: var(--color-txt);
-  filter: brightness(140%);
-  transition: filter 0.3s ease-in-out;
+  color: var(--color-btn);
+  transition: color 0.3s ease-in-out;
   outline: none;
 }
 
 a:hover {
-  filter: brightness(100%);
+  color: var(--color-txt);
 }
 
 .rpc-url {
@@ -153,6 +165,22 @@ a:hover {
 .random:hover,
 .previous:hover,
 .next:hover {
+  background-color: var(--color-hvr);
+}
+
+#modeToggle {
+  position: absolute;
+  right: 10px;
+  background-color: transparent;
+  font-size: 1.1em;
+  border-radius: 50%;
+  padding: 5px;
+  color: var(--color-btn);
+  border: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+#modeToggle:hover {
   background-color: var(--color-hvr);
 }
 
@@ -244,8 +272,7 @@ a:hover {
   transform: translateY(-50%);
   font-size: 0.6em;
   color: var(--color-btn);
-  background-color: var(--color-hvr);
-  filter: brightness(95%) saturate(100%);
+  background-color: var(--color-key);
   padding: 2.5px 7px;
   border-radius: 5px;
   cursor: default;

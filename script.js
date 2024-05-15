@@ -47,6 +47,8 @@ import {
 } from "./contracts.js"
 
 // DOM elements
+const modeToggle = document.getElementById("modeToggle")
+const root = document.documentElement
 const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
@@ -769,14 +771,23 @@ const list = [
   "VCA 19 - [classifieds] / fingacode - 24 minted",
 ]
 
-// Function to clear local storage
-function clearLocalStorage() {
-  localStorage.removeItem("Contract")
-  localStorage.removeItem("contractData")
-  localStorage.removeItem("Src")
-  localStorage.removeItem("IdHash")
-  localStorage.removeItem("Type")
-  localStorage.removeItem("Art")
+/***************************************************
+ *                    MODE TOGGLE
+ **************************************************/
+
+root.classList.remove("no-flash")
+
+modeToggle.addEventListener("click", () => {
+  root.classList.toggle("dark-mode")
+  const isDarkMode = root.classList.contains("dark-mode")
+  localStorage.setItem("darkMode", isDarkMode)
+})
+
+const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
+if (isDarkMode) {
+  root.classList.add("dark-mode")
+} else {
+  root.classList.remove("dark-mode")
 }
 
 /***************************************************
@@ -880,6 +891,15 @@ async function fetchEditionInfo(projId, contract, isContractGen1) {
 
 function storeDataInLocalStorage(data) {
   localStorage.setItem("contractData", JSON.stringify(data))
+}
+
+function clearLocalStorage() {
+  localStorage.removeItem("Contract")
+  localStorage.removeItem("contractData")
+  localStorage.removeItem("Src")
+  localStorage.removeItem("IdHash")
+  localStorage.removeItem("Type")
+  localStorage.removeItem("Art")
 }
 
 /***************************************************
