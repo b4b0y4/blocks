@@ -93,7 +93,7 @@ a:hover {
 
 .rpc-url:focus,
 .rpc-url:hover {
-  outline-color: var(--color-txt);
+  outline-color: var(--color-btn);
 }
 
 .info-box {
@@ -225,7 +225,7 @@ a:hover {
 
 .search-input:hover,
 .search-input:focus {
-  outline-color: var(--color-txt);
+  outline-color: var(--color-btn);
 }
 
 .search-icon {
