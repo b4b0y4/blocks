@@ -1327,13 +1327,6 @@ window.addEventListener("DOMContentLoaded", () => {
     : ((inc.style.display = "none"),
       (dec.style.display = "none"),
       (save.style.display = "none"))
-
-  // console.log("contract:", storedContract)
-  // console.log("lib source:", localStorage.getItem("Src"))
-  // console.log("Id an Hash:", localStorage.getItem("IdHash"))
-  // console.log("code type:", localStorage.getItem("Type"))
-  // console.log("Art script:", localStorage.getItem("Art"))
-  // console.log("library:", storedData.extLib)
 })
 
 window.addEventListener("load", () => {
@@ -1464,7 +1457,7 @@ async function fetchBloncks() {
   let token
 
   // CONTRACTS
-  for (let n = 17; n < 22; n++) {
+  for (let n = 19; n < 22; n++) {
     // PROJECT ID
     for (let i = n === 14 ? 1 : 0; i < 1000; i++) {
       if (contractMappings.hasOwnProperty(n)) {
