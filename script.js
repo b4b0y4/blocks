@@ -797,7 +797,7 @@ async function grabData(tokenId, contract) {
     const script = await constructScript(projId, projectInfo, contract)
     const detail = await fetchProjectDetails(projId, contract)
     const owner = await fetchOwner(tokenId, contract)
-    const externalLib = extractLibraryName(projectInfo)
+    const extLib = extractLibraryName(projectInfo)
     const { edition, remaining } = await fetchEditionInfo(
       projId,
       contract,
@@ -810,7 +810,7 @@ async function grabData(tokenId, contract) {
       script,
       detail,
       owner,
-      externalLib,
+      extLib,
       edition,
       remaining,
     })
@@ -890,12 +890,12 @@ function update(
   script,
   detail,
   owner,
-  externalLib,
+  extLib,
   edition,
   remaining
 ) {
   // Update library source
-  localStorage.setItem("Src", predefinedLibraries[externalLib])
+  localStorage.setItem("Src", predefinedLibraries[extLib])
 
   // Update tokenIdHash content
   const tknData =
@@ -907,7 +907,7 @@ function update(
 
   // Update artCode
   let process = ""
-  if (externalLib === "processing") {
+  if (extLib === "processing") {
     process = "application/processing"
   }
   localStorage.setItem("Type", process)
@@ -1066,7 +1066,7 @@ async function injectFrame() {
     </body>`
 
     let dynamicContent
-    if (storedData.externalLib === "custom") {
+    if (storedData.extLib === "custom") {
       dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
     } else {
       dynamicContent = `<html>${frameHead}${frameBody}</html>`
@@ -1346,7 +1346,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // console.log("Id an Hash:", localStorage.getItem("IdHash"))
   // console.log("code type:", localStorage.getItem("Type"))
   // console.log("Art script:", localStorage.getItem("Art"))
-  // console.log("library:", storedData.externalLib)
+  // console.log("library:", storedData.extLib)
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
