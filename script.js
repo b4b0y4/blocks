@@ -774,7 +774,6 @@ const list = [
 /***************************************************
  *                    MODE TOGGLE
  **************************************************/
-
 root.classList.remove("no-flash")
 
 modeToggle.addEventListener("click", () => {
