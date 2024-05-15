@@ -214,10 +214,11 @@ a:hover {
   background-color: var(--color-hvr);
   color: var(--color-txt);
   font-size: 1em;
-  width: 80px;
+  width: 90px;
   text-align: start;
   border-radius: 5px;
-  padding: 4px 30px 4px 30px;
+  padding: 4px;
+  padding-left: 30px;
   outline: 0.5px solid transparent;
   transition: outline-color 0.3s ease-in-out;
 }
@@ -244,7 +245,7 @@ a:hover {
   font-size: 0.6em;
   color: var(--color-btn);
   background-color: var(--color-hvr);
-  filter: brightness(140%);
+  filter: brightness(130%) saturate(100%);
   padding: 2.5px 7px;
   border-radius: 5px;
   cursor: default;
@@ -306,7 +307,8 @@ a:hover {
   }
 
   .search-input {
-    padding: 6px 30px 6px 30px;
+    padding: 6px;
+    padding-left: 30px;
   }
 
   .save,

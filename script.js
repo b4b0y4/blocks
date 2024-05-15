@@ -1218,6 +1218,7 @@ search.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     const query = search.value.trim()
     query === "" ? getRandom(list) : getToken(dataContent.innerHTML, query)
+    search.value = ""
   }
 })
 
@@ -1402,12 +1403,18 @@ document.addEventListener("keypress", (event) => {
     if (dataPanel.classList.contains("active")) {
       panel.classList.remove("active")
       overlay.style.display = "block"
-      keyShort.style.display = "none"
     } else {
       overlay.style.display = "none"
-      keyShort.style.display = "block"
     }
   }
+})
+
+search.addEventListener("focus", () => {
+  keyShort.style.display = "none"
+})
+
+search.addEventListener("blur", () => {
+  keyShort.style.display = "block"
 })
 
 search.addEventListener("input", () => {
@@ -1415,11 +1422,9 @@ search.addEventListener("input", () => {
     dataPanel.classList.add("active")
     panel.classList.remove("active")
     overlay.style.display = "block"
-    keyShort.style.display = "none"
   } else {
     dataPanel.classList.remove("active")
     overlay.style.display = "none"
-    keyShort.style.display = "block"
   }
 })
 
