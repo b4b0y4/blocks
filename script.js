@@ -924,7 +924,7 @@ function update(
   const curation =
     contract == 0 || contract == 1 || contract == 2
       ? determineCuration(projId)
-      : ""
+      : null
   const platform = determinePlatform(contract, curation)
   let id = getShortenedId(tokenId)
   updateInfo(contract, detail, id, logs)
