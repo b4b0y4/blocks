@@ -813,18 +813,21 @@ async function grabData(_tokenId, contract) {
       isContractGen1
     )
 
-    storeDataInLocalStorage({
-      tokenId,
-      contract,
-      projId,
-      hash,
-      script,
-      detail,
-      owner,
-      extLib,
-      edition,
-      remaining,
-    })
+    localStorage.setItem(
+      "contractData",
+      JSON.stringify({
+        tokenId,
+        contract,
+        projId,
+        hash,
+        script,
+        detail,
+        owner,
+        extLib,
+        edition,
+        remaining,
+      })
+    )
 
     location.reload()
   } catch (error) {
@@ -886,10 +889,6 @@ async function fetchEditionInfo(projId, contract, isContractGen1) {
   }
 }
 
-function storeDataInLocalStorage(data) {
-  localStorage.setItem("contractData", JSON.stringify(data))
-}
-
 /***************************************************
  *              CLEAR FUNCTIONS
  **************************************************/
@@ -919,7 +918,6 @@ function update(
   edition,
   remaining
 ) {
-  let logs = []
   pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
   const curation =
     contract == 0 || contract == 1 || contract == 2
@@ -927,17 +925,18 @@ function update(
       : null
   const platform = determinePlatform(contract, curation)
   let id = getShortenedId(tokenId)
-  updateInfo(contract, detail, id, logs)
-  updatePanelContent(
-    contract,
-    owner,
-    detail,
-    tokenId,
-    platform,
-    edition,
-    remaining,
-    logs
-  )
+  updateInfo(contract, detail, id).then((artist) => {
+    updatePanelContent(
+      contract,
+      owner,
+      detail,
+      tokenId,
+      platform,
+      edition,
+      remaining,
+      artist
+    )
+  })
   injectFrame()
 }
 
@@ -949,11 +948,10 @@ function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
       : `let tokenData = { tokenId: "${tokenId}", hash: "${hash}" }`
   let process = extLib == "processing" ? "application/processing" : ""
 
-  storeScriptDataInLocalStorage({ src, tokenIdHash, process, script })
-}
-
-function storeScriptDataInLocalStorage(data) {
-  localStorage.setItem("scriptData", JSON.stringify(data))
+  localStorage.setItem(
+    "scriptData",
+    JSON.stringify({ src, tokenIdHash, process, script })
+  )
 }
 
 function determineCuration(projId) {
@@ -1017,22 +1015,25 @@ function getShortenedId(tokenId) {
     : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
 }
 
-function updateInfo(contract, detail, id, logs) {
-  if (contract == 8) {
-    frame.contentWindow.console.log = function (message) {
-      console.log("Log from iframe:", message)
-      if (logs.length === 0) {
-        message = message.replace(/Artist\s*\d+\.\s*/, "")
-        message = message.replace(/\s*--.*/, "")
+function updateInfo(contract, detail, id) {
+  return new Promise((resolve, reject) => {
+    let logs = []
+    if (contract == 8) {
+      frame.contentWindow.console.log = function (message) {
+        console.log("Log from iframe:", message)
+        if (logs.length === 0) {
+          message = message.replace(/Artist\s*\d+\.\s*/, "")
+          message = message.replace(/\s*--.*/, "")
+        }
+        logs.push(message)
+        info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
+        resolve(logs[0])
       }
-      logs.push(message)
-
-      info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
-      return logs
+    } else {
+      info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
+      resolve(detail[1])
     }
-  } else {
-    info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
-  }
+  })
 }
 
 async function updatePanelContent(
@@ -1043,21 +1044,15 @@ async function updatePanelContent(
   platform,
   edition,
   remaining,
-  logs
+  artist
 ) {
   try {
-    const ensName = await provider.lookupAddress(owner)
-
-    const ownerLink = ensName
-      ? `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a>`
-      : `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
-
-    const mintedOut =
+    let mintedOut =
       remaining == 0
         ? `Edition of ${edition} works.`
         : `Edition of ${edition} works, ${remaining} remaining.`
 
-    let artist = logs.length != 0 ? logs[0] : detail[1]
+    let ownerLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
 
     const panelContentHTML = `
       <p>
@@ -1076,6 +1071,15 @@ async function updatePanelContent(
     `
 
     panelContent.innerHTML = panelContentHTML
+
+    let ensName = await provider.lookupAddress(owner)
+    if (ensName) {
+      let ensLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a>`
+      panelContent.innerHTML = panelContentHTML.replace(
+        `Owner: ${ownerLink}<br>`,
+        `Owner: ${ensLink}<br>`
+      )
+    }
   } catch (error) {
     console.log("updatePanelContent:", error)
   }
@@ -1087,7 +1091,6 @@ async function updatePanelContent(
 async function injectFrame() {
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
   try {
-    let contractData = JSON.parse(localStorage.getItem("contractData"))
     let scriptData = JSON.parse(localStorage.getItem("scriptData"))
 
     const frameHead = `<head>
@@ -1303,7 +1306,6 @@ document.getElementById("randomButton").addEventListener("click", () => {
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
  **************************************************/
 function incrementTokenId() {
-  let contractData = JSON.parse(localStorage.getItem("contractData"))
   contractData.tokenId = contractData.tokenId
     ? (contractData.tokenId + 1).toString()
     : "1"
@@ -1314,7 +1316,6 @@ function incrementTokenId() {
 }
 
 function decrementTokenId() {
-  let contractData = JSON.parse(localStorage.getItem("contractData"))
   contractData.tokenId = contractData.tokenId
     ? Math.max(contractData.tokenId - 1, 0).toString()
     : "0"
@@ -1386,8 +1387,9 @@ save.addEventListener("click", handleSaveButtonClick)
 /***************************************************
  *                     EVENTS
  **************************************************/
+let contractData = {}
 window.addEventListener("DOMContentLoaded", () => {
-  let contractData = JSON.parse(localStorage.getItem("contractData"))
+  contractData = JSON.parse(localStorage.getItem("contractData"))
   if (contractData) {
     update(...Object.values(contractData))
   }
