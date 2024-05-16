@@ -912,11 +912,12 @@ function update(
   edition,
   remaining
 ) {
+  let log = []
   pushItemToLocalStorage(tokenId, hash, script, extLib)
   const platform = determinePlatform(storedContract)
   let id = getShortenedId(tokenId)
-  updateInfo(storedContract, detail, id)
-  updatePanelContent(owner, detail, tokenId, platform, edition, remaining)
+  updateInfo(storedContract, detail, id, log)
+  updatePanelContent(owner, detail, tokenId, platform, edition, remaining, log)
   injectFrame()
 }
 
@@ -969,8 +970,7 @@ function getShortenedId(tokenId) {
     : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
 }
 
-function updateInfo(storedContract, detail, id) {
-  let logs = []
+function updateInfo(storedContract, detail, id, logs) {
   if (storedContract == 8) {
     frame.contentWindow.console.log = function (message) {
       console.log("Log from iframe:", message)
@@ -981,6 +981,7 @@ function updateInfo(storedContract, detail, id) {
       logs.push(message)
 
       info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
+      return logs
     }
   } else {
     info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
@@ -993,7 +994,8 @@ async function updatePanelContent(
   tokenId,
   platform,
   edition,
-  remaining
+  remaining,
+  logs
 ) {
   try {
     const ensName = await provider.lookupAddress(owner)
@@ -1007,10 +1009,12 @@ async function updatePanelContent(
         ? `Edition of ${edition} works.`
         : `Edition of ${edition} works, ${remaining} remaining.`
 
+    let artist = logs.length != 0 ? logs[0] : detail[1]
+
     const panelContentHTML = `
       <p>
         <span style="font-size: 1.4em">${detail[0]}</span><br>
-        ${detail[1]} ● ${platform}<br>
+        ${artist} ● ${platform}<br>
         ${mintedOut} 
       </p><br>
       <p>
