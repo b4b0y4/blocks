@@ -795,6 +795,7 @@ async function grabData(tokenId, contract) {
     keyShort.style.display = "none"
     spin.style.display = "block"
     clearLocalStorage()
+    clearPanels()
     localStorage.setItem("Contract", contract)
 
     const isContractGen1 = [0, 1, 4, 7, 9, 10, 13, 16, 18].includes(contract)
@@ -890,6 +891,9 @@ function storeDataInLocalStorage(data) {
   localStorage.setItem("contractData", JSON.stringify(data))
 }
 
+/***************************************************
+ *              CLEAR FUNCTIONS
+ **************************************************/
 function clearLocalStorage() {
   localStorage.removeItem("contractData")
   localStorage.removeItem("Contract")
@@ -897,6 +901,12 @@ function clearLocalStorage() {
   localStorage.removeItem("IdHash")
   localStorage.removeItem("Type")
   localStorage.removeItem("Art")
+}
+
+function clearPanels() {
+  listPanel.classList.remove("active")
+  panel.classList.remove("active")
+  overlay.style.display = "none"
 }
 
 /***************************************************
@@ -912,12 +922,12 @@ function update(
   edition,
   remaining
 ) {
-  let log = []
+  let logs = []
   pushItemToLocalStorage(tokenId, hash, script, extLib)
   const platform = determinePlatform(storedContract)
   let id = getShortenedId(tokenId)
-  updateInfo(storedContract, detail, id, log)
-  updatePanelContent(owner, detail, tokenId, platform, edition, remaining, log)
+  updateInfo(storedContract, detail, id, logs)
+  updatePanelContent(owner, detail, tokenId, platform, edition, remaining, logs)
   injectFrame()
 }
 
@@ -1015,7 +1025,7 @@ async function updatePanelContent(
       <p>
         <span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
-        ${mintedOut} 
+        ${mintedOut}
       </p><br>
       <p>
         ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
@@ -1424,15 +1434,12 @@ search.addEventListener("input", () => {
     panel.classList.remove("active")
     overlay.style.display = "block"
   } else {
-    listPanel.classList.remove("active")
-    overlay.style.display = "none"
+    clearPanels()
   }
 })
 
 overlay.addEventListener("click", () => {
-  listPanel.classList.remove("active")
-  panel.classList.remove("active")
-  overlay.style.display = "none"
+  clearPanels()
 })
 
 /***************************************************
