@@ -965,10 +965,21 @@ function determineCuration(projId) {
     379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
     456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
   ]
+  const playground = [
+    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
+    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
+    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
+    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
+    373,
+  ]
   return curated.includes(projId)
     ? "Art Blocks Curated"
+    : playground.includes(projId)
+    ? "Art Blocks Playground"
+    : projId < 374
+    ? "Art Blocks Factory"
     : projId < 494
-    ? "Art Blocks Present"
+    ? "Art Blocks Presents"
     : "Art Blocks"
 }
 
