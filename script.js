@@ -94,7 +94,6 @@ const contracts = [
   { abi: abiVFA, address: contractAddressVFA },
   { abi: abiUNITLDN, address: contractAddressUNITLDN },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
-let storedContract = localStorage.getItem("Contract")
 
 // Libraries
 const predefinedLibraries = {
@@ -790,18 +789,19 @@ root.classList.remove("no-flash")
 /***************************************************
  *        FUNCTIONS TO GET DATA FROM ETHEREUM
  **************************************************/
-async function grabData(tokenId, contract) {
+async function grabData(_tokenId, contract) {
   try {
     keyShort.style.display = "none"
     spin.style.display = "block"
     clearLocalStorage()
     clearPanels()
-    localStorage.setItem("Contract", contract)
 
+    const tokenId = Number(_tokenId)
     const isContractGen1 = [0, 1, 4, 7, 9, 10, 13, 16, 18].includes(contract)
 
     const hash = await fetchHash(tokenId, contract)
-    const projId = await fetchProjectId(tokenId, contract)
+    const projectId = await fetchProjectId(tokenId, contract)
+    const projId = Number(projectId)
     const projectInfo = await fetchProjectInfo(projId, contract, isContractGen1)
     const script = await constructScript(projId, projectInfo, contract)
     const detail = await fetchProjectDetails(projId, contract)
@@ -815,6 +815,8 @@ async function grabData(tokenId, contract) {
 
     storeDataInLocalStorage({
       tokenId,
+      contract,
+      projId,
       hash,
       script,
       detail,
@@ -844,24 +846,21 @@ async function fetchProjectId(tokenId, contract) {
 
 async function fetchProjectInfo(projId, contract, isContractGen1) {
   return isContractGen1
-    ? contracts[contract].projectScriptInfo(projId.toString())
-    : contracts[contract].projectScriptDetails(projId.toString())
+    ? contracts[contract].projectScriptInfo(projId)
+    : contracts[contract].projectScriptDetails(projId)
 }
 
 async function constructScript(projId, projectInfo, contract) {
   let script = ""
   for (let i = 0; i < projectInfo.scriptCount; i++) {
-    const scrpt = await contracts[contract].projectScriptByIndex(
-      projId.toString(),
-      i
-    )
+    const scrpt = await contracts[contract].projectScriptByIndex(projId, i)
     script += scrpt
   }
   return script
 }
 
 async function fetchProjectDetails(projId, contract) {
-  return contracts[contract].projectDetails(projId.toString())
+  return contracts[contract].projectDetails(projId)
 }
 
 async function fetchOwner(tokenId, contract) {
@@ -878,8 +877,8 @@ function extractLibraryName(projectInfo) {
 
 async function fetchEditionInfo(projId, contract, isContractGen1) {
   const invo = await (isContractGen1
-    ? contracts[contract].projectTokenInfo(projId.toString())
-    : contracts[contract].projectStateData(projId.toString()))
+    ? contracts[contract].projectTokenInfo(projId)
+    : contracts[contract].projectStateData(projId))
 
   return {
     edition: invo.maxInvocations.toString(),
@@ -896,11 +895,7 @@ function storeDataInLocalStorage(data) {
  **************************************************/
 function clearLocalStorage() {
   localStorage.removeItem("contractData")
-  localStorage.removeItem("Contract")
-  localStorage.removeItem("Src")
-  localStorage.removeItem("IdHash")
-  localStorage.removeItem("Type")
-  localStorage.removeItem("Art")
+  localStorage.removeItem("scriptData")
 }
 
 function clearPanels() {
@@ -914,6 +909,8 @@ function clearPanels() {
  **************************************************/
 function update(
   tokenId,
+  contract,
+  projId,
   hash,
   script,
   detail,
@@ -923,34 +920,63 @@ function update(
   remaining
 ) {
   let logs = []
-  pushItemToLocalStorage(tokenId, hash, script, extLib)
-  const platform = determinePlatform(storedContract)
+  pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
+  const curation =
+    contract == 0 || contract == 1 || contract == 2
+      ? determineCuration(projId)
+      : ""
+  const platform = determinePlatform(contract, curation)
   let id = getShortenedId(tokenId)
-  updateInfo(storedContract, detail, id, logs)
-  updatePanelContent(owner, detail, tokenId, platform, edition, remaining, logs)
+  updateInfo(contract, detail, id, logs)
+  updatePanelContent(
+    contract,
+    owner,
+    detail,
+    tokenId,
+    platform,
+    edition,
+    remaining,
+    logs
+  )
   injectFrame()
 }
 
-function pushItemToLocalStorage(tokenId, hash, script, extLib) {
-  localStorage.setItem("Src", predefinedLibraries[extLib])
-
+function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
+  const src = predefinedLibraries[extLib]
   const tokenIdHash =
-    tokenId < 3000000 && storedContract == 0
-      ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
-      : `{ tokenId: "${tokenId}", hash: "${hash}" }`
-
-  localStorage.setItem("IdHash", `let tokenData = ${tokenIdHash}`)
-
+    tokenId < 3000000 && contract == 0
+      ? `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
+      : `let tokenData = { tokenId: "${tokenId}", hash: "${hash}" }`
   let process = extLib == "processing" ? "application/processing" : ""
-  localStorage.setItem("Type", process)
-  localStorage.setItem("Art", script)
+
+  storeScriptDataInLocalStorage({ src, tokenIdHash, process, script })
 }
 
-function determinePlatform(storedContract) {
+function storeScriptDataInLocalStorage(data) {
+  localStorage.setItem("scriptData", JSON.stringify(data))
+}
+
+function determineCuration(projId) {
+  const curated = [
+    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
+    41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
+    159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
+    284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
+    379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
+    456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
+  ]
+  return curated.includes(projId)
+    ? "Art Blocks Curated"
+    : projId < 494
+    ? "Art Blocks Present"
+    : "Art Blocks"
+}
+
+function determinePlatform(contract, curation) {
   const contractsData = {
-    0: "Art Blocks",
-    1: "Art Blocks",
-    2: "Art Blocks",
+    0: curation,
+    1: curation,
+    2: curation,
     3: "Art Blocks Explorations",
     4: "Art Blocks &times; Pace",
     5: "Art Blocks &times; Pace",
@@ -971,7 +997,7 @@ function determinePlatform(storedContract) {
     21: "Unit London",
   }
 
-  return contractsData[storedContract] || null
+  return contractsData[contract] || null
 }
 
 function getShortenedId(tokenId) {
@@ -980,8 +1006,8 @@ function getShortenedId(tokenId) {
     : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
 }
 
-function updateInfo(storedContract, detail, id, logs) {
-  if (storedContract == 8) {
+function updateInfo(contract, detail, id, logs) {
+  if (contract == 8) {
     frame.contentWindow.console.log = function (message) {
       console.log("Log from iframe:", message)
       if (logs.length === 0) {
@@ -999,6 +1025,7 @@ function updateInfo(storedContract, detail, id, logs) {
 }
 
 async function updatePanelContent(
+  contract,
   owner,
   detail,
   tokenId,
@@ -1032,7 +1059,7 @@ async function updatePanelContent(
       </p><br>
       <p class="mini">
         Owner: ${ownerLink}<br>
-        Contract: <a href="https://etherscan.io/address/${contracts[storedContract].target}" target="_blank">${contracts[storedContract].target}</a><br>
+        Contract: <a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank">${contracts[contract].target}</a><br>
         Token ID: <a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a>
       </p>
     `
@@ -1049,15 +1076,13 @@ async function updatePanelContent(
 async function injectFrame() {
   const iframeDocument = frame.contentDocument || frame.contentWindow.document
   try {
-    const frameSrc = localStorage.getItem("Src")
-    const frameIdHash = localStorage.getItem("IdHash")
-    const frameType = localStorage.getItem("Type")
-    const frameArt = localStorage.getItem("Art")
+    let contractData = JSON.parse(localStorage.getItem("contractData"))
+    let scriptData = JSON.parse(localStorage.getItem("scriptData"))
 
     const frameHead = `<head>
     <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-    <script src='${frameSrc}'></script>
-    <script>${frameIdHash};</script>
+    <script src='${scriptData.src}'></script>
+    <script>${scriptData.tokenIdHash};</script>
     <style type="text/css">
       html {
         height: 100%;
@@ -1081,19 +1106,19 @@ async function injectFrame() {
     </style>
     </head>`
 
-    const frameBody = frameType
+    const frameBody = scriptData.process
       ? `<body>
-    <script type='${frameType}'>${frameArt}</script>
+    <script type='${scriptData.process}'>${scriptData.script}</script>
     <canvas></canvas>
     </body>`
       : `<body>
     <canvas id="babylon-canvas"></canvas>
-    <script>${frameArt}</script>
+    <script>${scriptData.script}</script>
     </body>`
 
     let dynamicContent
-    if (storedData.extLib === "custom") {
-      dynamicContent = `<script>${frameIdHash}</script>${frameArt}`
+    if (contractData.extLib === "custom") {
+      dynamicContent = `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
     } else {
       dynamicContent = `<html>${frameHead}${frameBody}</html>`
     }
@@ -1111,7 +1136,6 @@ async function injectFrame() {
 /***************************************************
  *          FUNCTIONS TO SEARCH AND GET TOKEN
  **************************************************/
-
 function getToken(panelContent, searchQuery) {
   const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
 
@@ -1268,23 +1292,25 @@ document.getElementById("randomButton").addEventListener("click", () => {
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
  **************************************************/
 function incrementTokenId() {
-  storedData.tokenId = storedData.tokenId
-    ? (parseInt(storedData.tokenId) + 1).toString()
+  let contractData = JSON.parse(localStorage.getItem("contractData"))
+  contractData.tokenId = contractData.tokenId
+    ? (contractData.tokenId + 1).toString()
     : "1"
 
-  grabData(storedData.tokenId, parseInt(storedContract))
-  console.log("Contract:", parseInt(storedContract))
-  console.log("Token Id:", storedData.tokenId)
+  grabData(contractData.tokenId, contractData.contract)
+  console.log("Contract:", contractData.contract)
+  console.log("Token Id:", contractData.tokenId)
 }
 
 function decrementTokenId() {
-  storedData.tokenId = storedData.tokenId
-    ? Math.max(parseInt(storedData.tokenId) - 1, 0).toString()
+  let contractData = JSON.parse(localStorage.getItem("contractData"))
+  contractData.tokenId = contractData.tokenId
+    ? Math.max(contractData.tokenId - 1, 0).toString()
     : "0"
 
-  grabData(storedData.tokenId, parseInt(storedContract))
-  console.log("Contract:", parseInt(storedContract))
-  console.log("Token Id:", storedData.tokenId)
+  grabData(contractData.tokenId, contractData.contract)
+  console.log("Contract:", contractData.contract)
+  console.log("Token Id:", contractData.tokenId)
 }
 
 inc.addEventListener("click", incrementTokenId)
@@ -1303,8 +1329,11 @@ document.addEventListener("keypress", (event) => {
  *          FUNCTION TO SAVE THE OUTPUT
  **************************************************/
 async function saveContentAsFile(content, filename) {
-  let id = getShortenedId(storedData.tokenId)
-  const defaultName = `${storedData.detail[0].replace(/\s+/g, "-")}#${id}.html`
+  let id = getShortenedId(contractData.tokenId)
+  const defaultName = `${contractData.detail[0].replace(
+    /\s+/g,
+    "-"
+  )}#${id}.html`
 
   let userFilename = filename || defaultName
 
@@ -1337,6 +1366,7 @@ async function saveContentAsFile(content, filename) {
 
 function handleSaveButtonClick() {
   const dynamicContent = frame.contentDocument.documentElement.outerHTML
+  clearPanels()
   saveContentAsFile(dynamicContent)
 }
 
@@ -1345,14 +1375,13 @@ save.addEventListener("click", handleSaveButtonClick)
 /***************************************************
  *                     EVENTS
  **************************************************/
-let storedData = {}
 window.addEventListener("DOMContentLoaded", () => {
-  storedData = JSON.parse(localStorage.getItem("contractData"))
-  if (storedData) {
-    update(...Object.values(storedData))
+  let contractData = JSON.parse(localStorage.getItem("contractData"))
+  if (contractData) {
+    update(...Object.values(contractData))
   }
 
-  storedData
+  contractData
     ? ((inc.style.display = "block"),
       (dec.style.display = "block"),
       (save.style.display = "block"))

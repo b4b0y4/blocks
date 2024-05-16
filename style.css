@@ -103,11 +103,6 @@ a:hover {
   transition: outline-color 0.3s ease-in-out;
 }
 
-.rpc-url:focus,
-.rpc-url:hover {
-  outline-color: var(--color-btn);
-}
-
 .info-box {
   display: flex;
   justify-content: end;
@@ -248,9 +243,11 @@ a:hover {
   transition: outline-color 0.3s ease-in-out;
 }
 
+.rpc-url:focus,
+.rpc-url:hover,
 .search-input:hover,
 .search-input:focus {
-  outline-color: var(--color-btn);
+  outline-color: var(--color-txt);
 }
 
 .search-icon {
