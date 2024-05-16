@@ -59,9 +59,8 @@ const save = document.getElementById("saveButton")
 const inc = document.getElementById("incrementButton")
 const dec = document.getElementById("decrementButton")
 const panel = document.querySelector(".panel")
-const dataPanel = document.querySelector(".data-panel")
 const panelContent = document.getElementById("panelContent")
-const dataContent = document.getElementById("dataContent")
+const listPanel = document.querySelector(".list-panel")
 const search = document.getElementById("searchInput")
 const keyShort = document.querySelector(".key-short")
 const spin = document.querySelector(".spinner")
@@ -774,8 +773,6 @@ const list = [
 /***************************************************
  *                    MODE TOGGLE
  **************************************************/
-root.classList.remove("no-flash")
-
 modeToggle.addEventListener("click", () => {
   root.classList.toggle("dark-mode")
   const isDarkMode = root.classList.contains("dark-mode")
@@ -788,6 +785,7 @@ if (isDarkMode) {
 } else {
   root.classList.remove("dark-mode")
 }
+root.classList.remove("no-flash")
 
 /***************************************************
  *        FUNCTIONS TO GET DATA FROM ETHEREUM
@@ -893,8 +891,8 @@ function storeDataInLocalStorage(data) {
 }
 
 function clearLocalStorage() {
-  localStorage.removeItem("Contract")
   localStorage.removeItem("contractData")
+  localStorage.removeItem("Contract")
   localStorage.removeItem("Src")
   localStorage.removeItem("IdHash")
   localStorage.removeItem("Type")
@@ -925,14 +923,14 @@ function update(
 function pushItemToLocalStorage(tokenId, hash, script, extLib) {
   localStorage.setItem("Src", predefinedLibraries[extLib])
 
-  const tknData =
-    tokenId < 3000000 && storedContract === 0
+  const tokenIdHash =
+    tokenId < 3000000 && storedContract == 0
       ? `{ tokenId: "${tokenId}", hashes: ["${hash}"] }`
       : `{ tokenId: "${tokenId}", hash: "${hash}" }`
 
-  localStorage.setItem("IdHash", `let tokenData = ${tknData}`)
+  localStorage.setItem("IdHash", `let tokenData = ${tokenIdHash}`)
 
-  const process = extLib === "processing" ? "application/processing" : ""
+  let process = extLib == "processing" ? "application/processing" : ""
   localStorage.setItem("Type", process)
   localStorage.setItem("Art", script)
 }
@@ -972,7 +970,8 @@ function getShortenedId(tokenId) {
 }
 
 function updateInfo(storedContract, detail, id) {
-  if (storedContract === 8) {
+  let logs = []
+  if (storedContract == 8) {
     frame.contentWindow.console.log = function (message) {
       console.log("Log from iframe:", message)
       if (logs.length === 0) {
@@ -1204,7 +1203,7 @@ function getContractFromList(contract, tokenId) {
 function displayList(lines) {
   const panel =
     "<div>" + lines.map((line) => `<p>${line}</p>`).join("") + "</div>"
-  dataContent.innerHTML = panel
+  listPanel.innerHTML = panel
 }
 
 function filterList(lines, query) {
@@ -1224,7 +1223,7 @@ search.addEventListener("input", (event) => {
 search.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     const query = search.value.trim()
-    query === "" ? getRandom(list) : getToken(dataContent.innerHTML, query)
+    query === "" ? getRandom(list) : getToken(listPanel.innerHTML, query)
     search.value = ""
   }
 })
@@ -1290,6 +1289,7 @@ document.addEventListener("keypress", (event) => {
  *          FUNCTION TO SAVE THE OUTPUT
  **************************************************/
 async function saveContentAsFile(content, filename) {
+  let id = getShortenedId(storedData.tokenId)
   const defaultName = `${storedData.detail[0].replace(/\s+/g, "-")}#${id}.html`
 
   let userFilename = filename || defaultName
@@ -1374,7 +1374,7 @@ document.addEventListener("keypress", (event) => {
 info.addEventListener("click", () => {
   panel.classList.toggle("active")
   if (panel.classList.contains("active")) {
-    dataPanel.classList.remove("active")
+    listPanel.classList.remove("active")
     overlay.style.display = "block"
     keyShort.style.display = "block"
   } else {
@@ -1383,8 +1383,8 @@ info.addEventListener("click", () => {
 })
 
 document.querySelector(".search-icon").addEventListener("click", () => {
-  dataPanel.classList.toggle("active")
-  if (dataPanel.classList.contains("active")) {
+  listPanel.classList.toggle("active")
+  if (listPanel.classList.contains("active")) {
     panel.classList.remove("active")
     overlay.style.display = "block"
   } else {
@@ -1396,8 +1396,8 @@ document.addEventListener("keypress", (event) => {
   if (event.key === "/" && document.activeElement !== search) {
     event.preventDefault()
     search.focus()
-    dataPanel.classList.toggle("active")
-    if (dataPanel.classList.contains("active")) {
+    listPanel.classList.toggle("active")
+    if (listPanel.classList.contains("active")) {
       panel.classList.remove("active")
       overlay.style.display = "block"
     } else {
@@ -1416,17 +1416,17 @@ search.addEventListener("blur", () => {
 
 search.addEventListener("input", () => {
   if (search.value.trim() !== "") {
-    dataPanel.classList.add("active")
+    listPanel.classList.add("active")
     panel.classList.remove("active")
     overlay.style.display = "block"
   } else {
-    dataPanel.classList.remove("active")
+    listPanel.classList.remove("active")
     overlay.style.display = "none"
   }
 })
 
 overlay.addEventListener("click", () => {
-  dataPanel.classList.remove("active")
+  listPanel.classList.remove("active")
   panel.classList.remove("active")
   overlay.style.display = "none"
 })

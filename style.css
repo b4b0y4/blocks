@@ -11,7 +11,7 @@
   --color-txt: #9a9a9c;
   --color-btn: #6f6f71;
   --color-hvr: #353539;
-  --color-key: #2e2e33;
+  --color-key: #2f2f35;
 }
 
 .no-flash {
@@ -123,12 +123,12 @@ a:hover {
   font-size: 1.1em;
   padding: 4px 8px;
   cursor: default;
-  transition: transform 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out;
   z-index: 100;
 }
 
 .info:hover {
-  transform: scale(1.01);
+  color: var(--color-btn);
 }
 
 .button-container {
@@ -148,9 +148,9 @@ a:hover {
   padding: 3.25px 6.5px;
   margin: 0 5px;
   cursor: default;
+  z-index: 100;
   transition: background-color 0.3s ease-in-out;
   outline: none;
-  z-index: 100;
 }
 
 .previous {
@@ -170,13 +170,15 @@ a:hover {
 
 #modeToggle {
   position: absolute;
+  top: 10px;
   right: 10px;
   background-color: transparent;
   font-size: 1.1em;
   border-radius: 50%;
-  padding: 5px;
+  padding: 4px 5px 3px;
   color: var(--color-btn);
   border: none;
+  outline: none;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -186,10 +188,9 @@ a:hover {
 
 .instruction,
 .panel,
-.data-panel {
+.list-panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
   position: absolute;
   bottom: 45px;
   right: 8px;
@@ -199,13 +200,19 @@ a:hover {
   color: var(--color-txt);
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   overflow-x: hidden;
+  word-wrap: break-word;
   z-index: 100;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease-in-out;
+}
+
+.panel:hover {
+  opacity: 0.95;
+  pointer-events: auto;
 }
 
 .instruction {
@@ -215,14 +222,9 @@ a:hover {
 }
 
 .panel.active,
-.data-panel.active {
+.list-panel.active {
   opacity: 0.95;
   pointer-events: auto;
-}
-
-#panelContent {
-  width: 100%;
-  word-wrap: break-word;
 }
 
 .mini {
@@ -303,8 +305,8 @@ a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
   z-index: 50;
 }
 
@@ -325,7 +327,7 @@ a:hover {
 
   .info-box {
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-around;
     padding: 0;
   }
 
@@ -348,7 +350,7 @@ a:hover {
 
   .instruction,
   .panel,
-  .data-panel {
+  .list-panel {
     max-width: 100%;
     max-height: 60%;
     right: 0;
