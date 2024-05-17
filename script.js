@@ -1541,11 +1541,11 @@ async function fetchBloncks() {
     7: (i) => (i < 1 ? 8 : 7),
     8: (i) => (i < 1 ? 8 : 7),
   }
-  let newList = []
   let token
 
   // CONTRACTS
-  for (let n = 19; n < 22; n++) {
+  for (let n = 15; n < 22; n++) {
+    let newList = []
     // PROJECT ID
     for (let i = n === 14 ? 1 : 0; i < 1000; i++) {
       if (contractMappings.hasOwnProperty(n)) {

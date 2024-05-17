@@ -282,7 +282,7 @@ a:hover {
   display: none;
   position: absolute;
   right: 7px;
-  border: 3px solid var(--color-btn);
+  border: 2.5px solid var(--color-btn);
   border-left-color: var(--color-hvr);
   border-radius: 50%;
   width: 12px;
