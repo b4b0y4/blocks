@@ -3,27 +3,6 @@ import {
   abiV1,
   abiV2,
   abiV3,
-  abiEXPLORE,
-  abiABXPACE,
-  abiABXPACE2,
-  abiABXBM,
-  abiBM,
-  abiBMF,
-  abiCITIZEN,
-  abiPLOTS,
-  abiPLOTS2,
-  abiSTBYS,
-  abiATP,
-  abiGRAILS,
-  abiAOI,
-  abiVCA,
-  abiSDAO,
-  abiMINTS,
-  abiTDG,
-  abiVFA,
-  abiUNITLDN,
-  abiTRAME,
-  abiHODLERS,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -78,27 +57,27 @@ const contracts = [
   { abi: abiV1, address: contractAddressV1 },
   { abi: abiV2, address: contractAddressV2 },
   { abi: abiV3, address: contractAddressV3 },
-  { abi: abiEXPLORE, address: contractAddressEXPLORE },
-  { abi: abiABXPACE, address: contractAddressABXPACE },
-  { abi: abiABXPACE2, address: contractAddressABXPACE2 },
-  { abi: abiABXBM, address: contractAddressABXBM },
-  { abi: abiBM, address: contractAddressBM },
-  { abi: abiBMF, address: contractAddressBMF },
-  { abi: abiCITIZEN, address: contractAddressCITIZEN },
-  { abi: abiPLOTS, address: contractAddressPLOTS },
-  { abi: abiPLOTS2, address: contractAddressPLOTS2 },
-  { abi: abiSTBYS, address: contractAddressSTBYS },
-  { abi: abiATP, address: contractAddressATP },
-  { abi: abiGRAILS, address: contractAddressGRAILS },
-  { abi: abiAOI, address: contractAddressAOI },
-  { abi: abiVCA, address: contractAddressVCA },
-  { abi: abiSDAO, address: contractAddressSDAO },
-  { abi: abiMINTS, address: contractAddressMINTS },
-  { abi: abiTDG, address: contractAddressTDG },
-  { abi: abiVFA, address: contractAddressVFA },
-  { abi: abiUNITLDN, address: contractAddressUNITLDN },
-  { abi: abiTRAME, address: contractAddressTRAME },
-  { abi: abiUNITLDN, address: contractAddressHODLERS },
+  { abi: abiV3, address: contractAddressEXPLORE },
+  { abi: abiV2, address: contractAddressABXPACE },
+  { abi: abiV3, address: contractAddressABXPACE2 },
+  { abi: abiV3, address: contractAddressABXBM },
+  { abi: abiV2, address: contractAddressBM },
+  { abi: abiV3, address: contractAddressBMF },
+  { abi: abiV2, address: contractAddressCITIZEN },
+  { abi: abiV2, address: contractAddressPLOTS },
+  { abi: abiV3, address: contractAddressPLOTS2 },
+  { abi: abiV3, address: contractAddressSTBYS },
+  { abi: abiV2, address: contractAddressATP },
+  { abi: abiV3, address: contractAddressGRAILS },
+  { abi: abiV3, address: contractAddressAOI },
+  { abi: abiV2, address: contractAddressVCA },
+  { abi: abiV3, address: contractAddressSDAO },
+  { abi: abiV2, address: contractAddressMINTS },
+  { abi: abiV3, address: contractAddressTDG },
+  { abi: abiV3, address: contractAddressVFA },
+  { abi: abiV3, address: contractAddressUNITLDN },
+  { abi: abiV2, address: contractAddressTRAME },
+  { abi: abiV3, address: contractAddressHODLERS },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -823,14 +802,12 @@ async function grabData(_tokenId, contract) {
     clearPanels()
 
     const tokenId = Number(_tokenId)
-    const isContractGen2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(
-      contract
-    )
+    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(contract)
 
     const hash = await fetchHash(tokenId, contract)
     const projectId = await fetchProjectId(tokenId, contract)
     const projId = Number(projectId)
-    const projectInfo = await fetchProjectInfo(projId, contract, isContractGen2)
+    const projectInfo = await fetchProjectInfo(projId, contract, isContractV2)
     const script = await constructScript(projId, projectInfo, contract)
     const detail = await fetchProjectDetails(projId, contract)
     const owner = await fetchOwner(tokenId, contract)
@@ -838,7 +815,7 @@ async function grabData(_tokenId, contract) {
     const { edition, remaining } = await fetchEditionInfo(
       projId,
       contract,
-      isContractGen2
+      isContractV2
     )
 
     localStorage.setItem(
@@ -875,8 +852,8 @@ async function fetchProjectId(tokenId, contract) {
   return contracts[contract].tokenIdToProjectId(tokenId)
 }
 
-async function fetchProjectInfo(projId, contract, isContractGen2) {
-  return isContractGen2
+async function fetchProjectInfo(projId, contract, isContractV2) {
+  return isContractV2
     ? contracts[contract].projectScriptInfo(projId)
     : contracts[contract].projectScriptDetails(projId)
 }
@@ -906,8 +883,8 @@ function extractLibraryName(projectInfo) {
   }
 }
 
-async function fetchEditionInfo(projId, contract, isContractGen2) {
-  const invo = await (isContractGen2
+async function fetchEditionInfo(projId, contract, isContractV2) {
+  const invo = await (isContractV2
     ? contracts[contract].projectTokenInfo(projId)
     : contracts[contract].projectStateData(projId))
 
@@ -1588,10 +1565,10 @@ async function fetchBloncks() {
         n = contractMappings[n](i)
       }
       let contractName = getContractName(n)
-      const isContractGen2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(n)
+      const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(n)
       try {
         const detail = await contracts[n].projectDetails(i.toString())
-        const tkns = isContractGen2
+        const tkns = isContractV2
           ? await contracts[n].projectTokenInfo(i)
           : await contracts[n].projectStateData(i)
 
