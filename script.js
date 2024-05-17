@@ -1340,15 +1340,7 @@ function decrementTokenId() {
 
 inc.addEventListener("click", incrementTokenId)
 
-document.addEventListener("keypress", (event) => {
-  event.key === ">" ? incrementTokenId() : null
-})
-
 dec.addEventListener("click", decrementTokenId)
-
-document.addEventListener("keypress", (event) => {
-  event.key === "<" ? decrementTokenId() : null
-})
 
 /***************************************************
  *          FUNCTION TO SAVE THE OUTPUT
