@@ -22,6 +22,7 @@ import {
   abiTDG,
   abiVFA,
   abiUNITLDN,
+  abiTRAME,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -44,6 +45,7 @@ import {
   contractAddressTDG,
   contractAddressVFA,
   contractAddressUNITLDN,
+  contractAddressTRAME,
 } from "./contracts.js"
 
 // DOM elements
@@ -93,6 +95,7 @@ const contracts = [
   { abi: abiTDG, address: contractAddressTDG },
   { abi: abiVFA, address: contractAddressVFA },
   { abi: abiUNITLDN, address: contractAddressUNITLDN },
+  { abi: abiTRAME, address: contractAddressTRAME },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -700,6 +703,7 @@ const list = [
   "BM 82 - Encore / rudxane - 100 minted",
   "BM 83 - Notes / Maya Man - 100 minted",
   "BM 84 - Culmination / Jeff Davis - 100 minted",
+  "BM 85 - 89 Bright x Empty Rooms / Casey REAS - 89 minted",
   "CITIZEN 0 - CryptoGalactican / Qian Qian - 1000 minted",
   "CITIZEN 3 - CryptoBerliner / Qian Qian - 1000 minted",
   "CITIZEN 4 - CryptoLondoner / Qian Qian - 1000 minted",
@@ -767,6 +771,9 @@ const list = [
   "VCA 17 - Transition / William Watkins - 100 minted",
   "VCA 18 - JaggedMemories / Shunsuke Takawo - 50 minted",
   "VCA 19 - [classifieds] / fingacode - 24 minted",
+  "TRAME 0 - Navette / Alexis André - 200 minted",
+  "TRAME 1 - Optimism / Jeff Davis - 13 minted",
+  "TRAME 2 - Portraits / Martin Grasser - 12 minted",
 ]
 
 /***************************************************
@@ -797,12 +804,14 @@ async function grabData(_tokenId, contract) {
     clearPanels()
 
     const tokenId = Number(_tokenId)
-    const isContractGen1 = [0, 1, 4, 7, 9, 10, 13, 16, 18].includes(contract)
+    const isContractGen2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(
+      contract
+    )
 
     const hash = await fetchHash(tokenId, contract)
     const projectId = await fetchProjectId(tokenId, contract)
     const projId = Number(projectId)
-    const projectInfo = await fetchProjectInfo(projId, contract, isContractGen1)
+    const projectInfo = await fetchProjectInfo(projId, contract, isContractGen2)
     const script = await constructScript(projId, projectInfo, contract)
     const detail = await fetchProjectDetails(projId, contract)
     const owner = await fetchOwner(tokenId, contract)
@@ -810,7 +819,7 @@ async function grabData(_tokenId, contract) {
     const { edition, remaining } = await fetchEditionInfo(
       projId,
       contract,
-      isContractGen1
+      isContractGen2
     )
 
     localStorage.setItem(
@@ -847,8 +856,8 @@ async function fetchProjectId(tokenId, contract) {
   return contracts[contract].tokenIdToProjectId(tokenId)
 }
 
-async function fetchProjectInfo(projId, contract, isContractGen1) {
-  return isContractGen1
+async function fetchProjectInfo(projId, contract, isContractGen2) {
+  return isContractGen2
     ? contracts[contract].projectScriptInfo(projId)
     : contracts[contract].projectScriptDetails(projId)
 }
@@ -878,8 +887,8 @@ function extractLibraryName(projectInfo) {
   }
 }
 
-async function fetchEditionInfo(projId, contract, isContractGen1) {
-  const invo = await (isContractGen1
+async function fetchEditionInfo(projId, contract, isContractGen2) {
+  const invo = await (isContractGen2
     ? contracts[contract].projectTokenInfo(projId)
     : contracts[contract].projectStateData(projId))
 
@@ -1004,6 +1013,7 @@ function determinePlatform(contract, curation) {
     19: "The Disruptive Gallery",
     20: "Vertu Fine Art",
     21: "Unit London",
+    22: "Trame",
   }
 
   return contractsData[contract] || null
@@ -1260,6 +1270,8 @@ function getContractFromList(contract, tokenId) {
       return 20
     case "UNITLDN":
       return 21
+    case "TRAME":
+      return 22
     default:
       return tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
   }
@@ -1525,6 +1537,7 @@ function getContractName(contract) {
     19: "TDG",
     20: "VFA",
     21: "UNITLDN",
+    22: "TRAME",
   }
 
   return contractNames[contract] ? contractNames[contract] + " " : ""
@@ -1544,7 +1557,7 @@ async function fetchBloncks() {
   let token
 
   // CONTRACTS
-  for (let n = 10; n < 12; n++) {
+  for (let n = 22; n < 23; n++) {
     let newList = []
     // PROJECT ID
     for (let i = n === 14 ? 1 : 0; i < 1000; i++) {
@@ -1552,19 +1565,12 @@ async function fetchBloncks() {
         n = contractMappings[n](i)
       }
       let contractName = getContractName(n)
+      const isContractGen2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(n)
       try {
         const detail = await contracts[n].projectDetails(i.toString())
-        const tkns = await (n === 0 ||
-        n === 1 ||
-        n === 4 ||
-        n === 7 ||
-        n === 9 ||
-        n === 10 ||
-        n === 13 ||
-        n === 16 ||
-        n === 18
-          ? contracts[n].projectTokenInfo(i)
-          : contracts[n].projectStateData(i))
+        const tkns = isContractGen2
+          ? await contracts[n].projectTokenInfo(i)
+          : await contracts[n].projectStateData(i)
 
         if (tkns.invocations) {
           newList.push(
