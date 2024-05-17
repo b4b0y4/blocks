@@ -4,30 +4,32 @@ export const contractAddressV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
 export const contractAddressEXPLORE =
   "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
 export const contractAddressABXPACE =
-  "0x64780CE53f6e966E18a22Af13a2F97369580Ec11"
+  "0x64780CE53f6e966E18a22Af13a2F97369580Ec11" // GenArt721CoreV2_ArtBlocksXPace
 export const contractAddressABXPACE2 =
-  "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
-export const contractAddressABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
-export const contractAddressBM = "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676"
-export const contractAddressBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD"
+  "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36" // GenArt721CoreV3_Engine
+export const contractAddressABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707" // GenArt721CoreV3_Engine
+export const contractAddressBM = "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" // GenArt721CoreV2_BrightMoments
+export const contractAddressBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD" // GenArt721CoreV3_Engine
 export const contractAddressCITIZEN =
-  "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
-export const contractAddressPLOTS = "0xa319C382a702682129fcbF55d514E61a16f97f9c"
+  "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0" // GenArt721CoreV2_CryptoCitizens
+export const contractAddressPLOTS = "0xa319C382a702682129fcbF55d514E61a16f97f9c" // GenArt721CoreV2_Plottables
 export const contractAddressPLOTS2 =
-  "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
-export const contractAddressSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
-export const contractAddressATP = "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3"
+  "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f" // GenArt721CoreV3_Engine
+export const contractAddressSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D" // GenArt721CoreV3_Engine_Flex
+export const contractAddressATP = "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3" // GenArt721CoreV2_ATP
 export const contractAddressGRAILS =
-  "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
-export const contractAddressAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C"
-export const contractAddressVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436"
-export const contractAddressSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706"
+  "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F" // GenArt721CoreV3_Engine_Flex
+export const contractAddressAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C" //GenArt721CoreV3_Engine_Flex
+export const contractAddressVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436" // GenArt721CoreV2_ENGINE_FLEX
+export const contractAddressSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706" // GenArt721CoreV2_EndaomentGalleryForGoodFlex
 export const contractAddressMINTS = "0xEafE7b73A3cfA804b761debcF077D4574588dfe7"
-export const contractAddressTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253"
-export const contractAddressVFA = "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4"
+export const contractAddressTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253" // GenArt721CoreV3_Engine_Flex
+export const contractAddressVFA = "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4" // GenArt721CoreV3_Engine_Flex
 export const contractAddressUNITLDN =
-  "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
+  "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2" //GenArt721CoreV3_Engine_Flex
 export const contractAddressTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
+export const contractAddressHODLERS =
+  "0x9F79e46A309f804Aa4B7B53a1F72c69137427794" // GenArt721CoreV3_Engine_Flex
 
 export const abiV1 = [
   {
@@ -24920,6 +24922,1350 @@ export const abiTRAME = [
       },
     ],
     name: "updateRenderProviderPercentage",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+]
+
+export const abiHODLERS = [
+  {
+    inputs: [
+      { internalType: "string", name: "_tokenName", type: "string" },
+      { internalType: "string", name: "_tokenSymbol", type: "string" },
+      {
+        internalType: "address",
+        name: "_renderProviderAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_platformProviderAddress",
+        type: "address",
+      },
+      { internalType: "address", name: "_randomizerContract", type: "address" },
+      { internalType: "address", name: "_adminACLContract", type: "address" },
+      { internalType: "uint248", name: "_startingProjectId", type: "uint248" },
+      {
+        internalType: "bool",
+        name: "_autoApproveArtistSplitProposals",
+        type: "bool",
+      },
+      {
+        internalType: "address",
+        name: "_engineRegistryContract",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_projectId",
+        type: "uint256",
+      },
+    ],
+    name: "AcceptedArtistAddressesAndSplits",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "approved",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      { indexed: false, internalType: "bool", name: "approved", type: "bool" },
+    ],
+    name: "ApprovalForAll",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_projectId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_index",
+        type: "uint256",
+      },
+    ],
+    name: "ExternalAssetDependencyRemoved",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_projectId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_index",
+        type: "uint256",
+      },
+      { indexed: false, internalType: "string", name: "_cid", type: "string" },
+      {
+        indexed: false,
+        internalType:
+          "enum IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyType",
+        name: "_dependencyType",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint24",
+        name: "_externalAssetDependencyCount",
+        type: "uint24",
+      },
+    ],
+    name: "ExternalAssetDependencyUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType:
+          "enum IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyType",
+        name: "_dependencyType",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "_gatewayAddress",
+        type: "string",
+      },
+    ],
+    name: "GatewayUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "_to", type: "address" },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "Mint",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_currentMinter",
+        type: "address",
+      },
+    ],
+    name: "MinterUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "_field",
+        type: "bytes32",
+      },
+    ],
+    name: "PlatformUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_projectId",
+        type: "uint256",
+      },
+    ],
+    name: "ProjectExternalAssetDependenciesLocked",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_projectId",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "bytes32",
+        name: "_update",
+        type: "bytes32",
+      },
+    ],
+    name: "ProjectUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "_projectId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_artistAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_additionalPayeePrimarySales",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_additionalPayeePrimarySalesPercentage",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_additionalPayeeSecondarySales",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_additionalPayeeSecondarySalesPercentage",
+        type: "uint256",
+      },
+    ],
+    name: "ProposedArtistAddressesAndSplits",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    inputs: [
+      { internalType: "string", name: "_projectName", type: "string" },
+      {
+        internalType: "address payable",
+        name: "_artistAddress",
+        type: "address",
+      },
+    ],
+    name: "addProject",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_cidOrData", type: "string" },
+      {
+        internalType:
+          "enum IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyType",
+        name: "_dependencyType",
+        type: "uint8",
+      },
+    ],
+    name: "addProjectExternalAssetDependency",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_script", type: "string" },
+    ],
+    name: "addProjectScript",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "admin",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_sender", type: "address" },
+      { internalType: "address", name: "_contract", type: "address" },
+      { internalType: "bytes4", name: "_selector", type: "bytes4" },
+    ],
+    name: "adminACLAllowed",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "adminACLContract",
+    outputs: [
+      { internalType: "contract IAdminACLV0", name: "", type: "address" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      {
+        internalType: "address payable",
+        name: "_artistAddress",
+        type: "address",
+      },
+      {
+        internalType: "address payable",
+        name: "_additionalPayeePrimarySales",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_additionalPayeePrimarySalesPercentage",
+        type: "uint256",
+      },
+      {
+        internalType: "address payable",
+        name: "_additionalPayeeSecondarySales",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_additionalPayeeSecondarySalesPercentage",
+        type: "uint256",
+      },
+    ],
+    name: "adminAcceptArtistAddressesAndSplits",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+    ],
+    name: "approve",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "artblocksDependencyRegistryAddress",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "autoApproveArtistSplitProposals",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "owner", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "coreType",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "coreVersion",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "defaultBaseURI",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "forbidNewProjects",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    name: "getApproved",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_index", type: "uint256" }],
+    name: "getHistoricalRandomizerAt",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint256", name: "_price", type: "uint256" },
+    ],
+    name: "getPrimaryRevenueSplits",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "renderProviderRevenue_",
+        type: "uint256",
+      },
+      {
+        internalType: "address payable",
+        name: "renderProviderAddress_",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "platformProviderRevenue_",
+        type: "uint256",
+      },
+      {
+        internalType: "address payable",
+        name: "platformProviderAddress_",
+        type: "address",
+      },
+      { internalType: "uint256", name: "artistRevenue_", type: "uint256" },
+      {
+        internalType: "address payable",
+        name: "artistAddress_",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "additionalPayeePrimaryRevenue_",
+        type: "uint256",
+      },
+      {
+        internalType: "address payable",
+        name: "additionalPayeePrimaryAddress_",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
+    name: "getRoyalties",
+    outputs: [
+      {
+        internalType: "address payable[]",
+        name: "recipients",
+        type: "address[]",
+      },
+      { internalType: "uint256[]", name: "bps", type: "uint256[]" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "operator", type: "address" },
+    ],
+    name: "isApprovedForAll",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_minter", type: "address" }],
+    name: "isMintWhitelisted",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "lockProjectExternalAssetDependencies",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_to", type: "address" },
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "address", name: "_by", type: "address" },
+    ],
+    name: "mint_Ecf",
+    outputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "minterContract",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "newProjectsForbidden",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "nextProjectId",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "numHistoricalRandomizers",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    name: "ownerOf",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "platformProviderPrimarySalesAddress",
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "platformProviderPrimarySalesPercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "platformProviderSecondarySalesAddress",
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "platformProviderSecondarySalesBPS",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "preferredArweaveGateway",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "preferredIPFSGateway",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectArtistPaymentInfo",
+    outputs: [
+      { internalType: "address", name: "artistAddress", type: "address" },
+      {
+        internalType: "address",
+        name: "additionalPayeePrimarySales",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "additionalPayeePrimarySalesPercentage",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "additionalPayeeSecondarySales",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "additionalPayeeSecondarySalesPercentage",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "secondaryMarketRoyaltyPercentage",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectDetails",
+    outputs: [
+      { internalType: "string", name: "projectName", type: "string" },
+      { internalType: "string", name: "artist", type: "string" },
+      { internalType: "string", name: "description", type: "string" },
+      { internalType: "string", name: "website", type: "string" },
+      { internalType: "string", name: "license", type: "string" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint256", name: "_index", type: "uint256" },
+    ],
+    name: "projectExternalAssetDependencyByIndex",
+    outputs: [
+      {
+        components: [
+          { internalType: "string", name: "cid", type: "string" },
+          {
+            internalType:
+              "enum IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyType",
+            name: "dependencyType",
+            type: "uint8",
+          },
+          { internalType: "address", name: "bytecodeAddress", type: "address" },
+          { internalType: "string", name: "data", type: "string" },
+        ],
+        internalType:
+          "struct IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyWithData",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectExternalAssetDependencyCount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectIdToAdditionalPayeePrimarySales",
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectIdToAdditionalPayeePrimarySalesPercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectIdToAdditionalPayeeSecondarySales",
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectIdToAdditionalPayeeSecondarySalesPercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectIdToArtistAddress",
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectIdToSecondaryMarketRoyaltyPercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint256", name: "_index", type: "uint256" },
+    ],
+    name: "projectScriptByIndex",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint256", name: "_index", type: "uint256" },
+    ],
+    name: "projectScriptBytecodeAddressByIndex",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectScriptDetails",
+    outputs: [
+      { internalType: "string", name: "scriptTypeAndVersion", type: "string" },
+      { internalType: "string", name: "aspectRatio", type: "string" },
+      { internalType: "uint256", name: "scriptCount", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectStateData",
+    outputs: [
+      { internalType: "uint256", name: "invocations", type: "uint256" },
+      { internalType: "uint256", name: "maxInvocations", type: "uint256" },
+      { internalType: "bool", name: "active", type: "bool" },
+      { internalType: "bool", name: "paused", type: "bool" },
+      { internalType: "uint256", name: "completedTimestamp", type: "uint256" },
+      { internalType: "bool", name: "locked", type: "bool" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "projectURIInfo",
+    outputs: [
+      { internalType: "string", name: "projectBaseURI", type: "string" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      {
+        internalType: "address payable",
+        name: "_artistAddress",
+        type: "address",
+      },
+      {
+        internalType: "address payable",
+        name: "_additionalPayeePrimarySales",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_additionalPayeePrimarySalesPercentage",
+        type: "uint256",
+      },
+      {
+        internalType: "address payable",
+        name: "_additionalPayeeSecondarySales",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_additionalPayeeSecondarySalesPercentage",
+        type: "uint256",
+      },
+    ],
+    name: "proposeArtistPaymentAddressesAndSplits",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "proposedArtistAddressesAndSplitsHash",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "randomizerContract",
+    outputs: [
+      { internalType: "contract IRandomizerV2", name: "", type: "address" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint256", name: "_index", type: "uint256" },
+    ],
+    name: "removeProjectExternalAssetDependency",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "removeProjectLastScript",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renderProviderPrimarySalesAddress",
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renderProviderPrimarySalesPercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renderProviderSecondarySalesAddress",
+    outputs: [{ internalType: "address payable", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renderProviderSecondarySalesBPS",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+    ],
+    name: "safeTransferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+      { internalType: "bytes", name: "data", type: "bytes" },
+    ],
+    name: "safeTransferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "operator", type: "address" },
+      { internalType: "bool", name: "approved", type: "bool" },
+    ],
+    name: "setApprovalForAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_tokenId", type: "uint256" },
+      { internalType: "bytes32", name: "_hashSeed", type: "bytes32" },
+    ],
+    name: "setTokenHash_8PT",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "startingProjectId",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "bytes4", name: "interfaceId", type: "bytes4" }],
+    name: "supportsInterface",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "toggleProjectIsActive",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    name: "toggleProjectIsPaused",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
+    name: "tokenIdToHash",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
+    name: "tokenIdToHashSeed",
+    outputs: [{ internalType: "bytes12", name: "", type: "bytes12" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
+    name: "tokenIdToProjectId",
+    outputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_tokenId", type: "uint256" }],
+    name: "tokenURI",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+    ],
+    name: "transferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_artblocksDependencyRegistryAddress",
+        type: "address",
+      },
+    ],
+    name: "updateArtblocksDependencyRegistryAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "string", name: "_gateway", type: "string" }],
+    name: "updateArweaveGateway",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "string", name: "_defaultBaseURI", type: "string" },
+    ],
+    name: "updateDefaultBaseURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "string", name: "_gateway", type: "string" }],
+    name: "updateIPFSGateway",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_address", type: "address" }],
+    name: "updateMinterContract",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      {
+        internalType: "address payable",
+        name: "_artistAddress",
+        type: "address",
+      },
+    ],
+    name: "updateProjectArtistAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_projectArtistName", type: "string" },
+    ],
+    name: "updateProjectArtistName",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_aspectRatio", type: "string" },
+    ],
+    name: "updateProjectAspectRatio",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_newBaseURI", type: "string" },
+    ],
+    name: "updateProjectBaseURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_projectDescription", type: "string" },
+    ],
+    name: "updateProjectDescription",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint256", name: "_index", type: "uint256" },
+      { internalType: "string", name: "_cidOrData", type: "string" },
+      {
+        internalType:
+          "enum IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyType",
+        name: "_dependencyType",
+        type: "uint8",
+      },
+    ],
+    name: "updateProjectExternalAssetDependency",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_projectLicense", type: "string" },
+    ],
+    name: "updateProjectLicense",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint24", name: "_maxInvocations", type: "uint24" },
+    ],
+    name: "updateProjectMaxInvocations",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_projectName", type: "string" },
+    ],
+    name: "updateProjectName",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "uint256", name: "_scriptId", type: "uint256" },
+      { internalType: "string", name: "_script", type: "string" },
+    ],
+    name: "updateProjectScript",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      {
+        internalType: "bytes32",
+        name: "_scriptTypeAndVersion",
+        type: "bytes32",
+      },
+    ],
+    name: "updateProjectScriptType",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "_secondMarketRoyalty",
+        type: "uint256",
+      },
+    ],
+    name: "updateProjectSecondaryMarketRoyaltyPercentage",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_projectId", type: "uint256" },
+      { internalType: "string", name: "_projectWebsite", type: "string" },
+    ],
+    name: "updateProjectWebsite",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "renderProviderPrimarySalesPercentage_",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "platformProviderPrimarySalesPercentage_",
+        type: "uint256",
+      },
+    ],
+    name: "updateProviderPrimarySalesPercentages",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address payable",
+        name: "_renderProviderPrimarySalesAddress",
+        type: "address",
+      },
+      {
+        internalType: "address payable",
+        name: "_renderProviderSecondarySalesAddress",
+        type: "address",
+      },
+      {
+        internalType: "address payable",
+        name: "_platformProviderPrimarySalesAddress",
+        type: "address",
+      },
+      {
+        internalType: "address payable",
+        name: "_platformProviderSecondarySalesAddress",
+        type: "address",
+      },
+    ],
+    name: "updateProviderSalesAddresses",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_renderProviderSecondarySalesBPS",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_platformProviderSecondarySalesBPS",
+        type: "uint256",
+      },
+    ],
+    name: "updateProviderSecondarySalesBPS",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_randomizerAddress", type: "address" },
+    ],
+    name: "updateRandomizerAddress",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

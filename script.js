@@ -23,6 +23,7 @@ import {
   abiVFA,
   abiUNITLDN,
   abiTRAME,
+  abiHODLERS,
   contractAddressV1,
   contractAddressV2,
   contractAddressV3,
@@ -46,6 +47,7 @@ import {
   contractAddressVFA,
   contractAddressUNITLDN,
   contractAddressTRAME,
+  contractAddressHODLERS,
 } from "./contracts.js"
 
 // DOM elements
@@ -96,6 +98,7 @@ const contracts = [
   { abi: abiVFA, address: contractAddressVFA },
   { abi: abiUNITLDN, address: contractAddressUNITLDN },
   { abi: abiTRAME, address: contractAddressTRAME },
+  { abi: abiUNITLDN, address: contractAddressHODLERS },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -774,6 +777,22 @@ const list = [
   "TRAME 0 - Navette / Alexis André - 200 minted",
   "TRAME 1 - Optimism / Jeff Davis - 13 minted",
   "TRAME 2 - Portraits / Martin Grasser - 12 minted",
+  "HODL 1 - Order and Disorder / @greweb - 90 minted",
+  "HODL 2 - Theoretical Townships / WILLARD - 196 minted",
+  "HODL 3 - Lines of Memories / Kitel - 17 minted",
+  "HODL 4 - Aesthetics of Failure / DistCollective - 100 minted",
+  "HODL 5 - Multifaceted / Gin - 5 minted",
+  "HODL 6 - THIS ART IS ILLEGAL! / Daïm - 20 minted",
+  "HODL 7 - Vendaval / Omar Lobato - 8 minted",
+  "HODL 8 - Pulse of Expression / Mathis Biabiany - 20 minted",
+  "HODL 9 - Summit / gpitombo - 33 minted",
+  "HODL 10 - Chaos Control / Olga Fradina - 41 minted",
+  "HODL 11 - Dead Air / artplusbrad - 12 minted",
+  "HODL 12 - Renaissance / Fernando Jerez - 16 minted",
+  "HODL 13 - Whispers of Knowledge / Ferdinand Dervieux - 34 minted",
+  "HODL 15 - Gravity / Pawel Dudko - 45 minted",
+  "HODL 16 - Wired wonders / Alessandro Fiore - 53 minted",
+  "HODL 17 - Nebulous / KRANKARTA - 20 minted",
 ]
 
 /***************************************************
@@ -1014,6 +1033,7 @@ function determinePlatform(contract, curation) {
     20: "Vertu Fine Art",
     21: "Unit London",
     22: "Trame",
+    23: "Hodlers",
   }
 
   return contractsData[contract] || null
@@ -1272,6 +1292,8 @@ function getContractFromList(contract, tokenId) {
       return 21
     case "TRAME":
       return 22
+    case "HODL":
+      return 23
     default:
       return tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
   }
@@ -1538,6 +1560,7 @@ function getContractName(contract) {
     20: "VFA",
     21: "UNITLDN",
     22: "TRAME",
+    23: "HODL",
   }
 
   return contractNames[contract] ? contractNames[contract] + " " : ""
@@ -1557,10 +1580,10 @@ async function fetchBloncks() {
   let token
 
   // CONTRACTS
-  for (let n = 22; n < 23; n++) {
+  for (let n = 23; n < 24; n++) {
     let newList = []
     // PROJECT ID
-    for (let i = n === 14 ? 1 : 0; i < 1000; i++) {
+    for (let i = n == 14 ? 1 : n == 23 ? 1 : 0; i < 1000; i++) {
       if (contractMappings.hasOwnProperty(n)) {
         n = contractMappings[n](i)
       }
