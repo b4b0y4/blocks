@@ -253,7 +253,7 @@ a:hover {
 .rpc-url:hover,
 .search-input:hover,
 .search-input:focus {
-  outline-color: var(--color-txt);
+  outline-color: var(--color-btn);
 }
 
 .search-icon {
