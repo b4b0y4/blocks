@@ -1544,7 +1544,7 @@ async function fetchBloncks() {
   let token
 
   // CONTRACTS
-  for (let n = 15; n < 22; n++) {
+  for (let n = 10; n < 12; n++) {
     let newList = []
     // PROJECT ID
     for (let i = n === 14 ? 1 : 0; i < 1000; i++) {
