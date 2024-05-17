@@ -1,9 +1,9 @@
 :root {
-  --color-bg: #ffffff;
+  --color-bg: #f8f8f8;
   --color-txt: #737373;
   --color-btn: #9d9d9d;
-  --color-hvr: #f5f5f5;
-  --color-key: #eae9e9;
+  --color-hvr: #f0f0f0;
+  --color-key: #e4e4e4;
 }
 
 :root.dark-mode {
