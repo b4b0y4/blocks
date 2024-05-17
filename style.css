@@ -77,6 +77,12 @@ li {
   line-height: 1.4em;
 }
 
+.key {
+  background-color: var(--color-key);
+  border-radius: 5px;
+  padding: 2px 5px;
+}
+
 a {
   text-decoration: none;
   color: var(--color-btn);
