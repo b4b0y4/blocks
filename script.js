@@ -1095,6 +1095,19 @@ async function injectFrame() {
 
     const frameHead = `<head>
     <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
+    <script>
+    document.addEventListener("keypress", (event) => {
+      if (event.key === "/") {
+        window.parent.postMessage(
+          {
+            type: "keypress",
+            key: event.key,
+          },
+          "*"
+        )
+      }
+    })
+    </script>
     <script src='${scriptData.src}'></script>
     <script>${scriptData.tokenIdHash};</script>
     <style type="text/css">
@@ -1427,6 +1440,32 @@ document.addEventListener("keypress", (event) => {
   }
 })
 
+function handleSlashKey(event) {
+  event.preventDefault()
+  search.focus()
+  listPanel.classList.toggle("active")
+  if (listPanel.classList.contains("active")) {
+    panel.classList.remove("active")
+    overlay.style.display = "block"
+  } else {
+    overlay.style.display = "none"
+  }
+}
+
+document.addEventListener("keypress", (event) => {
+  if (event.key === "/" && document.activeElement !== search) {
+    handleSlashKey(event)
+  }
+})
+
+window.addEventListener("message", (event) => {
+  if (event.data.type === "keypress" && event.data.key === "/") {
+    if (document.activeElement !== search) {
+      handleSlashKey(event)
+    }
+  }
+})
+
 info.addEventListener("click", () => {
   panel.classList.toggle("active")
   if (panel.classList.contains("active")) {
@@ -1445,20 +1484,6 @@ document.querySelector(".search-icon").addEventListener("click", () => {
     overlay.style.display = "block"
   } else {
     overlay.style.display = "none"
-  }
-})
-
-document.addEventListener("keypress", (event) => {
-  if (event.key === "/" && document.activeElement !== search) {
-    event.preventDefault()
-    search.focus()
-    listPanel.classList.toggle("active")
-    if (listPanel.classList.contains("active")) {
-      panel.classList.remove("active")
-      overlay.style.display = "block"
-    } else {
-      overlay.style.display = "none"
-    }
   }
 })
 
