@@ -1216,7 +1216,7 @@ function handleOtherQuery(textContent, searchQuery) {
     const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
     const matches = textContent.match(regex)
     const token = parseInt(matches[3])
-    const randomToken = Math.floor(Math.random() * (token - 1))
+    const randomToken = Math.floor(Math.random() * token)
     tokenId =
       projId === 0
         ? randomToken.toString()
@@ -1322,7 +1322,7 @@ function getRandom(lines) {
   if (!matches) return null
 
   const id = parseInt(matches[3])
-  const randomToken = `#${Math.floor(Math.random() * (id - 1))}`
+  const randomToken = `#${Math.floor(Math.random() * id)}`
 
   console.log("Randomly selected line:", randomLine)
   console.log("Random token:", randomToken)
