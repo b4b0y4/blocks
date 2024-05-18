@@ -1315,18 +1315,10 @@ search.addEventListener("keypress", (event) => {
  *        FUNCTION TO GET RANDOM TOKEN ID
  **************************************************/
 function getRandom(lines) {
-  const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
   const randomLine = lines[Math.floor(Math.random() * lines.length)]
 
-  const matches = randomLine.match(regex)
-  if (!matches) return null
-
-  const id = parseInt(matches[3])
-  const randomToken = `#${Math.floor(Math.random() * id)}`
-
   console.log("Randomly selected line:", randomLine)
-  console.log("Random token:", randomToken)
-  getToken(randomLine, randomToken)
+  getToken(randomLine, "")
 }
 
 document.getElementById("randomButton").addEventListener("click", () => {
@@ -1339,21 +1331,17 @@ document.getElementById("randomButton").addEventListener("click", () => {
 function incrementTokenId() {
   contractData.tokenId = contractData.tokenId
     ? (contractData.tokenId + 1).toString()
-    : "1"
+    : ""
 
   grabData(contractData.tokenId, contractData.contract)
-  console.log("Contract:", contractData.contract)
-  console.log("Token Id:", contractData.tokenId)
 }
 
 function decrementTokenId() {
   contractData.tokenId = contractData.tokenId
-    ? Math.max(contractData.tokenId - 1, 0).toString()
-    : "0"
+    ? Math.max(contractData.tokenId - 1).toString()
+    : ""
 
   grabData(contractData.tokenId, contractData.contract)
-  console.log("Contract:", contractData.contract)
-  console.log("Token Id:", contractData.tokenId)
 }
 
 inc.addEventListener("click", incrementTokenId)
