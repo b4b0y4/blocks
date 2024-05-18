@@ -27,6 +27,7 @@ import {
   contractAddressUNITLDN,
   contractAddressTRAME,
   contractAddressHODLERS,
+  contractAddressFAB,
 } from "./contracts.js"
 
 // DOM elements
@@ -78,6 +79,7 @@ const contracts = [
   { abi: abiV3, address: contractAddressUNITLDN },
   { abi: abiV2, address: contractAddressTRAME },
   { abi: abiV3, address: contractAddressHODLERS },
+  { abi: abiV3, address: contractAddressFAB },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -730,7 +732,7 @@ const list = [
   "TDG 1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
   "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
   "VFA 0 - Fenestra / Rob Scalera - 41 minted",
-  "VFA 1 - Opuntia / Jake Rockland - 1 minted",
+  "VFA 1 - Opuntia / Jake Rockland - 2 minted",
   "UNITLDN 1 - Disconnected / Stefano Contiero - 10 minted",
   "UNITLDN 2 - Pressed Pause / Loren Bednar - 9 minted",
   "AOI 0 - Pursuit / Per Kristian Stoveland - 200 minted",
@@ -772,6 +774,7 @@ const list = [
   "HODL 15 - Gravity / Pawel Dudko - 45 minted",
   "HODL 16 - Wired wonders / Alessandro Fiore - 53 minted",
   "HODL 17 - Nebulous / KRANKARTA - 20 minted",
+  "FAB 0 - Giving Shape / ippsketch - 98 minted",
 ]
 
 /***************************************************
@@ -1011,6 +1014,7 @@ function determinePlatform(contract, curation) {
     21: "Unit London",
     22: "Trame",
     23: "Hodlers",
+    24: "Foundation for Art and Blockchain",
   }
 
   return contractsData[contract] || null
@@ -1271,6 +1275,8 @@ function getContractFromList(contract, tokenId) {
       return 22
     case "HODL":
       return 23
+    case "FAB":
+      return 24
     default:
       return tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
   }
@@ -1538,6 +1544,7 @@ function getContractName(contract) {
     21: "UNITLDN",
     22: "TRAME",
     23: "HODL",
+    24: "FAB",
   }
 
   return contractNames[contract] ? contractNames[contract] + " " : ""
@@ -1555,12 +1562,11 @@ async function fetchBloncks() {
     8: (i) => (i < 1 ? 8 : 7),
   }
   let token
-
   // CONTRACTS
-  for (let n = 23; n < 24; n++) {
+  for (let n = 23; n < 25; n++) {
     let newList = []
     // PROJECT ID
-    for (let i = n == 14 ? 1 : n == 23 ? 1 : 0; i < 1000; i++) {
+    for (let i = n == 14 || n == 23 ? 1 : 0; i < 1000; i++) {
       if (contractMappings.hasOwnProperty(n)) {
         n = contractMappings[n](i)
       }

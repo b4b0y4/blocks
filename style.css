@@ -1,17 +1,17 @@
 :root {
-  --color-bg: #f8f8f8;
-  --color-txt: #737373;
-  --color-btn: #9d9d9d;
+  --color-bg: #f9f9f9;
+  --color-txt: #171717;
+  --color-btn: #737373;
   --color-hvr: #e9e9e9;
   --color-key: #d9d9d9;
 }
 
 :root.dark-mode {
   --color-bg: #171717;
-  --color-txt: #a3a3a3;
-  --color-btn: #797979;
-  --color-hvr: #262626;
-  --color-key: #363636;
+  --color-txt: #c0c0c0;
+  --color-btn: #737373;
+  --color-hvr: #2f2f2f;
+  --color-key: #3f3f3f;
 }
 
 .no-flash {
