@@ -1283,6 +1283,13 @@ function getContractFromList(contract, tokenId) {
   }
 }
 
+function getRandom(lines) {
+  const randomLine = lines[Math.floor(Math.random() * lines.length)]
+
+  console.log("Randomly selected line:", randomLine)
+  getToken(randomLine, "")
+}
+
 function displayList(lines) {
   const panel =
     "<div>" + lines.map((line) => `<p>${line}</p>`).join("") + "</div>"
@@ -1310,16 +1317,6 @@ search.addEventListener("keypress", (event) => {
     search.value = ""
   }
 })
-
-/***************************************************
- *        FUNCTION TO GET RANDOM TOKEN ID
- **************************************************/
-function getRandom(lines) {
-  const randomLine = lines[Math.floor(Math.random() * lines.length)]
-
-  console.log("Randomly selected line:", randomLine)
-  getToken(randomLine, "")
-}
 
 document.getElementById("randomButton").addEventListener("click", () => {
   getRandom(list)
