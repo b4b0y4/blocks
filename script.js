@@ -49,8 +49,6 @@ const listPanel = document.querySelector(".list-panel")
 const search = document.getElementById("searchInput")
 const keyShort = document.querySelector(".key-short")
 const spin = document.querySelector(".spinner")
-const sunIcon = document.getElementById("sun")
-const moonIcon = document.getElementById("moon")
 
 // Initialize Ethereum provider
 const rpcUrl = localStorage.getItem("rpcUrl")
@@ -789,23 +787,11 @@ if (savedDarkMode) {
 } else {
   root.classList.remove("dark-mode")
 }
-updateIconVisibility(savedDarkMode)
-
-function updateIconVisibility(isDarkMode) {
-  if (isDarkMode) {
-    moonIcon.style.display = "none"
-    sunIcon.style.display = "block"
-  } else {
-    sunIcon.style.display = "none"
-    moonIcon.style.display = "block"
-  }
-}
 
 modeToggle.addEventListener("click", () => {
   root.classList.toggle("dark-mode")
   const isDarkMode = root.classList.contains("dark-mode")
   localStorage.setItem("darkMode", isDarkMode)
-  updateIconVisibility(isDarkMode)
 })
 
 root.classList.remove("no-flash")

@@ -137,15 +137,6 @@ a:hover {
   align-items: center;
 }
 
-svg {
-  padding: 0;
-  margin: 0;
-  display: block;
-  fill: var(--color-btn);
-  width: 22px;
-  height: 22px;
-}
-
 .save,
 .random,
 .previous,
@@ -185,7 +176,7 @@ svg {
   background-color: transparent;
   font-size: 1.1em;
   border-radius: 50%;
-  padding: 4px;
+  padding: 4px 5px 3px;
   color: var(--color-btn);
   border: none;
   outline: none;
