@@ -248,7 +248,7 @@ svg {
   text-align: start;
   border-radius: 5px;
   padding: 4px;
-  padding-left: 27px;
+  padding-left: 30px;
   outline: 0.5px solid transparent;
   transition: outline-color 0.3s ease-in-out;
 }
@@ -263,7 +263,7 @@ svg {
 .search-icon {
   position: absolute;
   top: 50%;
-  left: 4px;
+  left: 7px;
   transform: translateY(-50%);
   color: var(--color-btn);
   cursor: default;
@@ -337,16 +337,20 @@ svg {
     margin-right: 0;
   }
 
+  .info:hover {
+    color: var(--color-txt);
+  }
+
   .search-input {
     padding: 6px;
     padding-left: 30px;
   }
 
-  .save,
-  .random,
-  .previous,
-  .next {
-    padding: 1.25px 2.5px;
+  .save:hover,
+  .random:hover,
+  .previous:hover,
+  .next:hover {
+    background-color: transparent;
   }
 
   .instruction,
