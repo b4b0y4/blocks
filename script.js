@@ -781,20 +781,18 @@ const list = [
 /***************************************************
  *                    MODE TOGGLE
  **************************************************/
-const savedDarkMode = JSON.parse(localStorage.getItem("darkMode"))
-if (savedDarkMode) {
+const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
+if (isDarkMode) {
   root.classList.add("dark-mode")
 } else {
   root.classList.remove("dark-mode")
 }
+root.classList.remove("no-flash")
 
 modeToggle.addEventListener("click", () => {
   root.classList.toggle("dark-mode")
-  const isDarkMode = root.classList.contains("dark-mode")
   localStorage.setItem("darkMode", isDarkMode)
 })
-
-root.classList.remove("no-flash")
 
 /***************************************************
  *        FUNCTIONS TO GET DATA FROM ETHEREUM
