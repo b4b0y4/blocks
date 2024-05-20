@@ -779,7 +779,7 @@ const list = [
 ]
 
 /***************************************************
- *                    MODE TOGGLE
+ *              DARK/LIGHT MODE TOGGLE
  **************************************************/
 const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
 if (isDarkMode) {
@@ -1016,7 +1016,6 @@ function determinePlatform(contract, curation) {
     23: "Hodlers",
     24: "Foundation for Art and Blockchain",
   }
-
   return contractsData[contract] || null
 }
 
@@ -1172,7 +1171,7 @@ async function injectFrame() {
 }
 
 /***************************************************
- *          FUNCTIONS TO SEARCH AND GET TOKEN
+ *          FUNCTIONS TO GET TOKEN
  **************************************************/
 function getToken(panelContent, searchQuery) {
   const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
@@ -1282,13 +1281,9 @@ function getContractFromList(contract, tokenId) {
   }
 }
 
-function getRandom(lines) {
-  const randomLine = lines[Math.floor(Math.random() * lines.length)]
-
-  console.log("Randomly selected line:", randomLine)
-  getToken(randomLine, "")
-}
-
+/***************************************************
+ *          FUNCTIONS TO DISPLAY LIST
+ **************************************************/
 function displayList(lines) {
   const panel =
     "<div>" + lines.map((line) => `<p>${line}</p>`).join("") + "</div>"
@@ -1316,6 +1311,16 @@ search.addEventListener("keypress", (event) => {
     search.value = ""
   }
 })
+
+/***************************************************
+ *   FUNCTIONS TO GET RANDOM LINE FROM THE LIST
+ **************************************************/
+function getRandom(lines) {
+  const randomLine = lines[Math.floor(Math.random() * lines.length)]
+
+  console.log("Randomly selected line:", randomLine)
+  getToken(randomLine, "")
+}
 
 document.getElementById("randomButton").addEventListener("click", () => {
   getRandom(list)
@@ -1361,24 +1366,17 @@ async function saveContentAsFile(content, filename) {
   if (!userFilename) {
     return
   }
-  // Create a Blob containing the content
+
   const blob = new Blob([content], { type: "text/html" })
-
-  // Create a temporary URL for the Blob
   const url = window.URL.createObjectURL(blob)
-
-  // Create a temporary <a> element to trigger the download
   const link = document.createElement("a")
   link.href = url
   link.download = userFilename
 
-  // Append the <a> element to the document body
   document.body.appendChild(link)
 
-  // Programmatically trigger the click event
   link.click()
 
-  // Clean up
   window.URL.revokeObjectURL(url)
   link.remove()
 }
@@ -1504,7 +1502,7 @@ overlay.addEventListener("click", () => {
 })
 
 /***************************************************
- *         FUNCTION TO UPDATE THE LIST
+ *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
 function getContractName(contract) {
   const contractNames = {

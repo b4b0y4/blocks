@@ -339,15 +339,13 @@ a:hover {
 
   .search-input {
     padding: 5px;
-    padding-left: 32px;
-    font-size: 1.2em;
+    padding-left: 30px;
   }
 
   .save,
   .random,
   .previous,
-  .next,
-  .search-icon {
+  .next {
     font-size: 1.2em;
   }
 
