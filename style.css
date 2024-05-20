@@ -137,16 +137,20 @@ a:hover {
   align-items: center;
 }
 
+svg {
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
 .save,
 .random,
 .previous,
 .next {
   background-color: transparent;
-  font-size: 1.1em;
   color: var(--color-btn);
   border: none;
   border-radius: 5px;
-  padding: 3.25px 6.5px;
   margin: 0 5px;
   cursor: default;
   z-index: 100;
@@ -176,7 +180,7 @@ a:hover {
   background-color: transparent;
   font-size: 1.1em;
   border-radius: 50%;
-  padding: 4px 5px 3px;
+  padding: 4px;
   color: var(--color-btn);
   border: none;
   outline: none;
@@ -244,7 +248,7 @@ a:hover {
   text-align: start;
   border-radius: 5px;
   padding: 4px;
-  padding-left: 30px;
+  padding-left: 27px;
   outline: 0.5px solid transparent;
   transition: outline-color 0.3s ease-in-out;
 }
@@ -259,7 +263,7 @@ a:hover {
 .search-icon {
   position: absolute;
   top: 50%;
-  left: 7px;
+  left: 4px;
   transform: translateY(-50%);
   color: var(--color-btn);
   cursor: default;
@@ -342,8 +346,7 @@ a:hover {
   .random,
   .previous,
   .next {
-    font-size: 1.2em;
-    padding: 4.5px 9px;
+    padding: 1.25px 2.5px;
   }
 
   .instruction,

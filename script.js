@@ -49,6 +49,8 @@ const listPanel = document.querySelector(".list-panel")
 const search = document.getElementById("searchInput")
 const keyShort = document.querySelector(".key-short")
 const spin = document.querySelector(".spinner")
+const sunIcon = document.getElementById("sun")
+const moonIcon = document.getElementById("moon")
 
 // Initialize Ethereum provider
 const rpcUrl = localStorage.getItem("rpcUrl")
@@ -781,18 +783,31 @@ const list = [
 /***************************************************
  *                    MODE TOGGLE
  **************************************************/
-modeToggle.addEventListener("click", () => {
-  root.classList.toggle("dark-mode")
-  const isDarkMode = root.classList.contains("dark-mode")
-  localStorage.setItem("darkMode", isDarkMode)
-})
-
-const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
-if (isDarkMode) {
+const savedDarkMode = JSON.parse(localStorage.getItem("darkMode"))
+if (savedDarkMode) {
   root.classList.add("dark-mode")
 } else {
   root.classList.remove("dark-mode")
 }
+updateIconVisibility(savedDarkMode)
+
+function updateIconVisibility(isDarkMode) {
+  if (isDarkMode) {
+    moonIcon.style.display = "none"
+    sunIcon.style.display = "block"
+  } else {
+    sunIcon.style.display = "none"
+    moonIcon.style.display = "block"
+  }
+}
+
+modeToggle.addEventListener("click", () => {
+  root.classList.toggle("dark-mode")
+  const isDarkMode = root.classList.contains("dark-mode")
+  localStorage.setItem("darkMode", isDarkMode)
+  updateIconVisibility(isDarkMode)
+})
+
 root.classList.remove("no-flash")
 
 /***************************************************
@@ -1130,7 +1145,7 @@ async function injectFrame() {
         min-height: 100%;
         margin: 0;
         padding: 0;
-        background-color: var(--color-bg);
+        background-color: transparent;
       }
       canvas {
         padding: 0;
@@ -1549,7 +1564,7 @@ async function fetchBloncks() {
   }
   let token
   // CONTRACTS
-  for (let n = 23; n < 25; n++) {
+  for (let n = 2; n < 3; n++) {
     let newList = []
     // PROJECT ID
     for (let i = n == 14 || n == 23 ? 1 : 0; i < 1000; i++) {
