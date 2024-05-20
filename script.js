@@ -32,17 +32,12 @@ import {
 } from "./contracts.js"
 
 // DOM elements
-const modeToggle = document.getElementById("modeToggle")
-const root = document.documentElement
 const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
 const overlay = document.querySelector(".overlay")
-const save = document.getElementById("saveButton")
-const inc = document.getElementById("incrementButton")
-const dec = document.getElementById("decrementButton")
 const panel = document.querySelector(".panel")
 const panelContent = document.getElementById("panelContent")
 const listPanel = document.querySelector(".list-panel")
@@ -783,14 +778,14 @@ const list = [
  **************************************************/
 const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
 if (isDarkMode) {
-  root.classList.add("dark-mode")
+  document.documentElement.classList.add("dark-mode")
 } else {
-  root.classList.remove("dark-mode")
+  document.documentElement.classList.remove("dark-mode")
 }
-root.classList.remove("no-flash")
+document.documentElement.classList.remove("no-flash")
 
-modeToggle.addEventListener("click", () => {
-  root.classList.toggle("dark-mode")
+document.getElementById("modeToggle").addEventListener("click", () => {
+  document.documentElement.classList.toggle("dark-mode")
   localStorage.setItem("darkMode", isDarkMode)
 })
 
@@ -1345,49 +1340,42 @@ function decrementTokenId() {
   grabData(contractData.tokenId, contractData.contract)
 }
 
-inc.addEventListener("click", incrementTokenId)
+document
+  .getElementById("incrementButton")
+  .addEventListener("click", incrementTokenId)
 
-dec.addEventListener("click", decrementTokenId)
+document
+  .getElementById("decrementButton")
+  .addEventListener("click", decrementTokenId)
 
 /***************************************************
  *          FUNCTION TO SAVE THE OUTPUT
  **************************************************/
-async function saveContentAsFile(content, filename) {
+async function saveContentAsHtml() {
+  clearPanels()
+  const content = frame.contentDocument.documentElement.outerHTML
   let id = getShortenedId(contractData.tokenId)
   const defaultName = `${contractData.detail[0].replace(
     /\s+/g,
     "-"
   )}#${id}.html`
 
-  let userFilename = filename || defaultName
-
-  userFilename = prompt("Enter a filename:", userFilename)
-
-  if (!userFilename) {
-    return
-  }
-
   const blob = new Blob([content], { type: "text/html" })
-  const url = window.URL.createObjectURL(blob)
+  const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
+
   link.href = url
-  link.download = userFilename
-
+  link.download = defaultName
   document.body.appendChild(link)
-
   link.click()
 
-  window.URL.revokeObjectURL(url)
+  URL.revokeObjectURL(url)
   link.remove()
 }
 
-function handleSaveButtonClick() {
-  const dynamicContent = frame.contentDocument.documentElement.outerHTML
-  clearPanels()
-  saveContentAsFile(dynamicContent)
-}
-
-save.addEventListener("click", handleSaveButtonClick)
+document
+  .getElementById("saveButton")
+  .addEventListener("click", saveContentAsHtml)
 
 /***************************************************
  *                     EVENTS
