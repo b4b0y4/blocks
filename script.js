@@ -1494,11 +1494,11 @@ function getContract(contract) {
     26: "ABSI",
   }
 
-  return contractNames[contract] ? `${contractNames[contract]} ` : ""
+  return contractNames[contract] || ""
 }
 
-// fetchBloncks()
-async function fetchBloncks() {
+// fetchBlocks()
+async function fetchBlocks() {
   let token
   // CONTRACTS
   for (let n = 4; n < 6; n++) {
@@ -1506,7 +1506,7 @@ async function fetchBloncks() {
     // PROJECT ID
     for (
       let i =
-        n == 1 ? 4 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0;
+        n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0;
       i < 376;
       i++
     ) {
@@ -1520,11 +1520,11 @@ async function fetchBloncks() {
 
         if (tkns.invocations) {
           newList.push(
-            `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+            `${contractName} ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
           )
           token = 0
         } else {
-          console.log(`No tokens found for project ${contractName}${i}`)
+          console.log(`No tokens found for project ${contractName} ${i}`)
           token++
           if (token == 5) break
         }
