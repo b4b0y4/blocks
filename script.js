@@ -1187,10 +1187,11 @@ function getToken(panelContent, searchQuery) {
 }
 
 function handleCommaSeparatedQuery(searchQuery) {
-  const [tokenId, query2] = searchQuery
+  const [tokenIdStr, query2] = searchQuery
     .split(",")
     .map((str) => str.trim().toUpperCase())
 
+  const tokenId = Number(tokenIdStr)
   let contract = getContractFromList(query2, tokenId)
 
   console.log("Contract:", contract)
@@ -1198,7 +1199,8 @@ function handleCommaSeparatedQuery(searchQuery) {
   grabData(tokenId, contract)
 }
 
-function handleNumericQuery(tokenId) {
+function handleNumericQuery(_tokenId) {
+  const tokenId = Number(_tokenId)
   let contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
 
   console.log("Contract:", contract)
@@ -1217,14 +1219,14 @@ function handleOtherQuery(textContent, searchQuery) {
     const randomToken = Math.floor(Math.random() * token)
     tokenId =
       projId == 0
-        ? randomToken.toString()
-        : (projId * 1000000 + randomToken).toString().padStart(6, "0")
+        ? randomToken
+        : Number((projId * 1000000 + randomToken).toString().padStart(6, "0"))
   } else {
     const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
     tokenId =
       projId == 0
-        ? searchId.toString()
-        : (projId * 1000000 + searchId).toString().padStart(6, "0")
+        ? searchId
+        : Number((projId * 1000000 + searchId).toString().padStart(6, "0"))
   }
 
   let contract = getContractFromList(listContract, tokenId)
@@ -1315,18 +1317,12 @@ document.getElementById("randomButton").addEventListener("click", () => {
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
  **************************************************/
 function incrementTokenId() {
-  contractData.tokenId = contractData.tokenId
-    ? (contractData.tokenId + 1).toString()
-    : ""
-
+  contractData.tokenId = (contractData.tokenId || 0) + 1
   grabData(contractData.tokenId, contractData.contract)
 }
 
 function decrementTokenId() {
-  contractData.tokenId = contractData.tokenId
-    ? Math.max(contractData.tokenId - 1).toString()
-    : ""
-
+  contractData.tokenId = (contractData.tokenId || 0) - 1
   grabData(contractData.tokenId, contractData.contract)
 }
 
