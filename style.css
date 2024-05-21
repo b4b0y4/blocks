@@ -119,7 +119,7 @@ a:hover {
   display: flex;
   align-items: center;
   color: var(--color-txt);
-  margin-right: 5px;
+  margin-right: 15px;
   font-size: 1.1em;
   border-radius: 5px;
   cursor: default;

@@ -606,7 +606,7 @@ const list = [
   "ABXPACE 7 - Schema / DRIFT with Jeff Davis - 300 minted",
   "ABXBM 0 - Metropolis / mpkoz - 940 minted",
   "ABXBM 1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
-  "ABS 0 - Misbah / Melissa Wiederrecht - 5 minted",
+  "ABS 0 - Misbah / Melissa Wiederrecht - 55 minted",
   "ABSI 0 - One More Day / Aaron Penne - 2 minted",
   "BM 0 - Finale / Bright Moments - 1000 minted",
   "BM 1 - Stellaraum / Alida Sun - 66 minted",
