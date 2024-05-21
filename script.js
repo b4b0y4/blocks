@@ -29,6 +29,8 @@ import {
   contractAddressTRAME,
   contractAddressHODLERS,
   contractAddressFAB,
+  contractAddressABSTUDIO0,
+  contractAddressABSTUDIO1,
 } from "./contracts.js"
 
 // DOM elements
@@ -37,6 +39,9 @@ const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
+const save = document.getElementById("saveBtn")
+const dec = document.getElementById("decrementBtn")
+const inc = document.getElementById("incrementBtn")
 const overlay = document.querySelector(".overlay")
 const panel = document.querySelector(".panel")
 const panelContent = document.getElementById("panelContent")
@@ -76,6 +81,8 @@ const contracts = [
   { abi: abiV2, address: contractAddressTRAME },
   { abi: abiV3, address: contractAddressHODLERS },
   { abi: abiV3, address: contractAddressFAB },
+  { abi: abiV3, address: contractAddressABSTUDIO0 },
+  { abi: abiV3, address: contractAddressABSTUDIO1 },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -598,6 +605,8 @@ const list = [
   "ABXPACE 7 - Schema / DRIFT with Jeff Davis - 300 minted",
   "ABXBM 0 - Metropolis / mpkoz - 940 minted",
   "ABXBM 1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
+  "ABS 0 - Misbah / Melissa Wiederrecht - 5 minted",
+  "ABSI 0 - One More Day / Aaron Penne - 2 minted",
   "BM 0 - Finale / Bright Moments - 1000 minted",
   "BM 1 - Stellaraum / Alida Sun - 66 minted",
   "BM 2 - Parnassus / mpkoz - 100 minted",
@@ -777,11 +786,7 @@ const list = [
  *              DARK/LIGHT MODE TOGGLE
  **************************************************/
 const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
-if (isDarkMode) {
-  document.documentElement.classList.add("dark-mode")
-} else {
-  document.documentElement.classList.remove("dark-mode")
-}
+document.documentElement.classList.toggle("dark-mode", isDarkMode)
 document.documentElement.classList.remove("no-flash")
 
 document.getElementById("modeToggle").addEventListener("click", () => {
@@ -792,19 +797,17 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *        FUNCTIONS TO GET DATA FROM ETHEREUM
  **************************************************/
-async function grabData(_tokenId, contract) {
+async function grabData(tokenId, contract) {
   try {
     keyShort.style.display = "none"
     spin.style.display = "block"
     clearLocalStorage()
     clearPanels()
 
-    const tokenId = Number(_tokenId)
     const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(contract)
 
     const hash = await fetchHash(tokenId, contract)
-    const projectId = await fetchProjectId(tokenId, contract)
-    const projId = Number(projectId)
+    const projId = Number(await fetchProjectId(tokenId, contract))
     const projectInfo = await fetchProjectInfo(projId, contract, isContractV2)
     const script = await constructScript(projId, projectInfo, contract)
     const detail = await fetchProjectDetails(projId, contract)
@@ -841,7 +844,7 @@ async function grabData(_tokenId, contract) {
 }
 
 async function fetchHash(tokenId, contract) {
-  return contract === 0
+  return contract == 0
     ? contracts[contract].showTokenHashes(tokenId)
     : contracts[contract].tokenIdToHash(tokenId)
 }
@@ -922,10 +925,9 @@ function update(
   remaining
 ) {
   pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
-  const curation =
-    contract == 0 || contract == 1 || contract == 2
-      ? determineCuration(projId)
-      : null
+  const curation = [0, 1, 2].includes(contract)
+    ? determineCuration(projId)
+    : null
   const platform = determinePlatform(contract, curation)
   let id = getShortenedId(tokenId)
   updateInfo(contract, detail, id).then((artist) => {
@@ -986,16 +988,8 @@ function determineCuration(projId) {
 
 function determinePlatform(contract, curation) {
   const contractsData = {
-    0: curation,
-    1: curation,
-    2: curation,
     3: "Art Blocks Explorations",
-    4: "Art Blocks &times; Pace",
-    5: "Art Blocks &times; Pace",
     6: "Art Blocks &times; Bright Moments",
-    7: "Bright Moments",
-    8: "Bright Moments",
-    9: "Bright Moments",
     10: "Plottables",
     12: "Sotheby's",
     13: "ATP",
@@ -1011,6 +1005,16 @@ function determinePlatform(contract, curation) {
     23: "Hodlers",
     24: "Foundation for Art and Blockchain",
   }
+
+  ;[
+    [[0, 1, 2], curation],
+    [[4, 5], "Art Blocks &times; Pace"],
+    [[7, 8, 9], "Bright Moments"],
+    [[25, 26], "Art Blocks Studio"],
+  ].forEach(([keys, value]) =>
+    keys.forEach((key) => (contractsData[key] = value))
+  )
+
   return contractsData[contract] || null
 }
 
@@ -1074,7 +1078,6 @@ async function updatePanelContent(
         Token ID: <a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a>
       </p>
     `
-
     panelContent.innerHTML = panelContentHTML
 
     let ensName = await provider.lookupAddress(owner)
@@ -1166,7 +1169,7 @@ async function injectFrame() {
 }
 
 /***************************************************
- *          FUNCTIONS TO GET TOKEN
+ *            FUNCTIONS TO GET TOKEN
  **************************************************/
 function getToken(panelContent, searchQuery) {
   const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
@@ -1201,23 +1204,22 @@ function handleNumericQuery(tokenId) {
 }
 
 function handleOtherQuery(textContent, searchQuery) {
-  const projId = parseInt(textContent.match(/\d+/)[0])
-  const listContract = textContent.match(/^[A-Za-z0-9]+/)[0]
   let tokenId
+  const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
+  const listContract = textContent.match(regex)[1]
+  const projId = parseInt(textContent.match(regex)[2])
 
   if (!searchQuery.includes("#")) {
-    const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
-    const matches = textContent.match(regex)
-    const token = parseInt(matches[3])
+    const token = parseInt(textContent.match(regex)[3])
     const randomToken = Math.floor(Math.random() * token)
     tokenId =
-      projId === 0
+      projId == 0
         ? randomToken.toString()
         : (projId * 1000000 + randomToken).toString().padStart(6, "0")
   } else {
     const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
     tokenId =
-      projId === 0
+      projId == 0
         ? searchId.toString()
         : (projId * 1000000 + searchId).toString().padStart(6, "0")
   }
@@ -1230,50 +1232,35 @@ function handleOtherQuery(textContent, searchQuery) {
 }
 
 function getContractFromList(contract, tokenId) {
-  switch (contract) {
-    case "EXP":
-      return 3
-    case "ABXPACE":
-      return tokenId < 5000000 ? 4 : 5
-    case "ABXBM":
-      return 6
-    case "BM":
-      return tokenId < 1000000 ? 8 : 7
-    case "CITIZEN":
-      return 9
-    case "PLOT":
-      return 10
-    case "PLOTII":
-      return 11
-    case "STBYS":
-      return 12
-    case "ATP":
-      return 13
-    case "GRAIL":
-      return 14
-    case "AOI":
-      return 15
-    case "VCA":
-      return 16
-    case "SDAO":
-      return 17
-    case "MINTS":
-      return 18
-    case "TDG":
-      return 19
-    case "VFA":
-      return 20
-    case "UNITLDN":
-      return 21
-    case "TRAME":
-      return 22
-    case "HODL":
-      return 23
-    case "FAB":
-      return 24
-    default:
-      return tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
+  const contractMap = {
+    EXP: 3,
+    ABXPACE: tokenId < 5000000 ? 4 : 5,
+    ABXBM: 6,
+    BM: tokenId < 1000000 ? 8 : 7,
+    CITIZEN: 9,
+    PLOT: 10,
+    PLOTII: 11,
+    STBYS: 12,
+    ATP: 13,
+    GRAIL: 14,
+    AOI: 15,
+    VCA: 16,
+    SDAO: 17,
+    MINTS: 18,
+    TDG: 19,
+    VFA: 20,
+    UNITLDN: 21,
+    TRAME: 22,
+    HODL: 23,
+    FAB: 24,
+    ABS: 25,
+    ABSI: 26,
   }
+
+  return (
+    contractMap[contract] ??
+    (tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2)
+  )
 }
 
 /***************************************************
@@ -1340,13 +1327,8 @@ function decrementTokenId() {
   grabData(contractData.tokenId, contractData.contract)
 }
 
-document
-  .getElementById("incrementButton")
-  .addEventListener("click", incrementTokenId)
-
-document
-  .getElementById("decrementButton")
-  .addEventListener("click", decrementTokenId)
+inc.addEventListener("click", incrementTokenId)
+dec.addEventListener("click", decrementTokenId)
 
 /***************************************************
  *          FUNCTION TO SAVE THE OUTPUT
@@ -1359,7 +1341,6 @@ async function saveContentAsHtml() {
     /\s+/g,
     "-"
   )}#${id}.html`
-
   const blob = new Blob([content], { type: "text/html" })
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
@@ -1373,9 +1354,7 @@ async function saveContentAsHtml() {
   link.remove()
 }
 
-document
-  .getElementById("saveButton")
-  .addEventListener("click", saveContentAsHtml)
+save.addEventListener("click", saveContentAsHtml)
 
 /***************************************************
  *                     EVENTS
@@ -1387,22 +1366,17 @@ window.addEventListener("DOMContentLoaded", () => {
     update(...Object.values(contractData))
   }
 
-  contractData
-    ? ((inc.style.display = "block"),
-      (dec.style.display = "block"),
-      (save.style.display = "block"))
-    : ((inc.style.display = "none"),
-      (dec.style.display = "none"),
-      (save.style.display = "none"))
+  const value = contractData ? "block" : "none"
+  inc.style.display = value
+  dec.style.display = value
+  save.style.display = value
 })
 
 window.addEventListener("load", () => {
-  rpcUrl
-    ? ((rpcUrlInput.style.display = "none"),
-      (instruction.style.display = "none"))
-    : ((rpcUrlInput.style.display = "block"),
-      (instruction.style.display = "block"),
-      (infoBox.style.display = "none"))
+  const value = rpcUrl ? "none" : "block"
+  rpcUrlInput.style.display = value
+  instruction.style.display = value
+  if (!rpcUrl) infoBox.style.display = "none"
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
@@ -1492,7 +1466,7 @@ overlay.addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-function getContractName(contract) {
+function getContract(contract) {
   const contractNames = {
     3: "EXP",
     4: "ABXPACE",
@@ -1516,32 +1490,27 @@ function getContractName(contract) {
     22: "TRAME",
     23: "HODL",
     24: "FAB",
+    25: "ABSTUDIO",
+    26: "ABSTUDIOI",
   }
 
-  return contractNames[contract] ? contractNames[contract] + " " : ""
+  return contractNames[contract] ? `${contractNames[contract]} ` : ""
 }
 
 // fetchBloncks()
 async function fetchBloncks() {
-  const contractMappings = {
-    0: (i) => (i < 3 ? 0 : i < 374 ? 1 : 2),
-    1: (i) => (i < 3 ? 0 : i < 374 ? 1 : 2),
-    2: (i) => (i < 3 ? 0 : i < 374 ? 1 : 2),
-    4: (i) => (i < 5 ? 4 : 5),
-    5: (i) => (i < 5 ? 4 : 5),
-    7: (i) => (i < 1 ? 8 : 7),
-    8: (i) => (i < 1 ? 8 : 7),
-  }
   let token
   // CONTRACTS
-  for (let n = 2; n < 3; n++) {
+  for (let n = 4; n < 6; n++) {
     let newList = []
     // PROJECT ID
-    for (let i = n == 14 || n == 23 ? 1 : 0; i < 1000; i++) {
-      if (contractMappings.hasOwnProperty(n)) {
-        n = contractMappings[n](i)
-      }
-      let contractName = getContractName(n)
+    for (
+      let i =
+        n == 1 ? 4 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0;
+      i < 376;
+      i++
+    ) {
+      let contractName = getContract(n)
       const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(n)
       try {
         const detail = await contracts[n].projectDetails(i.toString())
@@ -1557,9 +1526,7 @@ async function fetchBloncks() {
         } else {
           console.log(`No tokens found for project ${contractName}${i}`)
           token++
-          if (token == 5) {
-            break
-          }
+          if (token == 5) break
         }
       } catch (error) {
         console.log(`Error fetching data for project ${contractName}${i}`)
