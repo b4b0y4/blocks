@@ -785,13 +785,19 @@ const list = [
 /***************************************************
  *              DARK/LIGHT MODE TOGGLE
  **************************************************/
+const root = document.documentElement
 const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
-document.documentElement.classList.toggle("dark-mode", isDarkMode)
-document.documentElement.classList.remove("no-flash")
+if (isDarkMode) {
+  root.classList.add("dark-mode")
+} else {
+  root.classList.remove("dark-mode")
+}
+root.classList.remove("no-flash")
 
 document.getElementById("modeToggle").addEventListener("click", () => {
-  document.documentElement.classList.toggle("dark-mode")
-  localStorage.setItem("darkMode", isDarkMode)
+  root.classList.toggle("dark-mode")
+  const updateMode = root.classList.contains("dark-mode")
+  localStorage.setItem("darkMode", updateMode)
 })
 
 /***************************************************
