@@ -1,17 +1,17 @@
 :root {
-  --color-bg: #f9f9f9;
-  --color-txt: #565656;
-  --color-btn: #9f9f9f;
-  --color-hvr: #e9e9e9;
-  --color-key: #d9d9d9;
+  --color-bg: #ececef;
+  --color-txt: #5c5c5c;
+  --color-btn: #969697;
+  --color-hvr: #e2e3e4;
+  --color-key: #d3d3d4;
 }
 
 :root.dark-mode {
-  --color-bg: #171717;
-  --color-txt: #a9a9a9;
-  --color-btn: #737373;
-  --color-hvr: #2f2f2f;
-  --color-key: #3f3f3f;
+  --color-bg: #212122;
+  --color-txt: #adadae;
+  --color-btn: #818182;
+  --color-hvr: #2d2e36;
+  --color-key: #3e3e45;
 }
 
 .no-flash {
