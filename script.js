@@ -103,7 +103,8 @@ const predefinedLibraries = {
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
   "a-frame":
     "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
-  twemoji: "https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js",
+  twemoji:
+    'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
   babylonjs:
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   babylon:
@@ -1500,13 +1501,13 @@ function getContract(contract) {
 async function fetchBlocks() {
   let token
   // CONTRACTS
-  for (let n = 4; n < 6; n++) {
+  for (let n = 2; n < 3; n++) {
     let newList = []
     // PROJECT ID
     for (
       let i =
         n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0;
-      i < 376;
+      i < 500;
       i++
     ) {
       let contractName = getContract(n)
