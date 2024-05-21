@@ -1490,8 +1490,8 @@ function getContract(contract) {
     22: "TRAME",
     23: "HODL",
     24: "FAB",
-    25: "ABSTUDIO",
-    26: "ABSTUDIOI",
+    25: "ABS",
+    26: "ABSI",
   }
 
   return contractNames[contract] ? `${contractNames[contract]} ` : ""
