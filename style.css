@@ -222,6 +222,16 @@ a:hover {
   pointer-events: auto;
 }
 
+.list-item {
+  padding: 2px 5px;
+  border-radius: 10px;
+  cursor: default;
+}
+
+.list-item:hover {
+  background-color: var(--color-hvr);
+}
+
 .mini {
   font-size: 0.85em;
 }

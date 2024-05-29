@@ -607,7 +607,7 @@ const list = [
   "ABXBM 0 - Metropolis / mpkoz - 940 minted",
   "ABXBM 1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "ABS 0 - Misbah / Melissa Wiederrecht - 55 minted",
-  "ABSI 0 - One More Day / Aaron Penne - 2 minted",
+  "ABSI 0 - One More Day / Aaron Penne - 50 minted",
   "BM 0 - Finale / Bright Moments - 1000 minted",
   "BM 1 - Stellaraum / Alida Sun - 66 minted",
   "BM 2 - Parnassus / mpkoz - 100 minted",
@@ -740,7 +740,7 @@ const list = [
   "VFA 0 - Fenestra / Rob Scalera - 41 minted",
   "VFA 1 - Opuntia / Jake Rockland - 2 minted",
   "UNITLDN 1 - Disconnected / Stefano Contiero - 10 minted",
-  "UNITLDN 2 - Pressed Pause / Loren Bednar - 9 minted",
+  "UNITLDN 2 - Pressed Pause / Loren Bednar - 10 minted",
   "AOI 0 - Pursuit / Per Kristian Stoveland - 200 minted",
   "AOI 1 - Echo of Intensity / Per Kristian Stoveland - 1595 minted",
   "AOI 2 - /// / Snowfro - 2000 minted",
@@ -1274,15 +1274,29 @@ function getContractFromList(contract, tokenId) {
  **************************************************/
 function displayList(lines) {
   const panel =
-    "<div>" + lines.map((line) => `<p>${line}</p>`).join("") + "</div>"
+    "<div>" +
+    lines
+      .map(
+        (line, index) =>
+          `<p class="list-item" data-index="${index}">${line}</p>`
+      )
+      .join("") +
+    "</div>"
   listPanel.innerHTML = panel
 }
 
+let filteredList = list
 function filterList(lines, query) {
-  const filteredLines = lines.filter((line) =>
+  filteredList = lines.filter((line) =>
     line.toLowerCase().includes(query.toLowerCase())
   )
-  displayList(filteredLines)
+  displayList(filteredList)
+}
+
+function handleItemClick(event) {
+  const selectedIndex = event.target.getAttribute("data-index")
+  console.log("Item clicked:", filteredList[selectedIndex])
+  getToken(filteredList[selectedIndex], "")
 }
 
 displayList(list)
@@ -1299,6 +1313,8 @@ search.addEventListener("keypress", (event) => {
     search.value = ""
   }
 })
+
+listPanel.addEventListener("click", handleItemClick)
 
 /***************************************************
  *   FUNCTIONS TO GET RANDOM LINE FROM THE LIST
