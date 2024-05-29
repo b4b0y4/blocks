@@ -9,8 +9,6 @@ View information about each one and save a HTML file of your favorites.
 - Add a RPC URL and you're good to go!
 - Press Enter/return
   - (empty input): get a random token Id.
-  - (token Id): get the corresponding Art Blocks work.
-  - (token Id, contract name): get the corresponding work.
   - (work's name): get a random token Id for that collection.
   - (work's name #Id): get the exact token for that collection.
   - (#Id): get to the desired token Id when a project is already displayed.

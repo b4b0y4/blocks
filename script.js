@@ -1251,37 +1251,16 @@ async function injectFrame() {
 function getToken(panelContent, searchQuery) {
   const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
 
-  if (searchQuery.includes(",")) {
-    handleCommaSeparatedQuery(searchQuery)
-  } else if (/^\d+$/.test(searchQuery)) {
+  if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery)
-  } else if (searchQuery.startsWith("#")) {
-    handleHashTagQuery(searchQuery)
   } else {
     handleOtherQuery(textContent, searchQuery)
   }
 }
 
-function handleCommaSeparatedQuery(searchQuery) {
-  const [tokenIdStr, query2] = searchQuery
-    .split(",")
-    .map((str) => str.trim().toUpperCase())
-  const tokenId = Number(tokenIdStr)
-  const contract = getContractFromList(query2, tokenId)
-
-  logAndGrabData(tokenId, contract)
-}
-
 function handleNumericQuery(searchQuery) {
-  const tokenId = Number(searchQuery)
-  const contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
-
-  logAndGrabData(tokenId, contract)
-}
-
-function handleHashTagQuery(searchQuery) {
   const { contract, projId } = contractData
-  const id = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
+  const id = parseInt(searchQuery.match(/\s*(\d+)/)[1])
   const tokenId =
     projId == 0
       ? id
@@ -1404,6 +1383,7 @@ function logAndGrabData(tokenId, contract) {
         search.value = ""
       } else {
         const query = search.value.trim()
+        console.log(listPanel.innerHTML)
         query === "" ? getRandom(list) : getToken(listPanel.innerHTML, query)
         search.value = ""
       }
