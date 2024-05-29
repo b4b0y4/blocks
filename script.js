@@ -1272,50 +1272,75 @@ function getContractFromList(contract, tokenId) {
 /***************************************************
  *          FUNCTIONS TO DISPLAY LIST
  **************************************************/
-function displayList(lines) {
-  const panel =
-    "<div>" +
-    lines
+;(function () {
+  let filteredList = list
+  let selectedIndex = -1
+
+  function displayList(lines) {
+    const panel = lines
       .map(
         (line, index) =>
           `<p class="list-item" data-index="${index}">${line}</p>`
       )
-      .join("") +
-    "</div>"
-  listPanel.innerHTML = panel
-}
-
-let filteredList = list
-function filterList(lines, query) {
-  filteredList = lines.filter((line) =>
-    line.toLowerCase().includes(query.toLowerCase())
-  )
-  displayList(filteredList)
-}
-
-function handleItemClick(event) {
-  const selectedIndex = event.target.getAttribute("data-index")
-  console.log("Item clicked:", filteredList[selectedIndex])
-  getToken(filteredList[selectedIndex], "")
-}
-
-displayList(list)
-
-search.addEventListener("input", (event) => {
-  const query = event.target.value.trim().split("#")[0].trim()
-  filterList(list, query)
-})
-
-search.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    const query = search.value.trim()
-    query === "" ? getRandom(list) : getToken(listPanel.innerHTML, query)
-    search.value = ""
+      .join("")
+    listPanel.innerHTML = `<div>${panel}</div>`
   }
-})
 
-listPanel.addEventListener("click", handleItemClick)
+  function filterList(lines, query) {
+    filteredList = lines.filter((line) =>
+      line.toLowerCase().includes(query.toLowerCase())
+    )
+    displayList(filteredList)
+    selectedIndex = -1
+  }
 
+  function handleItemClick(event) {
+    const selectedIndex = event.target.getAttribute("data-index")
+    console.log("Item clicked:", filteredList[selectedIndex])
+    getToken(filteredList[selectedIndex], "")
+  }
+
+  function handleKeyboardNavigation(event) {
+    if (filteredList.length === 0) return
+
+    if (event.key === "ArrowDown") {
+      selectedIndex = (selectedIndex + 1) % filteredList.length
+    } else if (event.key === "ArrowUp") {
+      selectedIndex =
+        (selectedIndex - 1 + filteredList.length) % filteredList.length
+    } else if (event.key === "Enter") {
+      if (selectedIndex !== -1) {
+        console.log("Item clicked:", filteredList[selectedIndex])
+        getToken(filteredList[selectedIndex], "")
+        search.value = ""
+      } else {
+        const query = search.value.trim()
+        query === "" ? getRandom(list) : getToken(listPanel.innerHTML, query)
+        search.value = ""
+      }
+    }
+
+    const items = document.querySelectorAll(".list-item")
+    items.forEach((item, index) => {
+      item.classList.toggle("selected", index === selectedIndex)
+    })
+
+    if (selectedIndex !== -1) {
+      items[selectedIndex].scrollIntoView({ block: "nearest" })
+    }
+  }
+
+  search.addEventListener("input", (event) => {
+    const query = event.target.value.trim().split("#")[0].trim()
+    filterList(list, query)
+  })
+
+  search.addEventListener("keydown", handleKeyboardNavigation)
+
+  listPanel.addEventListener("click", handleItemClick)
+
+  displayList(list)
+})()
 /***************************************************
  *   FUNCTIONS TO GET RANDOM LINE FROM THE LIST
  **************************************************/
