@@ -13,6 +13,6 @@ View information about each one and save a HTML file of your favorites.
   - (token Id, contract name): get the corresponding work.
   - (work's name): get a random token Id for that collection.
   - (work's name #Id): get the exact token for that collection.
-  - (#Id) : get to the desired token Id when a project is already displayed.
+  - (#Id): get to the desired token Id when a project is already displayed.
 - Press `\` to clear the page.
 - Pin this app to your IPFS node to help decentralisation

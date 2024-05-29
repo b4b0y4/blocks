@@ -114,7 +114,9 @@ const predefinedLibraries = {
   custom: "",
 }
 
-// List of works
+/***************************************************
+ *         FUNCTIONS TO UPDATE THE LIST
+ **************************************************/
 const list = [
   "0 - Chromie Squiggle / Snowfro - 9998 minted",
   "1 - Genesis / DCA - 512 minted",
@@ -782,6 +784,77 @@ const list = [
   "HODL 17 - Nebulous / KRANKARTA - 20 minted",
   "FAB 0 - Giving Shape / ippsketch - 98 minted",
 ]
+
+function getContract(contract) {
+  const contractNames = {
+    3: "EXP",
+    4: "ABXPACE",
+    5: "ABXPACE",
+    6: "ABXBM",
+    7: "BM",
+    8: "BM",
+    9: "CITIZEN",
+    10: "PLOT",
+    11: "PLOTII",
+    12: "STBYS",
+    13: "ATP",
+    14: "GRAIL",
+    15: "AOI",
+    16: "VCA",
+    17: "SDAO",
+    18: "MINTS",
+    19: "TDG",
+    20: "VFA",
+    21: "UNITLDN",
+    22: "TRAME",
+    23: "HODL",
+    24: "FAB",
+    25: "ABS",
+    26: "ABSI",
+  }
+
+  return contractNames[contract] || ""
+}
+
+// fetchBlocks()
+async function fetchBlocks() {
+  let token
+  // CONTRACTS
+  for (let n = 2; n < 3; n++) {
+    let newList = []
+    // PROJECT ID
+    for (
+      let i =
+        n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0;
+      i < 500;
+      i++
+    ) {
+      let contractName = getContract(n)
+      const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(n)
+      try {
+        const detail = await contracts[n].projectDetails(i.toString())
+        const tkns = isContractV2
+          ? await contracts[n].projectTokenInfo(i)
+          : await contracts[n].projectStateData(i)
+
+        if (tkns.invocations) {
+          newList.push(
+            `${contractName} ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+          )
+          token = 0
+        } else {
+          console.log(`No tokens found for project ${contractName} ${i}`)
+          token++
+          if (token == 5) break
+        }
+      } catch (error) {
+        console.log(`Error fetching data for project ${contractName}${i}`)
+        break
+      }
+    }
+    console.log(newList)
+  }
+}
 
 /***************************************************
  *              DARK/LIGHT MODE TOGGLE
@@ -1523,77 +1596,3 @@ search.addEventListener("input", () => {
 overlay.addEventListener("click", () => {
   clearPanels()
 })
-
-/***************************************************
- *         FUNCTIONS TO UPDATE THE LIST
- **************************************************/
-function getContract(contract) {
-  const contractNames = {
-    3: "EXP",
-    4: "ABXPACE",
-    5: "ABXPACE",
-    6: "ABXBM",
-    7: "BM",
-    8: "BM",
-    9: "CITIZEN",
-    10: "PLOT",
-    11: "PLOTII",
-    12: "STBYS",
-    13: "ATP",
-    14: "GRAIL",
-    15: "AOI",
-    16: "VCA",
-    17: "SDAO",
-    18: "MINTS",
-    19: "TDG",
-    20: "VFA",
-    21: "UNITLDN",
-    22: "TRAME",
-    23: "HODL",
-    24: "FAB",
-    25: "ABS",
-    26: "ABSI",
-  }
-
-  return contractNames[contract] || ""
-}
-
-// fetchBlocks()
-async function fetchBlocks() {
-  let token
-  // CONTRACTS
-  for (let n = 2; n < 3; n++) {
-    let newList = []
-    // PROJECT ID
-    for (
-      let i =
-        n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0;
-      i < 500;
-      i++
-    ) {
-      let contractName = getContract(n)
-      const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(n)
-      try {
-        const detail = await contracts[n].projectDetails(i.toString())
-        const tkns = isContractV2
-          ? await contracts[n].projectTokenInfo(i)
-          : await contracts[n].projectStateData(i)
-
-        if (tkns.invocations) {
-          newList.push(
-            `${contractName} ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-          )
-          token = 0
-        } else {
-          console.log(`No tokens found for project ${contractName} ${i}`)
-          token++
-          if (token == 5) break
-        }
-      } catch (error) {
-        console.log(`Error fetching data for project ${contractName}${i}`)
-        break
-      }
-    }
-    console.log(newList)
-  }
-}
