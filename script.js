@@ -1267,14 +1267,14 @@ function handleCommaSeparatedQuery(searchQuery) {
     .split(",")
     .map((str) => str.trim().toUpperCase())
   const tokenId = Number(tokenIdStr)
-  let contract = getContractFromList(query2, tokenId)
+  const contract = getContractFromList(query2, tokenId)
 
   logAndGrabData(tokenId, contract)
 }
 
 function handleNumericQuery(searchQuery) {
   const tokenId = Number(searchQuery)
-  let contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
+  const contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
 
   logAndGrabData(tokenId, contract)
 }
@@ -1291,27 +1291,27 @@ function handleHashTagQuery(searchQuery) {
 }
 
 function handleOtherQuery(textContent, searchQuery) {
-  let tokenId
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
-  const listContract = textContent.match(regex)[1]
-  const projId = parseInt(textContent.match(regex)[2])
+  const [_, listContract, projIdStr, tokenStr] = textContent.match(regex)
+  const projId = parseInt(projIdStr)
+  const token = parseInt(tokenStr)
 
-  if (!searchQuery.includes("#")) {
-    const token = parseInt(textContent.match(regex)[3])
-    const randomToken = Math.floor(Math.random() * token)
-    tokenId =
-      projId == 0
-        ? randomToken
-        : Number((projId * 1000000 + randomToken).toString().padStart(6, "0"))
-  } else {
+  let tokenId
+  if (searchQuery.includes("#")) {
     const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
     tokenId =
-      projId == 0
+      projId === 0
         ? searchId
         : Number((projId * 1000000 + searchId).toString().padStart(6, "0"))
+  } else {
+    const randomToken = Math.floor(Math.random() * token)
+    tokenId =
+      projId === 0
+        ? randomToken
+        : Number((projId * 1000000 + randomToken).toString().padStart(6, "0"))
   }
 
-  let contract = getContractFromList(listContract, tokenId)
+  const contract = getContractFromList(listContract, tokenId)
 
   logAndGrabData(tokenId, contract)
 }
