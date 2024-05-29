@@ -1255,7 +1255,7 @@ function getToken(panelContent, searchQuery) {
     handleCommaSeparatedQuery(searchQuery)
   } else if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery)
-  } else if (searchQuery.includes("#")) {
+  } else if (searchQuery.startsWith("#")) {
     handleHashTagQuery(searchQuery)
   } else {
     handleOtherQuery(textContent, searchQuery)
@@ -1266,36 +1266,28 @@ function handleCommaSeparatedQuery(searchQuery) {
   const [tokenIdStr, query2] = searchQuery
     .split(",")
     .map((str) => str.trim().toUpperCase())
-
   const tokenId = Number(tokenIdStr)
   let contract = getContractFromList(query2, tokenId)
 
-  console.log("Contract:", contract)
-  console.log("Token Id:", tokenId)
-  grabData(tokenId, contract)
+  logAndGrabData(tokenId, contract)
 }
 
 function handleNumericQuery(searchQuery) {
   const tokenId = Number(searchQuery)
   let contract = tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2
 
-  console.log("Contract:", contract)
-  console.log("Token Id:", tokenId)
-  grabData(tokenId, contract)
+  logAndGrabData(tokenId, contract)
 }
 
 function handleHashTagQuery(searchQuery) {
-  const contract = contractData.contract
-  const projId = contractData.projId
+  const { contract, projId } = contractData
   const id = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
   const tokenId =
     projId == 0
       ? id
       : Number((projId * 1000000 + id).toString().padStart(6, "0"))
 
-  console.log("Contract:", contract)
-  console.log("Token Id:", tokenId)
-  grabData(tokenId, contract)
+  logAndGrabData(tokenId, contract)
 }
 
 function handleOtherQuery(textContent, searchQuery) {
@@ -1321,9 +1313,7 @@ function handleOtherQuery(textContent, searchQuery) {
 
   let contract = getContractFromList(listContract, tokenId)
 
-  console.log("Contract:", contract)
-  console.log("Token Id:", tokenId)
-  grabData(tokenId, contract)
+  logAndGrabData(tokenId, contract)
 }
 
 function getContractFromList(contract, tokenId) {
@@ -1356,6 +1346,12 @@ function getContractFromList(contract, tokenId) {
     contractMap[contract] ??
     (tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2)
   )
+}
+
+function logAndGrabData(tokenId, contract) {
+  console.log("Contract:", contract)
+  console.log("Token Id:", tokenId)
+  grabData(tokenId, contract)
 }
 
 /***************************************************
