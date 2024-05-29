@@ -2,16 +2,16 @@
   --color-bg: #ececef;
   --color-txt: #5c5c5c;
   --color-btn: #969697;
-  --color-hvr: #e2e3e4;
-  --color-key: #d3d3d4;
+  --color-hvr: #d3d3d4;
+  --color-key: #c6c6c6;
 }
 
 :root.dark-mode {
   --color-bg: #212122;
   --color-txt: #adadae;
   --color-btn: #818182;
-  --color-hvr: #2d2e36;
-  --color-key: #3e3e45;
+  --color-hvr: #3e3e45;
+  --color-key: #36363f;
 }
 
 .no-flash {
