@@ -1306,8 +1306,12 @@ function getContractFromList(contract, tokenId) {
     if (event.key === "ArrowDown") {
       selectedIndex = (selectedIndex + 1) % filteredList.length
     } else if (event.key === "ArrowUp") {
-      selectedIndex =
-        (selectedIndex - 1 + filteredList.length) % filteredList.length
+      if (selectedIndex === -1) {
+        selectedIndex = filteredList.length - 1
+      } else {
+        selectedIndex =
+          (selectedIndex - 1 + filteredList.length) % filteredList.length
+      }
     } else if (event.key === "Enter") {
       if (selectedIndex !== -1) {
         console.log("Item clicked:", filteredList[selectedIndex])

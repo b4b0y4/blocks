@@ -87,6 +87,7 @@ a {
   color: var(--color-btn);
   transition: color 0.1s ease-in-out;
   outline: none;
+  cursor: default;
 }
 
 a:hover {
