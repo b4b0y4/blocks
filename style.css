@@ -84,6 +84,10 @@ body {
   padding: 5px;
 }
 
+.interaction-container.inactive {
+  display: none;
+}
+
 ::placeholder {
   color: var(--color-btn);
 }
@@ -118,14 +122,6 @@ a {
 
 a:hover {
   color: var(--color-txt);
-}
-
-.interaction-container {
-  display: block;
-}
-
-.interaction-container.inactive {
-  display: none;
 }
 
 .rpc-url {
