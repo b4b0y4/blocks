@@ -38,24 +38,17 @@ body {
   overflow: hidden;
 }
 
-.favorite {
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-}
-
 #toggleBox {
   position: absolute;
   top: 15px;
   right: 10px;
   border: none;
-  color: transparent;
+  color: var(--color-btn);
+  opacity: 0;
   background-color: transparent;
   font-size: 1.1em;
   border-radius: 50%;
-  transition: color 0.1s ease-in-out;
+  transition: opacity 0.1s ease-in-out;
 }
 
 .loop-box {
@@ -68,16 +61,21 @@ body {
   transition: opacity 0.3s ease-in-out;
 }
 
+.loop-box:hover,
+#toggleBox:hover {
+  opacity: 0.95;
+}
+
 #loop-input {
   font-size: 0.85em;
-  padding: 5px 5px 5px 53px;
+  padding: 5px 5px 5px 50px;
   border-radius: 5px;
   border: 0.5px solid var(--color-btn);
   outline: none;
   background-color: var(--color-hvr);
   color: var(--color-btn);
   width: 40px;
-  text-align: start;
+  text-align: center;
 }
 
 #loop {
@@ -109,14 +107,6 @@ body {
 #loop:hover,
 #favLoop:hover {
   color: var(--color-txt);
-}
-
-.loop-box:hover {
-  opacity: 0.95;
-}
-
-#toggleBox:hover {
-  color: var(--color-btn);
 }
 
 .frame-container {
