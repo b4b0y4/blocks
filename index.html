@@ -18,15 +18,17 @@
 
 <body>
   <div class="container">
+    <div class="loop-box">
+      <input type="text" id="loop-input" placeholder="" autocomplete="off">
+      <button id="loop">
+        <i class="fa-solid fa-repeat"></i>
+      </button>
+      <button id="favLoop"><i class="fa-solid fa-heart-circle-check"></i></button>
+    </div>
+    <div class="favorite">
+      <button id="fav"><i class="fa-solid fa-bookmark"></i></button>
+    </div>
     <button id="toggleBox"><i class="fa-solid fa-eye-slash"></i></button>
-    <button id="loop">
-      <i class="fa-solid fa-repeat"></i>
-      <div class="dropdown-content">
-        <a href="#" data-interval="5">5 min</a>
-        <a href="#" data-interval="30">30 min</a>
-        <a href="#" data-interval="60">60 min</a>
-      </div>
-    </button>
     <div class="frame-container">
       <iframe id="frame" class="frame" src="about:blank"></iframe>
     </div>

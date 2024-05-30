@@ -1446,35 +1446,49 @@ function stopLoopRandom() {
 function checkLocalStorage() {
   const storedLoopState = localStorage.getItem("isLooping")
   const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
+  const storedIntervalMinutes = storedInterval ? storedInterval / 60000 : ""
+  document.getElementById("loop-input").placeholder =
+    storedIntervalMinutes !== "" ? `${storedIntervalMinutes}min` : "1min"
   if (storedLoopState === "true" && storedInterval) {
     loopRandom(storedInterval)
     interaction.classList.add("inactive")
   }
 }
 
-function handleLoopClick(interval) {
-  if (!isLooping) {
-    loopRandom(interval)
-    interaction.classList.add("inactive")
+function handleLoopClick() {
+  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
+  let inputValue = document.getElementById("loop-input").value.trim()
+
+  const inputVal = inputValue !== "" ? parseInt(inputValue, 10) : 1
+
+  const interval =
+    storedInterval && (inputValue === "" || storedInterval === inputVal * 60000)
+      ? storedInterval
+      : inputVal * 60000
+
+  if (!isNaN(interval) && interval > 0) {
+    if (!isLooping) {
+      loopRandom(interval)
+      interaction.classList.add("inactive")
+    } else {
+      stopLoopRandom()
+      interaction.classList.remove("inactive")
+    }
   } else {
-    stopLoopRandom()
-    interaction.classList.remove("inactive")
+    if (!isLooping) {
+      alert("Please enter a valid positive number for the interval.")
+    } else {
+      stopLoopRandom()
+      interaction.classList.remove("inactive")
+    }
+  }
+
+  if (inputValue !== "" && interval !== storedInterval) {
+    localStorage.setItem("loopInterval", interval)
   }
 }
 
-document
-  .getElementById("loop")
-  .addEventListener("click", () => handleLoopClick(60000))
-
-document.querySelectorAll(".dropdown-content a").forEach((item) => {
-  item.addEventListener("click", (event) => {
-    event.preventDefault()
-    const interval =
-      parseInt(event.target.getAttribute("data-interval"), 10) * 60000
-    localStorage.setItem("loopInterval", interval)
-    handleLoopClick(interval)
-  })
-})
+document.getElementById("loop").addEventListener("click", handleLoopClick)
 
 /***************************************************
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
@@ -1517,6 +1531,46 @@ async function saveContentAsHtml() {
 }
 
 save.addEventListener("click", saveContentAsHtml)
+
+async function saveContentToLocal() {
+  let id = getShortenedId(contractData.tokenId)
+  const key = `${contractData.detail[0]} #${id}`
+
+  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
+  favorite[key] = contractData
+  localStorage.setItem("favorite", JSON.stringify(favorite))
+}
+
+document.getElementById("fav").addEventListener("click", saveContentToLocal)
+
+function getRandomContent() {
+  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
+  const keys = Object.keys(favorite)
+
+  if (keys.length > 0) {
+    const randomKey = keys[Math.floor(Math.random() * keys.length)]
+
+    clearLocalStorage()
+
+    contractData = favorite[randomKey]
+    localStorage.setItem("contractData", JSON.stringify(contractData))
+
+    location.reload()
+  } else {
+    console.log("No favorite content found.")
+  }
+}
+
+document.getElementById("favLoop").addEventListener("click", () => {
+  if (intervalId) {
+    clearInterval(intervalId)
+    intervalId = null
+    console.log("Random content loop stopped.")
+  } else {
+    intervalId = setInterval(getRandomContent, 30000)
+    console.log("Random content loop started.")
+  }
+})
 
 /***************************************************
  *                     EVENTS

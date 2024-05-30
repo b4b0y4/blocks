@@ -38,9 +38,18 @@ body {
   overflow: hidden;
 }
 
-#toggleBox,
-#loop {
+.favorite {
   position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+#toggleBox {
+  position: absolute;
+  top: 15px;
+  right: 10px;
   border: none;
   color: transparent;
   background-color: transparent;
@@ -49,42 +58,64 @@ body {
   transition: color 0.1s ease-in-out;
 }
 
-#toggleBox {
+.loop-box {
+  position: absolute;
   top: 15px;
-  right: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#loop-input {
+  font-size: 0.85em;
+  padding: 5px 5px 5px 53px;
+  border-radius: 5px;
+  border: 0.5px solid var(--color-btn);
+  outline: none;
+  background-color: var(--color-hvr);
+  color: var(--color-btn);
+  width: 40px;
+  text-align: start;
 }
 
 #loop {
-  top: 15px;
-  left: 10px;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: var(--color-bg);
+  border: none;
   color: var(--color-btn);
-  opacity: 0.95;
-  font-size: 0.85em;
-  border-radius: 10px;
-  min-width: 60px;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  background-color: transparent;
+  font-size: 1em;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
   left: 0;
+  transform: translateY(-50%);
+  transition: color 0.1s ease-in-out;
 }
 
-.dropdown-content a {
-  padding: 2px 5px;
-  text-decoration: none;
-  display: block;
+#favLoop {
+  border: none;
+  color: var(--color-btn);
+  background-color: transparent;
+  font-size: 1em;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 23px;
+  transform: translateY(-50%);
+  transition: color 0.1s ease-in-out;
 }
 
-#loop:hover .dropdown-content {
-  display: block;
+#loop:hover,
+#favLoop:hover {
+  color: var(--color-txt);
 }
 
-#toggleBox:hover,
-#loop:hover {
+.loop-box:hover {
+  opacity: 0.95;
+}
+
+#toggleBox:hover {
   color: var(--color-btn);
 }
 
