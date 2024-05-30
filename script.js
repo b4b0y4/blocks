@@ -1249,12 +1249,10 @@ async function injectFrame() {
  *            FUNCTIONS TO GET TOKEN
  **************************************************/
 function getToken(line, searchQuery) {
-  const cleanLine = line.replace(/<\/?[^>]+(>|$)/g, "")
-
   if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery)
   } else {
-    handleOtherQuery(cleanLine, searchQuery)
+    handleOtherQuery(line, searchQuery)
   }
 }
 
@@ -1269,9 +1267,9 @@ function handleNumericQuery(searchQuery) {
   logAndGrabData(tokenId, contract)
 }
 
-function handleOtherQuery(cleanLine, searchQuery) {
+function handleOtherQuery(line, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
-  const [_, listContract, projIdStr, tokenStr] = cleanLine.match(regex)
+  const [_, listContract, projIdStr, tokenStr] = line.match(regex)
   const projId = parseInt(projIdStr)
   const token = parseInt(tokenStr)
 
