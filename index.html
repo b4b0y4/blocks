@@ -19,7 +19,14 @@
 <body>
   <div class="container">
     <button id="toggleBox"><i class="fa-solid fa-eye-slash"></i></button>
-    <button id="loop"><i class="fa-solid fa-repeat"></i></button>
+    <button id="loop">
+      <i class="fa-solid fa-repeat"></i>
+      <div class="dropdown-content">
+        <a href="#" data-interval="5">5 min</a>
+        <a href="#" data-interval="30">30 min</a>
+        <a href="#" data-interval="60">60 min</a>
+      </div>
+    </button>
     <div class="frame-container">
       <iframe id="frame" class="frame" src="about:blank"></iframe>
     </div>
@@ -66,8 +73,7 @@
         </ul>
         <li>Click <i class="fa-solid fa-eye-slash"></i> on the upper right-hand corner to hide the info.
         </li>
-        <li>Click <i class="fa-solid fa-repeat"></i> on the upper left-hand corner to enter a random loop (5min
-          interval).
+        <li>Click <i class="fa-solid fa-repeat"></i> on the upper left-hand corner to enter a random loop.
         </li>
         <li>Press <span class="key">\</span> to clear the page.</li>
         <li>Pin this app to your IPFS node to

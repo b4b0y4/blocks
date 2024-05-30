@@ -1412,19 +1412,27 @@ displayList(list)
  **************************************************/
 function getRandom(lines) {
   const randomLine = lines[Math.floor(Math.random() * lines.length)]
-
   console.log("Randomly selected line:", randomLine)
   getToken(randomLine, "")
 }
 
+document.getElementById("randomButton").addEventListener("click", () => {
+  getRandom(list)
+})
+
+/***************************************************
+ *                  LOOP FUNCTIONS
+ **************************************************/
 let intervalId
 let isLooping = false
 
-function loopRandom() {
+function loopRandom(interval) {
+  clearInterval(intervalId)
+  localStorage.setItem("loopInterval", interval)
   localStorage.getItem("isLooping") !== "true" && getRandom(list)
   intervalId = setInterval(() => {
     getRandom(list)
-  }, 300000)
+  }, interval)
   localStorage.setItem("isLooping", true)
   isLooping = true
 }
@@ -1437,24 +1445,35 @@ function stopLoopRandom() {
 
 function checkLocalStorage() {
   const storedLoopState = localStorage.getItem("isLooping")
-  if (storedLoopState === "true") {
-    loopRandom()
+  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
+  if (storedLoopState === "true" && storedInterval) {
+    loopRandom(storedInterval)
     interaction.classList.add("inactive")
   }
 }
 
-document.getElementById("randomButton").addEventListener("click", () => {
-  getRandom(list)
-})
-
-document.getElementById("loop").addEventListener("click", () => {
+function handleLoopClick(interval) {
   if (!isLooping) {
-    loopRandom()
+    loopRandom(interval)
     interaction.classList.add("inactive")
   } else {
     stopLoopRandom()
     interaction.classList.remove("inactive")
   }
+}
+
+document
+  .getElementById("loop")
+  .addEventListener("click", () => handleLoopClick(60000))
+
+document.querySelectorAll(".dropdown-content a").forEach((item) => {
+  item.addEventListener("click", (event) => {
+    event.preventDefault()
+    const interval =
+      parseInt(event.target.getAttribute("data-interval"), 10) * 60000
+    localStorage.setItem("loopInterval", interval)
+    handleLoopClick(interval)
+  })
 })
 
 /***************************************************
