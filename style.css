@@ -234,6 +234,12 @@ a:hover {
   background-color: var(--color-hvr);
 }
 
+.list-item span {
+  font-size: 0.85em;
+  color: var(--color-btn);
+  margin-left: 10px;
+}
+
 .mini {
   font-size: 0.85em;
 }

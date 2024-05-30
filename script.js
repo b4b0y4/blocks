@@ -1248,13 +1248,13 @@ async function injectFrame() {
 /***************************************************
  *            FUNCTIONS TO GET TOKEN
  **************************************************/
-function getToken(panelContent, searchQuery) {
-  const textContent = panelContent.replace(/<\/?[^>]+(>|$)/g, "")
+function getToken(line, searchQuery) {
+  const cleanLine = line.replace(/<\/?[^>]+(>|$)/g, "")
 
   if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery)
   } else {
-    handleOtherQuery(textContent, searchQuery)
+    handleOtherQuery(cleanLine, searchQuery)
   }
 }
 
@@ -1269,9 +1269,9 @@ function handleNumericQuery(searchQuery) {
   logAndGrabData(tokenId, contract)
 }
 
-function handleOtherQuery(textContent, searchQuery) {
+function handleOtherQuery(cleanLine, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
-  const [_, listContract, projIdStr, tokenStr] = textContent.match(regex)
+  const [_, listContract, projIdStr, tokenStr] = cleanLine.match(regex)
   const projId = parseInt(projIdStr)
   const token = parseInt(tokenStr)
 
@@ -1341,9 +1341,12 @@ let selectedIndex = -1
 
 function displayList(lines) {
   const panel = lines
-    .map(
-      (line, index) => `<p class="list-item" data-index="${index}">${line}</p>`
-    )
+    .map((line, index) => {
+      const parts = line.split(" - ")
+      const displayText = parts.slice(1, parts.length - 1).join(" - ")
+      const mintedInfo = parts[parts.length - 1].replace("minted", "items")
+      return `<p class="list-item" data-index="${index}">${displayText}<span>${mintedInfo}</span></p>`
+    })
     .join("")
   listPanel.innerHTML = `<div>${panel}</div>`
 }
@@ -1360,6 +1363,7 @@ function handleItemClick(event) {
   const selectedIndex = event.target.getAttribute("data-index")
   console.log("Item clicked:", filteredList[selectedIndex])
   getToken(filteredList[selectedIndex], "")
+  search.value = ""
 }
 
 function handleKeyboardNavigation(event) {
@@ -1378,7 +1382,7 @@ function handleKeyboardNavigation(event) {
       getToken(filteredList[selectedIndex], "")
     } else {
       const query = search.value.trim()
-      query === "" ? getRandom(list) : getToken(listPanel.innerHTML, query)
+      query === "" ? getRandom(list) : getToken(filteredList.join("\n"), query)
     }
     search.value = ""
   }
