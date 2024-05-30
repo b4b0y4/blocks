@@ -38,6 +38,29 @@ body {
   overflow: hidden;
 }
 
+#toggleBox,
+#loop {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  border: none;
+  color: transparent;
+  background-color: transparent;
+  font-size: 1.1em;
+  border-radius: 50%;
+  transition: color 0.1s ease-in-out;
+}
+
+#loop {
+  top: 15px;
+  right: 40px;
+}
+
+#toggleBox:hover,
+#loop:hover {
+  color: var(--color-btn);
+}
+
 .frame-container {
   height: 100%;
 }
@@ -92,6 +115,14 @@ a {
 
 a:hover {
   color: var(--color-txt);
+}
+
+.interaction-container {
+  display: block;
+}
+
+.interaction-container.inactive {
+  display: none;
 }
 
 .rpc-url {

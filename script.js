@@ -1416,8 +1416,45 @@ function getRandom(lines) {
   getToken(randomLine, "")
 }
 
+let intervalId
+let isLooping = false
+
+function loopRandom() {
+  intervalId = setInterval(() => {
+    getRandom(list)
+  }, 60000) // 60000 milliseconds = 1 minute
+  localStorage.setItem("isLooping", true)
+  isLooping = true
+}
+
+function stopLoopRandom() {
+  clearInterval(intervalId)
+  localStorage.setItem("isLooping", "false")
+  isLooping = false
+}
+
+function checkLocalStorage() {
+  const storedLoopState = localStorage.getItem("isLooping")
+  if (storedLoopState === "true") {
+    loopRandom()
+    document.querySelector(".interaction-container").classList.add("inactive")
+  }
+}
+
 document.getElementById("randomButton").addEventListener("click", () => {
   getRandom(list)
+})
+
+document.getElementById("loop").addEventListener("click", () => {
+  if (!isLooping) {
+    loopRandom()
+    document.querySelector(".interaction-container").classList.add("inactive")
+  } else {
+    stopLoopRandom()
+    document
+      .querySelector(".interaction-container")
+      .classList.remove("inactive")
+  }
 })
 
 /***************************************************
@@ -1471,6 +1508,8 @@ window.addEventListener("DOMContentLoaded", () => {
   if (contractData) {
     update(...Object.values(contractData))
   }
+
+  checkLocalStorage()
 
   const value = contractData ? "block" : "none"
   inc.style.display = value
@@ -1567,4 +1606,8 @@ search.addEventListener("input", () => {
 
 overlay.addEventListener("click", () => {
   clearPanels()
+})
+
+document.getElementById("toggleBox").addEventListener("click", () => {
+  document.querySelector(".interaction-container").classList.toggle("inactive")
 })
