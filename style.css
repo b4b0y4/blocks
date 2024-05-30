@@ -41,8 +41,6 @@ body {
 #toggleBox,
 #loop {
   position: absolute;
-  top: 15px;
-  right: 10px;
   border: none;
   color: transparent;
   background-color: transparent;
@@ -51,9 +49,14 @@ body {
   transition: color 0.1s ease-in-out;
 }
 
+#toggleBox {
+  top: 15px;
+  right: 10px;
+}
+
 #loop {
   top: 15px;
-  right: 40px;
+  left: 10px;
 }
 
 #toggleBox:hover,
