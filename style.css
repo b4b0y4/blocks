@@ -130,8 +130,8 @@ a:hover {
 
 .rpc-url {
   display: none;
-  width: 250px;
-  margin-right: 10px;
+  width: 100%;
+  margin-top: 10px;
   border: none;
   background-color: var(--color-hvr);
   color: var(--color-btn);
@@ -141,6 +141,7 @@ a:hover {
   padding: 5px;
   outline: 0.5px solid transparent;
   transition: outline-color 0.1s ease-in-out;
+  box-sizing: border-box;
 }
 
 .info-box {
@@ -247,6 +248,7 @@ a:hover {
 
 .instruction {
   display: none;
+  bottom: 8px;
   opacity: 0.95;
   pointer-events: auto;
 }

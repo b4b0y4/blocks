@@ -37,6 +37,7 @@ import {
 const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
+const interaction = document.querySelector(".interaction-container")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
 const save = document.getElementById("saveBtn")
@@ -1420,9 +1421,10 @@ let intervalId
 let isLooping = false
 
 function loopRandom() {
+  localStorage.getItem("isLooping") !== "true" && getRandom(list)
   intervalId = setInterval(() => {
     getRandom(list)
-  }, 60000) // 60000 milliseconds = 1 minute
+  }, 300000)
   localStorage.setItem("isLooping", true)
   isLooping = true
 }
@@ -1437,7 +1439,7 @@ function checkLocalStorage() {
   const storedLoopState = localStorage.getItem("isLooping")
   if (storedLoopState === "true") {
     loopRandom()
-    document.querySelector(".interaction-container").classList.add("inactive")
+    interaction.classList.add("inactive")
   }
 }
 
@@ -1448,12 +1450,10 @@ document.getElementById("randomButton").addEventListener("click", () => {
 document.getElementById("loop").addEventListener("click", () => {
   if (!isLooping) {
     loopRandom()
-    document.querySelector(".interaction-container").classList.add("inactive")
+    interaction.classList.add("inactive")
   } else {
     stopLoopRandom()
-    document
-      .querySelector(".interaction-container")
-      .classList.remove("inactive")
+    interaction.classList.remove("inactive")
   }
 })
 
@@ -1527,7 +1527,6 @@ window.addEventListener("load", () => {
 rpcUrlInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     localStorage.setItem("rpcUrl", rpcUrlInput.value)
-    rpcUrlInput.style.display = "none"
     location.reload()
   }
 })
@@ -1609,5 +1608,5 @@ overlay.addEventListener("click", () => {
 })
 
 document.getElementById("toggleBox").addEventListener("click", () => {
-  document.querySelector(".interaction-container").classList.toggle("inactive")
+  interaction.classList.toggle("inactive")
 })
