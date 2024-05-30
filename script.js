@@ -820,7 +820,7 @@ function getContract(contract) {
 async function fetchBlocks() {
   let token
   // CONTRACTS
-  for (let n = 2; n < 3; n++) {
+  for (let n = 17; n < 26; n++) {
     let newList = []
     // PROJECT ID
     for (
