@@ -730,7 +730,7 @@ const list = [
   "PLOT 24 - Lissajous / Michael G Devereux - 13 minted",
   "PLOT 25 - Happenstance II: Framed / Generative Artworks - 16 minted",
   "PLOT 26 - Field Recordings / Jacob Gold - 15 minted",
-  "PLOTII 0 - Time Between the Lines is Thread Through the Mind / Matto - 38 minted",
+  "PLOTII 0 - Time Between the Lines is Thread Through the Mind / Matto - 40 minted",
   "STBYS 0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted",
   "ATP 0 - LOVE / Martin Grasser - 300 minted",
   "GRAIL 1 - Fold / rudxane - 400 minted",
