@@ -1189,19 +1189,6 @@ async function injectFrame() {
 
     const frameHead = `<head>
     <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-    <script>
-    document.addEventListener("keypress", (event) => {
-      if (event.key === "/") {
-        window.parent.postMessage(
-          {
-            type: "keypress",
-            key: event.key,
-          },
-          "*"
-        )
-      }
-    })
-    </script>
     <script src='${scriptData.src}'></script>
     <script>${scriptData.tokenIdHash};</script>
     <style type="text/css">
@@ -1690,17 +1677,13 @@ function togglePanel(panelElement) {
   }
 }
 
-function handleSlashKey(event) {
-  event.preventDefault()
-  search.focus()
-  togglePanel(listPanel)
-  panel.classList.remove("active")
-  favPanel.classList.remove("active")
-}
-
 document.addEventListener("keypress", (event) => {
-  if (event.key === "/" && document.activeElement !== search) {
-    handleSlashKey(event)
+  if (event.key === "/") {
+    event.preventDefault()
+    search.focus()
+    togglePanel(listPanel)
+    panel.classList.remove("active")
+    favPanel.classList.remove("active")
   }
 })
 
