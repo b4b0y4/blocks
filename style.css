@@ -38,26 +38,33 @@ body {
   overflow: hidden;
 }
 
+#saveBtn,
 #toggleBox,
 #favList {
   position: absolute;
-  right: 10px;
   border: none;
   color: var(--color-btn);
   opacity: 0;
   background-color: transparent;
   outline: none;
-  font-size: 1.1em;
+  font-size: 1.2em;
   border-radius: 50%;
   transition: opacity 0.1s ease-in-out;
 }
 
+#saveBtn {
+  bottom: 45px;
+  left: 10px;
+}
+
 #toggleBox {
   top: 15px;
+  right: 10px;
 }
 
 #favList {
   bottom: 45px;
+  right: 10px;
 }
 
 .loop-box {
@@ -72,7 +79,8 @@ body {
 
 .loop-box:hover,
 #toggleBox:hover,
-#favList:hover {
+#favList:hover,
+#saveBtn:hover {
   opacity: 0.95;
 }
 
@@ -154,11 +162,11 @@ p {
 
 ul {
   padding-left: 15px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 li {
-  line-height: 1.8em;
+  line-height: 1.5em;
 }
 
 .key {
@@ -223,7 +231,6 @@ a:hover {
   align-items: center;
 }
 
-.save,
 .random,
 .previous,
 .next {
@@ -233,7 +240,7 @@ a:hover {
   padding: 3.75px 6.5px 2.75px;
   border: none;
   border-radius: 5px;
-  margin: 0 5px;
+  margin: 0 10px;
   cursor: default;
   z-index: 100;
   transition: background-color 0.1s ease-in-out;
@@ -241,14 +248,13 @@ a:hover {
 }
 
 .previous {
-  margin: 0 3px 0 5px;
+  margin: 0 0 0 10px;
 }
 
 .next {
-  margin: 0 5px 0 3px;
+  margin: 0 10px 0 0;
 }
 
-.save:hover,
 .random:hover,
 .previous:hover,
 .next:hover {
@@ -458,14 +464,12 @@ a:hover {
     padding-left: 30px;
   }
 
-  .save,
   .random,
   .previous,
   .next {
     font-size: 1.2em;
   }
 
-  .save:hover,
   .random:hover,
   .previous:hover,
   .next:hover {
