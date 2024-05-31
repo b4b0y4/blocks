@@ -879,7 +879,7 @@ async function grabData(tokenId, contract) {
   try {
     keyShort.style.display = "none"
     spin.style.display = "block"
-    clearLocalStorage()
+    clearDataStorage()
     clearPanels()
 
     const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(contract)
@@ -976,7 +976,7 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
 /***************************************************
  *              CLEAR FUNCTIONS
  **************************************************/
-function clearLocalStorage() {
+function clearDataStorage() {
   localStorage.removeItem("contractData")
   localStorage.removeItem("scriptData")
 }
@@ -985,6 +985,12 @@ function clearPanels() {
   listPanel.classList.remove("active")
   panel.classList.remove("active")
   overlay.style.display = "none"
+}
+
+function clearLoops() {
+  localStorage.removeItem("isLooping")
+  localStorage.removeItem("loopInterval")
+  localStorage.removeItem("loopAction")
 }
 
 /***************************************************
@@ -1408,12 +1414,29 @@ listPanel.addEventListener("click", handleItemClick)
 displayList(list)
 
 /***************************************************
- *   FUNCTIONS TO GET RANDOM LINE FROM THE LIST
+ *              RANDOMNESS FUNCTIONS
  **************************************************/
 function getRandom(lines) {
   const randomLine = lines[Math.floor(Math.random() * lines.length)]
   console.log("Randomly selected line:", randomLine)
   getToken(randomLine, "")
+}
+
+function getRandomKey(favorite) {
+  const keys = Object.keys(favorite)
+
+  if (keys.length > 0) {
+    const randomKey = keys[Math.floor(Math.random() * keys.length)]
+
+    clearDataStorage()
+
+    contractData = favorite[randomKey]
+    localStorage.setItem("contractData", JSON.stringify(contractData))
+
+    location.reload()
+  } else {
+    console.log("No favorite content found.")
+  }
 }
 
 document.getElementById("randomButton").addEventListener("click", () => {
@@ -1426,42 +1449,57 @@ document.getElementById("randomButton").addEventListener("click", () => {
 let intervalId
 let isLooping = false
 
-function loopRandom(interval) {
+function loopRandom(interval, action) {
   clearInterval(intervalId)
 
-  localStorage.setItem("loopInterval", interval)
-  localStorage.getItem("isLooping") !== "true" && getRandom(list)
+  const favorite = JSON.parse(localStorage.getItem("favorite") || "{}")
+
+  if (localStorage.getItem("isLooping") !== "true") {
+    if (action === "loop") {
+      getRandom(list)
+    } else if (action === "favLoop") {
+      getRandomKey(favorite)
+    }
+  }
 
   intervalId = setInterval(() => {
-    getRandom(list)
+    if (action === "loop") {
+      getRandom(list)
+    } else if (action === "favLoop") {
+      getRandomKey(favorite)
+    }
   }, interval)
 
-  localStorage.setItem("isLooping", true)
+  localStorage.setItem("loopInterval", interval)
+  localStorage.setItem("loopAction", action)
+  localStorage.setItem("isLooping", "true")
   isLooping = true
 }
 
-function stopLoopRandom() {
+function stopRandomLoop() {
   clearInterval(intervalId)
   localStorage.setItem("isLooping", "false")
+  localStorage.removeItem("loopAction")
   isLooping = false
 }
 
 function checkLocalStorage() {
   const storedLoopState = localStorage.getItem("isLooping")
   const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
+  const storedAction = localStorage.getItem("loopAction")
   const storedIntervalMinutes = storedInterval ? storedInterval / 60000 : ""
   document.getElementById("loop-input").placeholder =
     storedIntervalMinutes !== "" ? `${storedIntervalMinutes}min` : "1min"
 
-  if (storedLoopState === "true" && storedInterval) {
-    loopRandom(storedInterval)
+  if (storedLoopState === "true" && storedInterval && storedAction) {
     interaction.classList.add("inactive")
+    loopRandom(storedInterval, storedAction)
   }
 }
 
-function handleLoopClick() {
-  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
+function handleLoopClick(action) {
   let inputValue = document.getElementById("loop-input").value.trim()
+  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
 
   const inputVal = inputValue !== "" ? parseInt(inputValue, 10) : 1
 
@@ -1472,19 +1510,14 @@ function handleLoopClick() {
 
   if (!isNaN(interval) && interval > 0) {
     if (!isLooping) {
-      loopRandom(interval)
       interaction.classList.add("inactive")
+      loopRandom(interval, action)
     } else {
-      stopLoopRandom()
+      stopRandomLoop()
       interaction.classList.remove("inactive")
     }
   } else {
-    if (!isLooping) {
-      alert("Please enter a valid positive number for the interval.")
-    } else {
-      stopLoopRandom()
-      interaction.classList.remove("inactive")
-    }
+    alert("Please enter a valid positive number for the interval.")
   }
 
   if (inputValue !== "" && interval !== storedInterval) {
@@ -1492,106 +1525,12 @@ function handleLoopClick() {
   }
 }
 
-document.getElementById("loop").addEventListener("click", handleLoopClick)
-
-/***************************************************
- *                FAV LOOP FUNCTIONS
- **************************************************/
-function favLoopRandom(interval) {
-  clearInterval(intervalId)
-
-  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
-
-  localStorage.setItem("loopInterval", interval)
-  localStorage.getItem("isLooping") !== "true" && getRandomKey(favorite)
-
-  intervalId = setInterval(() => {
-    getRandomKey(favorite)
-  }, interval)
-
-  localStorage.setItem("isLooping", true)
-  isLooping = true
-}
-
-function getRandomKey(favorite) {
-  const keys = Object.keys(favorite)
-
-  if (keys.length > 0) {
-    const randomKey = keys[Math.floor(Math.random() * keys.length)]
-
-    clearLocalStorage()
-
-    contractData = favorite[randomKey]
-    localStorage.setItem("contractData", JSON.stringify(contractData))
-
-    location.reload()
-  } else {
-    console.log("No favorite content found.")
-  }
-}
-
-function checkStorage() {
-  const storedLoopState = localStorage.getItem("isLooping")
-  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
-  const storedIntervalMinutes = storedInterval ? storedInterval / 60000 : ""
-  document.getElementById("loop-input").placeholder =
-    storedIntervalMinutes !== "" ? `${storedIntervalMinutes}min` : "1min"
-  if (storedLoopState === "true" && storedInterval) {
-    favLoopRandom(storedInterval)
-    interaction.classList.add("inactive")
-  }
-}
-
-function handleFavLoopClick() {
-  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
-  let inputValue = document.getElementById("loop-input").value.trim()
-
-  const inputVal = inputValue !== "" ? parseInt(inputValue, 10) : 1
-
-  const interval =
-    storedInterval && (inputValue === "" || storedInterval === inputVal * 60000)
-      ? storedInterval
-      : inputVal * 60000
-
-  if (!isNaN(interval) && interval > 0) {
-    if (!isLooping) {
-      favLoopRandom(interval)
-      interaction.classList.add("inactive")
-    } else {
-      stopLoopRandom()
-      interaction.classList.remove("inactive")
-    }
-  } else {
-    if (!isLooping) {
-      alert("Please enter a valid positive number for the interval.")
-    } else {
-      stopLoopRandom()
-      interaction.classList.remove("inactive")
-    }
-  }
-
-  if (inputValue !== "" && interval !== storedInterval) {
-    localStorage.setItem("loopInterval", interval)
-  }
-}
-
-document.getElementById("favLoop").addEventListener("click", handleFavLoopClick)
-
-/***************************************************
- *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
- **************************************************/
-function incrementTokenId() {
-  contractData.tokenId = (contractData.tokenId || 0) + 1
-  grabData(contractData.tokenId, contractData.contract)
-}
-
-function decrementTokenId() {
-  contractData.tokenId = (contractData.tokenId || 0) - 1
-  grabData(contractData.tokenId, contractData.contract)
-}
-
-inc.addEventListener("click", incrementTokenId)
-dec.addEventListener("click", decrementTokenId)
+document
+  .getElementById("loop")
+  .addEventListener("click", () => handleLoopClick("loop"))
+document
+  .getElementById("favLoop")
+  .addEventListener("click", () => handleLoopClick("favLoop"))
 
 /***************************************************
  *          FUNCTION TO SAVE THE OUTPUT
@@ -1628,6 +1567,22 @@ function pushContractDataToStorage(id) {
 save.addEventListener("click", saveOutput)
 
 /***************************************************
+ *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
+ **************************************************/
+function incrementTokenId() {
+  contractData.tokenId = (contractData.tokenId || 0) + 1
+  grabData(contractData.tokenId, contractData.contract)
+}
+
+function decrementTokenId() {
+  contractData.tokenId = (contractData.tokenId || 0) - 1
+  grabData(contractData.tokenId, contractData.contract)
+}
+
+inc.addEventListener("click", incrementTokenId)
+dec.addEventListener("click", decrementTokenId)
+
+/***************************************************
  *                     EVENTS
  **************************************************/
 let contractData = {}
@@ -1638,7 +1593,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   checkLocalStorage()
-  checkStorage()
+  // checkStorage()
 
   const value = contractData ? "block" : "none"
   inc.style.display = value
@@ -1662,7 +1617,7 @@ rpcUrlInput.addEventListener("keypress", (event) => {
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
-    clearLocalStorage()
+    clearDataStorage()
     location.reload()
   }
 })
