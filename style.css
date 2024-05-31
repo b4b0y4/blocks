@@ -46,6 +46,7 @@ body {
   color: var(--color-btn);
   opacity: 0;
   background-color: transparent;
+  outline: none;
   font-size: 1.1em;
   border-radius: 50%;
   transition: opacity 0.1s ease-in-out;
