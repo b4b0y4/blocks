@@ -1602,7 +1602,7 @@ function displayFavoriteList() {
       delSpan.style.marginLeft = "10px"
 
       delSpan.addEventListener("mouseenter", () => {
-        delSpan.style.color = "Tomato"
+        delSpan.style.color = "IndianRed"
       })
 
       delSpan.addEventListener("mouseleave", () => {
