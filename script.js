@@ -1685,7 +1685,6 @@ info.addEventListener("click", () => {
   togglePanel(panel)
   listPanel.classList.remove("active")
   favPanel.classList.remove("active")
-  keyShort.style.display = panel.classList.contains("active") ? "block" : "none"
 })
 
 document.querySelector(".search-icon").addEventListener("click", () => {
