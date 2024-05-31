@@ -1604,6 +1604,7 @@ function displayFavoriteList() {
 
       keyElement.addEventListener("click", () => {
         displayFavorite(key)
+        clearPanels()
       })
 
       keyElement.appendChild(delSpan)
