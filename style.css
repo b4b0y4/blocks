@@ -214,7 +214,6 @@ a:hover {
   display: flex;
   align-items: center;
   color: var(--color-txt);
-  margin-right: 15px;
   font-size: 1.1em;
   border-radius: 5px;
   cursor: default;
@@ -449,10 +448,6 @@ a:hover {
     flex-direction: column;
     justify-content: space-around;
     padding: 0;
-  }
-
-  .info {
-    margin-right: 0;
   }
 
   .info:hover {
