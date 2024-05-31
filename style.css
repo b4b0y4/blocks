@@ -138,7 +138,7 @@ body {
 }
 
 p {
-  line-height: 1.4em;
+  line-height: 1.5em;
   margin: 0;
 }
 
@@ -148,7 +148,7 @@ ul {
 }
 
 li {
-  line-height: 1.4em;
+  line-height: 1.8em;
 }
 
 .key {
@@ -265,7 +265,8 @@ a:hover {
 
 .instruction,
 .panel,
-.list-panel {
+.list-panel,
+.fav-panel {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -295,9 +296,15 @@ a:hover {
 }
 
 .panel.active,
-.list-panel.active {
+.list-panel.active,
+.fav-panel.active {
   opacity: 0.95;
   pointer-events: auto;
+}
+
+.fav-panel.active p:hover {
+  color: red;
+  cursor: default;
 }
 
 .list-item {

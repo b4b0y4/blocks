@@ -47,6 +47,7 @@ const overlay = document.querySelector(".overlay")
 const panel = document.querySelector(".panel")
 const panelContent = document.getElementById("panelContent")
 const listPanel = document.querySelector(".list-panel")
+const favPanel = document.querySelector(".fav-panel")
 const search = document.getElementById("searchInput")
 const keyShort = document.querySelector(".key-short")
 const spin = document.querySelector(".spinner")
@@ -984,6 +985,7 @@ function clearDataStorage() {
 function clearPanels() {
   listPanel.classList.remove("active")
   panel.classList.remove("active")
+  favPanel.classList.remove("active")
   overlay.style.display = "none"
 }
 
@@ -1452,7 +1454,7 @@ let isLooping = false
 function loopRandom(interval, action) {
   clearInterval(intervalId)
 
-  const favorite = JSON.parse(localStorage.getItem("favorite") || "{}")
+  const favorite = JSON.parse(localStorage.getItem("favorite")) || "{}"
 
   if (localStorage.getItem("isLooping") !== "true") {
     if (action === "loop") {
@@ -1567,6 +1569,52 @@ function pushContractDataToStorage(id) {
 save.addEventListener("click", saveOutput)
 
 /***************************************************
+ *   FUNCTION TO DELETE SAVED OUTPUT IN STORAGE
+ **************************************************/
+function deleteContractDataFromStorage(key) {
+  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
+
+  if (favorite.hasOwnProperty(key)) {
+    delete favorite[key]
+    localStorage.setItem("favorite", JSON.stringify(favorite))
+  }
+}
+
+function displayFavoriteKeys() {
+  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
+
+  favPanel.innerHTML = ""
+
+  for (let key in favorite) {
+    if (favorite.hasOwnProperty(key)) {
+      const keyElement = document.createElement("p")
+      keyElement.textContent = key
+
+      keyElement.addEventListener("click", () => {
+        deleteContractDataFromStorage(key)
+        displayFavoriteKeys()
+      })
+
+      favPanel.appendChild(keyElement)
+    }
+  }
+}
+
+// document.addEventListener("keypress", (event) => {
+//   if (event.key === "|") {
+//     displayFavoriteKeys()
+//     favPanel.classList.toggle("active")
+//     if (favPanel.classList.contains("active")) {
+//       panel.classList.remove("active")
+//       listPanel.classList.remove("active")
+//       overlay.style.display = "block"
+//     } else {
+//       overlay.style.display = "none"
+//     }
+//   }
+// })
+
+/***************************************************
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
  **************************************************/
 function incrementTokenId() {
@@ -1592,13 +1640,12 @@ window.addEventListener("DOMContentLoaded", () => {
     update(...Object.values(contractData))
   }
 
-  checkLocalStorage()
-  // checkStorage()
-
   const value = contractData ? "block" : "none"
   inc.style.display = value
   dec.style.display = value
   save.style.display = value
+
+  checkLocalStorage()
 })
 
 window.addEventListener("load", () => {
@@ -1622,16 +1669,21 @@ document.addEventListener("keypress", (event) => {
   }
 })
 
-function handleSlashKey(event) {
-  event.preventDefault()
-  search.focus()
-  listPanel.classList.toggle("active")
-  if (listPanel.classList.contains("active")) {
-    panel.classList.remove("active")
+function togglePanel(panelElement) {
+  panelElement.classList.toggle("active")
+  if (panelElement.classList.contains("active")) {
     overlay.style.display = "block"
   } else {
     overlay.style.display = "none"
   }
+}
+
+function handleSlashKey(event) {
+  event.preventDefault()
+  search.focus()
+  togglePanel(listPanel)
+  panel.classList.remove("active")
+  favPanel.classList.remove("active")
 }
 
 document.addEventListener("keypress", (event) => {
@@ -1640,32 +1692,44 @@ document.addEventListener("keypress", (event) => {
   }
 })
 
-window.addEventListener("message", (event) => {
-  if (event.data.type === "keypress" && event.data.key === "/") {
-    if (document.activeElement !== search) {
-      handleSlashKey(event)
-    }
-  }
-})
-
 info.addEventListener("click", () => {
-  panel.classList.toggle("active")
-  if (panel.classList.contains("active")) {
-    listPanel.classList.remove("active")
-    overlay.style.display = "block"
-    keyShort.style.display = "block"
-  } else {
-    overlay.style.display = "none"
-  }
+  togglePanel(panel)
+  listPanel.classList.remove("active")
+  favPanel.classList.remove("active")
+  keyShort.style.display = panel.classList.contains("active") ? "block" : "none"
 })
 
 document.querySelector(".search-icon").addEventListener("click", () => {
-  listPanel.classList.toggle("active")
-  if (listPanel.classList.contains("active")) {
+  togglePanel(listPanel)
+  panel.classList.remove("active")
+  favPanel.classList.remove("active")
+})
+
+overlay.addEventListener("click", () => {
+  clearPanels()
+})
+
+document.getElementById("toggleBox").addEventListener("click", () => {
+  interaction.classList.toggle("inactive")
+})
+
+document.addEventListener("keypress", (event) => {
+  if (event.key === "|") {
+    displayFavoriteKeys()
+    togglePanel(favPanel)
     panel.classList.remove("active")
+    listPanel.classList.remove("active")
+  }
+})
+
+search.addEventListener("input", () => {
+  if (search.value.trim() !== "") {
+    listPanel.classList.add("active")
+    panel.classList.remove("active")
+    favPanel.classList.remove("active")
     overlay.style.display = "block"
   } else {
-    overlay.style.display = "none"
+    clearPanels()
   }
 })
 
@@ -1675,22 +1739,4 @@ search.addEventListener("focus", () => {
 
 search.addEventListener("blur", () => {
   keyShort.style.display = "block"
-})
-
-search.addEventListener("input", () => {
-  if (search.value.trim() !== "") {
-    listPanel.classList.add("active")
-    panel.classList.remove("active")
-    overlay.style.display = "block"
-  } else {
-    clearPanels()
-  }
-})
-
-overlay.addEventListener("click", () => {
-  clearPanels()
-})
-
-document.getElementById("toggleBox").addEventListener("click", () => {
-  interaction.classList.toggle("inactive")
 })
