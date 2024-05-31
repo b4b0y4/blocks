@@ -1556,10 +1556,10 @@ async function saveOutput() {
 
   URL.revokeObjectURL(url)
   link.remove()
-  pushContractDataToStorage(id)
 }
 
-function pushContractDataToStorage(id) {
+function pushContractDataToStorage() {
+  let id = getShortenedId(contractData.tokenId)
   const key = `${contractData.detail[0]} #${id}`
   const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
   favorite[key] = contractData
@@ -1567,6 +1567,9 @@ function pushContractDataToStorage(id) {
 }
 
 save.addEventListener("click", saveOutput)
+document
+  .getElementById("loveBtn")
+  .addEventListener("click", pushContractDataToStorage)
 
 /***************************************************
  *   FUNCTION TO DELETE SAVED OUTPUT IN STORAGE
@@ -1580,7 +1583,14 @@ function deleteContractDataFromStorage(key) {
   }
 }
 
-function displayFavoriteKeys() {
+function displayFavorite(key) {
+  clearDataStorage()
+  contractData = JSON.parse(localStorage.getItem("favorite"))[key]
+  localStorage.setItem("contractData", JSON.stringify(contractData))
+  location.reload()
+}
+
+function displayFavoriteList() {
   const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
 
   favPanel.innerHTML = ""
@@ -1590,29 +1600,34 @@ function displayFavoriteKeys() {
       const keyElement = document.createElement("p")
       keyElement.textContent = key
 
-      keyElement.addEventListener("click", () => {
-        deleteContractDataFromStorage(key)
-        displayFavoriteKeys()
+      const delSpan = document.createElement("span")
+      delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`
+      delSpan.style.marginLeft = "10px"
+
+      delSpan.addEventListener("mouseenter", () => {
+        delSpan.style.color = "Tomato"
       })
+
+      delSpan.addEventListener("mouseleave", () => {
+        delSpan.style.color = "var(--color-txt)"
+      })
+
+      delSpan.addEventListener("click", (event) => {
+        event.stopPropagation()
+        deleteContractDataFromStorage(key)
+        displayFavoriteList()
+      })
+
+      keyElement.addEventListener("click", () => {
+        displayFavorite(key)
+      })
+
+      keyElement.appendChild(delSpan)
 
       favPanel.appendChild(keyElement)
     }
   }
 }
-
-// document.addEventListener("keypress", (event) => {
-//   if (event.key === "|") {
-//     displayFavoriteKeys()
-//     favPanel.classList.toggle("active")
-//     if (favPanel.classList.contains("active")) {
-//       panel.classList.remove("active")
-//       listPanel.classList.remove("active")
-//       overlay.style.display = "block"
-//     } else {
-//       overlay.style.display = "none"
-//     }
-//   }
-// })
 
 /***************************************************
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
@@ -1713,13 +1728,11 @@ document.getElementById("toggleBox").addEventListener("click", () => {
   interaction.classList.toggle("inactive")
 })
 
-document.addEventListener("keypress", (event) => {
-  if (event.key === "|") {
-    displayFavoriteKeys()
-    togglePanel(favPanel)
-    panel.classList.remove("active")
-    listPanel.classList.remove("active")
-  }
+document.getElementById("favList").addEventListener("click", () => {
+  displayFavoriteList()
+  togglePanel(favPanel)
+  panel.classList.remove("active")
+  listPanel.classList.remove("active")
 })
 
 search.addEventListener("input", () => {

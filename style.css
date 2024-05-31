@@ -217,7 +217,9 @@ a:hover {
 .save,
 .random,
 .previous,
-.next {
+.next,
+.fav,
+.love {
   background-color: transparent;
   color: var(--color-btn);
   font-size: 1.1em;
@@ -242,7 +244,9 @@ a:hover {
 .save:hover,
 .random:hover,
 .previous:hover,
-.next:hover {
+.next:hover,
+.fav:hover,
+.love:hover {
   background-color: var(--color-hvr);
 }
 
@@ -303,8 +307,13 @@ a:hover {
   pointer-events: auto;
 }
 
+.fav-panel p {
+  padding: 2px 5px;
+  border-radius: 10px;
+}
+
 .fav-panel.active p:hover {
-  color: red;
+  background-color: var(--color-hvr);
   cursor: default;
 }
 

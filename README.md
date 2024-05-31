@@ -15,5 +15,4 @@ View information about each one and save a HTML file of your favorites.
 - Click on the upper right-hand corner to hide the info.
 - Click on the upper left-hand corner to enter a random loop.
 - Press `\` to clear the page.
-- Press `|` to clear your favorite list.
 - Pin this app to your IPFS node to help decentralisation
