@@ -34,6 +34,7 @@ import {
 } from "./contracts.js"
 
 // DOM elements
+const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
@@ -1471,7 +1472,7 @@ function checkLocalStorage() {
   const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
   const storedAction = localStorage.getItem("loopAction")
   const storedIntervalMinutes = storedInterval ? storedInterval / 60000 : ""
-  document.getElementById("loop-input").placeholder =
+  loopInput.placeholder =
     storedIntervalMinutes !== "" ? `${storedIntervalMinutes}min` : "1min"
 
   if (storedLoopState === "true" && storedInterval && storedAction) {
@@ -1481,7 +1482,7 @@ function checkLocalStorage() {
 }
 
 function handleLoopClick(action) {
-  let inputValue = document.getElementById("loop-input").value.trim()
+  let inputValue = loopInput.value.trim()
   const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
 
   const inputVal = inputValue !== "" ? parseInt(inputValue, 10) : 1
@@ -1665,11 +1666,9 @@ document.addEventListener("keypress", (event) => {
 
 function togglePanel(panelElement) {
   panelElement.classList.toggle("active")
-  if (panelElement.classList.contains("active")) {
-    overlay.style.display = "block"
-  } else {
-    overlay.style.display = "none"
-  }
+  panelElement.classList.contains("active")
+    ? (overlay.style.display = "block")
+    : (overlay.style.display = "none")
 }
 
 document.addEventListener("keypress", (event) => {
@@ -1719,6 +1718,10 @@ search.addEventListener("input", () => {
   } else {
     clearPanels()
   }
+})
+
+loopInput.addEventListener("focus", () => {
+  document.querySelector(".loop-box").style.opacity = "0.95"
 })
 
 search.addEventListener("focus", () => {

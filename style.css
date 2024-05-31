@@ -66,7 +66,7 @@ body {
   opacity: 0.95;
 }
 
-#loop-input {
+#loopInput {
   font-size: 0.85em;
   padding: 5px 5px 5px 50px;
   border-radius: 5px;
@@ -270,7 +270,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   position: absolute;
-  bottom: 40px;
+  bottom: 45px;
   right: 8px;
   max-width: 450px;
   max-height: 500px;
