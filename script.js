@@ -989,12 +989,6 @@ function clearPanels() {
   overlay.style.display = "none"
 }
 
-function clearLoops() {
-  localStorage.removeItem("isLooping")
-  localStorage.removeItem("loopInterval")
-  localStorage.removeItem("loopAction")
-}
-
 /***************************************************
  *              FUNCTIONS TO UPDATE UI
  **************************************************/
@@ -1547,7 +1541,7 @@ async function saveOutput() {
 }
 
 function pushContractDataToStorage(id) {
-  const key = `${contractData.detail[0]} #${id}`
+  const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`
   const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
   favorite[key] = contractData
   localStorage.setItem("favorite", JSON.stringify(favorite))
