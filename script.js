@@ -1556,10 +1556,10 @@ async function saveOutput() {
 
   URL.revokeObjectURL(url)
   link.remove()
+  pushContractDataToStorage(id)
 }
 
-function pushContractDataToStorage() {
-  let id = getShortenedId(contractData.tokenId)
+function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id}`
   const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
   favorite[key] = contractData
@@ -1567,12 +1567,9 @@ function pushContractDataToStorage() {
 }
 
 save.addEventListener("click", saveOutput)
-document
-  .getElementById("loveBtn")
-  .addEventListener("click", pushContractDataToStorage)
 
 /***************************************************
- *   FUNCTION TO DELETE SAVED OUTPUT IN STORAGE
+ *  FUNCTION TO MANIPULATE SAVED OUTPUT IN STORAGE
  **************************************************/
 function deleteContractDataFromStorage(key) {
   const favorite = JSON.parse(localStorage.getItem("favorite")) || {}

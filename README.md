@@ -14,5 +14,6 @@ View information about each one and save a HTML file of your favorites.
   - (Id): get the exact token id on a displayed collection.
 - Click on the upper right-hand corner to hide the info.
 - Click on the upper left-hand corner to enter a random loop.
+- Click on the lower right-hand corner to show favorite list.
 - Press `\` to clear the page.
 - Pin this app to your IPFS node to help decentralisation

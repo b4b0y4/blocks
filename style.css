@@ -38,9 +38,9 @@ body {
   overflow: hidden;
 }
 
-#toggleBox {
+#toggleBox,
+#favList {
   position: absolute;
-  top: 15px;
   right: 10px;
   border: none;
   color: var(--color-btn);
@@ -50,6 +50,14 @@ body {
   font-size: 1.1em;
   border-radius: 50%;
   transition: opacity 0.1s ease-in-out;
+}
+
+#toggleBox {
+  top: 15px;
+}
+
+#favList {
+  bottom: 45px;
 }
 
 .loop-box {
@@ -63,7 +71,8 @@ body {
 }
 
 .loop-box:hover,
-#toggleBox:hover {
+#toggleBox:hover,
+#favList:hover {
   opacity: 0.95;
 }
 
@@ -217,9 +226,7 @@ a:hover {
 .save,
 .random,
 .previous,
-.next,
-.fav,
-.love {
+.next {
   background-color: transparent;
   color: var(--color-btn);
   font-size: 1.1em;
@@ -244,9 +251,7 @@ a:hover {
 .save:hover,
 .random:hover,
 .previous:hover,
-.next:hover,
-.fav:hover,
-.love:hover {
+.next:hover {
   background-color: var(--color-hvr);
 }
 
@@ -467,9 +472,14 @@ a:hover {
     background-color: transparent;
   }
 
+  #favList {
+    bottom: 90px;
+  }
+
   .instruction,
   .panel,
-  .list-panel {
+  .list-panel,
+  .fav-panel {
     max-width: 100%;
     max-height: 60%;
     right: 0;
