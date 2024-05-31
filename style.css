@@ -47,14 +47,9 @@ body {
   opacity: 0;
   background-color: transparent;
   outline: none;
-  font-size: 1.2em;
+  font-size: 1.1em;
   border-radius: 50%;
   transition: opacity 0.1s ease-in-out;
-}
-
-#saveBtn {
-  bottom: 45px;
-  left: 10px;
 }
 
 #toggleBox {
@@ -62,8 +57,13 @@ body {
   right: 10px;
 }
 
+#saveBtn {
+  bottom: 8.5px;
+  left: 10px;
+}
+
 #favList {
-  bottom: 45px;
+  bottom: 8.5px;
   right: 10px;
 }
 
@@ -208,6 +208,7 @@ a:hover {
   justify-content: end;
   align-items: center;
   height: 100%;
+  margin-right: 15px;
 }
 
 .info {
@@ -448,10 +449,7 @@ a:hover {
     flex-direction: column;
     justify-content: space-around;
     padding: 0;
-  }
-
-  .info:hover {
-    color: var(--color-txt);
+    margin-right: 0;
   }
 
   .search-input {
@@ -463,12 +461,6 @@ a:hover {
   .previous,
   .next {
     font-size: 1.2em;
-  }
-
-  .random:hover,
-  .previous:hover,
-  .next:hover {
-    background-color: transparent;
   }
 
   #favList {
