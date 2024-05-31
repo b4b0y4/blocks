@@ -38,34 +38,17 @@ body {
   overflow: hidden;
 }
 
-#saveBtn,
-#toggleBox,
-#favList {
+#toggleBox {
   position: absolute;
+  top: 10px;
+  right: 10px;
   border: none;
   color: var(--color-btn);
+  background-color: transparent;
   opacity: 0;
-  background-color: var(--color-hvr);
-  padding: 3.75px 6.5px 2.75px;
-  border-radius: 5px;
   outline: none;
   font-size: 1.1em;
   transition: opacity 0.1s ease-in-out;
-}
-
-#toggleBox {
-  top: 10px;
-  right: 10px;
-}
-
-#saveBtn {
-  bottom: 6px;
-  left: 10px;
-}
-
-#favList {
-  bottom: 6px;
-  right: 10px;
 }
 
 .loop-box {
@@ -79,9 +62,7 @@ body {
 }
 
 .loop-box:hover,
-#toggleBox:hover,
-#favList:hover,
-#saveBtn:hover {
+#toggleBox:hover {
   opacity: 0.95;
 }
 
@@ -209,7 +190,6 @@ a:hover {
   justify-content: end;
   align-items: center;
   height: 100%;
-  margin-right: 15px;
 }
 
 .info {
@@ -221,6 +201,7 @@ a:hover {
   cursor: default;
   transition: color 0.1s ease-in-out;
   z-index: 100;
+  margin-right: 15px;
 }
 
 .info:hover {
@@ -232,6 +213,7 @@ a:hover {
   align-items: center;
 }
 
+.save,
 .random,
 .previous,
 .next {
@@ -241,7 +223,7 @@ a:hover {
   padding: 3.75px 6.5px 2.75px;
   border: none;
   border-radius: 5px;
-  margin: 0 10px;
+  margin: 0 5px;
   cursor: default;
   z-index: 100;
   transition: background-color 0.1s ease-in-out;
@@ -249,13 +231,14 @@ a:hover {
 }
 
 .previous {
-  margin: 0 0 0 10px;
+  margin: 0 3px 0 5px;
 }
 
 .next {
-  margin: 0 10px 0 0;
+  margin: 0 5px 0 3px;
 }
 
+.save:hover,
 .random:hover,
 .previous:hover,
 .next:hover {
@@ -321,7 +304,7 @@ a:hover {
 
 .fav-panel p {
   padding: 2px 5px;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .fav-panel.active p:hover {
@@ -331,7 +314,7 @@ a:hover {
 
 .list-item {
   padding: 2px 5px;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: default;
 }
 
@@ -366,8 +349,7 @@ a:hover {
   width: 80px;
   text-align: start;
   border-radius: 5px;
-  padding: 4px;
-  padding-left: 30px;
+  padding: 4px 15px 4px 25px;
   outline: 0.5px solid transparent;
   transition: outline-color 0.1s ease-in-out;
 }
@@ -379,19 +361,36 @@ a:hover {
   outline-color: var(--color-btn);
 }
 
-.search-icon {
+.search-icon,
+#favList {
   position: absolute;
   top: 50%;
-  left: 7px;
   transform: translateY(-50%);
   color: var(--color-btn);
+  background-color: transparent;
+  border: none;
   cursor: default;
+  transition: color 0.1s ease-in-out;
+}
+
+.search-icon {
+  left: 5px;
+}
+
+#favList {
+  right: 0px;
+  font-size: 1em;
+}
+
+.search-icon:hover,
+#favList:hover {
+  color: var(--color-txt);
 }
 
 .key-short {
   position: absolute;
   top: 50%;
-  right: 7px;
+  right: 16px;
   transform: translateY(-50%);
   font-size: 0.6em;
   color: var(--color-btn);
@@ -404,7 +403,7 @@ a:hover {
 .spinner {
   display: none;
   position: absolute;
-  right: 7px;
+  right: 16px;
   border: 2.5px solid var(--color-btn);
   border-left-color: var(--color-hvr);
   border-radius: 50%;
@@ -453,19 +452,22 @@ a:hover {
     margin-right: 0;
   }
 
+  .info {
+    margin-right: 0;
+  }
+
   .search-input {
-    padding: 5px;
-    padding-left: 30px;
+    padding: 5px 15px 5px 25px;
+  }
+
+  .key-short {
+    opacity: 0;
   }
 
   .random,
   .previous,
   .next {
     font-size: 1.2em;
-  }
-
-  #favList {
-    bottom: 90px;
   }
 
   .instruction,
