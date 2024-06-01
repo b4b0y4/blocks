@@ -1723,6 +1723,10 @@ loopInput.addEventListener("focus", () => {
   document.querySelector(".loop-box").style.opacity = "0.95"
 })
 
+loopInput.addEventListener("blur", () => {
+  document.querySelector(".loop-box").style.opacity = "0"
+})
+
 search.addEventListener("focus", () => {
   keyShort.style.display = "none"
 })
