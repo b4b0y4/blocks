@@ -38,7 +38,7 @@ const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
-const interaction = document.querySelector(".interaction-container")
+const infobar = document.querySelector(".infobar")
 const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
 const save = document.getElementById("saveBtn")
@@ -1476,7 +1476,7 @@ function checkLocalStorage() {
     storedIntervalMinutes !== "" ? `${storedIntervalMinutes}min` : "1min"
 
   if (storedLoopState === "true" && storedInterval && storedAction) {
-    interaction.classList.add("inactive")
+    infobar.classList.add("inactive")
     loopRandom(storedInterval, storedAction)
   }
 }
@@ -1494,11 +1494,11 @@ function handleLoopClick(action) {
 
   if (!isNaN(interval) && interval > 0) {
     if (!isLooping) {
-      interaction.classList.add("inactive")
+      toggleInfobarVisibility()
       loopRandom(interval, action)
     } else {
       stopRandomLoop()
-      interaction.classList.remove("inactive")
+      toggleInfobarVisibility()
     }
   } else {
     alert("Please enter a valid positive number for the interval.")
@@ -1697,9 +1697,24 @@ overlay.addEventListener("click", () => {
   clearPanels()
 })
 
-document.getElementById("toggleBox").addEventListener("click", () => {
-  interaction.classList.toggle("inactive")
-})
+function setupInfobar() {
+  const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
+  infobar.classList.toggle("inactive", isInfobarInactive)
+}
+
+function toggleInfobarVisibility() {
+  const isInfobarInactive = infobar.classList.toggle("inactive")
+  localStorage.setItem("infobarInactive", isInfobarInactive)
+  const storedLoopState = localStorage.getItem("isLooping")
+
+  if (!storedLoopState) {
+    location.reload()
+  }
+}
+
+document.addEventListener("DOMContentLoaded", setupInfobar)
+
+toggleBox.addEventListener("click", toggleInfobarVisibility)
 
 document.getElementById("favList").addEventListener("click", () => {
   displayFavoriteList()

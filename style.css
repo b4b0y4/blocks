@@ -115,7 +115,7 @@ body {
   border: none;
 }
 
-.interaction-container {
+.infobar {
   height: 30px;
   max-width: 100%;
   display: flex;
@@ -125,8 +125,9 @@ body {
   padding: 5px;
 }
 
-.interaction-container.inactive {
+.infobar.inactive {
   display: none;
+  height: 0;
 }
 
 ::placeholder {
@@ -378,7 +379,6 @@ a:hover {
   right: 2px;
   font-size: 1em;
   padding: 0 4px;
-  /* background: white; */
 }
 
 .search-icon:hover,
@@ -443,7 +443,7 @@ a:hover {
     color: transparent;
   }
 
-  .interaction-container {
+  infobar {
     justify-content: center;
     height: 80px;
   }
