@@ -1149,9 +1149,9 @@ async function updatePanelContent(
     const shortOwner = shortenAddress(owner)
     const shortContract = shortenAddress(contracts[contract].target)
 
-    let ownerLink = `<span class="copy-text" data-text="${owner}">${shortOwner}</span> <a href="https://zapper.xyz/account/${owner}" target="_blank"><i class="fa-solid fa-link"></i></a>`
-    let contractLink = `<span class="copy-text" data-text="${contracts[contract].target}">${shortContract}</span> <a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank"><i class="fa-solid fa-link"></i></a>`
-    let tokenLink = `<span class="copy-text" data-text="${tokenId}">${tokenId}</span> <a href="https://api.artblocks.io/token/${tokenId}" target="_blank"><i class="fa-solid fa-link"></i></a>`
+    let ownerLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${shortOwner}</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span>`
+    let contractLink = `<a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank">${shortContract}</a><span class="copy-text" data-text="${contracts[contract].target}"><i class="fa-regular fa-copy"></i></span>`
+    let tokenLink = `<a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a><span class="copy-text" data-text="${tokenId}"><i class="fa-regular fa-copy"></i></span>`
 
     const panelContentHTML = `
       <p>
@@ -1172,7 +1172,7 @@ async function updatePanelContent(
 
     let ensName = await provider.lookupAddress(owner)
     if (ensName) {
-      let ensLink = `<span class="copy-text" data-text="${owner}">${ensName}</span> <a href="https://zapper.xyz/account/${owner}" target="_blank"><i class="fa-solid fa-link"></i></a>`
+      let ensLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensLink}</a><span class="copy-text" data-text="${owner}"> <i class="fa-regular fa-copy"></i></span>`
       panelContent.innerHTML = panelContentHTML.replace(
         `Owner: ${ownerLink}<br>`,
         `Owner: ${ensLink}<br>`

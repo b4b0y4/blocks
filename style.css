@@ -154,8 +154,7 @@ li {
   padding: 2px 5px;
 }
 
-a,
-.copy-text {
+a {
   text-decoration: none;
   color: var(--color-btn);
   transition: color 0.1s ease-in-out;
@@ -163,8 +162,7 @@ a,
   cursor: default;
 }
 
-a:hover,
-.copy-text:hover {
+a:hover {
   color: var(--color-txt);
 }
 
@@ -260,6 +258,24 @@ a:hover,
 
 #modeToggle:hover {
   background-color: var(--color-hvr);
+}
+
+.copy-text {
+  color: var(--color-key);
+  transition: color 0.1s ease-in-out;
+  cursor: default;
+}
+
+.copy-text:hover {
+  color: var(--color-btn);
+}
+
+.copy-text:active .fa-copy {
+  transform: scale(1.2);
+}
+
+.fa-copy {
+  margin-left: 10px;
 }
 
 .instruction,
@@ -365,6 +381,7 @@ a:hover,
   padding: 0;
   background-color: transparent;
   border: none;
+  outline: none;
   cursor: default;
   transition: color 0.1s ease-in-out;
 }
