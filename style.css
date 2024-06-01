@@ -375,9 +375,10 @@ a:hover {
 }
 
 #favList {
-  right: 4px;
+  right: 2px;
   font-size: 1em;
-  padding: 0 2px;
+  padding: 0 4px;
+  /* background: white; */
 }
 
 .search-icon:hover,
@@ -459,7 +460,7 @@ a:hover {
   }
 
   .search-input {
-    padding: 5px 15px 5px 27px;
+    padding: 5px 17px 5px 27px;
   }
 
   .search-icon {
@@ -467,7 +468,7 @@ a:hover {
   }
 
   #favList {
-    right: 6px;
+    right: 4px;
   }
 
   .key-short {
