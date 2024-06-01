@@ -1163,9 +1163,9 @@ async function updatePanelContent(
         ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
       </p><br>
       <p>
-        owned by: ${ownerLink}<br>
-        contract: ${contractLink}<br>
-        token id: ${tokenLink}
+        Owner ${ownerLink}<br>
+        Contract ${contractLink}<br>
+        Token Id ${tokenLink}
       </p>
     `
     panelContent.innerHTML = panelContentHTML
@@ -1174,8 +1174,8 @@ async function updatePanelContent(
     if (ensName) {
       let ensLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a><span class="copy-text" data-text="${owner}"> <i class="fa-regular fa-copy"></i></span>`
       panelContent.innerHTML = panelContentHTML.replace(
-        `owned by: ${ownerLink}<br>`,
-        `owned by: ${ensLink}<br>`
+        `Owner ${ownerLink}<br>`,
+        `Owner ${ensLink}<br>`
       )
     }
     document.querySelectorAll(".copy-text").forEach((element) => {

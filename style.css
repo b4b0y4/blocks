@@ -48,7 +48,7 @@ body {
   background-color: transparent;
   opacity: 0;
   outline: none;
-  font-size: 1.1em;
+  font-size: 1.4em;
   transition: opacity 0.1s ease-in-out;
 }
 
