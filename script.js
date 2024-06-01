@@ -1172,7 +1172,7 @@ async function updatePanelContent(
 
     let ensName = await provider.lookupAddress(owner)
     if (ensName) {
-      let ensLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensLink}</a><span class="copy-text" data-text="${owner}"> <i class="fa-regular fa-copy"></i></span>`
+      let ensLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a><span class="copy-text" data-text="${owner}"> <i class="fa-regular fa-copy"></i></span>`
       panelContent.innerHTML = panelContentHTML.replace(
         `Owner: ${ownerLink}<br>`,
         `Owner: ${ensLink}<br>`
