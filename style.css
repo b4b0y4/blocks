@@ -460,8 +460,16 @@ a:hover {
     left: 7px;
   }
 
+  #favList {
+    right: 8px;
+  }
+
   .key-short {
     opacity: 0;
+  }
+
+  .spinner {
+    right: 18px;
   }
 
   .random,
