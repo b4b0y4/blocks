@@ -1476,7 +1476,6 @@ function checkLocalStorage() {
     storedIntervalMinutes !== "" ? `${storedIntervalMinutes}min` : "1min"
 
   if (storedLoopState === "true" && storedInterval && storedAction) {
-    infobar.classList.add("inactive")
     loopRandom(storedInterval, storedAction)
   }
 }
@@ -1494,8 +1493,8 @@ function handleLoopClick(action) {
 
   if (!isNaN(interval) && interval > 0) {
     if (!isLooping) {
-      toggleInfobarVisibility()
       loopRandom(interval, action)
+      toggleInfobarVisibility()
     } else {
       stopRandomLoop()
       toggleInfobarVisibility()
