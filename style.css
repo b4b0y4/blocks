@@ -43,6 +43,7 @@ body {
   top: 10px;
   right: 10px;
   border: none;
+  padding: 0;
   color: var(--color-btn);
   background-color: transparent;
   opacity: 0;
