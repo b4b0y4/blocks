@@ -443,7 +443,7 @@ a:hover {
     color: transparent;
   }
 
-  infobar {
+  .infobar {
     justify-content: center;
     height: 80px;
   }
