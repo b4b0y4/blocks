@@ -1126,6 +1126,10 @@ function updateInfo(contract, detail, id) {
   })
 }
 
+function shortenAddress(address) {
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
+}
+
 async function updatePanelContent(
   contract,
   owner,
@@ -1142,7 +1146,12 @@ async function updatePanelContent(
         ? `Edition of ${edition} works.`
         : `Edition of ${edition} works, ${remaining} remaining.`
 
-    let ownerLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${owner}</a>`
+    const shortOwner = shortenAddress(owner)
+    const shortContract = shortenAddress(contracts[contract].target)
+
+    let ownerLink = `<span class="copy-text" data-text="${owner}">${shortOwner}</span> <a href="https://zapper.xyz/account/${owner}" target="_blank"><i class="fa-solid fa-link"></i></a>`
+    let contractLink = `<span class="copy-text" data-text="${contracts[contract].target}">${shortContract}</span> <a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank"><i class="fa-solid fa-link"></i></a>`
+    let tokenLink = `<span class="copy-text" data-text="${tokenId}">${tokenId}</span> <a href="https://api.artblocks.io/token/${tokenId}" target="_blank"><i class="fa-solid fa-link"></i></a>`
 
     const panelContentHTML = `
       <p>
@@ -1153,25 +1162,40 @@ async function updatePanelContent(
       <p>
         ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
       </p><br>
-      <p class="mini">
+      <p>
         Owner: ${ownerLink}<br>
-        Contract: <a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank">${contracts[contract].target}</a><br>
-        Token ID: <a href="https://api.artblocks.io/token/${tokenId}" target="_blank">${tokenId}</a>
+        Contract: ${contractLink}<br>
+        Token ID: ${tokenLink}
       </p>
     `
     panelContent.innerHTML = panelContentHTML
 
     let ensName = await provider.lookupAddress(owner)
     if (ensName) {
-      let ensLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a>`
+      let ensLink = `<span class="copy-text" data-text="${owner}">${ensName}</span> <a href="https://zapper.xyz/account/${owner}" target="_blank"><i class="fa-solid fa-link"></i></a>`
       panelContent.innerHTML = panelContentHTML.replace(
         `Owner: ${ownerLink}<br>`,
         `Owner: ${ensLink}<br>`
       )
     }
+    document.querySelectorAll(".copy-text").forEach((element) => {
+      element.addEventListener("click", () => {
+        copyToClipboard(element.getAttribute("data-text"))
+      })
+    })
   } catch (error) {
     console.log("updatePanelContent:", error)
   }
+}
+
+function copyToClipboard(text) {
+  const textarea = document.createElement("textarea")
+  textarea.value = text
+  document.body.appendChild(textarea)
+  textarea.select()
+  document.execCommand("copy")
+  document.body.removeChild(textarea)
+  // alert(`Copied to clipboard: ${text}`)
 }
 
 /***************************************************

@@ -154,7 +154,8 @@ li {
   padding: 2px 5px;
 }
 
-a {
+a,
+.copy-text {
   text-decoration: none;
   color: var(--color-btn);
   transition: color 0.1s ease-in-out;
@@ -162,7 +163,8 @@ a {
   cursor: default;
 }
 
-a:hover {
+a:hover,
+.copy-text:hover {
   color: var(--color-txt);
 }
 
@@ -324,10 +326,6 @@ a:hover {
   font-size: 0.85em;
   color: var(--color-btn);
   margin-left: 10px;
-}
-
-.mini {
-  font-size: 0.85em;
 }
 
 .search-container {
@@ -494,9 +492,5 @@ a:hover {
     right: 0;
     left: 0;
     bottom: 90px;
-  }
-
-  .mini {
-    font-size: 0.75em;
   }
 }
