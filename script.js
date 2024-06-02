@@ -1209,7 +1209,6 @@ function copyToClipboard(text) {
   textarea.select()
   document.execCommand("copy")
   document.body.removeChild(textarea)
-  // alert(`Copied to clipboard: ${text}`)
 }
 
 /***************************************************
@@ -1456,7 +1455,6 @@ function getRandomKey(favorite) {
 
     contractData = favorite[randomKey]
     localStorage.setItem("contractData", JSON.stringify(contractData))
-
     location.reload()
   } else {
     console.log("No favorite content found.")
@@ -1471,68 +1469,63 @@ document.getElementById("randomButton").addEventListener("click", () => {
  *                  LOOP FUNCTIONS
  **************************************************/
 let intervalId
-let isLooping = false
+const MIN_TO_MS = 60000
+let loopState = JSON.parse(localStorage.getItem("loopState")) || {
+  isLooping: "false",
+  interval: MIN_TO_MS,
+  action: null,
+}
 
 function loopRandom(interval, action) {
   clearInterval(intervalId)
-
   const favorite = JSON.parse(localStorage.getItem("favorite")) || "{}"
 
-  if (localStorage.getItem("isLooping") !== "true") {
-    if (action === "loop") {
-      getRandom(list)
-    } else if (action === "favLoop") {
-      getRandomKey(favorite)
-    }
+  if (loopState.isLooping !== "true") {
+    performAction(action, list, favorite)
   }
 
   intervalId = setInterval(() => {
-    if (action === "loop") {
-      getRandom(list)
-    } else if (action === "favLoop") {
-      getRandomKey(favorite)
-    }
+    performAction(action, list, favorite)
   }, interval)
 
-  localStorage.setItem("loopInterval", interval)
-  localStorage.setItem("loopAction", action)
-  localStorage.setItem("isLooping", "true")
-  isLooping = true
+  loopState = { isLooping: "true", interval, action }
+  localStorage.setItem("loopState", JSON.stringify(loopState))
+}
+
+function performAction(action, list, favorite) {
+  if (action === "loop") {
+    getRandom(list)
+  } else if (action === "favLoop") {
+    getRandomKey(favorite)
+  }
 }
 
 function stopRandomLoop() {
   clearInterval(intervalId)
-  localStorage.setItem("isLooping", "false")
-  localStorage.removeItem("loopAction")
-  isLooping = false
+  loopState.isLooping = "false"
+  localStorage.setItem("loopState", JSON.stringify(loopState))
 }
 
 function checkLocalStorage() {
-  const storedLoopState = localStorage.getItem("isLooping")
-  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
-  const storedAction = localStorage.getItem("loopAction")
-  const storedIntervalMinutes = storedInterval ? storedInterval / 60000 : ""
-  loopInput.placeholder =
-    storedIntervalMinutes !== "" ? `${storedIntervalMinutes}min` : "1min"
+  loopInput.placeholder = `${loopState.interval / MIN_TO_MS}min`
 
-  if (storedLoopState === "true" && storedInterval && storedAction) {
-    loopRandom(storedInterval, storedAction)
+  if (loopState.isLooping === "true" && loopState.action !== null) {
+    loopRandom(loopState.interval, loopState.action)
   }
 }
 
 function handleLoopClick(action) {
   let inputValue = loopInput.value.trim()
-  const storedInterval = parseInt(localStorage.getItem("loopInterval"), 10)
-
   const inputVal = inputValue !== "" ? parseInt(inputValue, 10) : 1
 
   const interval =
-    storedInterval && (inputValue === "" || storedInterval === inputVal * 60000)
-      ? storedInterval
-      : inputVal * 60000
+    loopState.interval &&
+    (inputValue === "" || loopState.interval === inputVal * MIN_TO_MS)
+      ? loopState.interval
+      : inputVal * MIN_TO_MS
 
   if (!isNaN(interval) && interval > 0) {
-    if (!isLooping) {
+    if (loopState.isLooping !== "true") {
       loopRandom(interval, action)
       toggleInfobarVisibility()
     } else {
@@ -1540,11 +1533,12 @@ function handleLoopClick(action) {
       toggleInfobarVisibility()
     }
   } else {
-    alert("Please enter a valid positive number for the interval.")
+    alert("Please enter a valid time in minutes.")
   }
 
-  if (inputValue !== "" && interval !== storedInterval) {
-    localStorage.setItem("loopInterval", interval)
+  if (inputValue !== "" && interval !== loopState.interval) {
+    loopState = { isLooping: "false", interval: interval, action: action }
+    localStorage.setItem("loopState", JSON.stringify(loopState))
   }
 }
 
@@ -1580,21 +1574,20 @@ async function saveOutput() {
   pushContractDataToStorage(id)
 }
 
-function pushContractDataToStorage(id) {
-  const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`
-  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
-  favorite[key] = contractData
-  localStorage.setItem("favorite", JSON.stringify(favorite))
-}
-
 save.addEventListener("click", saveOutput)
 
 /***************************************************
  *  FUNCTION TO MANIPULATE SAVED OUTPUT IN STORAGE
  **************************************************/
-function deleteContractDataFromStorage(key) {
-  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
+let favorite = JSON.parse(localStorage.getItem("favorite")) || {}
 
+function pushContractDataToStorage(id) {
+  const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`
+  favorite[key] = contractData
+  localStorage.setItem("favorite", JSON.stringify(favorite))
+}
+
+function deleteContractDataFromStorage(key) {
   if (favorite.hasOwnProperty(key)) {
     delete favorite[key]
     localStorage.setItem("favorite", JSON.stringify(favorite))
@@ -1603,14 +1596,12 @@ function deleteContractDataFromStorage(key) {
 
 function displayFavorite(key) {
   clearDataStorage()
-  contractData = JSON.parse(localStorage.getItem("favorite"))[key]
+  contractData = favorite[key]
   localStorage.setItem("contractData", JSON.stringify(contractData))
   location.reload()
 }
 
 function displayFavoriteList() {
-  const favorite = JSON.parse(localStorage.getItem("favorite")) || {}
-
   favPanel.innerHTML = ""
 
   for (let key in favorite) {
@@ -1744,9 +1735,8 @@ function setupInfobar() {
 function toggleInfobarVisibility() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
   localStorage.setItem("infobarInactive", isInfobarInactive)
-  const storedLoopState = localStorage.getItem("isLooping") === "true"
 
-  if (!storedLoopState) {
+  if (loopState.isLooping !== "true") {
     location.reload()
   }
 }
