@@ -1516,7 +1516,7 @@ function checkLocalStorage() {
 
 function handleLoopClick(action) {
   let inputValue = loopInput.value.trim()
-  const inputVal = inputValue !== "" ? parseInt(inputValue, 10) : 1
+  const inputVal = parseInt(inputValue, 10)
 
   const interval =
     loopState.interval &&
