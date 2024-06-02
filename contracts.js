@@ -31,6 +31,8 @@ export const contractAddressTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
 export const contractAddressHODLERS =
   "0x9F79e46A309f804Aa4B7B53a1F72c69137427794" // GenArt721CoreV3_Engine_Flex
 export const contractAddressFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743" // GenArt721CoreV3_Engine
+export const contractAddressFLUTTER =
+  "0x13aAe6f9599880edbB7d144BB13F1212CeE99533" //GenArt721CoreV2_Flutter
 // GenArt721CoreV3_Engine_Flex
 export const contractAddressABSTUDIO0 =
   "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"

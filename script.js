@@ -31,6 +31,7 @@ import {
   contractAddressFAB,
   contractAddressABSTUDIO0,
   contractAddressABSTUDIO1,
+  contractAddressFLUTTER,
 } from "./contracts.js"
 
 // DOM elements
@@ -86,6 +87,7 @@ const contracts = [
   { abi: abiV3, address: contractAddressFAB },
   { abi: abiV3, address: contractAddressABSTUDIO0 },
   { abi: abiV3, address: contractAddressABSTUDIO1 },
+  { abi: abiV2, address: contractAddressFLUTTER },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -740,6 +742,9 @@ const list = [
   "GRAIL 2 - Atlas / Eric De Giuli - 333 minted",
   "SDAO 0 - Elevate Heart / Daniel Calderon Arenas - 1000 minted",
   "MINTS 0 - The Colors That Heal / Ryan Green - 142 minted",
+  "FLUTTER 0 - Worlds / Kenny Vaden - 500 minted",
+  "FLUTTER 1 - Leggenda / Stefano Contiero - 888 minted",
+  "FLUTTER 2 - Fluxus / Monotau - 234 minted",
   "TDG 1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
   "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
   "VFA 0 - Fenestra / Rob Scalera - 41 minted",
@@ -814,6 +819,7 @@ function getContract(contract) {
     24: "FAB",
     25: "ABS",
     26: "ABSI",
+    27: "FLUTTER",
   }
 
   return contractNames[contract] || ""
@@ -833,7 +839,7 @@ async function fetchBlocks() {
       i++
     ) {
       let contractName = getContract(n)
-      const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(n)
+      const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(n)
       try {
         const detail = await contracts[n].projectDetails(i.toString())
         const tkns = isContractV2
@@ -851,7 +857,7 @@ async function fetchBlocks() {
           if (token == 5) break
         }
       } catch (error) {
-        console.log(`Error fetching data for project ${contractName}${i}`)
+        console.log(`Error fetching data for project ${contractName} ${i}`)
         break
       }
     }
@@ -884,7 +890,9 @@ async function grabData(tokenId, contract) {
     clearDataStorage()
     clearPanels()
 
-    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22].includes(contract)
+    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(
+      contract
+    )
 
     const hash = await fetchHash(tokenId, contract)
     const projId = Number(await fetchProjectId(tokenId, contract))
@@ -1085,6 +1093,7 @@ function determinePlatform(contract, curation) {
     22: "Trame",
     23: "Hodlers",
     24: "Foundation for Art and Blockchain",
+    27: "FlamingoDAO",
   }
 
   ;[
@@ -1332,6 +1341,7 @@ function getContractFromList(contract, tokenId) {
     FAB: 24,
     ABS: 25,
     ABSI: 26,
+    FLUTTER: 27,
   }
 
   return (
