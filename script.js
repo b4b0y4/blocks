@@ -32,6 +32,7 @@ import {
   contractAddressABSTUDIO0,
   contractAddressABSTUDIO1,
   contractAddressFLUTTER,
+  contractAddressTENDER,
 } from "./contracts.js"
 
 // DOM elements
@@ -88,6 +89,7 @@ const contracts = [
   { abi: abiV3, address: contractAddressABSTUDIO0 },
   { abi: abiV3, address: contractAddressABSTUDIO1 },
   { abi: abiV2, address: contractAddressFLUTTER },
+  { abi: abiV3, address: contractAddressTENDER },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
 // Libraries
@@ -791,6 +793,7 @@ const list = [
   "HODL 16 - Wired wonders / Alessandro Fiore - 53 minted",
   "HODL 17 - Nebulous / KRANKARTA - 20 minted",
   "FAB 0 - Giving Shape / ippsketch - 98 minted",
+  "TENDER 0 - Of That Ilk / KRANKARTA - 200 minted",
 ]
 
 function getContract(contract) {
@@ -820,6 +823,7 @@ function getContract(contract) {
     25: "ABS",
     26: "ABSI",
     27: "FLUTTER",
+    28: "TENDER",
   }
 
   return contractNames[contract] || ""
@@ -829,7 +833,7 @@ function getContract(contract) {
 async function fetchBlocks() {
   let token
   // CONTRACTS
-  for (let n = 27; n < 28; n++) {
+  for (let n = 28; n < 30; n++) {
     let newList = []
     let noZero = [14, 23].includes(n)
     // PROJECT ID
@@ -1093,6 +1097,7 @@ function determinePlatform(contract, curation) {
     23: "Hodlers",
     24: "Foundation for Art and Blockchain",
     27: "FlamingoDAO",
+    28: "Tender",
   }
 
   ;[
@@ -1342,6 +1347,7 @@ function getContractFromList(contract, tokenId) {
     ABS: 25,
     ABSI: 26,
     FLUTTER: 27,
+    TENDER: 28,
   }
 
   return (
