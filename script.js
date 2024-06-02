@@ -1079,7 +1079,6 @@ function determinePlatform(contract, curation) {
   const contractsData = {
     3: "Art Blocks Explorations",
     6: "Art Blocks &times; Bright Moments",
-    10: "Plottables",
     12: "Sotheby's",
     13: "ATP",
     14: "Grailers",
@@ -1100,6 +1099,7 @@ function determinePlatform(contract, curation) {
     [[0, 1, 2], curation],
     [[4, 5], "Art Blocks &times; Pace"],
     [[7, 8, 9], "Bright Moments"],
+    [[10, 11], "Plottables"],
     [[25, 26], "Art Blocks Studio"],
   ].forEach(([keys, value]) =>
     keys.forEach((key) => (contractsData[key] = value))
