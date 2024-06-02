@@ -100,22 +100,16 @@ const predefinedLibraries = {
   three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  paperjs:
-    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
-  paper:
-    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  paperjs: "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  paper: "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
   processing:
     "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
-  "a-frame":
-    "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
-  twemoji:
-    'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
-  babylonjs:
-    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
-  babylon:
-    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+  "a-frame": "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
+  twemoji: 'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
+  babylonjs: "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+  babylon: "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   js: "",
   svg: "",
   custom: "",
@@ -837,11 +831,7 @@ async function fetchBlocks() {
     let newList = []
     let noZero = [14, 23].includes(n)
     // PROJECT ID
-    for (
-      let i = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0;
-      i < 500;
-      i++
-    ) {
+    for (let i = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0; i < 500; i++) {
       let contractName = getContract(n)
       const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(n)
       try {
@@ -887,16 +877,17 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *        FUNCTIONS TO GET DATA FROM ETHEREUM
  **************************************************/
+let contractData = {}
+
 async function grabData(tokenId, contract) {
   try {
-    keyShort.style.display = "none"
     spin.style.display = "block"
-    clearDataStorage()
+    keyShort.style.display = "none"
     clearPanels()
+    clearDataStorage()
+    console.log("Contract:", contract, "\nToken Id:", tokenId)
 
-    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(
-      contract
-    )
+    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(contract)
 
     const hash = await fetchHash(tokenId, contract)
     const projId = Number(await fetchProjectId(tokenId, contract))
@@ -905,11 +896,7 @@ async function grabData(tokenId, contract) {
     const detail = await fetchProjectDetails(projId, contract)
     const owner = await fetchOwner(tokenId, contract)
     const extLib = extractLibraryName(projectInfo)
-    const { edition, remaining } = await fetchEditionInfo(
-      projId,
-      contract,
-      isContractV2
-    )
+    const { edition, remaining } = await fetchEditionInfo(projId, contract, isContractV2)
 
     localStorage.setItem(
       "contractData",
@@ -926,12 +913,10 @@ async function grabData(tokenId, contract) {
         remaining,
       })
     )
-
     location.reload()
   } catch (error) {
     console.error("grabData:", error)
-    search.placeholder = "Error"
-    spin.style.display = "none"
+    search.placeholder = "error"
   }
 }
 
@@ -988,21 +973,6 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
 }
 
 /***************************************************
- *              CLEAR FUNCTIONS
- **************************************************/
-function clearDataStorage() {
-  localStorage.removeItem("contractData")
-  localStorage.removeItem("scriptData")
-}
-
-function clearPanels() {
-  listPanel.classList.remove("active")
-  panel.classList.remove("active")
-  favPanel.classList.remove("active")
-  overlay.style.display = "none"
-}
-
-/***************************************************
  *              FUNCTIONS TO UPDATE UI
  **************************************************/
 function update(
@@ -1018,9 +988,7 @@ function update(
   remaining
 ) {
   pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
-  const curation = [0, 1, 2].includes(contract)
-    ? determineCuration(projId)
-    : null
+  const curation = [0, 1, 2].includes(contract) ? determineCuration(projId) : null
   const platform = determinePlatform(contract, curation)
   let id = getShortenedId(tokenId)
   updateInfo(contract, detail, id).then((artist) => {
@@ -1054,19 +1022,18 @@ function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
 
 function determineCuration(projId) {
   const curated = [
-    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-    41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-    159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-    284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-    379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-    456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
+    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40, 41, 53,
+    59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147, 159, 173, 204,
+    206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282, 284, 296, 304, 309, 320,
+    328, 333, 334, 336, 337, 341, 364, 367, 368, 376, 379, 383, 385, 399, 406, 407, 412,
+    416, 417, 418, 423, 426, 428, 433, 455, 456, 457, 462, 466, 471, 472, 482, 483, 484,
+    486, 487, 488, 493,
   ]
   const playground = [
-    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
-    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
-    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
-    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
-    373,
+    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77, 94, 104,
+    108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164, 167, 191, 197, 200,
+    201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264, 286, 289, 292, 294, 310, 319,
+    329, 339, 340, 350, 356, 362, 366, 369, 370, 373,
   ]
   return curated.includes(projId)
     ? "Art Blocks Curated"
@@ -1106,9 +1073,7 @@ function determinePlatform(contract, curation) {
     [[7, 8, 9], "Bright Moments"],
     [[10, 11], "Plottables"],
     [[25, 26], "Art Blocks Studio"],
-  ].forEach(([keys, value]) =>
-    keys.forEach((key) => (contractsData[key] = value))
-  )
+  ].forEach(([keys, value]) => keys.forEach((key) => (contractsData[key] = value)))
 
   return contractsData[contract] || null
 }
@@ -1138,10 +1103,6 @@ function updateInfo(contract, detail, id) {
       resolve(detail[1])
     }
   })
-}
-
-function shortenAddress(address) {
-  return `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
 }
 
 async function updatePanelContent(
@@ -1192,6 +1153,7 @@ async function updatePanelContent(
         `Owner ${ensLink}<br>`
       )
     }
+
     document.querySelectorAll(".copy-text").forEach((element) => {
       element.addEventListener("click", () => {
         copyToClipboard(element.getAttribute("data-text"))
@@ -1202,13 +1164,15 @@ async function updatePanelContent(
   }
 }
 
+function shortenAddress(address) {
+  return `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
+}
+
 function copyToClipboard(text) {
-  const textarea = document.createElement("textarea")
-  textarea.value = text
-  document.body.appendChild(textarea)
-  textarea.select()
-  document.execCommand("copy")
-  document.body.removeChild(textarea)
+  navigator.clipboard
+    .writeText(text)
+    .then(() => console.log("Text copied to clipboard:", text))
+    .catch((error) => console.error("Failed to copy text to clipboard:", error))
 }
 
 /***************************************************
@@ -1266,8 +1230,6 @@ async function injectFrame() {
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
     iframeDocument.close()
-    spin.style.display = "none"
-    keyShort.style.display = "block"
   } catch (error) {
     console.error("injectFrame:", error)
   }
@@ -1288,11 +1250,9 @@ function handleNumericQuery(searchQuery) {
   const { contract, projId } = contractData
   const id = parseInt(searchQuery.match(/\s*(\d+)/)[1])
   const tokenId =
-    projId == 0
-      ? id
-      : Number((projId * 1000000 + id).toString().padStart(6, "0"))
+    projId == 0 ? id : Number((projId * 1000000 + id).toString().padStart(6, "0"))
 
-  logAndGrabData(tokenId, contract)
+  grabData(tokenId, contract)
 }
 
 function handleOtherQuery(line, searchQuery) {
@@ -1300,8 +1260,8 @@ function handleOtherQuery(line, searchQuery) {
   const [_, listContract, projIdStr, tokenStr] = line.match(regex)
   const projId = parseInt(projIdStr)
   const token = parseInt(tokenStr)
-
   let tokenId
+
   if (searchQuery.includes("#")) {
     const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
     tokenId =
@@ -1315,10 +1275,9 @@ function handleOtherQuery(line, searchQuery) {
         ? randomToken
         : Number((projId * 1000000 + randomToken).toString().padStart(6, "0"))
   }
-
   const contract = getContractFromList(listContract, tokenId)
 
-  logAndGrabData(tokenId, contract)
+  grabData(tokenId, contract)
 }
 
 function getContractFromList(contract, tokenId) {
@@ -1349,16 +1308,7 @@ function getContractFromList(contract, tokenId) {
     TENDER: 28,
   }
 
-  return (
-    contractMap[contract] ??
-    (tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2)
-  )
-}
-
-function logAndGrabData(tokenId, contract) {
-  console.log("Contract:", contract)
-  console.log("Token Id:", tokenId)
-  grabData(tokenId, contract)
+  return contractMap[contract] ?? (tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2)
 }
 
 /***************************************************
@@ -1380,9 +1330,7 @@ function displayList(lines) {
 }
 
 function filterList(lines, query) {
-  filteredList = lines.filter((line) =>
-    line.toLowerCase().includes(query.toLowerCase())
-  )
+  filteredList = lines.filter((line) => line.toLowerCase().includes(query.toLowerCase()))
   displayList(filteredList)
   selectedIndex = -1
 }
@@ -1401,8 +1349,7 @@ function handleKeyboardNavigation(event) {
     if (selectedIndex === -1) {
       selectedIndex = filteredList.length - 1
     } else {
-      selectedIndex =
-        (selectedIndex - 1 + filteredList.length) % filteredList.length
+      selectedIndex = (selectedIndex - 1 + filteredList.length) % filteredList.length
     }
   } else if (event.key === "Enter") {
     if (selectedIndex !== -1) {
@@ -1424,6 +1371,7 @@ function handleKeyboardNavigation(event) {
     items[selectedIndex].scrollIntoView({ block: "nearest" })
   }
 }
+displayList(list)
 
 search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim()
@@ -1433,8 +1381,6 @@ search.addEventListener("input", (event) => {
 search.addEventListener("keydown", handleKeyboardNavigation)
 
 listPanel.addEventListener("click", handleItemClick)
-
-displayList(list)
 
 /***************************************************
  *              RANDOMNESS FUNCTIONS
@@ -1542,9 +1488,7 @@ function handleLoopClick(action) {
   }
 }
 
-document
-  .getElementById("loop")
-  .addEventListener("click", () => handleLoopClick("loop"))
+document.getElementById("loop").addEventListener("click", () => handleLoopClick("loop"))
 document
   .getElementById("favLoop")
   .addEventListener("click", () => handleLoopClick("favLoop"))
@@ -1556,10 +1500,7 @@ async function saveOutput() {
   clearPanels()
   const content = frame.contentDocument.documentElement.outerHTML
   let id = getShortenedId(contractData.tokenId)
-  const defaultName = `${contractData.detail[0].replace(
-    /\s+/g,
-    "-"
-  )}#${id}.html`
+  const defaultName = `${contractData.detail[0].replace(/\s+/g, "-")}#${id}.html`
   const blob = new Blob([content], { type: "text/html" })
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
@@ -1577,7 +1518,7 @@ async function saveOutput() {
 save.addEventListener("click", saveOutput)
 
 /***************************************************
- *  FUNCTION TO MANIPULATE SAVED OUTPUT IN STORAGE
+ * FUNCTIONS TO MANIPULATE SAVED OUTPUT IN STORAGE
  **************************************************/
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {}
 
@@ -1608,7 +1549,6 @@ function displayFavoriteList() {
     if (favorite.hasOwnProperty(key)) {
       const keyElement = document.createElement("p")
       keyElement.textContent = key
-
       const delSpan = document.createElement("span")
       delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`
       delSpan.style.marginLeft = "10px"
@@ -1616,24 +1556,22 @@ function displayFavoriteList() {
       delSpan.addEventListener("mouseenter", () => {
         delSpan.style.color = "IndianRed"
       })
-
       delSpan.addEventListener("mouseleave", () => {
         delSpan.style.color = "var(--color-txt)"
       })
-
       delSpan.addEventListener("click", (event) => {
         event.stopPropagation()
         deleteContractDataFromStorage(key)
         displayFavoriteList()
       })
-
       keyElement.addEventListener("click", () => {
+        spin.style.display = "block"
+        keyShort.style.display = "none"
         displayFavorite(key)
         clearPanels()
       })
 
       keyElement.appendChild(delSpan)
-
       favPanel.appendChild(keyElement)
     }
   }
@@ -1656,27 +1594,58 @@ inc.addEventListener("click", incrementTokenId)
 dec.addEventListener("click", decrementTokenId)
 
 /***************************************************
+ *              HELPER FUNCTIONS
+ **************************************************/
+function clearDataStorage() {
+  ;["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d))
+}
+
+function clearPanels() {
+  ;[listPanel, panel, favPanel].forEach((p) => p.classList.remove("active"))
+  overlay.style.display = "none"
+}
+
+function togglePanel(panelElement) {
+  ;[panel, listPanel, favPanel].forEach(
+    (p) => p !== panelElement && p.classList.remove("active")
+  )
+  const isActive = panelElement.classList.toggle("active")
+  overlay.style.display = isActive ? "block" : "none"
+}
+
+function toggleKeyShort(event) {
+  keyShort.style.display = event.type === "focusin" ? "none" : "block"
+}
+
+function setupInfobar() {
+  const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
+  infobar.classList.toggle("inactive", isInfobarInactive)
+}
+
+function toggleInfobarVisibility() {
+  const isInfobarInactive = infobar.classList.toggle("inactive")
+  localStorage.setItem("infobarInactive", isInfobarInactive)
+  if (!loopState.isLooping) {
+    location.reload()
+  }
+}
+
+/***************************************************
  *                     EVENTS
  **************************************************/
-let contractData = {}
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
+  setupInfobar()
+  checkLocalStorage()
+
   contractData = JSON.parse(localStorage.getItem("contractData"))
-  if (contractData) {
-    update(...Object.values(contractData))
-  }
+  if (contractData) update(...Object.values(contractData))
 
   const value = contractData ? "block" : "none"
-  inc.style.display = value
-  dec.style.display = value
-  save.style.display = value
+  ;[inc, dec, save].forEach((el) => (el.style.display = value))
 
-  checkLocalStorage()
-})
+  const val = rpcUrl ? "none" : "block"
+  ;[rpcUrlInput, instruction].forEach((el) => (el.style.display = val))
 
-window.addEventListener("load", () => {
-  const value = rpcUrl ? "none" : "block"
-  rpcUrlInput.style.display = value
-  instruction.style.display = value
   if (!rpcUrl) infoBox.style.display = "none"
 })
 
@@ -1694,62 +1663,25 @@ document.addEventListener("keypress", (event) => {
   }
 })
 
-function togglePanel(panelElement) {
-  panelElement.classList.toggle("active")
-  panelElement.classList.contains("active")
-    ? (overlay.style.display = "block")
-    : (overlay.style.display = "none")
-}
-
 document.addEventListener("keypress", (event) => {
   if (event.key === "/") {
     event.preventDefault()
     search.focus()
     togglePanel(listPanel)
-    panel.classList.remove("active")
-    favPanel.classList.remove("active")
   }
 })
 
 info.addEventListener("click", () => {
   togglePanel(panel)
-  listPanel.classList.remove("active")
-  favPanel.classList.remove("active")
 })
 
 document.querySelector(".search-icon").addEventListener("click", () => {
   togglePanel(listPanel)
-  panel.classList.remove("active")
-  favPanel.classList.remove("active")
 })
-
-overlay.addEventListener("click", () => {
-  clearPanels()
-})
-
-function setupInfobar() {
-  const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
-  infobar.classList.toggle("inactive", isInfobarInactive)
-}
-
-function toggleInfobarVisibility() {
-  const isInfobarInactive = infobar.classList.toggle("inactive")
-  localStorage.setItem("infobarInactive", isInfobarInactive)
-
-  if (loopState.isLooping !== "true") {
-    location.reload()
-  }
-}
-
-document.addEventListener("DOMContentLoaded", setupInfobar)
-
-toggleBox.addEventListener("click", toggleInfobarVisibility)
 
 document.getElementById("favList").addEventListener("click", () => {
   displayFavoriteList()
   togglePanel(favPanel)
-  panel.classList.remove("active")
-  listPanel.classList.remove("active")
 })
 
 search.addEventListener("input", () => {
@@ -1758,15 +1690,14 @@ search.addEventListener("input", () => {
     panel.classList.remove("active")
     favPanel.classList.remove("active")
     overlay.style.display = "block"
-  } else {
-    clearPanels()
   }
 })
 
-search.addEventListener("focus", () => {
-  keyShort.style.display = "none"
-})
+search.addEventListener("focusin", toggleKeyShort)
+search.addEventListener("focusout", toggleKeyShort)
 
-search.addEventListener("blur", () => {
-  keyShort.style.display = "block"
+toggleBox.addEventListener("click", toggleInfobarVisibility)
+
+overlay.addEventListener("click", () => {
+  clearPanels()
 })
