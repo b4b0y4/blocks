@@ -30,7 +30,7 @@ Object.keys(contractsData).forEach((key, index) => {
   contractIndexMap[key] = index
 })
 
-const library = {
+const libraries = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
   p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
   threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
@@ -936,7 +936,7 @@ function update(
 }
 
 function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
-  const src = library[extLib]
+  const src = libraries[extLib]
   const tokenIdHash =
     tokenId < 3000000 && contract == 0
       ? `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
