@@ -261,13 +261,22 @@ a:hover {
   background-color: var(--color-hvr);
 }
 
-.copy-text {
+.copy-text,
+.fa-copy {
   color: var(--color-key);
   transition: color 0.1s ease-in-out;
   cursor: default;
 }
 
+.copy-text {
+  color: var(--color-btn);
+}
+
 .copy-text:hover {
+  color: var(--color-txt);
+}
+
+.fa-copy:hover {
   color: var(--color-btn);
 }
 
