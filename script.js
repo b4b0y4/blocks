@@ -977,35 +977,36 @@ function determineCuration(projId) {
 }
 
 function determinePlatform(contract, curation) {
+  const contractName = contractNameMap[contract]
   const platform = {
-    3: "Art Blocks Explorations",
-    6: "Art Blocks &times; Bright Moments",
-    12: "Sotheby's",
-    13: "ATP",
-    14: "Grailers",
-    15: "AOI",
-    16: "Vertical Crypto Art",
-    17: "SquiggleDAO",
-    18: "Endaoment",
-    19: "The Disruptive Gallery",
-    20: "Vertu Fine Art",
-    21: "Unit London",
-    22: "Trame",
-    23: "Hodlers",
-    24: "Foundation for Art and Blockchain",
-    25: "FlamingoDAO",
-    26: "Tender",
+    EXP: "Art Blocks Explorations",
+    ABXBM: "Art Blocks &times; Bright Moments",
+    STBYS: "Sotheby's",
+    ATP: "ATP",
+    GRAIL: "Grailers",
+    AOI: "AOI",
+    VCA: "Vertical Crypto Art",
+    SDAO: "SquiggleDAO",
+    MINTS: "Endaoment",
+    TDG: "The Disruptive Gallery",
+    VFA: "Vertu Fine Art",
+    UNITLDN: "Unit London",
+    TRAME: "Trame",
+    HODL: "Hodlers",
+    FAB: "Foundation for Art and Blockchain",
+    FLUTTER: "FlamingoDAO",
+    TENDER: "Tender",
   }
 
   ;[
-    [[0, 1, 2], curation],
-    [[4, 5], "Art Blocks &times; Pace"],
-    [[7, 8, 9], "Bright Moments"],
-    [[10, 11], "Plottables"],
-    [[27, 28, 29, 30, 31], "Art Blocks Studio"],
+    [["AB", "ABVII", "ABVIII"], curation],
+    [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
+    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
+    [["PLOT", "PLOTII"], "Plottables"],
+    [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 
-  return platform[contract] || null
+  return platform[contractName] || null
 }
 
 function getShortenedId(tokenId) {
