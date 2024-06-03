@@ -40,7 +40,6 @@ const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
 const frame = document.getElementById("frame")
 const infobar = document.querySelector(".infobar")
-const infoBox = document.getElementById("infoBox")
 const info = document.getElementById("info")
 const save = document.getElementById("saveBtn")
 const dec = document.getElementById("decrementBtn")
@@ -51,8 +50,6 @@ const panelContent = document.getElementById("panelContent")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
 const search = document.getElementById("searchInput")
-const keyShort = document.querySelector(".key-short")
-const spin = document.querySelector(".spinner")
 
 const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
@@ -1594,7 +1591,8 @@ function clearPanels() {
 }
 
 function toggleSpin() {
-  ;(spin.style.display = "block"), (keyShort.style.display = "none")
+  document.querySelector(".spinner").style.display = "block"
+  document.querySelector(".key-short").style.display = "none"
 }
 
 function togglePanel(panelElement) {
@@ -1606,7 +1604,8 @@ function togglePanel(panelElement) {
 }
 
 function toggleKeyShort(event) {
-  keyShort.style.display = event.type === "focusin" ? "none" : "block"
+  document.querySelector(".key-short").style.display =
+    event.type === "focusin" ? "none" : "block"
 }
 
 function setupInfobar() {
@@ -1638,7 +1637,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const val = rpcUrl ? "none" : "block"
   ;[rpcUrlInput, instruction].forEach((el) => (el.style.display = val))
 
-  if (!rpcUrl) infoBox.style.display = "none"
+  if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
