@@ -886,7 +886,7 @@ async function grabData(tokenId, contract) {
     const projectInfo = await fetchProjectInfo(projId, contract, isContractV2)
     const script = await constructScript(projId, projectInfo, contract)
     const detail = await fetchProjectDetails(projId, contract)
-    const owner = await fetchOwner(tokenId, contract)
+    const { owner, ensName } = await fetchOwner(tokenId, contract)
     const extLib = extractLibraryName(projectInfo)
     const { edition, remaining } = await fetchEditionInfo(projId, contract, isContractV2)
 
@@ -900,6 +900,7 @@ async function grabData(tokenId, contract) {
         script,
         detail,
         owner,
+        ensName,
         extLib,
         edition,
         remaining,
@@ -942,7 +943,9 @@ async function fetchProjectDetails(projId, contract) {
 }
 
 async function fetchOwner(tokenId, contract) {
-  return contracts[contract].ownerOf(tokenId)
+  const owner = await contracts[contract].ownerOf(tokenId)
+  const ensName = await provider.lookupAddress(owner)
+  return { owner, ensName }
 }
 
 function extractLibraryName(projectInfo) {
@@ -975,6 +978,7 @@ function update(
   script,
   detail,
   owner,
+  ensName,
   extLib,
   edition,
   remaining
@@ -987,6 +991,7 @@ function update(
     updatePanelContent(
       contract,
       owner,
+      ensName,
       detail,
       tokenId,
       platform,
@@ -1077,14 +1082,12 @@ function getShortenedId(tokenId) {
 }
 
 function updateInfo(contract, detail, id) {
-  return new Promise((resolve, reject) => {
-    let logs = []
+  return new Promise((resolve) => {
+    const logs = []
     if (contract == 8) {
       frame.contentWindow.console.log = function (message) {
-        console.log("Log from iframe:", message)
         if (logs.length === 0) {
-          message = message.replace(/Artist\s*\d+\.\s*/, "")
-          message = message.replace(/\s*--.*/, "")
+          message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
         }
         logs.push(message)
         info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
@@ -1097,9 +1100,10 @@ function updateInfo(contract, detail, id) {
   })
 }
 
-async function updatePanelContent(
+function updatePanelContent(
   contract,
   owner,
+  ensName,
   detail,
   tokenId,
   platform,
@@ -1107,20 +1111,19 @@ async function updatePanelContent(
   remaining,
   artist
 ) {
-  try {
-    let mintedOut =
-      remaining == 0
-        ? `Edition of ${edition} works.`
-        : `Edition of ${edition} works, ${remaining} remaining.`
+  let mintedOut =
+    remaining == 0
+      ? `Edition of ${edition} works.`
+      : `Edition of ${edition} works, ${remaining} remaining.`
 
-    const shortOwner = shortenAddress(owner)
-    const shortContract = shortenAddress(contracts[contract].target)
+  const shortOwner = ensName ? ensName : shortenAddress(owner)
+  const shortContract = shortenAddress(contracts[contract].target)
 
-    let ownerLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${shortOwner}</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span>`
-    let contractLink = `<a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank">${shortContract}</a><span class="copy-text" data-text="${contracts[contract].target}"><i class="fa-regular fa-copy"></i></span>`
-    let copyToken = `<span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>`
+  let ownerLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${shortOwner}</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span>`
+  let contractLink = `<a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank">${shortContract}</a><span class="copy-text" data-text="${contracts[contract].target}"><i class="fa-regular fa-copy"></i></span>`
+  let tokenLink = `<span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>`
 
-    const panelContentHTML = `
+  const panelContentHTML = `
       <p>
         <span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
@@ -1132,28 +1135,16 @@ async function updatePanelContent(
       <p>
         Owner ${ownerLink}<br>
         Contract ${contractLink}<br>
-        Token Id ${copyToken}
+        Token Id ${tokenLink}
       </p>
     `
-    panelContent.innerHTML = panelContentHTML
+  panelContent.innerHTML = panelContentHTML
 
-    let ensName = await provider.lookupAddress(owner)
-    if (ensName) {
-      let ensLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${ensName}</a><span class="copy-text" data-text="${owner}"> <i class="fa-regular fa-copy"></i></span>`
-      panelContent.innerHTML = panelContentHTML.replace(
-        `Owner ${ownerLink}<br>`,
-        `Owner ${ensLink}<br>`
-      )
-    }
-
-    document.querySelectorAll(".copy-text").forEach((element) => {
-      element.addEventListener("click", () => {
-        copyToClipboard(element.getAttribute("data-text"))
-      })
+  document.querySelectorAll(".copy-text").forEach((element) => {
+    element.addEventListener("click", () => {
+      copyToClipboard(element.getAttribute("data-text"))
     })
-  } catch (error) {
-    console.log("updatePanelContent:", error)
-  }
+  })
 }
 
 function shortenAddress(address) {
@@ -1163,8 +1154,8 @@ function shortenAddress(address) {
 function copyToClipboard(text) {
   navigator.clipboard
     .writeText(text)
-    .then(() => console.log("Text copied to clipboard:", text))
-    .catch((error) => console.error("Failed to copy text to clipboard:", error))
+    .then(() => console.log("Copied:", text))
+    .catch((error) => console.error("Failed to copy:", error))
 }
 
 /***************************************************
