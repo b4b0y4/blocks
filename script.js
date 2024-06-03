@@ -1118,7 +1118,7 @@ async function updatePanelContent(
 
     let ownerLink = `<a href="https://zapper.xyz/account/${owner}" target="_blank">${shortOwner}</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span>`
     let contractLink = `<a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank">${shortContract}</a><span class="copy-text" data-text="${contracts[contract].target}"><i class="fa-regular fa-copy"></i></span>`
-    let tokenLink = `<span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>`
+    let copyToken = `<span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>`
 
     const panelContentHTML = `
       <p>
@@ -1132,7 +1132,7 @@ async function updatePanelContent(
       <p>
         Owner ${ownerLink}<br>
         Contract ${contractLink}<br>
-        Token Id ${tokenLink}
+        Token Id ${copyToken}
       </p>
     `
     panelContent.innerHTML = panelContentHTML
