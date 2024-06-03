@@ -1,39 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import {
-  abiV1,
-  abiV2,
-  abiV3,
-  abiBM,
-  contractAddressV1,
-  contractAddressV2,
-  contractAddressV3,
-  contractAddressEXPLORE,
-  contractAddressABXPACE,
-  contractAddressABXPACE2,
-  contractAddressABXBM,
-  contractAddressBM,
-  contractAddressBMF,
-  contractAddressCITIZEN,
-  contractAddressPLOTS,
-  contractAddressPLOTS2,
-  contractAddressSTBYS,
-  contractAddressATP,
-  contractAddressGRAILS,
-  contractAddressAOI,
-  contractAddressVCA,
-  contractAddressSDAO,
-  contractAddressMINTS,
-  contractAddressTDG,
-  contractAddressVFA,
-  contractAddressUNITLDN,
-  contractAddressTRAME,
-  contractAddressHODLERS,
-  contractAddressFAB,
-  contractAddressABSTUDIO0,
-  contractAddressABSTUDIO1,
-  contractAddressFLUTTER,
-  contractAddressTENDER,
-} from "./contracts.js"
+import { contractsData } from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -53,37 +19,9 @@ const search = document.getElementById("searchInput")
 const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
 
-const contracts = [
-  { abi: abiV1, address: contractAddressV1 },
-  { abi: abiV2, address: contractAddressV2 },
-  { abi: abiV3, address: contractAddressV3 },
-  { abi: abiV3, address: contractAddressEXPLORE },
-  { abi: abiV2, address: contractAddressABXPACE },
-  { abi: abiV3, address: contractAddressABXPACE2 },
-  { abi: abiV3, address: contractAddressABXBM },
-  { abi: abiBM, address: contractAddressBM },
-  { abi: abiV3, address: contractAddressBMF },
-  { abi: abiV2, address: contractAddressCITIZEN },
-  { abi: abiV2, address: contractAddressPLOTS },
-  { abi: abiV3, address: contractAddressPLOTS2 },
-  { abi: abiV3, address: contractAddressSTBYS },
-  { abi: abiV2, address: contractAddressATP },
-  { abi: abiV3, address: contractAddressGRAILS },
-  { abi: abiV3, address: contractAddressAOI },
-  { abi: abiV2, address: contractAddressVCA },
-  { abi: abiV3, address: contractAddressSDAO },
-  { abi: abiV2, address: contractAddressMINTS },
-  { abi: abiV3, address: contractAddressTDG },
-  { abi: abiV3, address: contractAddressVFA },
-  { abi: abiV3, address: contractAddressUNITLDN },
-  { abi: abiV2, address: contractAddressTRAME },
-  { abi: abiV3, address: contractAddressHODLERS },
-  { abi: abiV3, address: contractAddressFAB },
-  { abi: abiV3, address: contractAddressABSTUDIO0 },
-  { abi: abiV3, address: contractAddressABSTUDIO1 },
-  { abi: abiV2, address: contractAddressFLUTTER },
-  { abi: abiV3, address: contractAddressTENDER },
-].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
+const contracts = Object.values(contractsData).map(
+  ({ abi, address }) => new ethers.Contract(address, abi, provider)
+)
 
 const predefinedLibraries = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
@@ -92,16 +30,22 @@ const predefinedLibraries = {
   three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  paperjs: "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
-  paper: "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  paperjs:
+    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  paper:
+    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
   processing:
     "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
-  "a-frame": "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
-  twemoji: 'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
-  babylonjs: "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
-  babylon: "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+  "a-frame":
+    "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
+  twemoji:
+    'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
+  babylonjs:
+    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+  babylon:
+    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   js: "",
   svg: "",
   custom: "",
@@ -824,7 +768,11 @@ async function fetchBlocks() {
     let noZero = [14, 23].includes(n)
     const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(n)
     // i = project id
-    for (let i = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0; i < 500; i++) {
+    for (
+      let i = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0;
+      i < 500;
+      i++
+    ) {
       try {
         const contractName = getContract(n)
         const detail = await contracts[n].projectDetails(i.toString())
@@ -878,7 +826,9 @@ async function grabData(tokenId, contract) {
     clearDataStorage()
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
-    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(contract)
+    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(
+      contract
+    )
 
     const hash = await fetchHash(tokenId, contract)
     const projId = Number(await fetchProjectId(tokenId, contract))
@@ -887,7 +837,11 @@ async function grabData(tokenId, contract) {
     const detail = await fetchProjectDetails(projId, contract)
     const { owner, ensName } = await fetchOwner(tokenId, contract)
     const extLib = extractLibraryName(projectInfo)
-    const { edition, remaining } = await fetchEditionInfo(projId, contract, isContractV2)
+    const { edition, remaining } = await fetchEditionInfo(
+      projId,
+      contract,
+      isContractV2
+    )
 
     localStorage.setItem(
       "contractData",
@@ -983,7 +937,9 @@ function update(
   remaining
 ) {
   pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
-  const curation = [0, 1, 2].includes(contract) ? determineCuration(projId) : null
+  const curation = [0, 1, 2].includes(contract)
+    ? determineCuration(projId)
+    : null
   const platform = determinePlatform(contract, curation)
   let id = getShortenedId(tokenId)
   updateInfo(contract, detail, id).then((artist) => {
@@ -1018,18 +974,19 @@ function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
 
 function determineCuration(projId) {
   const curated = [
-    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40, 41, 53,
-    59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147, 159, 173, 204,
-    206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282, 284, 296, 304, 309, 320,
-    328, 333, 334, 336, 337, 341, 364, 367, 368, 376, 379, 383, 385, 399, 406, 407, 412,
-    416, 417, 418, 423, 426, 428, 433, 455, 456, 457, 462, 466, 471, 472, 482, 483, 484,
-    486, 487, 488, 493,
+    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
+    41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
+    159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
+    284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
+    379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
+    456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
   ]
   const playground = [
-    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77, 94, 104,
-    108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164, 167, 191, 197, 200,
-    201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264, 286, 289, 292, 294, 310, 319,
-    329, 339, 340, 350, 356, 362, 366, 369, 370, 373,
+    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
+    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
+    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
+    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
+    373,
   ]
   return curated.includes(projId)
     ? "Art Blocks Curated"
@@ -1043,7 +1000,7 @@ function determineCuration(projId) {
 }
 
 function determinePlatform(contract, curation) {
-  const contractsData = {
+  const platform = {
     3: "Art Blocks Explorations",
     6: "Art Blocks &times; Bright Moments",
     12: "Sotheby's",
@@ -1069,9 +1026,9 @@ function determinePlatform(contract, curation) {
     [[7, 8, 9], "Bright Moments"],
     [[10, 11], "Plottables"],
     [[25, 26], "Art Blocks Studio"],
-  ].forEach(([keys, value]) => keys.forEach((key) => (contractsData[key] = value)))
+  ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 
-  return contractsData[contract] || null
+  return platform[contract] || null
 }
 
 function getShortenedId(tokenId) {
@@ -1086,7 +1043,9 @@ function updateInfo(contract, detail, id) {
     if (contract == 8) {
       frame.contentWindow.console.log = function (message) {
         if (logs.length === 0) {
-          message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
+          message = message
+            .replace(/Artist\s*\d+\.\s*/, "")
+            .replace(/\s*--.*/, "")
         }
         logs.push(message)
         info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
@@ -1232,7 +1191,9 @@ function handleNumericQuery(searchQuery) {
   const { contract, projId } = contractData
   const id = parseInt(searchQuery.match(/\s*(\d+)/)[1])
   const tokenId =
-    projId == 0 ? id : Number((projId * 1000000 + id).toString().padStart(6, "0"))
+    projId == 0
+      ? id
+      : Number((projId * 1000000 + id).toString().padStart(6, "0"))
 
   grabData(tokenId, contract)
 }
@@ -1290,7 +1251,10 @@ function getContractFromList(contract, tokenId) {
     TENDER: 28,
   }
 
-  return contractMap[contract] ?? (tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2)
+  return (
+    contractMap[contract] ??
+    (tokenId < 3000000 ? 0 : tokenId < 374000000 ? 1 : 2)
+  )
 }
 
 /***************************************************
@@ -1312,7 +1276,9 @@ function displayList(lines) {
 }
 
 function filterList(lines, query) {
-  filteredList = lines.filter((line) => line.toLowerCase().includes(query.toLowerCase()))
+  filteredList = lines.filter((line) =>
+    line.toLowerCase().includes(query.toLowerCase())
+  )
   displayList(filteredList)
   selectedIndex = -1
 }
@@ -1331,7 +1297,8 @@ function handleKeyboardNavigation(event) {
     if (selectedIndex === -1) {
       selectedIndex = filteredList.length - 1
     } else {
-      selectedIndex = (selectedIndex - 1 + filteredList.length) % filteredList.length
+      selectedIndex =
+        (selectedIndex - 1 + filteredList.length) % filteredList.length
     }
   } else if (event.key === "Enter") {
     if (selectedIndex !== -1) {
@@ -1462,7 +1429,9 @@ function handleLoopClick(action) {
   }
 }
 
-document.getElementById("loop").addEventListener("click", () => handleLoopClick("loop"))
+document
+  .getElementById("loop")
+  .addEventListener("click", () => handleLoopClick("loop"))
 document
   .getElementById("favLoop")
   .addEventListener("click", () => handleLoopClick("favLoop"))
@@ -1474,7 +1443,10 @@ async function saveOutput() {
   clearPanels()
   const content = frame.contentDocument.documentElement.outerHTML
   let id = getShortenedId(contractData.tokenId)
-  const defaultName = `${contractData.detail[0].replace(/\s+/g, "-")}#${id}.html`
+  const defaultName = `${contractData.detail[0].replace(
+    /\s+/g,
+    "-"
+  )}#${id}.html`
   const blob = new Blob([content], { type: "text/html" })
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")

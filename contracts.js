@@ -1,39 +1,39 @@
 // GenArt721
-export const contractAddressV1 = "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"
+const contractAddressV1 = "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"
 
 // GenArt721CoreV2
-export const contractAddressV2 = "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270"
-export const contractAddressABXPACE = "0x64780CE53f6e966E18a22Af13a2F97369580Ec11"
-export const contractAddressBM = "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" //weird
-export const contractAddressPLOTS = "0xa319C382a702682129fcbF55d514E61a16f97f9c"
-export const contractAddressATP = "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3"
-export const contractAddressVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436"
-export const contractAddressMINTS = "0xEafE7b73A3cfA804b761debcF077D4574588dfe7"
-export const contractAddressTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
-export const contractAddressFLUTTER = "0x13aAe6f9599880edbB7d144BB13F1212CeE99533"
+const contractAddressV2 = "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270"
+const contractAddressABXPACE = "0x64780CE53f6e966E18a22Af13a2F97369580Ec11"
+const contractAddressBM = "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" //weird
+const contractAddressPLOTS = "0xa319C382a702682129fcbF55d514E61a16f97f9c"
+const contractAddressATP = "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3"
+const contractAddressVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436"
+const contractAddressMINTS = "0xEafE7b73A3cfA804b761debcF077D4574588dfe7"
+const contractAddressTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
+const contractAddressFLUTTER = "0x13aAe6f9599880edbB7d144BB13F1212CeE99533"
 
 // GenArt721CoreV3
-export const contractAddressV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
-export const contractAddressEXPLORE = "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
-export const contractAddressABXPACE2 = "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
-export const contractAddressABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
-export const contractAddressBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD"
-export const contractAddressCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
-export const contractAddressPLOTS2 = "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
-export const contractAddressSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
-export const contractAddressGRAILS = "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
-export const contractAddressAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C"
-export const contractAddressSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706"
-export const contractAddressTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253"
-export const contractAddressVFA = "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4"
-export const contractAddressUNITLDN = "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
-export const contractAddressHODLERS = "0x9F79e46A309f804Aa4B7B53a1F72c69137427794"
-export const contractAddressFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
-export const contractAddressTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
-export const contractAddressABSTUDIO0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
-export const contractAddressABSTUDIO1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
+const contractAddressV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
+const contractAddressEXPLORE = "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
+const contractAddressABXPACE2 = "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
+const contractAddressABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
+const contractAddressBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD"
+const contractAddressCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
+const contractAddressPLOTS2 = "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
+const contractAddressSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
+const contractAddressGRAILS = "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
+const contractAddressAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C"
+const contractAddressSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706"
+const contractAddressTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253"
+const contractAddressVFA = "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4"
+const contractAddressUNITLDN = "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
+const contractAddressHODLERS = "0x9F79e46A309f804Aa4B7B53a1F72c69137427794"
+const contractAddressFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
+const contractAddressTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
+const contractAddressABSTUDIO0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
+const contractAddressABSTUDIO1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 
-export const abiV1 = [
+const abiV1 = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -879,7 +879,7 @@ export const abiV1 = [
   },
 ]
 
-export const abiV2 = [
+const abiV2 = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -1345,7 +1345,9 @@ export const abiV2 = [
     constant: true,
     inputs: [],
     name: "randomizerContract",
-    outputs: [{ internalType: "contract Randomizer", name: "", type: "address" }],
+    outputs: [
+      { internalType: "contract Randomizer", name: "", type: "address" },
+    ],
     payable: false,
     stateMutability: "view",
     type: "function",
@@ -1578,7 +1580,9 @@ export const abiV2 = [
   },
   {
     constant: false,
-    inputs: [{ internalType: "address", name: "_artblocksAddress", type: "address" }],
+    inputs: [
+      { internalType: "address", name: "_artblocksAddress", type: "address" },
+    ],
     name: "updateArtblocksAddress",
     outputs: [],
     payable: false,
@@ -1805,7 +1809,9 @@ export const abiV2 = [
   },
   {
     constant: false,
-    inputs: [{ internalType: "address", name: "_randomizerAddress", type: "address" }],
+    inputs: [
+      { internalType: "address", name: "_randomizerAddress", type: "address" },
+    ],
     name: "updateRandomizerAddress",
     outputs: [],
     payable: false,
@@ -1814,7 +1820,7 @@ export const abiV2 = [
   },
 ]
 
-export const abiV3 = [
+const abiV3 = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -2079,7 +2085,9 @@ export const abiV3 = [
   {
     inputs: [],
     name: "adminACLContract",
-    outputs: [{ internalType: "contract IAdminACLV0", name: "", type: "address" }],
+    outputs: [
+      { internalType: "contract IAdminACLV0", name: "", type: "address" },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -2509,7 +2517,9 @@ export const abiV3 = [
   {
     inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
     name: "projectURIInfo",
-    outputs: [{ internalType: "string", name: "projectBaseURI", type: "string" }],
+    outputs: [
+      { internalType: "string", name: "projectBaseURI", type: "string" },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -2557,7 +2567,9 @@ export const abiV3 = [
   {
     inputs: [],
     name: "randomizerContract",
-    outputs: [{ internalType: "contract IRandomizerV2", name: "", type: "address" }],
+    outputs: [
+      { internalType: "contract IRandomizerV2", name: "", type: "address" },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -2771,7 +2783,9 @@ export const abiV3 = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "string", name: "_defaultBaseURI", type: "string" }],
+    inputs: [
+      { internalType: "string", name: "_defaultBaseURI", type: "string" },
+    ],
     name: "updateDefaultBaseURI",
     outputs: [],
     stateMutability: "nonpayable",
@@ -2918,7 +2932,9 @@ export const abiV3 = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "_randomizerAddress", type: "address" }],
+    inputs: [
+      { internalType: "address", name: "_randomizerAddress", type: "address" },
+    ],
     name: "updateRandomizerAddress",
     outputs: [],
     stateMutability: "nonpayable",
@@ -2926,7 +2942,7 @@ export const abiV3 = [
   },
 ]
 
-export const abiBM = [
+const abiBM = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -3328,7 +3344,9 @@ export const abiBM = [
     constant: true,
     inputs: [{ internalType: "uint256", name: "_projectId", type: "uint256" }],
     name: "projectURIInfo",
-    outputs: [{ internalType: "string", name: "projectBaseURI", type: "string" }],
+    outputs: [
+      { internalType: "string", name: "projectBaseURI", type: "string" },
+    ],
     payable: false,
     stateMutability: "view",
     type: "function",
@@ -3337,7 +3355,9 @@ export const abiBM = [
     constant: true,
     inputs: [],
     name: "randomizerContract",
-    outputs: [{ internalType: "contract IRandomizer", name: "", type: "address" }],
+    outputs: [
+      { internalType: "contract IRandomizer", name: "", type: "address" },
+    ],
     payable: false,
     stateMutability: "view",
     type: "function",
@@ -3552,7 +3572,9 @@ export const abiBM = [
   },
   {
     constant: false,
-    inputs: [{ internalType: "address", name: "_adminAddress", type: "address" }],
+    inputs: [
+      { internalType: "address", name: "_adminAddress", type: "address" },
+    ],
     name: "updateAdmin",
     outputs: [],
     payable: false,
@@ -3752,7 +3774,9 @@ export const abiBM = [
   },
   {
     constant: false,
-    inputs: [{ internalType: "address", name: "_randomizerAddress", type: "address" }],
+    inputs: [
+      { internalType: "address", name: "_randomizerAddress", type: "address" },
+    ],
     name: "updateRandomizerAddress",
     outputs: [],
     payable: false,
@@ -3790,3 +3814,35 @@ export const abiBM = [
     type: "function",
   },
 ]
+
+export const contractsData = {
+  V1: { abi: abiV1, address: contractAddressV1 },
+  V2: { abi: abiV2, address: contractAddressV2 },
+  V3: { abi: abiV3, address: contractAddressV3 },
+  EXPLORE: { abi: abiV3, address: contractAddressEXPLORE },
+  ABXPACE: { abi: abiV2, address: contractAddressABXPACE },
+  ABXPACE2: { abi: abiV3, address: contractAddressABXPACE2 },
+  ABXBM: { abi: abiV3, address: contractAddressABXBM },
+  BM: { abi: abiBM, address: contractAddressBM },
+  BMF: { abi: abiV3, address: contractAddressBMF },
+  CITIZEN: { abi: abiV2, address: contractAddressCITIZEN },
+  PLOTS: { abi: abiV2, address: contractAddressPLOTS },
+  PLOTS2: { abi: abiV3, address: contractAddressPLOTS2 },
+  STBYS: { abi: abiV3, address: contractAddressSTBYS },
+  ATP: { abi: abiV2, address: contractAddressATP },
+  GRAILS: { abi: abiV3, address: contractAddressGRAILS },
+  AOI: { abi: abiV3, address: contractAddressAOI },
+  VCA: { abi: abiV2, address: contractAddressVCA },
+  SDAO: { abi: abiV3, address: contractAddressSDAO },
+  MINTS: { abi: abiV2, address: contractAddressMINTS },
+  TDG: { abi: abiV3, address: contractAddressTDG },
+  VFA: { abi: abiV3, address: contractAddressVFA },
+  UNITLDN: { abi: abiV3, address: contractAddressUNITLDN },
+  TRAME: { abi: abiV2, address: contractAddressTRAME },
+  HODLERS: { abi: abiV3, address: contractAddressHODLERS },
+  FAB: { abi: abiV3, address: contractAddressFAB },
+  ABSTUDIO0: { abi: abiV3, address: contractAddressABSTUDIO0 },
+  ABSTUDIO1: { abi: abiV3, address: contractAddressABSTUDIO1 },
+  FLUTTER: { abi: abiV2, address: contractAddressFLUTTER },
+  TENDER: { abi: abiV3, address: contractAddressTENDER },
+}
