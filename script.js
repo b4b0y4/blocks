@@ -1617,7 +1617,7 @@ function setupInfobar() {
 function toggleInfobarVisibility() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
   localStorage.setItem("infobarInactive", isInfobarInactive)
-  if (!loopState.isLooping) {
+  if (loopState.isLooping !== "true") {
     location.reload()
   }
 }
