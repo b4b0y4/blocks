@@ -32,6 +32,9 @@ const contractAddressFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
 const contractAddressTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
 const contractAddressABSTUDIO0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
 const contractAddressABSTUDIO1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
+const contractAddressABSTUDIO2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
+const contractAddressABSTUDIO3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
+const contractAddressABSTUDIO4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
 
 const abiV1 = [
   {
@@ -3841,8 +3844,11 @@ export const contractsData = {
   TRAME: { abi: abiV2, address: contractAddressTRAME },
   HODL: { abi: abiV3, address: contractAddressHODLERS },
   FAB: { abi: abiV3, address: contractAddressFAB },
-  ABS: { abi: abiV3, address: contractAddressABSTUDIO0 },
-  ABSI: { abi: abiV3, address: contractAddressABSTUDIO1 },
   FLUTTER: { abi: abiV2, address: contractAddressFLUTTER },
   TENDER: { abi: abiV3, address: contractAddressTENDER },
+  ABS: { abi: abiV3, address: contractAddressABSTUDIO0 },
+  ABSI: { abi: abiV3, address: contractAddressABSTUDIO1 },
+  ABSII: { abi: abiV3, address: contractAddressABSTUDIO2 },
+  ABSIII: { abi: abiV3, address: contractAddressABSTUDIO3 },
+  ABSIV: { abi: abiV3, address: contractAddressABSTUDIO4 },
 }

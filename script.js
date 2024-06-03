@@ -31,8 +31,8 @@ Object.keys(contractsData).forEach((key, index) => {
 })
 
 const library = {
-  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
-  p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
+  p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
   threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
@@ -550,6 +550,9 @@ const list = [
   "ABXBM0 - Metropolis / mpkoz - 940 minted",
   "ABS0 - Misbah / Melissa Wiederrecht - 55 minted",
   "ABSI0 - One More Day / Aaron Penne - 50 minted",
+  "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 25 minted",
+  "ABSIII0 - Fragmented Perception / Motus Art - 1 minted",
+  "ABSIV0 - Monochronos / Heeey - 1 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
@@ -737,7 +740,7 @@ const list = [
 // fetchBlocks()
 async function fetchBlocks() {
   // n = contracts
-  for (let n = 27; n < 29; n++) {
+  for (let n = 29; n < 32; n++) {
     let token
     let newList = []
     const isContractV2 = isCoreV2(n)
@@ -990,8 +993,8 @@ function determinePlatform(contract, curation) {
     22: "Trame",
     23: "Hodlers",
     24: "Foundation for Art and Blockchain",
-    27: "FlamingoDAO",
-    28: "Tender",
+    25: "FlamingoDAO",
+    26: "Tender",
   }
 
   ;[
@@ -999,7 +1002,7 @@ function determinePlatform(contract, curation) {
     [[4, 5], "Art Blocks &times; Pace"],
     [[7, 8, 9], "Bright Moments"],
     [[10, 11], "Plottables"],
-    [[25, 26], "Art Blocks Studio"],
+    [[27, 28, 29, 30, 31], "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 
   return platform[contract] || null
