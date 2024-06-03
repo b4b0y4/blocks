@@ -761,20 +761,18 @@ function getContract(contract) {
 
 // fetchBlocks()
 async function fetchBlocks() {
-  let token
   // n = contracts
-  for (let n = 0; n < 1; n++) {
+  for (let n = 27; n < 29; n++) {
+    let token
     let newList = []
-    let noZero = [14, 23].includes(n)
     const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(n)
+    const contractName = getContract(n)
+
+    const iStart =
+      n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0
     // i = project id
-    for (
-      let i = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0;
-      i < 500;
-      i++
-    ) {
+    for (let i = iStart; i < 500; i++) {
       try {
-        const contractName = getContract(n)
         const detail = await contracts[n].projectDetails(i.toString())
         const tkns = isContractV2
           ? await contracts[n].projectTokenInfo(i)
@@ -786,12 +784,12 @@ async function fetchBlocks() {
           )
           token = 0
         } else {
-          console.log(`no ${contractName}${i}`)
+          console.log(`error for project ${contractName}${i}`)
           token++
           if (token == 5) break
         }
       } catch (error) {
-        console.log(`no ${contractName}${i}`)
+        console.log(`error for project ${contractName}${i}`)
         break
       }
     }
