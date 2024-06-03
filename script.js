@@ -46,7 +46,6 @@ const dec = document.getElementById("decrementBtn")
 const inc = document.getElementById("incrementBtn")
 const overlay = document.querySelector(".overlay")
 const panel = document.querySelector(".panel")
-const panelContent = document.getElementById("panelContent")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
 const search = document.getElementById("searchInput")
@@ -1138,7 +1137,7 @@ function updatePanelContent(
         Token Id ${tokenLink}
       </p>
     `
-  panelContent.innerHTML = panelContentHTML
+  document.getElementById("panelContent").innerHTML = panelContentHTML
 
   document.querySelectorAll(".copy-text").forEach((element) => {
     element.addEventListener("click", () => {
