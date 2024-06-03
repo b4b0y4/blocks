@@ -1384,8 +1384,6 @@ function getRandomKey(favorite) {
     contractData = favorite[randomKey]
     localStorage.setItem("contractData", JSON.stringify(contractData))
     location.reload()
-  } else {
-    console.log("No favorite content found.")
   }
 }
 
@@ -1408,9 +1406,7 @@ function loopRandom(interval, action) {
   clearInterval(intervalId)
   const favorite = JSON.parse(localStorage.getItem("favorite")) || "{}"
 
-  if (loopState.isLooping !== "true") {
-    performAction(action, list, favorite)
-  }
+  if (loopState.isLooping !== "true") performAction(action, list, favorite)
 
   intervalId = setInterval(() => {
     performAction(action, list, favorite)
@@ -1421,11 +1417,8 @@ function loopRandom(interval, action) {
 }
 
 function performAction(action, list, favorite) {
-  if (action === "loop") {
-    getRandom(list)
-  } else if (action === "favLoop") {
-    getRandomKey(favorite)
-  }
+  if (action === "loop") getRandom(list)
+  else if (action === "favLoop") getRandomKey(favorite)
 }
 
 function stopRandomLoop() {
@@ -1437,9 +1430,8 @@ function stopRandomLoop() {
 function checkLocalStorage() {
   loopInput.placeholder = `${loopState.interval / MIN_TO_MS}min`
 
-  if (loopState.isLooping === "true" && loopState.action !== null) {
+  if (loopState.isLooping === "true" && loopState.action !== null)
     loopRandom(loopState.interval, loopState.action)
-  }
 }
 
 function handleLoopClick(action) {
@@ -1511,10 +1503,8 @@ function pushContractDataToStorage(id) {
 }
 
 function deleteContractDataFromStorage(key) {
-  if (favorite.hasOwnProperty(key)) {
-    delete favorite[key]
-    localStorage.setItem("favorite", JSON.stringify(favorite))
-  }
+  if (favorite.hasOwnProperty(key)) delete favorite[key]
+  localStorage.setItem("favorite", JSON.stringify(favorite))
 }
 
 function displayFavorite(key) {
@@ -1606,9 +1596,7 @@ function setupInfobar() {
 function toggleInfobarVisibility() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
   localStorage.setItem("infobarInactive", isInfobarInactive)
-  if (loopState.isLooping !== "true") {
-    location.reload()
-  }
+  if (loopState.isLooping !== "true") location.reload()
 }
 
 /***************************************************
