@@ -199,6 +199,7 @@ a:hover {
   transition: color 0.1s ease-in-out;
   z-index: 100;
   margin-right: 15px;
+  user-select: none;
 }
 
 .info:hover {
@@ -320,6 +321,15 @@ a:hover {
 .fav-panel p {
   padding: 2px 5px;
   border-radius: 5px;
+}
+
+.fav-panel span {
+  margin-left: 10px;
+  transition: color 0.1s ease-in-out;
+}
+
+.fav-panel span:hover {
+  color: indianred;
 }
 
 .fav-panel.active p:hover {

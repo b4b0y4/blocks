@@ -35,7 +35,6 @@ import {
   contractAddressTENDER,
 } from "./contracts.js"
 
-// DOM elements
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
@@ -55,11 +54,9 @@ const search = document.getElementById("searchInput")
 const keyShort = document.querySelector(".key-short")
 const spin = document.querySelector(".spinner")
 
-// Initialize Ethereum provider
 const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
 
-// Initialize contracts array
 const contracts = [
   { abi: abiV1, address: contractAddressV1 },
   { abi: abiV2, address: contractAddressV2 },
@@ -92,7 +89,6 @@ const contracts = [
   { abi: abiV3, address: contractAddressTENDER },
 ].map(({ abi, address }) => new ethers.Contract(address, abi, provider))
 
-// Libraries
 const predefinedLibraries = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
@@ -115,9 +111,6 @@ const predefinedLibraries = {
   custom: "",
 }
 
-/***************************************************
- *         FUNCTIONS TO UPDATE THE LIST
- **************************************************/
 const list = [
   "0 - Chromie Squiggle / Snowfro - 9998 minted",
   "1 - Genesis / DCA - 512 minted",
@@ -596,200 +589,203 @@ const list = [
   "489 - Balance / Kelly Milligan x Amber Vittoria - 250 minted",
   "490 - Twist / Rafaël Rozendaal - 250 minted",
   "493 - Melancholic Magical Maiden / Emi Kusano - 300 minted",
-  "EXP 0 - Friendship Bracelets / Alexis André - 38664 minted",
-  "EXP 1 - Marfa Yucca / Daniel Calderon Arenas - 390 minted",
-  "EXP 2 - marfaMESH / Harvey Rayner | patterndotco - 343 minted",
-  "ABXPACE 0 - Petro National / John Gerrard - 196 minted",
-  "ABXPACE 1 - Floating World Genesis / A.A. Murakami - 250 minted",
-  "ABXPACE 2 - QWERTY / Tara Donovan - 500 minted",
-  "ABXPACE 3 - Contractions / Loie Hollowell - 280 minted",
-  "ABXPACE 4 - New Worlds / Robert Whitman - 500 minted",
-  "ABXPACE 5 - PRELUDES / Trevor Paglen - 250 minted",
-  "ABXPACE 6 - World Flag / John Gerrard - 195 minted",
-  "ABXPACE 7 - Schema / DRIFT with Jeff Davis - 300 minted",
-  "ABXBM 0 - Metropolis / mpkoz - 940 minted",
-  "ABXBM 1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
-  "ABS 0 - Misbah / Melissa Wiederrecht - 55 minted",
-  "ABSI 0 - One More Day / Aaron Penne - 50 minted",
-  "BM 0 - Finale / Bright Moments - 1000 minted",
-  "BM 1 - Stellaraum / Alida Sun - 66 minted",
-  "BM 2 - Parnassus / mpkoz - 100 minted",
-  "BM 3 - Inflection / Jeff Davis - 96 minted",
-  "BM 4 - Kaleidoscope / Loren Bednar - 100 minted",
-  "BM 5 - Lux / Jason Ting - 64 minted",
-  "BM 6 - Network C / Casey REAS - 100 minted",
-  "BM 7 - The Nursery / Sputniko! - 100 minted",
-  "BM 8 - FOLIO / Matt DesLauriers - 100 minted",
-  "BM 9 - Inprecision / Thomas Lin Pedersen - 100 minted",
-  "BM 10 - Off Script / Emily Xie - 100 minted",
-  "BM 11 - Formation / Jeff Davis - 100 minted",
-  "BM 12 - translucent panes / fingacode - 431 minted",
-  "BM 13 - Wirwar / Bart Simons - 100 minted",
-  "BM 14 - KERNELS / Julian Hespenheide - 190 minted",
-  "BM 15 - Brise Soleil  / Jorge Ledezma - 100 minted",
-  "BM 16 - Orchids / Luke Shannon - 400 minted",
-  "BM 17 - Rubicon / Mario Carrillo - 266 minted",
-  "BM 18 - nth culture / fingacode - 100 minted",
-  "BM 19 - Pohualli / Fahad Karim - 100 minted",
-  "BM 20 - Underwater / Monica Rizzolli - 100 minted",
-  "BM 21 - Infinito / Stefano Contiero - 100 minted",
-  "BM 22 - Bosque de Chapultepec / Daniel Calderon Arenas - 100 minted",
-  "BM 23 - ToSolaris / Iskra Velitchkova - 100 minted",
-  "BM 24 - Glaciations / Anna Lucia - 100 minted",
-  "BM 25 - 1935 / William Mapan - 100 minted",
-  "BM 26 - lūmen / p1xelfool - 100 minted",
-  "BM 27 - lo que no está / Marcelo Soria-Rodríguez - 100 minted",
-  "BM 28 - 100 Untitled Spaces / Snowfro - 100 minted",
-  "BM 29 - 100 Sunsets / Zach Lieberman - 100 minted",
-  "BM 30 - Transcendence / Jeff Davis - 10 minted",
-  "BM 31 - Caminos / Juan Rodríguez García - 1000 minted",
-  "BM 32 - Color Streams / r4v3n - 370 minted",
-  "BM 33 - Limn / RalenArc - 200 minted",
-  "BM 34 - Velum / Harvey Rayner | patterndotco - 100 minted",
-  "BM 35 - Cage / John Provencher - 162 minted",
-  "BM 36 - Sunset from the Bluffs / Nat Sarkissian - 100 minted",
-  "BM 37 - Intricada / Camille Roux - 270 minted",
-  "BM 38 - Passages / Aaron Penne x Boreta - 100 minted",
-  "BM 39 - Cantera / mrkswcz - 100 minted",
-  "BM 40 - immprint / imma - 315 minted",
-  "BM 41 - Agar / Emily Edelman - 100 minted",
-  "BM 42 - L'Appel / Alexis André - 100 minted",
-  "BM 43 - LED / Jeff Davis - 100 minted",
-  "BM 44 - Event Horizon / Kim Asendorf - 100 minted",
-  "BM 45 - Orbifold / Kjetil Golid - 100 minted",
-  "BM 46 - FULL_SPECTRUM / Lars Wander - 100 minted",
-  "BM 47 - Sparkling Goodbye / Licia He - 100 minted",
-  "BM 48 - Undercurrents / Melissa Wiederrecht - 100 minted",
-  "BM 49 - Margaret / qubibi - 100 minted",
-  "BM 50 - Nature finds a way. / Spongenuity. - 100 minted",
-  "BM 51 - Marching Resonances / Shunsuke Takawo - 100 minted",
-  "BM 52 - Kumono Shingou / zancan - 100 minted",
-  "BM 53 - Hanabi / ykxotkx - 82 minted",
-  "BM 54 - Square Symphony / Okazz - 100 minted",
-  "BM 55 - Public Art / 0xhaiku - 94 minted",
-  "BM 56 - Dream Logic / Ngozi - 100 minted",
-  "BM 57 - Epiphanies / Jimena Buena Vida - 201 minted",
-  "BM 58 - If You Could Do It All Again / Nicole Vella - 120 minted",
-  "BM 59 - Esquejes / Pedro Falco - 169 minted",
-  "BM 60 - 1 + 1 = 3 / Stefano Contiero - 112 minted",
-  "BM 61 - Apophenies / Cory Haber - 100 minted",
-  "BM 62 - Vertigo Las Luces / Guido Corallo - 79 minted",
-  "BM 63 - Cuadro / Jeff Davis - 89 minted",
-  "BM 64 - Dolor Gravitacional / Jorge Ledezma - 63 minted",
-  "BM 65 - Subtraction, Reconfiguration / Juan Pedro Vallejo - 100 minted",
-  "BM 66 - Delirium Blooms / Leonardo Solaas - 89 minted",
-  "BM 67 - KARNE / Lolo Armdz - 70 minted",
-  "BM 68 - BLINK / Patricio Gonzalez Vivo & Jen Lowe - 70 minted",
-  "BM 69 - Souls from Gaia / Tamara Moura Costa - 61 minted",
-  "BM 70 - Desde Lejos / Thomas Noya - 70 minted",
-  "BM 71 - Liminal / Julien Espagnon - 85 minted",
-  "BM 72 - SPINᵗ / NumbersInMotion - 52 minted",
-  "BM 73 - Topology / Rikard Lindström - 29 minted",
-  "BM 74 - Descent / Andreas Gysin - 100 minted",
-  "BM 75 - Enlace / Aranda/Lasch - 100 minted",
-  "BM 76 - Odysseys / Florian Zumbrunn - 100 minted",
-  "BM 77 - a temporary arrangement of material / Martin Grasser - 100 minted",
-  "BM 78 - Lightbreak / Luke Shannon - 100 minted",
-  "BM 79 - Figs. / Sarah Ridgley - 100 minted",
-  "BM 80 - Brava / Anna Carreras - 100 minted",
-  "BM 81 - The Destination / Camille Roux x Matthieu Segret - 100 minted",
-  "BM 82 - Encore / rudxane - 100 minted",
-  "BM 83 - Notes / Maya Man - 100 minted",
-  "BM 84 - Culmination / Jeff Davis - 100 minted",
-  "BM 85 - 89 Bright x Empty Rooms / Casey REAS - 89 minted",
-  "CITIZEN 0 - CryptoGalactican / Qian Qian - 1000 minted",
-  "CITIZEN 3 - CryptoBerliner / Qian Qian - 1000 minted",
-  "CITIZEN 4 - CryptoLondoner / Qian Qian - 1000 minted",
-  "CITIZEN 5 - CryptoMexa / Qian Qian - 1000 minted",
-  "CITIZEN 6 - CryptoTokyoite / Qian Qian - 1000 minted",
-  "CITIZEN 7 - CryptoPatagonian / Qian Qian - 1000 minted",
-  "CITIZEN 8 - CryptoParisian / Qian Qian - 1000 minted",
-  "CITIZEN 9 - CryptoVenezian / Qian Qian - 1000 minted",
-  "PLOT 0 - Streamlines / NumbersInMotion - 500 minted",
-  "PLOT 1 - Implosion / Generative Artworks - 256 minted",
-  "PLOT 2 - Really Random Rock / DCA - 350 minted",
-  "PLOT 3 - Diatom / Joshua Schachter - 102 minted",
-  "PLOT 4 - Lines Walking / Lars Wander - 44 minted",
-  "PLOT 5 - Coalescence / Beervangeer - 135 minted",
-  "PLOT 6 - Shattered / @greweb - 100 minted",
-  "PLOT 7 - Brickwork / WAWAA - 146 minted",
-  "PLOT 8 - spectral / oppos - 63 minted",
-  "PLOT 9 - Delicate Chaos / moving.drawing - 168 minted",
-  "PLOT 10 - Azulejos / PZS - 90 minted",
-  "PLOT 11 - Petri Dish / James Dalessandro - 38 minted",
-  "PLOT 12 - Pseudofigure / conundrumer - 144 minted",
-  "PLOT 13 - Reservation / Generative Artworks - 50 minted",
-  "PLOT 14 - Endless (5,607,250 to Infinity) / Modnar Wolf x NumbersInMotion - 2558 minted",
-  "PLOT 15 - Shields / r4v3n - 100 minted",
-  "PLOT 16 - Structures / Julien Gachadoat - 256 minted",
-  "PLOT 17 - Happenstance I: CTC / Generative Artworks - 30 minted",
-  "PLOT 18 - Beginnings / 0xPhiiil - 40 minted",
-  "PLOT 19 - Scribbled Daydreams / minimizer - 200 minted",
-  "PLOT 20 - Generative Alchemy / Eliya Stein - 38 minted",
-  "PLOT 21 - Scratch / Matto - 64 minted",
-  "PLOT 22 - Stroomlijn / Bart Simons - 38 minted",
-  "PLOT 24 - Lissajous / Michael G Devereux - 13 minted",
-  "PLOT 25 - Happenstance II: Framed / Generative Artworks - 16 minted",
-  "PLOT 26 - Field Recordings / Jacob Gold - 15 minted",
-  "PLOTII 0 - Time Between the Lines is Thread Through the Mind / Matto - 40 minted",
-  "STBYS 0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted",
-  "ATP 0 - LOVE / Martin Grasser - 300 minted",
-  "GRAIL 1 - Fold / rudxane - 400 minted",
-  "GRAIL 2 - Atlas / Eric De Giuli - 333 minted",
-  "SDAO 0 - Elevate Heart / Daniel Calderon Arenas - 1000 minted",
-  "MINTS 0 - The Colors That Heal / Ryan Green - 142 minted",
-  "FLUTTER 0 - Worlds / Kenny Vaden - 500 minted",
-  "FLUTTER 1 - Leggenda / Stefano Contiero - 888 minted",
-  "FLUTTER 2 - Fluxus / Monotau - 234 minted",
-  "TDG 1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
-  "TDG 2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
-  "VFA 0 - Fenestra / Rob Scalera - 41 minted",
-  "VFA 1 - Opuntia / Jake Rockland - 2 minted",
-  "UNITLDN 1 - Disconnected / Stefano Contiero - 10 minted",
-  "UNITLDN 2 - Pressed Pause / Loren Bednar - 10 minted",
-  "AOI 0 - Pursuit / Per Kristian Stoveland - 200 minted",
-  "AOI 1 - Echo of Intensity / Per Kristian Stoveland - 1595 minted",
-  "AOI 2 - /// / Snowfro - 2000 minted",
-  "AOI 3 - Signature / Jack Butcher - 200 minted",
-  "AOI 4 - Trademark / Jack Butcher - 10000 minted",
-  "VCA 1 - Concrete Letters / makio135 - 200 minted",
-  "VCA 2 - A Tender Count(ing) / Lisa Orth - 200 minted",
-  "VCA 3 - The Art behind the Code / Luca Ionescu - 5 minted",
-  "VCA 5 - Petrography Case / Orr Kislev - 200 minted",
-  "VCA 6 - Décorés / Alexis André - 200 minted",
-  "VCA 7 - Spatial Curvatures / DistCollective - 200 minted",
-  "VCA 8 - Drifting Dreams / Licia He - 325 minted",
-  "VCA 10 - Suma / Aleksandra Jovanić - 85 minted",
-  "VCA 11 - Chronicles / encapsuled - 17 minted",
-  "VCA 12 - la caverna / Marcelo Soria-Rodríguez - 150 minted",
-  "VCA 13 - Spensieratezza / Emanuele Pasin - 9 minted",
-  "VCA 15 - Linea Recta / Moodsoup - 150 minted",
-  "VCA 17 - Transition / William Watkins - 100 minted",
-  "VCA 18 - JaggedMemories / Shunsuke Takawo - 50 minted",
-  "VCA 19 - [classifieds] / fingacode - 24 minted",
-  "TRAME 0 - Navette / Alexis André - 200 minted",
-  "TRAME 1 - Optimism / Jeff Davis - 13 minted",
-  "TRAME 2 - Portraits / Martin Grasser - 12 minted",
-  "HODL 1 - Order and Disorder / @greweb - 90 minted",
-  "HODL 2 - Theoretical Townships / WILLARD - 196 minted",
-  "HODL 3 - Lines of Memories / Kitel - 17 minted",
-  "HODL 4 - Aesthetics of Failure / DistCollective - 100 minted",
-  "HODL 5 - Multifaceted / Gin - 5 minted",
-  "HODL 6 - THIS ART IS ILLEGAL! / Daïm - 20 minted",
-  "HODL 7 - Vendaval / Omar Lobato - 8 minted",
-  "HODL 8 - Pulse of Expression / Mathis Biabiany - 20 minted",
-  "HODL 9 - Summit / gpitombo - 33 minted",
-  "HODL 10 - Chaos Control / Olga Fradina - 41 minted",
-  "HODL 11 - Dead Air / artplusbrad - 12 minted",
-  "HODL 12 - Renaissance / Fernando Jerez - 16 minted",
-  "HODL 13 - Whispers of Knowledge / Ferdinand Dervieux - 34 minted",
-  "HODL 15 - Gravity / Pawel Dudko - 45 minted",
-  "HODL 16 - Wired wonders / Alessandro Fiore - 53 minted",
-  "HODL 17 - Nebulous / KRANKARTA - 20 minted",
-  "FAB 0 - Giving Shape / ippsketch - 98 minted",
-  "TENDER 0 - Of That Ilk / KRANKARTA - 200 minted",
+  "EXP0 - Friendship Bracelets / Alexis André - 38664 minted",
+  "EXP1 - Marfa Yucca / Daniel Calderon Arenas - 390 minted",
+  "EXP2 - marfaMESH / Harvey Rayner | patterndotco - 343 minted",
+  "ABXPACE0 - Petro National / John Gerrard - 196 minted",
+  "ABXPACE1 - Floating World Genesis / A.A. Murakami - 250 minted",
+  "ABXPACE2 - QWERTY / Tara Donovan - 500 minted",
+  "ABXPACE3 - Contractions / Loie Hollowell - 280 minted",
+  "ABXPACE4 - New Worlds / Robert Whitman - 500 minted",
+  "ABXPACE5 - PRELUDES / Trevor Paglen - 250 minted",
+  "ABXPACE6 - World Flag / John Gerrard - 195 minted",
+  "ABXPACE7 - Schema / DRIFT with Jeff Davis - 300 minted",
+  "ABXBM0 - Metropolis / mpkoz - 940 minted",
+  "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
+  "ABS0 - Misbah / Melissa Wiederrecht - 55 minted",
+  "ABSI0 - One More Day / Aaron Penne - 50 minted",
+  "BM0 - Finale / Bright Moments - 1000 minted",
+  "BM1 - Stellaraum / Alida Sun - 66 minted",
+  "BM2 - Parnassus / mpkoz - 100 minted",
+  "BM3 - Inflection / Jeff Davis - 96 minted",
+  "BM4 - Kaleidoscope / Loren Bednar - 100 minted",
+  "BM5 - Lux / Jason Ting - 64 minted",
+  "BM6 - Network C / Casey REAS - 100 minted",
+  "BM7 - The Nursery / Sputniko! - 100 minted",
+  "BM8 - FOLIO / Matt DesLauriers - 100 minted",
+  "BM9 - Inprecision / Thomas Lin Pedersen - 100 minted",
+  "BM10 - Off Script / Emily Xie - 100 minted",
+  "BM11 - Formation / Jeff Davis - 100 minted",
+  "BM12 - translucent panes / fingacode - 431 minted",
+  "BM13 - Wirwar / Bart Simons - 100 minted",
+  "BM14 - KERNELS / Julian Hespenheide - 190 minted",
+  "BM15 - Brise Soleil  / Jorge Ledezma - 100 minted",
+  "BM16 - Orchids / Luke Shannon - 400 minted",
+  "BM17 - Rubicon / Mario Carrillo - 266 minted",
+  "BM18 - nth culture / fingacode - 100 minted",
+  "BM19 - Pohualli / Fahad Karim - 100 minted",
+  "BM20 - Underwater / Monica Rizzolli - 100 minted",
+  "BM21 - Infinito / Stefano Contiero - 100 minted",
+  "BM22 - Bosque de Chapultepec / Daniel Calderon Arenas - 100 minted",
+  "BM23 - ToSolaris / Iskra Velitchkova - 100 minted",
+  "BM24 - Glaciations / Anna Lucia - 100 minted",
+  "BM25 - 1935 / William Mapan - 100 minted",
+  "BM26 - lūmen / p1xelfool - 100 minted",
+  "BM27 - lo que no está / Marcelo Soria-Rodríguez - 100 minted",
+  "BM28 - 100 Untitled Spaces / Snowfro - 100 minted",
+  "BM29 - 100 Sunsets / Zach Lieberman - 100 minted",
+  "BM30 - Transcendence / Jeff Davis - 10 minted",
+  "BM31 - Caminos / Juan Rodríguez García - 1000 minted",
+  "BM32 - Color Streams / r4v3n - 370 minted",
+  "BM33 - Limn / RalenArc - 200 minted",
+  "BM34 - Velum / Harvey Rayner | patterndotco - 100 minted",
+  "BM35 - Cage / John Provencher - 162 minted",
+  "BM36 - Sunset from the Bluffs / Nat Sarkissian - 100 minted",
+  "BM37 - Intricada / Camille Roux - 270 minted",
+  "BM38 - Passages / Aaron Penne x Boreta - 100 minted",
+  "BM39 - Cantera / mrkswcz - 100 minted",
+  "BM40 - immprint / imma - 315 minted",
+  "BM41 - Agar / Emily Edelman - 100 minted",
+  "BM42 - L'Appel / Alexis André - 100 minted",
+  "BM43 - LED / Jeff Davis - 100 minted",
+  "BM44 - Event Horizon / Kim Asendorf - 100 minted",
+  "BM45 - Orbifold / Kjetil Golid - 100 minted",
+  "BM46 - FULL_SPECTRUM / Lars Wander - 100 minted",
+  "BM47 - Sparkling Goodbye / Licia He - 100 minted",
+  "BM48 - Undercurrents / Melissa Wiederrecht - 100 minted",
+  "BM49 - Margaret / qubibi - 100 minted",
+  "BM50 - Nature finds a way. / Spongenuity. - 100 minted",
+  "BM51 - Marching Resonances / Shunsuke Takawo - 100 minted",
+  "BM52 - Kumono Shingou / zancan - 100 minted",
+  "BM53 - Hanabi / ykxotkx - 82 minted",
+  "BM54 - Square Symphony / Okazz - 100 minted",
+  "BM55 - Public Art / 0xhaiku - 94 minted",
+  "BM56 - Dream Logic / Ngozi - 100 minted",
+  "BM57 - Epiphanies / Jimena Buena Vida - 201 minted",
+  "BM58 - If You Could Do It All Again / Nicole Vella - 120 minted",
+  "BM59 - Esquejes / Pedro Falco - 169 minted",
+  "BM60 - 1 + 1 = 3 / Stefano Contiero - 112 minted",
+  "BM61 - Apophenies / Cory Haber - 100 minted",
+  "BM62 - Vertigo Las Luces / Guido Corallo - 79 minted",
+  "BM63 - Cuadro / Jeff Davis - 89 minted",
+  "BM64 - Dolor Gravitacional / Jorge Ledezma - 63 minted",
+  "BM65 - Subtraction, Reconfiguration / Juan Pedro Vallejo - 100 minted",
+  "BM66 - Delirium Blooms / Leonardo Solaas - 89 minted",
+  "BM67 - KARNE / Lolo Armdz - 70 minted",
+  "BM68 - BLINK / Patricio Gonzalez Vivo & Jen Lowe - 70 minted",
+  "BM69 - Souls from Gaia / Tamara Moura Costa - 61 minted",
+  "BM70 - Desde Lejos / Thomas Noya - 70 minted",
+  "BM71 - Liminal / Julien Espagnon - 85 minted",
+  "BM72 - SPINᵗ / NumbersInMotion - 52 minted",
+  "BM73 - Topology / Rikard Lindström - 29 minted",
+  "BM74 - Descent / Andreas Gysin - 100 minted",
+  "BM75 - Enlace / Aranda/Lasch - 100 minted",
+  "BM76 - Odysseys / Florian Zumbrunn - 100 minted",
+  "BM77 - a temporary arrangement of material / Martin Grasser - 100 minted",
+  "BM78 - Lightbreak / Luke Shannon - 100 minted",
+  "BM79 - Figs. / Sarah Ridgley - 100 minted",
+  "BM80 - Brava / Anna Carreras - 100 minted",
+  "BM81 - The Destination / Camille Roux x Matthieu Segret - 100 minted",
+  "BM82 - Encore / rudxane - 100 minted",
+  "BM83 - Notes / Maya Man - 100 minted",
+  "BM84 - Culmination / Jeff Davis - 100 minted",
+  "BM85 - 89 Bright x Empty Rooms / Casey REAS - 89 minted",
+  "CITIZEN0 - CryptoGalactican / Qian Qian - 1000 minted",
+  "CITIZEN3 - CryptoBerliner / Qian Qian - 1000 minted",
+  "CITIZEN4 - CryptoLondoner / Qian Qian - 1000 minted",
+  "CITIZEN5 - CryptoMexa / Qian Qian - 1000 minted",
+  "CITIZEN6 - CryptoTokyoite / Qian Qian - 1000 minted",
+  "CITIZEN7 - CryptoPatagonian / Qian Qian - 1000 minted",
+  "CITIZEN8 - CryptoParisian / Qian Qian - 1000 minted",
+  "CITIZEN9 - CryptoVenezian / Qian Qian - 1000 minted",
+  "PLOT0 - Streamlines / NumbersInMotion - 500 minted",
+  "PLOT1 - Implosion / Generative Artworks - 256 minted",
+  "PLOT2 - Really Random Rock / DCA - 350 minted",
+  "PLOT3 - Diatom / Joshua Schachter - 102 minted",
+  "PLOT4 - Lines Walking / Lars Wander - 44 minted",
+  "PLOT5 - Coalescence / Beervangeer - 135 minted",
+  "PLOT6 - Shattered / @greweb - 100 minted",
+  "PLOT7 - Brickwork / WAWAA - 146 minted",
+  "PLOT8 - spectral / oppos - 63 minted",
+  "PLOT9 - Delicate Chaos / moving.drawing - 168 minted",
+  "PLOT10 - Azulejos / PZS - 90 minted",
+  "PLOT11 - Petri Dish / James Dalessandro - 38 minted",
+  "PLOT12 - Pseudofigure / conundrumer - 144 minted",
+  "PLOT13 - Reservation / Generative Artworks - 50 minted",
+  "PLOT14 - Endless (5,607,250 to Infinity) / Modnar Wolf x NumbersInMotion - 2558 minted",
+  "PLOT15 - Shields / r4v3n - 100 minted",
+  "PLOT16 - Structures / Julien Gachadoat - 256 minted",
+  "PLOT17 - Happenstance I: CTC / Generative Artworks - 30 minted",
+  "PLOT18 - Beginnings / 0xPhiiil - 40 minted",
+  "PLOT19 - Scribbled Daydreams / minimizer - 200 minted",
+  "PLOT20 - Generative Alchemy / Eliya Stein - 38 minted",
+  "PLOT21 - Scratch / Matto - 64 minted",
+  "PLOT22 - Stroomlijn / Bart Simons - 38 minted",
+  "PLOT24 - Lissajous / Michael G Devereux - 13 minted",
+  "PLOT25 - Happenstance II: Framed / Generative Artworks - 16 minted",
+  "PLOT26 - Field Recordings / Jacob Gold - 15 minted",
+  "PLOTII0 - Time Between the Lines is Thread Through the Mind / Matto - 40 minted",
+  "STBYS0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted",
+  "ATP0 - LOVE / Martin Grasser - 300 minted",
+  "GRAIL1 - Fold / rudxane - 400 minted",
+  "GRAIL2 - Atlas / Eric De Giuli - 333 minted",
+  "SDAO0 - Elevate Heart / Daniel Calderon Arenas - 1000 minted",
+  "MINTS0 - The Colors That Heal / Ryan Green - 142 minted",
+  "FLUTTER0 - Worlds / Kenny Vaden - 500 minted",
+  "FLUTTER1 - Leggenda / Stefano Contiero - 888 minted",
+  "FLUTTER2 - Fluxus / Monotau - 234 minted",
+  "TDG1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
+  "TDG2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
+  "VFA0 - Fenestra / Rob Scalera - 41 minted",
+  "VFA1 - Opuntia / Jake Rockland - 2 minted",
+  "UNITLDN1 - Disconnected / Stefano Contiero - 10 minted",
+  "UNITLDN2 - Pressed Pause / Loren Bednar - 10 minted",
+  "AOI0 - Pursuit / Per Kristian Stoveland - 200 minted",
+  "AOI1 - Echo of Intensity / Per Kristian Stoveland - 1595 minted",
+  "AOI2 - /// / Snowfro - 2000 minted",
+  "AOI3 - Signature / Jack Butcher - 200 minted",
+  "AOI4 - Trademark / Jack Butcher - 10000 minted",
+  "VCA1 - Concrete Letters / makio135 - 200 minted",
+  "VCA2 - A Tender Count(ing) / Lisa Orth - 200 minted",
+  "VCA3 - The Art behind the Code / Luca Ionescu - 5 minted",
+  "VCA5 - Petrography Case / Orr Kislev - 200 minted",
+  "VCA6 - Décorés / Alexis André - 200 minted",
+  "VCA7 - Spatial Curvatures / DistCollective - 200 minted",
+  "VCA8 - Drifting Dreams / Licia He - 325 minted",
+  "VCA10 - Suma / Aleksandra Jovanić - 85 minted",
+  "VCA11 - Chronicles / encapsuled - 17 minted",
+  "VCA12 - la caverna / Marcelo Soria-Rodríguez - 150 minted",
+  "VCA13 - Spensieratezza / Emanuele Pasin - 9 minted",
+  "VCA15 - Linea Recta / Moodsoup - 150 minted",
+  "VCA17 - Transition / William Watkins - 100 minted",
+  "VCA18 - JaggedMemories / Shunsuke Takawo - 50 minted",
+  "VCA19 - [classifieds] / fingacode - 24 minted",
+  "TRAME0 - Navette / Alexis André - 200 minted",
+  "TRAME1 - Optimism / Jeff Davis - 13 minted",
+  "TRAME2 - Portraits / Martin Grasser - 12 minted",
+  "HODL1 - Order and Disorder / @greweb - 90 minted",
+  "HODL2 - Theoretical Townships / WILLARD - 196 minted",
+  "HODL3 - Lines of Memories / Kitel - 17 minted",
+  "HODL4 - Aesthetics of Failure / DistCollective - 100 minted",
+  "HODL5 - Multifaceted / Gin - 5 minted",
+  "HODL6 - THIS ART IS ILLEGAL! / Daïm - 20 minted",
+  "HODL7 - Vendaval / Omar Lobato - 8 minted",
+  "HODL8 - Pulse of Expression / Mathis Biabiany - 20 minted",
+  "HODL9 - Summit / gpitombo - 33 minted",
+  "HODL10 - Chaos Control / Olga Fradina - 41 minted",
+  "HODL11 - Dead Air / artplusbrad - 12 minted",
+  "HODL12 - Renaissance / Fernando Jerez - 16 minted",
+  "HODL13 - Whispers of Knowledge / Ferdinand Dervieux - 34 minted",
+  "HODL15 - Gravity / Pawel Dudko - 45 minted",
+  "HODL16 - Wired wonders / Alessandro Fiore - 53 minted",
+  "HODL17 - Nebulous / KRANKARTA - 20 minted",
+  "FAB0 - Giving Shape / ippsketch - 98 minted",
+  "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
 ]
 
+/***************************************************
+ *         FUNCTIONS TO UPDATE THE LIST
+ **************************************************/
 function getContract(contract) {
   const contractNames = {
     3: "EXP",
@@ -826,15 +822,15 @@ function getContract(contract) {
 // fetchBlocks()
 async function fetchBlocks() {
   let token
-  // CONTRACTS
-  for (let n = 28; n < 30; n++) {
+  // n = contracts
+  for (let n = 0; n < 1; n++) {
     let newList = []
     let noZero = [14, 23].includes(n)
-    // PROJECT ID
+    const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(n)
+    // i = project id
     for (let i = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0; i < 500; i++) {
-      let contractName = getContract(n)
-      const isContractV2 = [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(n)
       try {
+        const contractName = getContract(n)
         const detail = await contracts[n].projectDetails(i.toString())
         const tkns = isContractV2
           ? await contracts[n].projectTokenInfo(i)
@@ -842,16 +838,16 @@ async function fetchBlocks() {
 
         if (tkns.invocations) {
           newList.push(
-            `${contractName} ${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
+            `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
           )
           token = 0
         } else {
-          console.log(`No tokens found for project ${contractName} ${i}`)
+          console.log(`no ${contractName}${i}`)
           token++
           if (token == 5) break
         }
       } catch (error) {
-        console.log(`Error fetching data for project ${contractName} ${i}`)
+        console.log(`no ${contractName}${i}`)
         break
       }
     }
@@ -881,8 +877,7 @@ let contractData = {}
 
 async function grabData(tokenId, contract) {
   try {
-    spin.style.display = "block"
-    keyShort.style.display = "none"
+    toggleSpin()
     clearPanels()
     clearDataStorage()
     console.log("Contract:", contract, "\nToken Id:", tokenId)
@@ -1479,7 +1474,7 @@ function handleLoopClick(action) {
       toggleInfobarVisibility()
     }
   } else {
-    alert("Please enter a valid time in minutes.")
+    alert("Please enter a time in minutes.")
   }
 
   if (inputValue !== "" && interval !== loopState.interval) {
@@ -1551,22 +1546,15 @@ function displayFavoriteList() {
       keyElement.textContent = key
       const delSpan = document.createElement("span")
       delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`
-      delSpan.style.marginLeft = "10px"
 
-      delSpan.addEventListener("mouseenter", () => {
-        delSpan.style.color = "IndianRed"
-      })
-      delSpan.addEventListener("mouseleave", () => {
-        delSpan.style.color = "var(--color-txt)"
-      })
       delSpan.addEventListener("click", (event) => {
         event.stopPropagation()
         deleteContractDataFromStorage(key)
         displayFavoriteList()
       })
+
       keyElement.addEventListener("click", () => {
-        spin.style.display = "block"
-        keyShort.style.display = "none"
+        toggleSpin()
         displayFavorite(key)
         clearPanels()
       })
@@ -1581,12 +1569,12 @@ function displayFavoriteList() {
  *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
  **************************************************/
 function incrementTokenId() {
-  contractData.tokenId = (contractData.tokenId || 0) + 1
+  contractData.tokenId = contractData.tokenId + 1
   grabData(contractData.tokenId, contractData.contract)
 }
 
 function decrementTokenId() {
-  contractData.tokenId = (contractData.tokenId || 0) - 1
+  contractData.tokenId = contractData.tokenId - 1
   grabData(contractData.tokenId, contractData.contract)
 }
 
@@ -1603,6 +1591,10 @@ function clearDataStorage() {
 function clearPanels() {
   ;[listPanel, panel, favPanel].forEach((p) => p.classList.remove("active"))
   overlay.style.display = "none"
+}
+
+function toggleSpin() {
+  ;(spin.style.display = "block"), (keyShort.style.display = "none")
 }
 
 function togglePanel(panelElement) {
