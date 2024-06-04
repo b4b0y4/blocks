@@ -739,16 +739,14 @@ const list = [
  **************************************************/
 // fetchBlocks()
 async function fetchBlocks() {
-  // n = contracts
   for (let n = 29; n < 32; n++) {
     let token
     let newList = []
     const isContractV2 = isCoreV2(n)
     const contractName = contractNameMap[n]
-
     const iStart =
       n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0
-    // i = project id
+
     for (let i = iStart; i < 500; i++) {
       try {
         const detail = await contracts[n].projectDetails(i.toString())
@@ -1248,9 +1246,8 @@ function handleKeyboardNavigation(event) {
     item.classList.toggle("selected", index === selectedIndex)
   })
 
-  if (selectedIndex !== -1) {
+  if (selectedIndex !== -1)
     items[selectedIndex].scrollIntoView({ block: "nearest" })
-  }
 }
 displayList(list)
 
