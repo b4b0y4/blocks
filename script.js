@@ -55,9 +55,6 @@ const libraries = {
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   "babylon@5.0.0":
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
-  js: "",
-  "js@na": "",
-  custom: "",
 }
 
 const list = [
@@ -552,7 +549,7 @@ const list = [
   "ABXBM0 - Metropolis / mpkoz - 940 minted",
   "ABS0 - Misbah / Melissa Wiederrecht - 55 minted",
   "ABSI0 - One More Day / Aaron Penne - 50 minted",
-  "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 25 minted",
+  "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 29 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 1 minted",
   "ABSIV0 - Monochronos / Heeey - 1 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
@@ -1067,7 +1064,7 @@ async function injectFrame() {
     } else {
       dynamicContent = `<html><head>
       <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-      <script src='${scriptData.src}'></script>
+      <script src='${scriptData.src || ""}'></script>
       <script>${scriptData.tokenIdHash};</script>
       <style type="text/css">
         html {
@@ -1478,7 +1475,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   contractData = JSON.parse(localStorage.getItem("contractData"))
   if (contractData) update(...Object.values(contractData))
-  console.log(contractData.extLib)
 
   const value = contractData ? "block" : "none"
   ;[inc, dec, save].forEach((el) => (el.style.display = value))
