@@ -787,13 +787,13 @@ overlay.addEventListener("click", () => {
  **************************************************/
 // fetchBlocks()
 async function fetchBlocks() {
-  for (let n = 35; n < 36; n++) {
+  for (let n = 35; n < 37; n++) {
     let token
-    let newList = []
+    let newList = ""
     const isContractV2 = isCoreV2.includes(contractNameMap[n])
     const contractName = contractNameMap[n]
-    const iStart =
-      n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0
+    const noZero = ["GRAIL", "HODL"].includes(contractNameMap[n])
+    const iStart = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0
 
     for (let i = iStart; i < 500; i++) {
       try {
@@ -803,9 +803,7 @@ async function fetchBlocks() {
           : await contracts[n].projectStateData(i)
 
         if (tkns.invocations) {
-          newList.push(
-            `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted`
-          )
+          newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted',`
           token = 0
         } else {
           console.log(`no token for ${contractName}${i}`)
