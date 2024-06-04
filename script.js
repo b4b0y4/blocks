@@ -1,5 +1,11 @@
 import { ethers } from "./ethers.min.js"
-import { contractsData, isCoreV2 } from "./contracts.js"
+import {
+  isCoreV2,
+  contractsData,
+  contractNameMap,
+  contractIndexMap,
+  getPlatform,
+} from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -22,13 +28,6 @@ const provider = new ethers.JsonRpcProvider(rpcUrl)
 const contracts = Object.values(contractsData).map(
   ({ abi, address }) => new ethers.Contract(address, abi, provider)
 )
-const contractNameMap = {}
-const contractIndexMap = {}
-
-Object.keys(contractsData).forEach((key, index) => {
-  contractNameMap[index] = key
-  contractIndexMap[key] = index
-})
 
 const libraries = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
@@ -58,7 +57,6 @@ const libraries = {
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   js: "",
   "js@na": "",
-  svg: "",
   custom: "",
 }
 
@@ -915,7 +913,7 @@ function update(
   const curation = [0, 1, 2].includes(contract)
     ? determineCuration(projId)
     : null
-  const platform = determinePlatform(contract, curation)
+  const platform = getPlatform(contract, curation)
 
   updateInfo(
     contract,
@@ -969,39 +967,6 @@ function determineCuration(projId) {
     : projId < 494
     ? "Art Blocks Presents"
     : "Art Blocks"
-}
-
-function determinePlatform(contract, curation) {
-  const contractName = contractNameMap[contract]
-  const platform = {
-    EXP: "Art Blocks Explorations",
-    ABXBM: "Art Blocks &times; Bright Moments",
-    STBYS: "Sotheby's",
-    ATP: "ATP",
-    GRAIL: "Grailers",
-    AOI: "AOI",
-    VCA: "Vertical Crypto Art",
-    SDAO: "SquiggleDAO",
-    MINTS: "Endaoment",
-    TDG: "The Disruptive Gallery",
-    VFA: "Vertu Fine Art",
-    UNITLDN: "Unit London",
-    TRAME: "Trame",
-    HODL: "Hodlers",
-    FAB: "Foundation for Art and Blockchain",
-    FLUTTER: "FlamingoDAO",
-    TENDER: "Tender",
-  }
-
-  ;[
-    [["AB", "ABVII", "ABVIII"], curation],
-    [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
-    [["PLOT", "PLOTII"], "Plottables"],
-    [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
-  ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
-
-  return platform[contractName] || null
 }
 
 function getShortenedId(tokenId) {
