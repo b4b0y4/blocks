@@ -3852,3 +3852,16 @@ export const contractsData = {
   ABSIII: { abi: abiV3, address: contractAddressABSTUDIO3 },
   ABSIV: { abi: abiV3, address: contractAddressABSTUDIO4 },
 }
+
+export const isCoreV2 = [
+  "AB",
+  "ABVII",
+  "ABXPACE",
+  "BM",
+  "PLOT",
+  "ATP",
+  "VCA",
+  "MINTS",
+  "TRAME",
+  "FLUTTER",
+]

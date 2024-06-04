@@ -1,5 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import { contractsData } from "./contracts.js"
+import { contractsData, isCoreV2 } from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -31,29 +31,33 @@ Object.keys(contractsData).forEach((key, index) => {
 })
 
 const libraries = {
-  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
-  p5: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
+  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  "p5@1.9.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
   threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
-  three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+  "three@0.124.0":
+    "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  tone: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
+  "tone@14.8.15": "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   paperjs:
     "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
-  paper:
+  "paper@0.12.15":
     "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
   processing:
     "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  "regl@2.1.0": "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
   "a-frame":
     "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
-  twemoji:
+  "twemoji@14.0.2":
     'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
   babylonjs:
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
-  babylon:
+  "babylon@5.0.0":
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
   js: "",
+  "js@na": "",
   svg: "",
   custom: "",
 }
@@ -742,7 +746,7 @@ async function fetchBlocks() {
   for (let n = 29; n < 32; n++) {
     let token
     let newList = []
-    const isContractV2 = isCoreV2(n)
+    const isContractV2 = isCoreV2.includes(contractNameMap[n])
     const contractName = contractNameMap[n]
     const iStart =
       n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : [14, 23].includes(n) ? 1 : 0
@@ -800,7 +804,7 @@ async function grabData(tokenId, contract) {
     clearDataStorage()
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
-    const isContractV2 = isCoreV2(contract)
+    const isContractV2 = isCoreV2.includes(contractNameMap[contract])
     const hash = await fetchHash(tokenId, contract)
     const projId = Number(await fetchProjectId(tokenId, contract))
     const projectInfo = await fetchProjectInfo(projId, contract, isContractV2)
@@ -835,10 +839,6 @@ async function grabData(tokenId, contract) {
     console.error("grabData:", error)
     search.placeholder = "error"
   }
-}
-
-function isCoreV2(value) {
-  return [0, 1, 4, 7, 9, 10, 13, 16, 18, 22, 27].includes(value)
 }
 
 async function fetchHash(tokenId, contract) {
@@ -878,7 +878,7 @@ async function fetchOwner(tokenId, contract) {
 
 function extractLibraryName(projectInfo) {
   if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
-    return projectInfo[0].split("@")[0].trim()
+    return projectInfo[0].trim()
   } else {
     return JSON.parse(projectInfo[0]).type
   }
@@ -916,20 +916,17 @@ function update(
     ? determineCuration(projId)
     : null
   const platform = determinePlatform(contract, curation)
-  let id = getShortenedId(tokenId)
-  updateInfo(contract, detail, id).then((artist) => {
-    updatePanelContent(
-      contract,
-      owner,
-      ensName,
-      detail,
-      tokenId,
-      platform,
-      edition,
-      remaining,
-      artist
-    )
-  })
+
+  updateInfo(
+    contract,
+    owner,
+    ensName,
+    detail,
+    tokenId,
+    platform,
+    edition,
+    remaining
+  )
   injectFrame()
 }
 
@@ -1013,28 +1010,7 @@ function getShortenedId(tokenId) {
     : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
 }
 
-function updateInfo(contract, detail, id) {
-  return new Promise((resolve) => {
-    const logs = []
-    if (contract == 8) {
-      frame.contentWindow.console.log = function (message) {
-        if (logs.length === 0) {
-          message = message
-            .replace(/Artist\s*\d+\.\s*/, "")
-            .replace(/\s*--.*/, "")
-        }
-        logs.push(message)
-        info.innerHTML = `${detail[0]} #${id} / ${logs[0]}`
-        resolve(logs[0])
-      }
-    } else {
-      info.innerHTML = `${detail[0]} #${id} / ${detail[1]}`
-      resolve(detail[1])
-    }
-  })
-}
-
-function updatePanelContent(
+function updateInfo(
   contract,
   owner,
   ensName,
@@ -1042,18 +1018,29 @@ function updatePanelContent(
   tokenId,
   platform,
   edition,
-  remaining,
-  artist
+  remaining
 ) {
-  let mintedOut =
+  let artist = detail[1]
+  const logs = []
+  const originalLog = frame.contentWindow.console.log
+  frame.contentWindow.console.log = function (message) {
+    if (contract == 8 && logs.length === 0) {
+      message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
+      logs.push(message)
+      artist = logs[0]
+      updateInfo()
+    }
+    originalLog.apply(console, arguments)
+  }
+
+  const mintedOut =
     remaining == 0
       ? `Edition of ${edition} works.`
       : `Edition of ${edition} works, ${remaining} remaining.`
 
-  const shortOwner = ensName || shortenAddress(owner)
-  const shortContract = shortenAddress(contracts[contract].target)
-
-  const panelContentHTML = `
+  const updateInfo = () => {
+    info.innerHTML = `${detail[0]} #${getShortenedId(tokenId)} / ${artist}`
+    document.getElementById("panelContent").innerHTML = `
       <p>
         <span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
@@ -1063,21 +1050,31 @@ function updatePanelContent(
         ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
       </p><br>
       <p>
-        Owner <a href="https://zapper.xyz/account/${owner}" target="_blank">${shortOwner}</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span><br>
-        Contract <a href="https://etherscan.io/address/${contracts[contract].target}" target="_blank">${shortContract}</a><span class="copy-text" data-text="${contracts[contract].target}"><i class="fa-regular fa-copy"></i></span><br>
+        Owner <a href="https://zapper.xyz/account/${owner}" target="_blank">${
+      ensName || shortAddr(owner)
+    }</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span><br>
+        Contract <a href="https://etherscan.io/address/${
+          contracts[contract].target
+        }" target="_blank">${shortAddr(
+      contracts[contract].target
+    )}</a><span class="copy-text" data-text="${
+      contracts[contract].target
+    }"><i class="fa-regular fa-copy"></i></span><br>
         Token Id <span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>
       </p>
     `
-  document.getElementById("panelContent").innerHTML = panelContentHTML
-
-  document.querySelectorAll(".copy-text").forEach((element) => {
-    element.addEventListener("click", () => {
-      copyToClipboard(element.getAttribute("data-text"))
-    })
-  })
+    document
+      .querySelectorAll(".copy-text")
+      .forEach((element) =>
+        element.addEventListener("click", () =>
+          copyToClipboard(element.getAttribute("data-text"))
+        )
+      )
+  }
+  updateInfo()
 }
 
-function shortenAddress(address) {
+function shortAddr(address) {
   return `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
 }
 
@@ -1516,6 +1513,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   contractData = JSON.parse(localStorage.getItem("contractData"))
   if (contractData) update(...Object.values(contractData))
+  console.log(contractData.extLib)
 
   const value = contractData ? "block" : "none"
   ;[inc, dec, save].forEach((el) => (el.style.display = value))
