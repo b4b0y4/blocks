@@ -1,4 +1,32 @@
-export const list = [
+const libraries = {
+  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  "p5@1.9.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
+  threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+  "three@0.124.0":
+    "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+  tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
+  "tone@14.8.15": "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
+  paperjs:
+    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  "paper@0.12.15":
+    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
+  processing:
+    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
+  regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  "regl@2.1.0": "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
+  "a-frame":
+    "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
+  "twemoji@14.0.2":
+    'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
+  babylonjs:
+    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+  "babylon@5.0.0":
+    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+}
+
+const list = [
   "AB0 - Chromie Squiggle / Snowfro - 9998 minted",
   "AB1 - Genesis / DCA - 512 minted",
   "AB2 - Construction Token / Jeff Davis - 500 minted",
@@ -679,3 +707,5 @@ export const list = [
   "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
   "LOM0 - Sacred Trees / hideo - 267 minted",
 ]
+
+export { libraries, list }

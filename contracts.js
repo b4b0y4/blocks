@@ -11,6 +11,10 @@ const contractAddressVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436"
 const contractAddressMINTS = "0xEafE7b73A3cfA804b761debcF077D4574588dfe7"
 const contractAddressTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
 const contractAddressFLUTTER = "0x13aAe6f9599880edbB7d144BB13F1212CeE99533"
+const contractAddressCDESK = "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15"
+const contractAddressARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
+const contractAddressTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
+const contractAddressLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
 
 // GenArt721CoreV3
 const contractAddressV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
@@ -30,15 +34,11 @@ const contractAddressUNITLDN = "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
 const contractAddressHODLERS = "0x9F79e46A309f804Aa4B7B53a1F72c69137427794"
 const contractAddressFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
 const contractAddressTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
-const contractAddressABSTUDIO0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
-const contractAddressABSTUDIO1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
-const contractAddressABSTUDIO2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
-const contractAddressABSTUDIO3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
-const contractAddressABSTUDIO4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
-const contractAddressCDESK = "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15"
-const contractAddressARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
-const contractAddressTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
-const contractAddressLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
+const contractAddressABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
+const contractAddressABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
+const contractAddressABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
+const contractAddressABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
+const contractAddressABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
 
 const abiV1 = [
   {
@@ -3859,6 +3859,10 @@ const contractsData = {
   VCA: { abi: abiV2, address: contractAddressVCA },
   SDAO: { abi: abiV3, address: contractAddressSDAO },
   MINTS: { abi: abiV2, address: contractAddressMINTS },
+  CDESK: { abi: abiV2, address: contractAddressCDESK },
+  ARTCODE: { abi: abiV2, address: contractAddressARTCODE },
+  TBOA: { abi: abiV2, address: contractAddressTBOA },
+  LOM: { abi: abiV2, address: contractAddressLOM },
   TDG: { abi: abiV3, address: contractAddressTDG },
   VFA: { abi: abiV3, address: contractAddressVFA },
   UNITLDN: { abi: abiV3, address: contractAddressUNITLDN },
@@ -3867,15 +3871,11 @@ const contractsData = {
   FAB: { abi: abiV3, address: contractAddressFAB },
   FLUTTER: { abi: abiV2, address: contractAddressFLUTTER },
   TENDER: { abi: abiV3, address: contractAddressTENDER },
-  ABS: { abi: abiV3, address: contractAddressABSTUDIO0 },
-  ABSI: { abi: abiV3, address: contractAddressABSTUDIO1 },
-  ABSII: { abi: abiV3, address: contractAddressABSTUDIO2 },
-  ABSIII: { abi: abiV3, address: contractAddressABSTUDIO3 },
-  ABSIV: { abi: abiV3, address: contractAddressABSTUDIO4 },
-  CDESK: { abi: abiV2, address: contractAddressCDESK },
-  ARTCODE: { abi: abiV2, address: contractAddressARTCODE },
-  TBOA: { abi: abiV2, address: contractAddressTBOA },
-  LOM: { abi: abiV2, address: contractAddressLOM },
+  ABS: { abi: abiV3, address: contractAddressABS0 },
+  ABSI: { abi: abiV3, address: contractAddressABS1 },
+  ABSII: { abi: abiV3, address: contractAddressABS2 },
+  ABSIII: { abi: abiV3, address: contractAddressABS3 },
+  ABSIV: { abi: abiV3, address: contractAddressABS4 },
 }
 
 const contractNameMap = {}
