@@ -730,7 +730,13 @@ const list = [
   "FLUTTER0 - Worlds / Kenny Vaden - 500 minted",
   "FLUTTER1 - Leggenda / Stefano Contiero - 888 minted",
   "FLUTTER2 - Fluxus / Monotau - 234 minted",
+  "CDESK0 - Microcosms / Fahad Karim - 161 minted",
+  "ARTCODE0 - Ensemble / Loren Bednar - 404 minted",
+  "ARTCODE1 - Deconstructed City Plans / Proof of Beauty Studios - 38 minted",
+  "TBOA0 - AIXXA / Shvembldr - 600 minted",
+  "TBOA1 - [post]-konstrukt / Shvembldr - 26 minted",
   "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
+  "LOM0 - Sacred Trees / hideo - 267 minted",
 ]
 
 /***************************************************
@@ -738,7 +744,7 @@ const list = [
  **************************************************/
 // fetchBlocks()
 async function fetchBlocks() {
-  for (let n = 29; n < 32; n++) {
+  for (let n = 35; n < 36; n++) {
     let token
     let newList = []
     const isContractV2 = isCoreV2.includes(contractNameMap[n])
@@ -759,12 +765,12 @@ async function fetchBlocks() {
           )
           token = 0
         } else {
-          console.log(`error for project ${contractName}${i}`)
+          console.log(`no token for ${contractName}${i}`)
           token++
           if (token == 5) break
         }
       } catch (error) {
-        console.log(`error for project ${contractName}${i}`)
+        console.log(`error for ${contractName}${i}`)
         break
       }
     }
@@ -1483,6 +1489,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ;[rpcUrlInput, instruction].forEach((el) => (el.style.display = val))
 
   if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
+  console.log(contractData.extLib)
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {

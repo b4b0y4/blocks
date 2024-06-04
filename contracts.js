@@ -35,6 +35,10 @@ const contractAddressABSTUDIO1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const contractAddressABSTUDIO2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
 const contractAddressABSTUDIO3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
 const contractAddressABSTUDIO4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
+const contractAddressCDESK = "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15"
+const contractAddressARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
+const contractAddressTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
+const contractAddressLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
 
 const abiV1 = [
   {
@@ -3829,6 +3833,10 @@ const isCoreV2 = [
   "MINTS",
   "TRAME",
   "FLUTTER",
+  "CDESK",
+  "ARTCODE",
+  "TBOA",
+  "LOM",
 ]
 
 const contractsData = {
@@ -3864,6 +3872,10 @@ const contractsData = {
   ABSII: { abi: abiV3, address: contractAddressABSTUDIO2 },
   ABSIII: { abi: abiV3, address: contractAddressABSTUDIO3 },
   ABSIV: { abi: abiV3, address: contractAddressABSTUDIO4 },
+  CDESK: { abi: abiV2, address: contractAddressCDESK },
+  ARTCODE: { abi: abiV2, address: contractAddressARTCODE },
+  TBOA: { abi: abiV2, address: contractAddressTBOA },
+  LOM: { abi: abiV2, address: contractAddressLOM },
 }
 
 const contractNameMap = {}
@@ -3894,6 +3906,10 @@ const getPlatform = (contract, curation) => {
     FAB: "Foundation for Art and Blockchain",
     FLUTTER: "FlamingoDAO",
     TENDER: "Tender",
+    CDESK: "Coindesk",
+    ARTCODE: "Redlion",
+    TBOA: "TBOA Club",
+    LOM: "Legends of Metaterra",
   }
 
   ;[
