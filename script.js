@@ -20,14 +20,13 @@ const search = document.getElementById("searchInput")
 const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
 
-const contracts = Object.values(contractsData).map(
-  ({ abi, address }) => new ethers.Contract(address, abi, provider)
-)
-
+const contracts = []
 const contractNameMap = {}
 const contractIndexMap = {}
 
 Object.keys(contractsData).forEach((key, index) => {
+  const { abi, address } = contractsData[key]
+  contracts.push(new ethers.Contract(address, abi, provider))
   contractNameMap[index] = key
   contractIndexMap[key] = index
 })
