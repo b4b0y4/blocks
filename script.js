@@ -44,18 +44,31 @@ async function grabData(tokenId, contract) {
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
     const isContractV2 = isV2.includes(contractNameMap[contract])
-    const hash = await fetchHash(tokenId, contract)
-    const projId = Number(await fetchProjectId(tokenId, contract))
-    const projectInfo = await fetchProjectInfo(projId, contract, isContractV2)
-    const script = await constructScript(projId, projectInfo, contract)
-    const detail = await fetchProjectDetails(projId, contract)
-    const { owner, ensName } = await fetchOwner(tokenId, contract)
-    const extLib = extractLibraryName(projectInfo)
-    const { edition, remaining } = await fetchEditionInfo(
-      projId,
-      contract,
-      isContractV2
-    )
+
+    const projIdPromise = fetchProjectId(tokenId, contract)
+    const hashPromise = fetchHash(tokenId, contract)
+    const ownerPromise = fetchOwner(tokenId, contract)
+
+    const projId = Number(await projIdPromise)
+
+    const projectInfoPromise = fetchProjectInfo(projId, contract, isContractV2)
+    const detailPromise = fetchProjectDetails(projId, contract)
+    const editionInfoPromise = fetchEditionInfo(projId, contract, isContractV2)
+
+    const projectInfo = await projectInfoPromise
+
+    const scriptPromise = constructScript(projId, projectInfo, contract)
+    const extLibPromise = extractLibraryName(projectInfo)
+
+    const [hash, { owner, ensName }, detail, script, editionInfo, extLib] =
+      await Promise.all([
+        hashPromise,
+        ownerPromise,
+        detailPromise,
+        scriptPromise,
+        editionInfoPromise,
+        extLibPromise,
+      ])
 
     localStorage.setItem(
       "contractData",
@@ -69,8 +82,8 @@ async function grabData(tokenId, contract) {
         owner,
         ensName,
         extLib,
-        edition,
-        remaining,
+        edition: editionInfo.edition,
+        remaining: editionInfo.remaining,
       })
     )
     location.reload()
@@ -867,7 +880,7 @@ async function fetchBlocks(contractNames) {
         ? 374
         : contractName === "ABXPACEII"
         ? 5
-        : ["GRAIL", "HODL"].includes(contractName)
+        : ["GRAIL", "HODL", "UNITLDN"].includes(contractName)
         ? 1
         : 0
 

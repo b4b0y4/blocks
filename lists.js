@@ -673,7 +673,6 @@ export const list = [
   "TDG2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
   "VFA0 - Fenestra / Rob Scalera - 41 minted",
   "VFA1 - Opuntia / Jake Rockland - 2 minted",
-  "UNITLDN0 - TEST / Andrei Wang - 2 minted",
   "UNITLDN1 - Disconnected / Stefano Contiero - 10 minted",
   "UNITLDN2 - Pressed Pause / Loren Bednar - 10 minted",
   "TRAME0 - Navette / Alexis André - 200 minted",
