@@ -736,8 +736,8 @@ rpcUrlInput.addEventListener("keypress", (event) => {
   }
 })
 
-document.addEventListener("keypress", (event) => {
-  if (event.key === "\\") {
+document.addEventListener("keydown", (event) => {
+  if (event.ctrlKey && event.key === "c") {
     clearDataStorage()
     location.reload()
   }
