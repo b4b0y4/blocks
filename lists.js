@@ -1,4 +1,4 @@
-const libraries = {
+export const libraries = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.9.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
@@ -26,7 +26,7 @@ const libraries = {
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
 }
 
-const list = [
+export const list = [
   "AB0 - Chromie Squiggle / Snowfro - 9998 minted",
   "AB1 - Genesis / DCA - 512 minted",
   "AB2 - Construction Token / Jeff Davis - 500 minted",
@@ -707,5 +707,3 @@ const list = [
   "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
   "LOM0 - Sacred Trees / hideo - 267 minted",
 ]
-
-export { libraries, list }
