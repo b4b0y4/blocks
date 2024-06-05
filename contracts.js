@@ -3847,6 +3847,11 @@ const contractsData = {
   ABXPACE: { abi: abiV2, address: contractAddressABXPACE },
   ABXPACEII: { abi: abiV3, address: contractAddressABXPACE2 },
   ABXBM: { abi: abiV3, address: contractAddressABXBM },
+  ABS: { abi: abiV3, address: contractAddressABS0 },
+  ABSI: { abi: abiV3, address: contractAddressABS1 },
+  ABSII: { abi: abiV3, address: contractAddressABS2 },
+  ABSIII: { abi: abiV3, address: contractAddressABS3 },
+  ABSIV: { abi: abiV3, address: contractAddressABS4 },
   BM: { abi: abiBM, address: contractAddressBM },
   BMF: { abi: abiV3, address: contractAddressBMF },
   CITIZEN: { abi: abiV2, address: contractAddressCITIZEN },
@@ -3871,11 +3876,6 @@ const contractsData = {
   HODL: { abi: abiV3, address: contractAddressHODLERS },
   FAB: { abi: abiV3, address: contractAddressFAB },
   TENDER: { abi: abiV3, address: contractAddressTENDER },
-  ABS: { abi: abiV3, address: contractAddressABS0 },
-  ABSI: { abi: abiV3, address: contractAddressABS1 },
-  ABSII: { abi: abiV3, address: contractAddressABS2 },
-  ABSIII: { abi: abiV3, address: contractAddressABS3 },
-  ABSIV: { abi: abiV3, address: contractAddressABS4 },
 }
 
 const contractNameMap = {}
@@ -3923,13 +3923,10 @@ const getPlatform = (contract, curation) => {
   return platform[contractName] || null
 }
 
-const fetchBlocksContracts = ["AB", "GRAIL"]
-
 export {
   isCoreV2,
   contractsData,
   contractNameMap,
   contractIndexMap,
   getPlatform,
-  fetchBlocksContracts,
 }
