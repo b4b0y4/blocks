@@ -416,10 +416,13 @@ function filterList(lines, query) {
 }
 
 function handleItemClick(event) {
-  const selectedIndex = event.target.getAttribute("data-index")
-  console.log("Item clicked:", filteredList[selectedIndex])
-  getToken(filteredList[selectedIndex], "")
-  search.value = ""
+  const listItem = event.target.closest(".list-item")
+  if (listItem) {
+    const selectedIndex = listItem.getAttribute("data-index")
+    console.log("Item clicked:", filteredList[selectedIndex])
+    getToken(filteredList[selectedIndex], "")
+    search.value = ""
+  }
 }
 
 function handleKeyboardNavigation(event) {
