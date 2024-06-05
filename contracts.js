@@ -3822,7 +3822,7 @@ const abiBM = [
   },
 ]
 
-export const isCoreV2 = [
+export const isV2 = [
   "AB",
   "ABII",
   "ABXPACE",

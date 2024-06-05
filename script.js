@@ -1,6 +1,6 @@
 import { ethers } from "./ethers.min.js"
-import { isCoreV2, contractsData } from "./contracts.js"
-import { libraries, list } from "./lists.js"
+import { isV2, contractsData } from "./contracts.js"
+import { libs, list } from "./lists.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -43,7 +43,7 @@ async function grabData(tokenId, contract) {
     clearDataStorage()
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
-    const isContractV2 = isCoreV2.includes(contractNameMap[contract])
+    const isContractV2 = isV2.includes(contractNameMap[contract])
     const hash = await fetchHash(tokenId, contract)
     const projId = Number(await fetchProjectId(tokenId, contract))
     const projectInfo = await fetchProjectInfo(projId, contract, isContractV2)
@@ -170,7 +170,7 @@ function update(
 }
 
 function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
-  const src = libraries[extLib]
+  const src = libs[extLib]
   const tokenIdHash =
     tokenId < 3000000 && contract == 0
       ? `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
@@ -261,7 +261,8 @@ function updateInfo(
   const logs = []
   const originalLog = frame.contentWindow.console.log
   frame.contentWindow.console.log = function (message) {
-    if (contract == 8 && logs.length === 0) {
+    const contractName = contractNameMap[contract]
+    if (contractName == "BMF" && logs.length === 0) {
       message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
       logs.push(message)
       artist = logs[0]
@@ -841,7 +842,7 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["AB", "GRAIL"]
+const contractNames = ["AOI"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
@@ -850,7 +851,7 @@ async function fetchBlocks(contractNames) {
 
     let token
     let newList = ""
-    const isContractV2 = isCoreV2.includes(contractName)
+    const isContractV2 = isV2.includes(contractName)
 
     const iStart =
       contractName === "ABII"
