@@ -747,8 +747,15 @@ function toggleInfobarVisibility() {
 function copyToClipboard(text) {
   navigator.clipboard
     .writeText(text)
-    .then(() => console.log("Copied:", text))
-    .catch((error) => console.error("Failed to copy:", error))
+    .then(() => {
+      document.getElementById("toast").classList.add("show")
+      setTimeout(() => {
+        toast.classList.remove("show")
+      }, 2000)
+    })
+    .catch((error) => {
+      console.error("Failed to copy text: ", error)
+    })
 }
 
 /***************************************************
