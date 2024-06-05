@@ -783,17 +783,36 @@ overlay.addEventListener("click", () => {
 })
 
 /***************************************************
+ *              DARK/LIGHT MODE TOGGLE
+ **************************************************/
+const root = document.documentElement
+const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
+
+if (isDarkMode) root.classList.toggle("dark-mode")
+root.classList.remove("no-flash")
+
+document.getElementById("modeToggle").addEventListener("click", () => {
+  root.classList.toggle("dark-mode")
+  const updateMode = root.classList.contains("dark-mode")
+  localStorage.setItem("darkMode", updateMode)
+})
+
+/***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-// fetchBlocks()
-async function fetchBlocks() {
-  for (let n = 35; n < 37; n++) {
+async function fetchBlocks(contractNames) {
+  for (const contractName of contractNames) {
+    const n = contractIndexMap[contractName]
+
     let token
     let newList = ""
-    const isContractV2 = isCoreV2.includes(contractNameMap[n])
-    const contractName = contractNameMap[n]
-    const noZero = ["GRAIL", "HODL"].includes(contractNameMap[n])
-    const iStart = n == 1 ? 3 : n == 2 ? 374 : n == 5 ? 5 : noZero ? 1 : 0
+    const isContractV2 = isCoreV2.includes(contractName)
+    // prettier-ignore
+    const iStart =
+      contractName === "ABII" ? 3 :
+      contractName === "ABIII" ? 374 :
+      contractName === "ABXPACEII" ? 5 :
+      ["GRAIL", "HODL"].includes(contractName) ? 1 : 0;
 
     for (let i = iStart; i < 500; i++) {
       try {
@@ -803,7 +822,7 @@ async function fetchBlocks() {
           : await contracts[n].projectStateData(i)
 
         if (tkns.invocations) {
-          newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted',`
+          newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted', `
           token = 0
         } else {
           console.log(`no token for ${contractName}${i}`)
@@ -819,17 +838,5 @@ async function fetchBlocks() {
   }
 }
 
-/***************************************************
- *              DARK/LIGHT MODE TOGGLE
- **************************************************/
-const root = document.documentElement
-const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
-
-if (isDarkMode) root.classList.toggle("dark-mode")
-root.classList.remove("no-flash")
-
-document.getElementById("modeToggle").addEventListener("click", () => {
-  root.classList.toggle("dark-mode")
-  const updateMode = root.classList.contains("dark-mode")
-  localStorage.setItem("darkMode", updateMode)
-})
+const contractToCheck = ["AB", "GRAIL"]
+// fetchBlocks(contractToCheck)

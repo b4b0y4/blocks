@@ -3822,27 +3822,13 @@ const abiBM = [
   },
 ]
 
-const isCoreV2 = [
-  "AB",
-  "ABVII",
-  "ABXPACE",
-  "BM",
-  "PLOT",
-  "ATP",
-  "VCA",
-  "MINTS",
-  "TRAME",
-  "FLUTTER",
-  "CDESK",
-  "ARTCODE",
-  "TBOA",
-  "LOM",
-]
+// prettier-ignore
+const isCoreV2 = ["AB", "ABII", "ABXPACE", "BM", "PLOT", "ATP", "VCA", "MINTS", "TRAME", "FLUTTER", "CDESK", "ARTCODE", "TBOA", "LOM"]
 
 const contractsData = {
   AB: { abi: abiV1, address: contractAddressV1 },
-  ABVII: { abi: abiV2, address: contractAddressV2 },
-  ABVIII: { abi: abiV3, address: contractAddressV3 },
+  ABII: { abi: abiV2, address: contractAddressV2 },
+  ABIII: { abi: abiV3, address: contractAddressV3 },
   EXP: { abi: abiV3, address: contractAddressEXPLORE },
   ABXPACE: { abi: abiV2, address: contractAddressABXPACE },
   ABXPACEII: { abi: abiV3, address: contractAddressABXPACE2 },
@@ -3913,7 +3899,7 @@ const getPlatform = (contract, curation) => {
   }
 
   ;[
-    [["AB", "ABVII", "ABVIII"], curation],
+    [["AB", "ABII", "ABIII"], curation],
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
     [["BM", "BMF", "CITIZEN"], "Bright Moments"],
     [["PLOT", "PLOTII"], "Plottables"],
