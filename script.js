@@ -1,11 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import {
-  isCoreV2,
-  contractsData,
-  contractNameMap,
-  contractIndexMap,
-  getPlatform,
-} from "./contracts.js"
+import { isCoreV2, contractsData } from "./contracts.js"
 import { libraries, list } from "./lists.js"
 
 const loopInput = document.getElementById("loopInput")
@@ -29,6 +23,14 @@ const provider = new ethers.JsonRpcProvider(rpcUrl)
 const contracts = Object.values(contractsData).map(
   ({ abi, address }) => new ethers.Contract(address, abi, provider)
 )
+
+const contractNameMap = {}
+const contractIndexMap = {}
+
+Object.keys(contractsData).forEach((key, index) => {
+  contractNameMap[index] = key
+  contractIndexMap[key] = index
+})
 
 /***************************************************
  *        FUNCTIONS TO GET DATA FROM ETHEREUM
@@ -209,10 +211,41 @@ function determineCuration(projId) {
     : "Art Blocks"
 }
 
-function getShortenedId(tokenId) {
-  return tokenId < 1000000
-    ? tokenId
-    : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
+const getPlatform = (contract, curation) => {
+  const contractName = contractNameMap[contract]
+  const platform = {
+    EXP: "Art Blocks Explorations",
+    ABXBM: "Art Blocks &times; Bright Moments",
+    STBYS: "Sotheby's",
+    ATP: "ATP",
+    GRAIL: "Grailers",
+    AOI: "AOI",
+    VCA: "Vertical Crypto Art",
+    SDAO: "SquiggleDAO",
+    MINTS: "Endaoment",
+    TDG: "The Disruptive Gallery",
+    VFA: "Vertu Fine Art",
+    UNITLDN: "Unit London",
+    TRAME: "Trame",
+    HODL: "Hodlers",
+    FAB: "Foundation for Art and Blockchain",
+    FLUTTER: "FlamingoDAO",
+    TENDER: "Tender",
+    CDESK: "Coindesk",
+    ARTCODE: "Redlion",
+    TBOA: "TBOA Club",
+    LOM: "Legends of Metaterra",
+  }
+
+  ;[
+    [["AB", "ABII", "ABIII"], curation],
+    [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
+    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
+    [["PLOT", "PLOTII"], "Plottables"],
+    [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
+  ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
+
+  return platform[contractName] || null
 }
 
 function updateInfo(
@@ -244,7 +277,7 @@ function updateInfo(
       : `Edition of ${edition} works, ${remaining} remaining.`
 
   const updateInfo = () => {
-    info.innerHTML = `${detail[0]} #${getShortenedId(tokenId)} / ${artist}`
+    info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
     document.getElementById("panelContent").innerHTML = `
       <p>
         <span style="font-size: 1.4em">${detail[0]}</span><br>
@@ -277,6 +310,12 @@ function updateInfo(
       )
   }
   updateInfo()
+}
+
+function shortId(tokenId) {
+  return tokenId < 1000000
+    ? tokenId
+    : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0
 }
 
 function shortAddr(address) {

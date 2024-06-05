@@ -3822,7 +3822,7 @@ const abiBM = [
   },
 ]
 
-const isCoreV2 = [
+export const isCoreV2 = [
   "AB",
   "ABII",
   "ABXPACE",
@@ -3840,7 +3840,7 @@ const isCoreV2 = [
   "LOM",
 ]
 
-const contractsData = {
+export const contractsData = {
   AB: { abi: abiV1, address: contractAddressV1 },
   ABII: { abi: abiV2, address: contractAddressV2 },
   ABIII: { abi: abiV3, address: contractAddressV3 },
@@ -3877,57 +3877,4 @@ const contractsData = {
   HODL: { abi: abiV3, address: contractAddressHODLERS },
   FAB: { abi: abiV3, address: contractAddressFAB },
   TENDER: { abi: abiV3, address: contractAddressTENDER },
-}
-
-const contractNameMap = {}
-const contractIndexMap = {}
-
-Object.keys(contractsData).forEach((key, index) => {
-  contractNameMap[index] = key
-  contractIndexMap[key] = index
-})
-
-const getPlatform = (contract, curation) => {
-  const contractName = contractNameMap[contract]
-  const platform = {
-    EXP: "Art Blocks Explorations",
-    ABXBM: "Art Blocks &times; Bright Moments",
-    STBYS: "Sotheby's",
-    ATP: "ATP",
-    GRAIL: "Grailers",
-    AOI: "AOI",
-    VCA: "Vertical Crypto Art",
-    SDAO: "SquiggleDAO",
-    MINTS: "Endaoment",
-    TDG: "The Disruptive Gallery",
-    VFA: "Vertu Fine Art",
-    UNITLDN: "Unit London",
-    TRAME: "Trame",
-    HODL: "Hodlers",
-    FAB: "Foundation for Art and Blockchain",
-    FLUTTER: "FlamingoDAO",
-    TENDER: "Tender",
-    CDESK: "Coindesk",
-    ARTCODE: "Redlion",
-    TBOA: "TBOA Club",
-    LOM: "Legends of Metaterra",
-  }
-
-  ;[
-    [["AB", "ABII", "ABIII"], curation],
-    [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
-    [["PLOT", "PLOTII"], "Plottables"],
-    [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
-  ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
-
-  return platform[contractName] || null
-}
-
-export {
-  isCoreV2,
-  contractsData,
-  contractNameMap,
-  contractIndexMap,
-  getPlatform,
 }
