@@ -15,6 +15,7 @@ const contractAddressCDESK = "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15"
 const contractAddressARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
 const contractAddressTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
 const contractAddressLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
+const contractAddressCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
 
 // GenArt721CoreV3
 const contractAddressV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
@@ -22,7 +23,6 @@ const contractAddressEXPLORE = "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
 const contractAddressABXPACE2 = "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
 const contractAddressABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
 const contractAddressBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD"
-const contractAddressCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
 const contractAddressPLOTS2 = "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
 const contractAddressSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
 const contractAddressGRAILS = "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
@@ -3827,6 +3827,7 @@ const isCoreV2 = [
   "ABII",
   "ABXPACE",
   "BM",
+  "CITIZEN",
   "PLOT",
   "ATP",
   "VCA",
