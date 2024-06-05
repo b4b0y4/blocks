@@ -314,13 +314,19 @@ function updateInfo(
         Token Id <span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>
       </p>
     `
-    document
-      .querySelectorAll(".copy-text")
-      .forEach((element) =>
-        element.addEventListener("click", () =>
-          copyToClipboard(element.getAttribute("data-text"))
-        )
-      )
+    document.querySelectorAll(".copy-text").forEach((element) =>
+      element.addEventListener("click", (event) => {
+        const textToCopy = element.getAttribute("data-text")
+        copyToClipboard(textToCopy)
+        const toast = document.createElement("span")
+        toast.classList.add("toast")
+        toast.textContent = "Copied"
+        element.querySelector("i").after(toast)
+        setTimeout(() => {
+          toast.remove()
+        }, 1000)
+      })
+    )
   }
   updateInfo()
 }
@@ -628,7 +634,7 @@ document
 async function saveOutput() {
   clearPanels()
   const content = frame.contentDocument.documentElement.outerHTML
-  let id = getShortenedId(contractData.tokenId)
+  let id = shortId(contractData.tokenId)
   const defaultName = `${contractData.detail[0].replace(
     /\s+/g,
     "-"

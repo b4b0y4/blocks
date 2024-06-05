@@ -38,28 +38,6 @@ body {
   overflow: hidden;
 }
 
-.toast {
-  position: fixed;
-  top: 20px;
-  visibility: hidden;
-  background-color: var(--color-bg);
-  color: var(--color-btn);
-  border: 0.5px solid var(--color-btn);
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding: 5px 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  z-index: 150;
-  transition: opacity 0.5s, visibility 0.5s;
-}
-
-.toast.show {
-  visibility: visible;
-  opacity: 0.95;
-}
-
 #toggleBox {
   position: absolute;
   top: 10px;
@@ -311,6 +289,11 @@ a:hover {
 
 .fa-copy {
   margin-left: 5px;
+}
+
+.toast {
+  color: var(--color-btn);
+  margin-left: 15px;
 }
 
 .instruction,
