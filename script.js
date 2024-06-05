@@ -764,14 +764,7 @@ function toggleInfobarVisibility() {
 }
 
 function copyToClipboard(text) {
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-      console.log("Copied to clipboard: ", text)
-    })
-    .catch((error) => {
-      console.error("Failed to copy text: ", error)
-    })
+  navigator.clipboard.writeText(text)
 }
 
 /***************************************************
