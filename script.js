@@ -5,6 +5,7 @@ import {
   contractNameMap,
   contractIndexMap,
   getPlatform,
+  fetchBlocksContracts,
 } from "./contracts.js"
 import { libraries, list } from "./lists.js"
 
@@ -29,6 +30,8 @@ const provider = new ethers.JsonRpcProvider(rpcUrl)
 const contracts = Object.values(contractsData).map(
   ({ abi, address }) => new ethers.Contract(address, abi, provider)
 )
+
+// fetchBlocks(fetchBlocksContracts)
 
 /***************************************************
  *        FUNCTIONS TO GET DATA FROM ETHEREUM
@@ -845,6 +848,3 @@ async function fetchBlocks(contractNames) {
     console.log(newList)
   }
 }
-
-const contractToCheck = ["AB", "GRAIL"]
-// fetchBlocks(contractToCheck)

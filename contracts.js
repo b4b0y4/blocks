@@ -3923,10 +3923,13 @@ const getPlatform = (contract, curation) => {
   return platform[contractName] || null
 }
 
+const fetchBlocksContracts = ["AB", "GRAIL"]
+
 export {
   isCoreV2,
   contractsData,
   contractNameMap,
   contractIndexMap,
   getPlatform,
+  fetchBlocksContracts,
 }
