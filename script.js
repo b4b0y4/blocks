@@ -767,10 +767,7 @@ function copyToClipboard(text) {
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      document.getElementById("toast").classList.add("show")
-      setTimeout(() => {
-        toast.classList.remove("show")
-      }, 2000)
+      console.log("Copied to clipboard: ", text)
     })
     .catch((error) => {
       console.error("Failed to copy text: ", error)
