@@ -3822,8 +3822,22 @@ const abiBM = [
   },
 ]
 
-// prettier-ignore
-const isCoreV2 = ["AB", "ABII", "ABXPACE", "BM", "PLOT", "ATP", "VCA", "MINTS", "TRAME", "FLUTTER", "CDESK", "ARTCODE", "TBOA", "LOM"]
+const isCoreV2 = [
+  "AB",
+  "ABII",
+  "ABXPACE",
+  "BM",
+  "PLOT",
+  "ATP",
+  "VCA",
+  "MINTS",
+  "TRAME",
+  "FLUTTER",
+  "CDESK",
+  "ARTCODE",
+  "TBOA",
+  "LOM",
+]
 
 const contractsData = {
   AB: { abi: abiV1, address: contractAddressV1 },

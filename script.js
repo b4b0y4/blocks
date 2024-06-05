@@ -807,12 +807,17 @@ async function fetchBlocks(contractNames) {
     let token
     let newList = ""
     const isContractV2 = isCoreV2.includes(contractName)
-    // prettier-ignore
+
     const iStart =
-      contractName === "ABII" ? 3 :
-      contractName === "ABIII" ? 374 :
-      contractName === "ABXPACEII" ? 5 :
-      ["GRAIL", "HODL"].includes(contractName) ? 1 : 0;
+      contractName === "ABII"
+        ? 3
+        : contractName === "ABIII"
+        ? 374
+        : contractName === "ABXPACEII"
+        ? 5
+        : ["GRAIL", "HODL"].includes(contractName)
+        ? 1
+        : 0
 
     for (let i = iStart; i < 500; i++) {
       try {
