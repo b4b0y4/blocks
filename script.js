@@ -93,33 +93,6 @@ async function grabData(tokenId, contract) {
   }
 }
 
-async function updateContractData(tokenId, contract) {
-  try {
-    toggleSpin()
-    clearPanels()
-    console.log("Contract:", contract, "\nToken Id:", tokenId)
-
-    const hashPromise = fetchHash(tokenId, contract)
-    const ownerPromise = fetchOwner(tokenId, contract)
-    const [hash, { owner, ensName }] = await Promise.all([
-      hashPromise,
-      ownerPromise,
-    ])
-
-    contractData.tokenId = tokenId
-    contractData.hash = hash
-    contractData.owner = owner
-    contractData.ensName = ensName
-
-    localStorage.setItem("contractData", JSON.stringify(contractData))
-
-    location.reload()
-  } catch (error) {
-    console.error("updateContractData:", error)
-    search.placeholder = "error"
-  }
-}
-
 async function fetchHash(tokenId, contract) {
   return contract == 0
     ? contracts[contract].showTokenHashes(tokenId)
@@ -171,6 +144,33 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
   return {
     edition: Number(invo.maxInvocations),
     remaining: Number(invo.maxInvocations - invo.invocations),
+  }
+}
+
+async function updateContractData(tokenId, contract) {
+  try {
+    toggleSpin()
+    clearPanels()
+    console.log("Contract:", contract, "\nToken Id:", tokenId)
+
+    const hashPromise = fetchHash(tokenId, contract)
+    const ownerPromise = fetchOwner(tokenId, contract)
+    const [hash, { owner, ensName }] = await Promise.all([
+      hashPromise,
+      ownerPromise,
+    ])
+
+    contractData.tokenId = tokenId
+    contractData.hash = hash
+    contractData.owner = owner
+    contractData.ensName = ensName
+
+    localStorage.setItem("contractData", JSON.stringify(contractData))
+
+    location.reload()
+  } catch (error) {
+    console.error("updateContractData:", error)
+    search.placeholder = "error"
   }
 }
 
