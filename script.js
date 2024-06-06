@@ -554,10 +554,9 @@ document.getElementById("randomButton").addEventListener("click", () => {
  *                  LOOP FUNCTIONS
  **************************************************/
 let intervalId
-const MIN_TO_MS = 60000
 let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   isLooping: "false",
-  interval: MIN_TO_MS,
+  interval: 60000,
   action: null,
 }
 
@@ -587,7 +586,7 @@ function stopRandomLoop() {
 }
 
 function checkLocalStorage() {
-  loopInput.placeholder = `${loopState.interval / MIN_TO_MS}min`
+  loopInput.placeholder = `${loopState.interval / 60000}min`
 
   if (loopState.isLooping === "true" && loopState.action !== null)
     loopRandom(loopState.interval, loopState.action)
@@ -599,9 +598,9 @@ function handleLoopClick(action) {
 
   const interval =
     loopState.interval &&
-    (inputValue === "" || loopState.interval === inputVal * MIN_TO_MS)
+    (inputValue === "" || loopState.interval === inputVal * 60000)
       ? loopState.interval
-      : inputVal * MIN_TO_MS
+      : inputVal * 60000
 
   if (!isNaN(interval) && interval > 0) {
     if (loopState.isLooping !== "true") {
