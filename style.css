@@ -326,6 +326,7 @@ a:hover {
   pointer-events: auto;
 }
 
+.list-item,
 .fav-panel p {
   padding: 2px 5px;
   border-radius: 5px;
@@ -333,6 +334,7 @@ a:hover {
 
 .fav-panel span {
   margin-left: 10px;
+  color: var(--color-btn);
   transition: color 0.1s ease-in-out;
 }
 
@@ -340,20 +342,11 @@ a:hover {
   color: indianred;
 }
 
+.list-item:hover,
+.list-item.selected,
 .fav-panel.active p:hover {
   background-color: var(--color-hvr);
   cursor: default;
-}
-
-.list-item {
-  padding: 2px 5px;
-  border-radius: 5px;
-  cursor: default;
-}
-
-.list-item:hover,
-.list-item.selected {
-  background-color: var(--color-hvr);
 }
 
 .list-item span {
