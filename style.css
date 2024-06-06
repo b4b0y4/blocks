@@ -461,6 +461,7 @@ a:hover {
   height: 100%;
   background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 50;
 }
 
