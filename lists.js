@@ -690,7 +690,6 @@ export const list = [
   "HODL10 - Chaos Control / Olga Fradina - 41 minted",
   "HODL11 - Dead Air / artplusbrad - 12 minted",
   "HODL12 - Renaissance / Fernando Jerez - 16 minted",
-  "HODL13 - Whispers of Knowledge / Ferdinand Dervieux - 34 minted",
   "HODL15 - Gravity / Pawel Dudko - 45 minted",
   "HODL16 - Wired wonders / Alessandro Fiore - 53 minted",
   "HODL17 - Nebulous / KRANKARTA - 20 minted",
