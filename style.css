@@ -201,8 +201,6 @@ a:hover {
   margin-right: 15px;
   user-select: none;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 }
 
 .info:hover {

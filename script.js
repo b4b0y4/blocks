@@ -110,12 +110,12 @@ async function fetchProjectInfo(projId, contract, isContractV2) {
 }
 
 async function constructScript(projId, projectInfo, contract) {
-  let script = ""
+  const scriptPromises = []
   for (let i = 0; i < projectInfo.scriptCount; i++) {
-    const scrpt = await contracts[contract].projectScriptByIndex(projId, i)
-    script += scrpt
+    scriptPromises.push(contracts[contract].projectScriptByIndex(projId, i))
   }
-  return script
+  const scripts = await Promise.all(scriptPromises)
+  return scripts.join("")
 }
 
 async function fetchProjectDetails(projId, contract) {
@@ -384,6 +384,7 @@ async function injectFrame() {
       : `<body>
     <canvas id="babylon-canvas"></canvas>
     <script>${scriptData.script}</script>
+    <canvas></canvas>
     </body>`
 
     let dynamicContent
@@ -811,6 +812,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
   console.log(contractData)
+  root.classList.remove("no-flash")
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
@@ -873,7 +875,6 @@ const root = document.documentElement
 const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
 
 if (isDarkMode) root.classList.toggle("dark-mode")
-root.classList.remove("no-flash")
 
 document.getElementById("modeToggle").addEventListener("click", () => {
   root.classList.toggle("dark-mode")
