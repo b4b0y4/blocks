@@ -384,7 +384,6 @@ async function injectFrame() {
       : `<body>
     <canvas id="babylon-canvas"></canvas>
     <script>${scriptData.script}</script>
-    <canvas></canvas>
     </body>`
 
     let dynamicContent
