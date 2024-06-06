@@ -93,6 +93,33 @@ async function grabData(tokenId, contract) {
   }
 }
 
+async function updateContractData(tokenId, contract) {
+  try {
+    toggleSpin()
+    clearPanels()
+    console.log("Contract:", contract, "\nToken Id:", tokenId)
+
+    const hashPromise = fetchHash(tokenId, contract)
+    const ownerPromise = fetchOwner(tokenId, contract)
+    const [hash, { owner, ensName }] = await Promise.all([
+      hashPromise,
+      ownerPromise,
+    ])
+
+    contractData.tokenId = tokenId
+    contractData.hash = hash
+    contractData.owner = owner
+    contractData.ensName = ensName
+
+    localStorage.setItem("contractData", JSON.stringify(contractData))
+
+    location.reload()
+  } catch (error) {
+    console.error("updateContractData:", error)
+    search.placeholder = "error"
+  }
+}
+
 async function fetchHash(tokenId, contract) {
   return contract == 0
     ? contracts[contract].showTokenHashes(tokenId)
@@ -185,7 +212,7 @@ function update(
 function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
   const src = libs[extLib]
   const tokenIdHash =
-    tokenId < 3000000 && contract == 0
+    contract == 0
       ? `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
       : `let tokenData = { tokenId: "${tokenId}", hash: "${hash}" }`
   let process = extLib == "processing" ? "application/processing" : ""
@@ -419,7 +446,7 @@ function handleNumericQuery(searchQuery) {
       ? id
       : Number((projId * 1000000 + id).toString().padStart(6, "0"))
 
-  grabData(tokenId, contract)
+  updateContractData(tokenId, contract)
 }
 
 function handleOtherQuery(line, searchQuery) {
@@ -710,12 +737,12 @@ function displayFavoriteList() {
  **************************************************/
 function incrementTokenId() {
   contractData.tokenId = contractData.tokenId + 1
-  grabData(contractData.tokenId, contractData.contract)
+  updateContractData(contractData.tokenId, contractData.contract)
 }
 
 function decrementTokenId() {
   contractData.tokenId = contractData.tokenId - 1
-  grabData(contractData.tokenId, contractData.contract)
+  updateContractData(contractData.tokenId, contractData.contract)
 }
 
 inc.addEventListener("click", incrementTokenId)
