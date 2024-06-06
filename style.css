@@ -264,19 +264,16 @@ a:hover {
   background-color: var(--color-hvr);
 }
 
-.copy-text,
-.fa-copy {
-  color: var(--color-key);
-  transition: color 0.1s ease-in-out;
+.id-copy {
+  color: var(--color-btn);
   cursor: default;
 }
 
-.copy-text {
-  color: var(--color-btn);
-}
-
-.copy-text:hover {
-  color: var(--color-txt);
+.fa-copy {
+  margin-left: 5px;
+  color: var(--color-key);
+  transition: color 0.1s ease-in-out;
+  cursor: default;
 }
 
 .fa-copy:hover {
@@ -285,10 +282,6 @@ a:hover {
 
 .copy-text:active .fa-copy {
   transform: scale(1.2);
-}
-
-.fa-copy {
-  margin-left: 5px;
 }
 
 .toast {

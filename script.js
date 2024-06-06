@@ -142,8 +142,8 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
     : contracts[contract].projectStateData(projId))
 
   return {
-    edition: invo.maxInvocations.toString(),
-    remaining: (invo.maxInvocations - invo.invocations).toString(),
+    edition: Number(invo.maxInvocations),
+    remaining: Number(invo.maxInvocations - invo.invocations),
   }
 }
 
@@ -311,7 +311,7 @@ function updateInfo(
     )}</a><span class="copy-text" data-text="${
       contracts[contract].target
     }"><i class="fa-regular fa-copy"></i></span><br>
-        Token Id <span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>
+        Token Id <span class="copy-text id-copy" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>
       </p>
     `
     document.querySelectorAll(".copy-text").forEach((element) =>
@@ -784,7 +784,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ;[rpcUrlInput, instruction].forEach((el) => (el.style.display = val))
 
   if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
-  console.log(contractData.extLib)
+  console.log(contractData)
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
