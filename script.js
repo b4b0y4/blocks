@@ -911,7 +911,7 @@ async function fetchBlocks(contractNames) {
           : contracts[n].projectStateData(i),
       ])
 
-      if (tkns.invocations) {
+      if (tkns.invocations > 0) {
         newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted', `
       } else {
         console.log(`no token for ${contractName}${i}`)
