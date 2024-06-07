@@ -371,8 +371,8 @@ function shortAddr(address) {
  *        FUNCTION TO INJECT INTO IFRAME
  **************************************************/
 async function injectFrame() {
-  const iframeDocument = frame.contentDocument || frame.contentWindow.document
   try {
+    const iframeDocument = frame.contentDocument || frame.contentWindow.document
     let scriptData = JSON.parse(localStorage.getItem("scriptData"))
 
     const frameBody = scriptData.process
@@ -883,15 +883,15 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["ABIII"]
+const contractNames = ["PLOT"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
   for (const contractName of contractNames) {
     const n = contractIndexMap[contractName]
     const isContractV2 = isV2.includes(contractName)
-    const end = await contracts[n].nextProjectId()
-    const iStart =
+    const end = Number(await contracts[n].nextProjectId())
+    const start =
       contractName === "ABII"
         ? 3
         : contractName === "ABIII"
@@ -901,22 +901,39 @@ async function fetchBlocks(contractNames) {
         : ["GRAIL", "HODL", "UNITLDN"].includes(contractName)
         ? 1
         : 0
-    let newList = ""
 
-    for (let i = iStart; i < end; i++) {
-      const [detail, tkns] = await Promise.all([
-        contracts[n].projectDetails(i.toString()),
-        isContractV2
-          ? contracts[n].projectTokenInfo(i)
-          : contracts[n].projectStateData(i),
-      ])
+    const processIndex = async (i) => {
+      try {
+        const [detail, token] = await Promise.all([
+          contracts[n].projectDetails(i.toString()),
+          isContractV2
+            ? contracts[n].projectTokenInfo(i)
+            : contracts[n].projectStateData(i),
+        ])
 
-      if (tkns.invocations > 0) {
-        newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted', `
-      } else {
-        console.log(`no token for ${contractName}${i}`)
+        if (token.invocations > 0) {
+          return `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted'`
+        } else {
+          console.log(`no token for ${contractName}${i}`)
+          return null
+        }
+      } catch (error) {
+        console.error(
+          `Failed to process index ${i} for ${contractName}:`,
+          error
+        )
+        return null
       }
     }
+
+    const promises = []
+    for (let i = start; i < end; i++) {
+      promises.push(processIndex(i))
+    }
+
+    const results = await Promise.all(promises)
+    const newList = results.filter((result) => result !== null).join(", ")
+
     console.log(newList)
   }
 }
