@@ -612,7 +612,7 @@ function stopRandomLoop() {
 }
 
 function checkLocalStorage() {
-  loopInput.placeholder = `${loopState.interval / 60000}min`
+  loopInput.placeholder = `${loopState.interval / 60000}m`
 
   if (loopState.isLooping === "true" && loopState.action !== null)
     loopRandom(loopState.interval, loopState.action)
