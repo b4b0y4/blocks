@@ -58,7 +58,7 @@ body {
   left: 10px;
   display: flex;
   align-items: center;
-  padding: 3px 3px 3px 7.5px;
+  padding: 3px 7.5px 3px 3px;
   background-color: var(--color-hvr);
   border-radius: 5px;
   box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
@@ -89,7 +89,7 @@ body {
   color: var(--color-btn);
   background-color: transparent;
   font-size: 1.1em;
-  margin-right: 7.5px;
+  margin-left: 7.5px;
   padding: 1px 0 0 0;
   transition: color 0.1s ease-in-out;
 }
