@@ -58,6 +58,9 @@ body {
   left: 10px;
   display: flex;
   align-items: center;
+  padding: 3px 3px 3px 7.5px;
+  background-color: var(--color-hvr);
+  border-radius: 5px;
   box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
   opacity: 0;
   z-index: 100;
@@ -70,14 +73,13 @@ body {
 }
 
 #loopInput {
-  font-size: 0.85em;
-  padding: 5px 5px 5px 47px;
+  padding: 5px;
   border-radius: 5px;
-  border: 0.5px solid var(--color-btn);
+  border: none;
   outline: none;
-  background-color: var(--color-hvr);
+  background-color: var(--color-bg);
   color: var(--color-btn);
-  width: 40px;
+  width: 50px;
   text-align: center;
 }
 
@@ -86,18 +88,10 @@ body {
   border: none;
   color: var(--color-btn);
   background-color: transparent;
-  font-size: 1em;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 5px;
-  padding: 0;
-  transform: translateY(-50%);
+  font-size: 1.1em;
+  margin-right: 7.5px;
+  padding: 1px 0 0 0;
   transition: color 0.1s ease-in-out;
-}
-
-#favLoop {
-  left: 27px;
 }
 
 #loop:hover,
