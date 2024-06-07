@@ -883,7 +883,7 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["PLOT"]
+const contractNames = ["ABS"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
@@ -891,7 +891,7 @@ async function fetchBlocks(contractNames) {
     const n = contractIndexMap[contractName]
     const isContractV2 = isV2.includes(contractName)
     const end = Number(await contracts[n].nextProjectId())
-    const start =
+    const iStart =
       contractName === "ABII"
         ? 3
         : contractName === "ABIII"
@@ -901,39 +901,22 @@ async function fetchBlocks(contractNames) {
         : ["GRAIL", "HODL", "UNITLDN"].includes(contractName)
         ? 1
         : 0
+    let newList = ""
 
-    const processIndex = async (i) => {
-      try {
-        const [detail, token] = await Promise.all([
-          contracts[n].projectDetails(i.toString()),
-          isContractV2
-            ? contracts[n].projectTokenInfo(i)
-            : contracts[n].projectStateData(i),
-        ])
+    for (let i = iStart; i < end; i++) {
+      const [detail, token] = await Promise.all([
+        contracts[n].projectDetails(i.toString()),
+        isContractV2
+          ? contracts[n].projectTokenInfo(i)
+          : contracts[n].projectStateData(i),
+      ])
 
-        if (token.invocations > 0) {
-          return `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted'`
-        } else {
-          console.log(`no token for ${contractName}${i}`)
-          return null
-        }
-      } catch (error) {
-        console.error(
-          `Failed to process index ${i} for ${contractName}:`,
-          error
-        )
-        return null
+      if (token.invocations > 0) {
+        newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted', `
+      } else {
+        console.log(`no token for ${contractName}${i}`)
       }
     }
-
-    const promises = []
-    for (let i = start; i < end; i++) {
-      promises.push(processIndex(i))
-    }
-
-    const results = await Promise.all(promises)
-    const newList = results.filter((result) => result !== null).join(", ")
-
     console.log(newList)
   }
 }
