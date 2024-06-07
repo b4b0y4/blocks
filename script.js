@@ -308,7 +308,6 @@ function updateInfo(
       artist = logs[0]
       updateInfo()
     }
-    originalLog.apply(console, arguments)
   }
 
   const mintedOut =
@@ -884,17 +883,14 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["AOI"]
+const contractNames = ["ABIII"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
   for (const contractName of contractNames) {
     const n = contractIndexMap[contractName]
-
-    let token
-    let newList = ""
     const isContractV2 = isV2.includes(contractName)
-
+    const end = await contracts[n].nextProjectId()
     const iStart =
       contractName === "ABII"
         ? 3
@@ -905,25 +901,20 @@ async function fetchBlocks(contractNames) {
         : ["GRAIL", "HODL", "UNITLDN"].includes(contractName)
         ? 1
         : 0
+    let newList = ""
 
-    for (let i = iStart; i < 500; i++) {
-      try {
-        const detail = await contracts[n].projectDetails(i.toString())
-        const tkns = isContractV2
-          ? await contracts[n].projectTokenInfo(i)
-          : await contracts[n].projectStateData(i)
+    for (let i = iStart; i < end; i++) {
+      const [detail, tkns] = await Promise.all([
+        contracts[n].projectDetails(i.toString()),
+        isContractV2
+          ? contracts[n].projectTokenInfo(i)
+          : contracts[n].projectStateData(i),
+      ])
 
-        if (tkns.invocations) {
-          newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted', `
-          token = 0
-        } else {
-          console.log(`no token for ${contractName}${i}`)
-          token++
-          if (token == 5) break
-        }
-      } catch (error) {
-        console.log(`error for ${contractName}${i}`)
-        break
+      if (tkns.invocations) {
+        newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${tkns.invocations} minted', `
+      } else {
+        console.log(`no token for ${contractName}${i}`)
       }
     }
     console.log(newList)
