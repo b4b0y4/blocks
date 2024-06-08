@@ -883,7 +883,7 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["ABS"]
+const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
