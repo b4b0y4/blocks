@@ -369,7 +369,7 @@ const getPlatform = (contract, curation) => {
     [["AB", "ABII", "ABIII"], curation],
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
     [["BM", "BMF", "CITIZEN", "BMFLEX"], "Bright Moments"],
-    [["PLOT", "PLOTII"], "Plottables"],
+    [["PLOT", "PLOTII", "PLOTFLEX"], "Plottables"],
     [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 
@@ -388,7 +388,6 @@ function updateInfo(
 ) {
   let artist = detail[1]
   const logs = []
-  // const originalLog = frame.contentWindow.console.log
   frame.contentWindow.console.log = function (message) {
     const contractName = contractNameMap[contract]
     if (contractName == "BMF" && logs.length === 0) {
@@ -909,8 +908,8 @@ rpcUrlInput.addEventListener("keypress", (event) => {
   }
 })
 
-document.addEventListener("keydown", (event) => {
-  if (event.ctrlKey && event.key === "c") {
+document.addEventListener("keypress", (event) => {
+  if (event.key === "\\") {
     clearDataStorage()
     location.reload()
   }
