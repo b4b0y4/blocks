@@ -6100,12 +6100,12 @@ export const isV2 = [
   "ABII",
   "ABXPACE",
   "BM",
-  "BMFLEX", // projId 1, 16, 20 ?!#*
+  "BMFLEX",
   "CITIZEN",
   "PLOT",
   "PLOTFLEX",
   "ATP",
-  "VCA", // projId 4 ?!#*
+  "VCA",
   "MINTS",
   "TRAME",
   "FLUTTER",

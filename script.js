@@ -44,7 +44,6 @@ async function grabData(tokenId, contract) {
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
     const isContractV2 = isV2.includes(contractNameMap[contract])
-    const isContractFLEX = isFLEX.includes(contractNameMap[contract])
 
     const projIdPromise = fetchProjectId(tokenId, contract)
     const hashPromise = fetchHash(tokenId, contract)
@@ -58,7 +57,7 @@ async function grabData(tokenId, contract) {
 
     const projectInfo = await projectInfoPromise
 
-    let extDepCount = isContractFLEX
+    let extDepCount = isFLEX.includes(contractNameMap[contract])
       ? await fetchExtDepCount(projId, contract)
       : null
 
@@ -67,7 +66,7 @@ async function grabData(tokenId, contract) {
     let arweave = null
 
     if (extDepCount) {
-      const extDepPromise = fetchCIDs(projId, extDepCount, contract)
+      const extDepPromise = fetchCIDs(projId, extDepCount, contract, tokenId)
       const gatewayPromise = fetchGateway(contract)
       ;[extDependencies, { ipfs, arweave }] = await Promise.all([
         extDepPromise,
@@ -175,7 +174,7 @@ async function fetchExtDepCount(projId, contract) {
   return count == 0 ? null : count
 }
 
-async function fetchCIDs(projId, extDepCount, contract) {
+async function fetchCIDs(projId, extDepCount, contract, tokenId) {
   const cidPromises = []
   for (let i = 0; i < extDepCount; i++) {
     cidPromises.push(
@@ -183,7 +182,20 @@ async function fetchCIDs(projId, extDepCount, contract) {
     )
   }
   const cidTuples = await Promise.all(cidPromises)
-  return cidTuples.map((tuple) => tuple[0])
+  let cids = cidTuples.map((tuple) => tuple[0])
+  if (
+    contractNameMap[contract] == "BMFLEX" &&
+    tokenId < 17000000 &&
+    tokenId > 16000000
+  ) {
+    cids = cids.map((cid) =>
+      cid.replace(
+        "https://cyan-probable-mandrill-658.mypinata.cloud/",
+        "https://ipfs.io/"
+      )
+    )
+  }
+  return cids
 }
 
 async function fetchGateway(contract) {
@@ -462,6 +474,25 @@ async function injectFrame() {
   try {
     const iframeDocument = frame.contentDocument || frame.contentWindow.document
     let scriptData = JSON.parse(localStorage.getItem("scriptData"))
+
+    if (
+      contractNameMap[contractData.contract] == "BMFLEX" &&
+      contractData.tokenId < 2000000
+    ) {
+      scriptData.script = scriptData.script.replace(
+        "https://lavender-advanced-hummingbird-947.mypinata.cloud/",
+        "https://ipfs.io/"
+      )
+    } else if (
+      contractNameMap[contractData.contract] == "BMFLEX" &&
+      contractData.tokenId < 7000000 &&
+      contractData.tokenId > 6000000
+    ) {
+      scriptData.script = scriptData.script.replace(
+        "https://pinata.brightmoments.io/",
+        "https://ipfs.io/"
+      )
+    }
 
     const frameBody = scriptData.process
       ? `<body>
@@ -971,9 +1002,7 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-// const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
-const contractNames = ["PLOTFLEX"]
-
+const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
