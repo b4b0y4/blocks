@@ -6115,7 +6115,7 @@ export const isV2 = [
   "LOM",
 ]
 
-export const isFLEX = ["PLOTFLEX", "BMFLEX", "GLITCH", "VCA"]
+export const isOnIPFS = ["PLOTFLEX", "BMFLEX", "GLITCH", "VCA"]
 
 export const contractsData = {
   AB: { abi: abiV1, address: contractAddressV1 },

@@ -1,5 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import { isV2, isFLEX, contractsData } from "./contracts.js"
+import { isV2, isOnIPFS, contractsData } from "./contracts.js"
 import { libs, list } from "./lists.js"
 
 const loopInput = document.getElementById("loopInput")
@@ -51,27 +51,26 @@ async function grabData(tokenId, contract) {
 
     const projId = Number(await projIdPromise)
 
+    let extDepCountPromise = isOnIPFS.includes(contractNameMap[contract])
+      ? fetchExtDepCount(projId, contract)
+      : null
+
     const projectInfoPromise = fetchProjectInfo(projId, contract, isContractV2)
     const detailPromise = fetchProjectDetails(projId, contract)
     const editionInfoPromise = fetchEditionInfo(projId, contract, isContractV2)
 
-    const projectInfo = await projectInfoPromise
+    const [projectInfo, extDepCount] = await Promise.all([
+      projectInfoPromise,
+      extDepCountPromise,
+    ])
 
-    let extDepCount = isFLEX.includes(contractNameMap[contract])
-      ? await fetchExtDepCount(projId, contract)
-      : null
-
-    let extDependencies = []
+    let extDep = []
     let ipfs = null
-    let arweave = null
 
     if (extDepCount) {
       const extDepPromise = fetchCIDs(projId, extDepCount, contract, tokenId)
       const gatewayPromise = fetchGateway(contract)
-      ;[extDependencies, { ipfs, arweave }] = await Promise.all([
-        extDepPromise,
-        gatewayPromise,
-      ])
+      ;[extDep, ipfs] = await Promise.all([extDepPromise, gatewayPromise])
     }
 
     const scriptPromise = constructScript(projId, projectInfo, contract)
@@ -101,9 +100,8 @@ async function grabData(tokenId, contract) {
         extLib,
         edition: editionInfo.edition,
         remaining: editionInfo.remaining,
-        extDependencies,
+        extDep,
         ipfs,
-        arweave,
       })
     )
     location.reload()
@@ -199,10 +197,10 @@ async function fetchCIDs(projId, extDepCount, contract, tokenId) {
 }
 
 async function fetchGateway(contract) {
-  const ipfsPromise = contracts[contract].preferredIPFSGateway()
-  const arweavePromise = contracts[contract].preferredArweaveGateway()
-  const [ipfs, arweave] = await Promise.all([ipfsPromise, arweavePromise])
-  return { ipfs, arweave }
+  return (
+    (await contracts[contract].preferredIPFSGateway()) ||
+    "https://ipfs.io/ipfs/"
+  )
 }
 
 async function updateContractData(tokenId, contract) {
@@ -247,20 +245,10 @@ function update(
   extLib,
   edition,
   remaining,
-  extDependencies,
-  ipfs,
-  arweave
+  extDep,
+  ipfs
 ) {
-  pushItemToLocalStorage(
-    contract,
-    tokenId,
-    hash,
-    script,
-    extLib,
-    extDependencies,
-    ipfs,
-    arweave
-  )
+  pushItemToLocalStorage(contract, tokenId, hash, script, extLib, extDep, ipfs)
   const curation = [0, 1, 2].includes(contract)
     ? determineCuration(projId)
     : null
@@ -285,15 +273,15 @@ function pushItemToLocalStorage(
   hash,
   script,
   extLib,
-  extDependencies,
+  extDep,
   ipfs,
   arweave
 ) {
   const src = libs[extLib]
 
   let tokenIdHash = ""
-  if (extDependencies.length > 0) {
-    const cids = extDependencies
+  if (extDep.length > 0) {
+    const cids = extDep
       .map(
         (cid) => `{
       "cid": "${cid}",
@@ -305,8 +293,7 @@ function pushItemToLocalStorage(
     tokenIdHash = `let tokenData = {
                   "tokenId": "${tokenId}",
                   "externalAssetDependencies": [${cids}],
-                  "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
-                  "preferredArweaveGateway": "${arweave}",
+                  "preferredIPFSGateway": "${ipfs}",
                   "hash": "${hash}"
               }`
   } else if (contract === 0) {
@@ -475,23 +462,21 @@ async function injectFrame() {
     const iframeDocument = frame.contentDocument || frame.contentWindow.document
     let scriptData = JSON.parse(localStorage.getItem("scriptData"))
 
-    if (
-      contractNameMap[contractData.contract] == "BMFLEX" &&
-      contractData.tokenId < 2000000
-    ) {
-      scriptData.script = scriptData.script.replace(
-        "https://lavender-advanced-hummingbird-947.mypinata.cloud/",
-        "https://ipfs.io/"
-      )
-    } else if (
-      contractNameMap[contractData.contract] == "BMFLEX" &&
-      contractData.tokenId < 7000000 &&
-      contractData.tokenId > 6000000
-    ) {
-      scriptData.script = scriptData.script.replace(
-        "https://pinata.brightmoments.io/",
-        "https://ipfs.io/"
-      )
+    if (contractNameMap[contractData.contract] == "BMFLEX") {
+      if (contractData.tokenId < 2000000) {
+        scriptData.script = scriptData.script.replace(
+          "https://lavender-advanced-hummingbird-947.mypinata.cloud/",
+          "https://ipfs.io/"
+        )
+      } else if (
+        contractData.tokenId > 6000000 &&
+        contractData.tokenId < 7000000
+      ) {
+        scriptData.script = scriptData.script.replace(
+          "https://pinata.brightmoments.io/",
+          "https://ipfs.io/"
+        )
+      }
     }
 
     const frameBody = scriptData.process
