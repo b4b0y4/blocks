@@ -1,5 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import { isV2, contractsData } from "./contracts.js"
+import { isV2, isFLEX, contractsData } from "./contracts.js"
 import { libs, list } from "./lists.js"
 
 const loopInput = document.getElementById("loopInput")
@@ -44,6 +44,7 @@ async function grabData(tokenId, contract) {
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
     const isContractV2 = isV2.includes(contractNameMap[contract])
+    const isContractFLEX = isFLEX.includes(contractNameMap[contract])
 
     const projIdPromise = fetchProjectId(tokenId, contract)
     const hashPromise = fetchHash(tokenId, contract)
@@ -56,6 +57,23 @@ async function grabData(tokenId, contract) {
     const editionInfoPromise = fetchEditionInfo(projId, contract, isContractV2)
 
     const projectInfo = await projectInfoPromise
+
+    let extDepCount = isContractFLEX
+      ? await fetchExtDepCount(projId, contract)
+      : null
+
+    let extDependencies = []
+    let ipfs = null
+    let arweave = null
+
+    if (extDepCount) {
+      const extDepPromise = fetchCIDs(projId, extDepCount, contract)
+      const gatewayPromise = fetchGateway(contract)
+      ;[extDependencies, { ipfs, arweave }] = await Promise.all([
+        extDepPromise,
+        gatewayPromise,
+      ])
+    }
 
     const scriptPromise = constructScript(projId, projectInfo, contract)
     const extLibPromise = extractLibraryName(projectInfo)
@@ -84,6 +102,9 @@ async function grabData(tokenId, contract) {
         extLib,
         edition: editionInfo.edition,
         remaining: editionInfo.remaining,
+        extDependencies,
+        ipfs,
+        arweave,
       })
     )
     location.reload()
@@ -147,6 +168,31 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
   }
 }
 
+async function fetchExtDepCount(projId, contract) {
+  const count = await contracts[contract].projectExternalAssetDependencyCount(
+    projId
+  )
+  return count == 0 ? null : count
+}
+
+async function fetchCIDs(projId, extDepCount, contract) {
+  const cidPromises = []
+  for (let i = 0; i < extDepCount; i++) {
+    cidPromises.push(
+      contracts[contract].projectExternalAssetDependencyByIndex(projId, i)
+    )
+  }
+  const cidTuples = await Promise.all(cidPromises)
+  return cidTuples.map((tuple) => tuple[0])
+}
+
+async function fetchGateway(contract) {
+  const ipfsPromise = contracts[contract].preferredIPFSGateway()
+  const arweavePromise = contracts[contract].preferredArweaveGateway()
+  const [ipfs, arweave] = await Promise.all([ipfsPromise, arweavePromise])
+  return { ipfs, arweave }
+}
+
 async function updateContractData(tokenId, contract) {
   try {
     toggleSpin()
@@ -188,9 +234,21 @@ function update(
   ensName,
   extLib,
   edition,
-  remaining
+  remaining,
+  extDependencies,
+  ipfs,
+  arweave
 ) {
-  pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
+  pushItemToLocalStorage(
+    contract,
+    tokenId,
+    hash,
+    script,
+    extLib,
+    extDependencies,
+    ipfs,
+    arweave
+  )
   const curation = [0, 1, 2].includes(contract)
     ? determineCuration(projId)
     : null
@@ -209,12 +267,42 @@ function update(
   injectFrame()
 }
 
-function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
+function pushItemToLocalStorage(
+  contract,
+  tokenId,
+  hash,
+  script,
+  extLib,
+  extDependencies,
+  ipfs,
+  arweave
+) {
   const src = libs[extLib]
-  const tokenIdHash =
-    contract == 0
-      ? `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
-      : `let tokenData = { tokenId: "${tokenId}", hash: "${hash}" }`
+
+  let tokenIdHash = ""
+  if (extDependencies.length > 0) {
+    const cids = extDependencies
+      .map(
+        (cid) => `{
+      "cid": "${cid}",
+      "dependency_type": "IPFS",
+      "data": null
+  }`
+      )
+      .join(",")
+    tokenIdHash = `let tokenData = {
+                  "tokenId": "${tokenId}",
+                  "externalAssetDependencies": [${cids}],
+                  "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
+                  "preferredArweaveGateway": "${arweave}",
+                  "hash": "${hash}"
+              }`
+  } else if (contract === 0) {
+    tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
+  } else {
+    tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`
+  }
+
   let process = extLib == "processing" ? "application/processing" : ""
 
   localStorage.setItem(
@@ -274,12 +362,13 @@ const getPlatform = (contract, curation) => {
     ARTCODE: "Redlion",
     TBOA: "TBOA Club",
     LOM: "Legends of Metaterra",
+    GLITCH: "Glitch Gallery",
   }
 
   ;[
     [["AB", "ABII", "ABIII"], curation],
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
+    [["BM", "BMF", "CITIZEN", "BMFLEX"], "Bright Moments"],
     [["PLOT", "PLOTII"], "Plottables"],
     [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
@@ -299,7 +388,7 @@ function updateInfo(
 ) {
   let artist = detail[1]
   const logs = []
-  const originalLog = frame.contentWindow.console.log
+  // const originalLog = frame.contentWindow.console.log
   frame.contentWindow.console.log = function (message) {
     const contractName = contractNameMap[contract]
     if (contractName == "BMF" && logs.length === 0) {
@@ -883,7 +972,9 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTIONS TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
+// const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
+const contractNames = ["PLOTFLEX"]
+
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
@@ -898,7 +989,7 @@ async function fetchBlocks(contractNames) {
         ? 374
         : contractName === "ABXPACEII"
         ? 5
-        : ["GRAIL", "HODL", "UNITLDN"].includes(contractName)
+        : ["GRAIL", "HODL", "UNITLDN", "GLITCH"].includes(contractName)
         ? 1
         : 0
     let newList = ""
@@ -912,7 +1003,7 @@ async function fetchBlocks(contractNames) {
       ])
 
       if (token.invocations > 0) {
-        newList += `'${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted', `
+        newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted", `
       } else {
         console.log(`no token for ${contractName}${i}`)
       }
