@@ -754,13 +754,13 @@ function toggleKeyShort(event) {
 }
 
 function setupInfobar() {
-  const isInfobarInactive = localStorage.getItem("infobar") === "true"
+  const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
   infobar.classList.toggle("inactive", isInfobarInactive)
 }
 
 function toggleInfobarVisibility() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
-  localStorage.setItem("infobar", isInfobarInactive)
+  localStorage.setItem("infobarInactive", isInfobarInactive)
   if (loopState.isLooping !== "true") location.reload()
 }
 
