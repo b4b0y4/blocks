@@ -188,7 +188,6 @@ a:hover {
   align-items: center;
   color: var(--color-txt);
   font-size: 1.1em;
-  border-radius: 5px;
   cursor: default;
   transition: color 0.1s ease-in-out;
   z-index: 100;
