@@ -1,5 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import { isV2, isOnIPFS, contractsData } from "./contracts.js"
+import { isV2, contractsData } from "./contracts.js"
 import { libs, list } from "./lists.js"
 
 const loopInput = document.getElementById("loopInput")
@@ -51,27 +51,11 @@ async function grabData(tokenId, contract) {
 
     const projId = Number(await projIdPromise)
 
-    let extDepCountPromise = isOnIPFS.includes(contractNameMap[contract])
-      ? fetchExtDepCount(projId, contract)
-      : null
-
     const projectInfoPromise = fetchProjectInfo(projId, contract, isContractV2)
     const detailPromise = fetchProjectDetails(projId, contract)
     const editionInfoPromise = fetchEditionInfo(projId, contract, isContractV2)
 
-    const [projectInfo, extDepCount] = await Promise.all([
-      projectInfoPromise,
-      extDepCountPromise,
-    ])
-
-    let extDep = []
-    let ipfs = null
-
-    if (extDepCount) {
-      const extDepPromise = fetchCIDs(projId, extDepCount, contract, tokenId)
-      const gatewayPromise = fetchGateway(contract)
-      ;[extDep, ipfs] = await Promise.all([extDepPromise, gatewayPromise])
-    }
+    const projectInfo = await projectInfoPromise
 
     const scriptPromise = constructScript(projId, projectInfo, contract)
     const extLibPromise = extractLibraryName(projectInfo)
@@ -100,8 +84,6 @@ async function grabData(tokenId, contract) {
         extLib,
         edition: editionInfo.edition,
         remaining: editionInfo.remaining,
-        extDep,
-        ipfs,
       })
     )
     location.reload()
@@ -165,44 +147,6 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
   }
 }
 
-async function fetchExtDepCount(projId, contract) {
-  const count = await contracts[contract].projectExternalAssetDependencyCount(
-    projId
-  )
-  return count == 0 ? null : count
-}
-
-async function fetchCIDs(projId, extDepCount, contract, tokenId) {
-  const cidPromises = []
-  for (let i = 0; i < extDepCount; i++) {
-    cidPromises.push(
-      contracts[contract].projectExternalAssetDependencyByIndex(projId, i)
-    )
-  }
-  const cidTuples = await Promise.all(cidPromises)
-  let cids = cidTuples.map((tuple) => tuple[0])
-  if (
-    contractNameMap[contract] == "BMFLEX" &&
-    tokenId < 17000000 &&
-    tokenId > 16000000
-  ) {
-    cids = cids.map((cid) =>
-      cid.replace(
-        "https://cyan-probable-mandrill-658.mypinata.cloud/",
-        "https://ipfs.io/"
-      )
-    )
-  }
-  return cids
-}
-
-async function fetchGateway(contract) {
-  return (
-    (await contracts[contract].preferredIPFSGateway()) ||
-    "https://ipfs.io/ipfs/"
-  )
-}
-
 async function updateContractData(tokenId, contract) {
   try {
     toggleSpin()
@@ -244,11 +188,9 @@ function update(
   ensName,
   extLib,
   edition,
-  remaining,
-  extDep,
-  ipfs
+  remaining
 ) {
-  pushItemToLocalStorage(contract, tokenId, hash, script, extLib, extDep, ipfs)
+  pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
   const curation = [0, 1, 2].includes(contract)
     ? determineCuration(projId)
     : null
@@ -267,41 +209,13 @@ function update(
   injectFrame()
 }
 
-function pushItemToLocalStorage(
-  contract,
-  tokenId,
-  hash,
-  script,
-  extLib,
-  extDep,
-  ipfs,
-  arweave
-) {
+function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
   const src = libs[extLib]
 
-  let tokenIdHash = ""
-  if (extDep.length > 0) {
-    const cids = extDep
-      .map(
-        (cid) => `{
-      "cid": "${cid}",
-      "dependency_type": "IPFS",
-      "data": null
-  }`
-      )
-      .join(",")
-    tokenIdHash = `let tokenData = {
-                  "tokenId": "${tokenId}",
-                  "externalAssetDependencies": [${cids}],
-                  "preferredIPFSGateway": "${ipfs}",
-                  "hash": "${hash}"
-              }`
-  } else if (contract === 0) {
-    tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
-  } else {
-    tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`
-  }
-
+  const tokenIdHash =
+    contract == 0
+      ? `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
+      : `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`
   let process = extLib == "processing" ? "application/processing" : ""
 
   localStorage.setItem(
@@ -361,14 +275,13 @@ const getPlatform = (contract, curation) => {
     ARTCODE: "Redlion",
     TBOA: "TBOA Club",
     LOM: "Legends of Metaterra",
-    GLITCH: "Glitch Gallery",
   }
 
   ;[
     [["AB", "ABII", "ABIII"], curation],
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-    [["BM", "BMF", "CITIZEN", "BMFLEX"], "Bright Moments"],
-    [["PLOT", "PLOTII", "PLOTFLEX"], "Plottables"],
+    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
+    [["PLOT", "PLOTII"], "Plottables"],
     [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 
@@ -388,8 +301,7 @@ function updateInfo(
   let artist = detail[1]
   const logs = []
   frame.contentWindow.console.log = function (message) {
-    const contractName = contractNameMap[contract]
-    if (contractName == "BMF" && logs.length === 0) {
+    if (contractNameMap[contract] == "BMF" && logs.length === 0) {
       message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
       logs.push(message)
       artist = logs[0]
@@ -404,17 +316,15 @@ function updateInfo(
 
   const updateInfo = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
-    document.getElementById("panelContent").innerHTML = `
-      <p>
-        <span style="font-size: 1.4em">${detail[0]}</span><br>
+    document.getElementById(
+      "panelContent"
+    ).innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
-        ${mintedOut}
-      </p><br>
-      <p>
-        ${detail[2]} <a href="${detail[3]}" target="_blank">${detail[3]}</a>
-      </p><br>
-      <p>
-        Owner <a href="https://zapper.xyz/account/${owner}" target="_blank">${
+        ${mintedOut}</p><br>
+      <p>${detail[2]} <a href="${detail[3]}" target="_blank">${
+      detail[3]
+    }</a></p><br>
+      <p>Owner <a href="https://zapper.xyz/account/${owner}" target="_blank">${
       ensName || shortAddr(owner)
     }</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span><br>
         Contract <a href="https://etherscan.io/address/${
@@ -424,9 +334,8 @@ function updateInfo(
     )}</a><span class="copy-text" data-text="${
       contracts[contract].target
     }"><i class="fa-regular fa-copy"></i></span><br>
-        Token Id <span class="copy-text id-copy" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span>
-      </p>
-    `
+        Token Id <span class="copy-text id-copy" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span></p>`
+
     document.querySelectorAll(".copy-text").forEach((element) =>
       element.addEventListener("click", (event) => {
         const textToCopy = element.getAttribute("data-text")
@@ -462,23 +371,6 @@ async function injectFrame() {
     const iframeDocument = frame.contentDocument || frame.contentWindow.document
     let scriptData = JSON.parse(localStorage.getItem("scriptData"))
 
-    if (contractNameMap[contractData.contract] == "BMFLEX") {
-      if (contractData.tokenId < 2000000) {
-        scriptData.script = scriptData.script.replace(
-          "https://lavender-advanced-hummingbird-947.mypinata.cloud/",
-          "https://ipfs.io/"
-        )
-      } else if (
-        contractData.tokenId > 6000000 &&
-        contractData.tokenId < 7000000
-      ) {
-        scriptData.script = scriptData.script.replace(
-          "https://pinata.brightmoments.io/",
-          "https://ipfs.io/"
-        )
-      }
-    }
-
     const frameBody = scriptData.process
       ? `<body>
     <script type='${scriptData.process}'>${scriptData.script}</script>
@@ -489,38 +381,16 @@ async function injectFrame() {
     <script>${scriptData.script}</script>
     </body>`
 
-    let dynamicContent
-    if (contractData.extLib === "custom") {
-      dynamicContent = `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
-    } else {
-      dynamicContent = `<html><head>
-      <meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
+    let dynamicContent =
+      contractData.extLib === "custom"
+        ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
+        : `<html><head><meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
       <script src='${scriptData.src || ""}'></script>
-      <script>${scriptData.tokenIdHash};</script>
-      <style type="text/css">
-        html {
-          height: 100%;
-        }
-        body {
-          min-height: 100%;
-          margin: 0;
-          padding: 0;
-          background-color: transparent;
-        }
-        canvas {
-          padding: 0;
-          margin: auto;
-          display: block;
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-        }
-      </style>
-      </head>
-      ${frameBody}</html>`
-    }
+      <script>${scriptData.tokenIdHash};</script> <style type="text/css">
+        html {height: 100%;}
+        body {min-height: 100%; margin: 0; padding: 0; background-color: transparent;}
+        canvas {padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;}
+      </style></head>${frameBody}</html>`
 
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
