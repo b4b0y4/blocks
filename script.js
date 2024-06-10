@@ -725,9 +725,7 @@ dec.addEventListener("click", decrementTokenId)
  *              HELPER FUNCTIONS
  **************************************************/
 function clearDataStorage() {
-  ;["contractData", "scriptData", "loopState"].forEach((d) =>
-    localStorage.removeItem(d)
-  )
+  ;["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d))
 }
 
 function clearPanels() {
