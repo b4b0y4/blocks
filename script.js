@@ -725,7 +725,9 @@ dec.addEventListener("click", decrementTokenId)
  *              HELPER FUNCTIONS
  **************************************************/
 function clearDataStorage() {
-  ;["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d))
+  ;["contractData", "scriptData", "loopState"].forEach((d) =>
+    localStorage.removeItem(d)
+  )
 }
 
 function clearPanels() {
@@ -752,13 +754,13 @@ function toggleKeyShort(event) {
 }
 
 function setupInfobar() {
-  const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
+  const isInfobarInactive = localStorage.getItem("infobar") === "true"
   infobar.classList.toggle("inactive", isInfobarInactive)
 }
 
 function toggleInfobarVisibility() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
-  localStorage.setItem("infobarInactive", isInfobarInactive)
+  localStorage.setItem("infobar", isInfobarInactive)
   if (loopState.isLooping !== "true") location.reload()
 }
 
@@ -855,7 +857,7 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 })
 
 /***************************************************
- *         FUNCTIONS TO UPDATE THE LIST
+ *         FUNCTION TO UPDATE THE LIST
  **************************************************/
 const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
 // fetchBlocks(contractNames)
