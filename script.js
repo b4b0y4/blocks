@@ -124,7 +124,13 @@ async function fetchProjectDetails(projId, contract) {
 
 async function fetchOwner(tokenId, contract) {
   const owner = await contracts[contract].ownerOf(tokenId)
-  const ensName = await provider.lookupAddress(owner)
+  let ensName = null
+  try {
+    ensName = await provider.lookupAddress(owner)
+  } catch (error) {
+    console.error("ENS lookup failed:", error)
+    ensName = null
+  }
   return { owner, ensName }
 }
 

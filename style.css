@@ -422,8 +422,8 @@ a:hover {
   display: none;
   position: absolute;
   right: 16px;
-  border: 2.5px solid var(--color-btn);
-  border-left-color: var(--color-hvr);
+  border: 2.5px solid var(--color-key);
+  border-left-color: var(--color-btn);
   border-radius: 50%;
   width: 12px;
   height: 12px;
