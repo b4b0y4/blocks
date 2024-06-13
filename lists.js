@@ -652,7 +652,7 @@ export const list = [
   "AOI2 - /// / Snowfro - 2000 minted",
   "AOI3 - Signature / Jack Butcher - 200 minted",
   "AOI4 - Trademark / Jack Butcher - 10000 minted",
-  "AOI5 - Decision Matrix / Kjetil Golid - 276 minted",
+  "AOI5 - Decision Matrix / Kjetil Golid - 377 minted",
   "AOI6 - Risk / Reward / Kjetil Golid - 1855 minted",
   "VCA1 - Concrete Letters / makio135 - 200 minted",
   "VCA2 - A Tender Count(ing) / Lisa Orth - 200 minted",

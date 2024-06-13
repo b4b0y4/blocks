@@ -375,6 +375,10 @@ function extractDomain(url) {
   return match ? `<i class="fa-solid fa-link"></i></span> ${match[2]}` : ""
 }
 
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text)
+}
+
 /***************************************************
  *        FUNCTION TO INJECT INTO IFRAME
  **************************************************/
@@ -774,10 +778,6 @@ function toggleInfobarVisibility() {
   if (loopState.isLooping !== "true") location.reload()
 }
 
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text)
-}
-
 /***************************************************
  *                     EVENTS
  **************************************************/
@@ -869,7 +869,7 @@ document.getElementById("modeToggle").addEventListener("click", () => {
 /***************************************************
  *         FUNCTION TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
+const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI", "VFA"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
