@@ -128,7 +128,6 @@ async function fetchOwner(tokenId, contract) {
   try {
     ensName = await provider.lookupAddress(owner)
   } catch (error) {
-    console.error("ENS lookup failed:", error)
     ensName = null
   }
   return { owner, ensName }
@@ -327,9 +326,11 @@ function updateInfo(
     ).innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
         ${mintedOut}</p><br>
-      <p>${detail[2]} <a href="${detail[3]}" target="_blank">${
+      <p>${detail[2]} <a href="${
       detail[3]
-    }</a></p><br>
+    }" target="_blank"><span class="copy-text">${extractDomain(
+      detail[3]
+    )}</a></p><br>
       <p>Owner <a href="https://zapper.xyz/account/${owner}" target="_blank">${
       ensName || shortAddr(owner)
     }</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span><br>
@@ -340,7 +341,7 @@ function updateInfo(
     )}</a><span class="copy-text" data-text="${
       contracts[contract].target
     }"><i class="fa-regular fa-copy"></i></span><br>
-        Token Id <span class="copy-text id-copy" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span></p>`
+        Token Id <span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span></p>`
 
     document.querySelectorAll(".copy-text").forEach((element) =>
       element.addEventListener("click", (event) => {
@@ -367,6 +368,11 @@ function shortId(tokenId) {
 
 function shortAddr(address) {
   return `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
+}
+
+function extractDomain(url) {
+  const match = url.match(/https?:\/\/(www\.)?([^\/]+)/)
+  return match ? `<i class="fa-solid fa-link"></i></span> ${match[2]}` : ""
 }
 
 /***************************************************
