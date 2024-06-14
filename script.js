@@ -767,27 +767,6 @@ function toggleKeyShort(event) {
     event.type === "focusin" ? "none" : "block"
 }
 
-// function setupInfobar() {
-//   const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
-//   infobar.classList.toggle("inactive", isInfobarInactive)
-// }
-
-// function toggleInfobar() {
-//   const isInfobarInactive = infobar.classList.toggle("inactive")
-//   localStorage.setItem("infobarInactive", isInfobarInactive)
-//   if (loopState.isLooping !== "true") location.reload()
-// }
-
-function toggleFullscreen(element) {
-  if (!document.fullscreenElement) {
-    element.requestFullscreen().catch((err) => {
-      alert(`Error attempting to enable fullscreen mode: ${err.message}`)
-    })
-  } else {
-    document.exitFullscreen()
-  }
-}
-
 function setupInfobar() {
   const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
   infobar.classList.toggle("inactive", isInfobarInactive)
@@ -796,9 +775,6 @@ function setupInfobar() {
 function toggleInfobar() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
   localStorage.setItem("infobarInactive", isInfobarInactive)
-
-  toggleFullscreen(frame)
-
   if (loopState.isLooping !== "true") location.reload()
 }
 
