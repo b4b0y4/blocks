@@ -326,9 +326,7 @@ function updateInfo(
     ).innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
         ${mintedOut}</p><br>
-      <p>${detail[2]} <a href="${
-      detail[3]
-    }" target="_blank"><span class="copy-text">${extractDomain(
+      <p>${detail[2]} <a href="${detail[3]}" target="_blank">${extractDomain(
       detail[3]
     )}</a></p><br>
       <p>Owner <a href="https://zapper.xyz/account/${owner}" target="_blank">${
@@ -372,7 +370,9 @@ function shortAddr(address) {
 
 function extractDomain(url) {
   const match = url.match(/https?:\/\/(www\.)?([^\/]+)/)
-  return match ? `<i class="fa-solid fa-link"></i></span> ${match[2]}` : ""
+  return match
+    ? `<span class="domain-link"><i class="fa-solid fa-link"></i> ${match[2]}</span>`
+    : ""
 }
 
 function copyToClipboard(text) {
@@ -767,14 +767,38 @@ function toggleKeyShort(event) {
     event.type === "focusin" ? "none" : "block"
 }
 
+// function setupInfobar() {
+//   const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
+//   infobar.classList.toggle("inactive", isInfobarInactive)
+// }
+
+// function toggleInfobar() {
+//   const isInfobarInactive = infobar.classList.toggle("inactive")
+//   localStorage.setItem("infobarInactive", isInfobarInactive)
+//   if (loopState.isLooping !== "true") location.reload()
+// }
+
+function toggleFullscreen(element) {
+  if (!document.fullscreenElement) {
+    element.requestFullscreen().catch((err) => {
+      alert(`Error attempting to enable fullscreen mode: ${err.message}`)
+    })
+  } else {
+    document.exitFullscreen()
+  }
+}
+
 function setupInfobar() {
   const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
   infobar.classList.toggle("inactive", isInfobarInactive)
 }
 
-function toggleInfobarVisibility() {
+function toggleInfobar() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
   localStorage.setItem("infobarInactive", isInfobarInactive)
+
+  toggleFullscreen(frame)
+
   if (loopState.isLooping !== "true") location.reload()
 }
 
@@ -846,7 +870,7 @@ search.addEventListener("input", () => {
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
 
-toggleBox.addEventListener("click", toggleInfobarVisibility)
+toggleBox.addEventListener("click", toggleInfobar)
 
 overlay.addEventListener("click", () => {
   clearPanels()

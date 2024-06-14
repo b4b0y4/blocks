@@ -282,6 +282,18 @@ a:hover {
   border-radius: 5px;
 }
 
+.domain-link {
+  white-space: nowrap;
+}
+
+.fa-link {
+  color: var(--color-btn);
+}
+
+.domain-link:hover .fa-link {
+  color: var(--color-btn);
+}
+
 .fav-panel span {
   margin-left: 10px;
   color: var(--color-btn);
