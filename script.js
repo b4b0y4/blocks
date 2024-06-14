@@ -621,10 +621,10 @@ function handleLoopClick(action) {
   if (!isNaN(interval) && interval > 0) {
     if (loopState.isLooping !== "true") {
       loopRandom(interval, action)
-      toggleInfobarVisibility()
+      toggleInfobar()
     } else {
       stopRandomLoop()
-      toggleInfobarVisibility()
+      toggleInfobar()
     }
   } else {
     alert("Please enter a time in minutes.")
@@ -635,13 +635,6 @@ function handleLoopClick(action) {
     localStorage.setItem("loopState", JSON.stringify(loopState))
   }
 }
-
-document
-  .getElementById("loop")
-  .addEventListener("click", () => handleLoopClick("loop"))
-document
-  .getElementById("favLoop")
-  .addEventListener("click", () => handleLoopClick("favLoop"))
 
 /***************************************************
  *          FUNCTION TO SAVE THE OUTPUT
@@ -770,6 +763,9 @@ function toggleKeyShort(event) {
 function setupInfobar() {
   const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
   infobar.classList.toggle("inactive", isInfobarInactive)
+  document.querySelector(
+    isInfobarInactive ? ".fa-eye-slash" : ".fa-eye"
+  ).style.display = "none"
 }
 
 function toggleInfobar() {
@@ -777,6 +773,22 @@ function toggleInfobar() {
   localStorage.setItem("infobarInactive", isInfobarInactive)
   if (loopState.isLooping !== "true") location.reload()
 }
+
+document.getElementById("fullScreen").addEventListener("click", () => {
+  if (frame.requestFullscreen) {
+    frame.requestFullscreen()
+  } else if (frame.mozRequestFullScreen) {
+    frame.mozRequestFullScreen()
+  } else if (frame.webkitRequestFullscreen) {
+    frame.webkitRequestFullscreen()
+  } else if (frame.msRequestFullscreen) {
+    frame.msRequestFullscreen()
+  }
+
+  frame.style.backgroundColor = getComputedStyle(
+    document.documentElement
+  ).getPropertyValue("--color-bg")
+})
 
 /***************************************************
  *                     EVENTS
@@ -846,7 +858,14 @@ search.addEventListener("input", () => {
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
 
-toggleBox.addEventListener("click", toggleInfobar)
+document
+  .getElementById("loop")
+  .addEventListener("click", () => handleLoopClick("loop"))
+document
+  .getElementById("favLoop")
+  .addEventListener("click", () => handleLoopClick("favLoop"))
+
+document.getElementById("hideInfobar").addEventListener("click", toggleInfobar)
 
 overlay.addEventListener("click", () => {
   clearPanels()
