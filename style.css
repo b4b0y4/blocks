@@ -42,6 +42,7 @@ body {
 .screen-box {
   position: absolute;
   top: 10px;
+  padding: 3px;
   display: flex;
   align-items: center;
   background-color: var(--color-hvr);
@@ -54,12 +55,10 @@ body {
 
 .loop-box {
   left: 10px;
-  padding: 3px;
 }
 
 .screen-box {
   right: 10px;
-  padding: 1px;
 }
 
 .loop-box:hover,
@@ -76,6 +75,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-btn);
   width: 40px;
+  margin-right: 3px;
   text-align: center;
 }
 
@@ -87,15 +87,10 @@ body {
   color: var(--color-btn);
   background-color: transparent;
   font-size: 1.1em;
-  margin-left: 2.5px;
-  padding: 3.5px 6px 2.5px;
+  margin: 0;
+  padding: 3.2px 5px 2px;
   border-radius: 5px;
   transition: color 0.1s ease-in-out;
-}
-
-#hideInfobar,
-#fullScreen {
-  margin: 2.5px;
 }
 
 #loop:hover,
@@ -386,7 +381,7 @@ a:hover {
   width: 80px;
   text-align: start;
   border-radius: 5px;
-  padding: 4px 15px 4px 27px;
+  padding: 4px 15px 4px 26px;
   outline: 0.5px solid transparent;
   transition: outline-color 0.1s ease-in-out;
 }
@@ -405,7 +400,7 @@ a:hover {
   transform: translateY(-50%);
   color: var(--color-btn);
   padding: 0;
-  font-size: 1.1em;
+  font-size: 1em;
   background-color: transparent;
   border: none;
   outline: none;
@@ -498,6 +493,7 @@ a:hover {
 
   .search-input {
     padding: 5px 17px 5px 30px;
+    font-size: 1.1em;
   }
 
   #favList {
