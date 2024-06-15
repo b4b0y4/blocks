@@ -45,7 +45,7 @@ body {
   padding: 4px;
   display: flex;
   align-items: center;
-  background-color: var(--color-bg);
+  background-color: var(--color-hvr);
   border-radius: 5px;
   box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
   opacity: 0;
@@ -79,12 +79,12 @@ body {
 #loopInput {
   padding: 4px;
   border-radius: 5px;
+  font-size: 1em;
   border: none;
   outline: none;
-  background-color: var(--color-hvr);
+  background-color: var(--color-bg);
   color: var(--color-btn);
-  opacity: 0.95;
-  width: 40px;
+  width: 50px;
   margin-right: 3px;
   text-align: center;
 }
@@ -107,7 +107,7 @@ body {
 #favLoop:hover,
 #hideInfobar:hover,
 #fullScreen:hover {
-  background-color: var(--color-hvr);
+  background-color: var(--color-bg);
 }
 
 .frame-container {
