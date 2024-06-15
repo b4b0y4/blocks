@@ -481,10 +481,6 @@ a:hover {
     overflow-y: auto;
   }
 
-  #hideInfobar:hover {
-    color: transparent;
-  }
-
   .infobar {
     justify-content: center;
     height: 80px;
