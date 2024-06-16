@@ -98,7 +98,7 @@ body {
   background-color: transparent;
   font-size: 1.1em;
   margin: 0;
-  padding: 3.5px 5px 2.5px;
+  padding: 3.5px 5.5px 2.5px;
   border-radius: 5px;
   transition: color 0.1s ease-in-out;
 }
@@ -502,7 +502,7 @@ a:hover {
   }
 
   .search-input {
-    padding: 5px 17px 5px 30px;
+    padding: 5px 18px 5px 32px;
     font-size: 1.1em;
   }
 
@@ -515,7 +515,7 @@ a:hover {
   }
 
   .spinner {
-    right: 18px;
+    right: 20px;
   }
 
   .search-icon,
@@ -524,7 +524,12 @@ a:hover {
   .random,
   .previous,
   .next {
-    font-size: 1.2em;
+    font-size: 1.3em;
+  }
+
+  .save,
+  .random {
+    margin: 0 20px;
   }
 
   .instruction,
