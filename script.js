@@ -859,15 +859,18 @@ dropButton.addEventListener("click", () => {
   dropdownMenu.classList.toggle("active")
 })
 
-document
-  .getElementById("loop")
-  .addEventListener("click", () => handleLoopClick("loop"))
-document
-  .getElementById("favLoop")
-  .addEventListener("click", () => handleLoopClick("favLoop"))
-document
-  .getElementById("curatedLoop")
-  .addEventListener("click", () => handleLoopClick("curatedLoop"))
+document.getElementById("loop").addEventListener("click", () => {
+  handleLoopClick("loop")
+  dropdownMenu.classList.toggle("active")
+})
+document.getElementById("favLoop").addEventListener("click", () => {
+  handleLoopClick("favLoop")
+  dropdownMenu.classList.toggle("active")
+})
+document.getElementById("curatedLoop").addEventListener("click", () => {
+  handleLoopClick("curatedLoop")
+  dropdownMenu.classList.toggle("active")
+})
 
 stopButton.addEventListener("click", stopLoop)
 
