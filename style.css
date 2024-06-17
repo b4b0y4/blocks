@@ -227,6 +227,7 @@ a:hover {
   justify-content: end;
   align-items: center;
   height: 100%;
+  overflow-x: auto;
 }
 
 .info {
@@ -240,6 +241,15 @@ a:hover {
   margin-right: 15px;
   user-select: none;
   -webkit-user-select: none;
+  overflow-x: auto;
+  white-space: nowrap;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.info::-webkit-scrollbar {
+  display: none;
 }
 
 .info:hover {
