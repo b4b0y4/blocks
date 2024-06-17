@@ -536,16 +536,13 @@ a:hover {
     right: 20px;
   }
 
+  .search-icon,
   .fav-icon,
   .save,
   .random,
   .previous,
   .next {
     font-size: 1.3em;
-  }
-
-  .search-icon {
-    font-size: 1.2em;
   }
 
   .save {
