@@ -589,14 +589,14 @@ function loopRandom(interval, action) {
   if (loopState.isLooping !== "true") performAction(action, list, favorite)
 
   intervalId = setInterval(() => {
-    performAction(action, list, favorite)
+    performAction(action, favorite)
   }, interval)
 
   loopState = { isLooping: "true", interval, action }
   localStorage.setItem("loopState", JSON.stringify(loopState))
 }
 
-function performAction(action, list, favorite) {
+function performAction(action, favorite) {
   if (action === "loop") getRandom(list)
   else if (action === "favLoop") getRandomKey(favorite)
   else if (action === "curatedLoop") {
@@ -855,9 +855,8 @@ search.addEventListener("input", () => {
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
 
-dropButton.addEventListener("click", function () {
-  dropdownMenu.style.display =
-    dropdownMenu.style.display === "block" ? "none" : "block"
+dropButton.addEventListener("click", () => {
+  dropdownMenu.classList.toggle("active")
 })
 
 document

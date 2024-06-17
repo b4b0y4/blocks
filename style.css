@@ -109,15 +109,17 @@ body {
 }
 
 .dropdown-menu {
-  display: none;
   position: absolute;
   top: 38px;
+  left: 0;
   background-color: var(--color-hvr);
   border: none;
   box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 5px;
   z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
 #loop,
@@ -315,6 +317,7 @@ a:hover {
   pointer-events: auto;
 }
 
+.dropdown-menu.active,
 .panel.active,
 .list-panel.active,
 .fav-panel.active {
