@@ -564,6 +564,8 @@ function getRandomKey(favorite) {
 
     contractData = favorite[randomKey]
     localStorage.setItem("contractData", JSON.stringify(contractData))
+    console.log(randomKey)
+    console.log(contractData)
     location.reload()
   }
 }
@@ -586,7 +588,7 @@ function loopRandom(interval, action) {
   clearInterval(intervalId)
   const favorite = JSON.parse(localStorage.getItem("favorite")) || "{}"
 
-  if (loopState.isLooping !== "true") performAction(action, list, favorite)
+  if (loopState.isLooping !== "true") performAction(action, favorite)
 
   intervalId = setInterval(() => {
     performAction(action, favorite)
