@@ -527,9 +527,12 @@ a:hover {
     font-size: 1.3em;
   }
 
-  .save,
+  .save {
+    margin-right: 20px;
+  }
+
   .random {
-    margin: 0 20px;
+    margin-left: 20px;
   }
 
   .instruction,

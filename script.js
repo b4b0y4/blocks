@@ -400,7 +400,7 @@ async function injectFrame() {
     let dynamicContent =
       contractData.extLib === "custom"
         ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
-        : `<html><head><meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
+        : `<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
       <script src='${scriptData.src || ""}'></script>
       <script>${scriptData.tokenIdHash};</script> <style type="text/css">
         html {height: 100%;}
@@ -774,22 +774,6 @@ function toggleInfobar() {
   if (loopState.isLooping !== "true") location.reload()
 }
 
-document.getElementById("fullScreen").addEventListener("click", () => {
-  if (frame.requestFullscreen) {
-    frame.requestFullscreen()
-  } else if (frame.mozRequestFullScreen) {
-    frame.mozRequestFullScreen()
-  } else if (frame.webkitRequestFullscreen) {
-    frame.webkitRequestFullscreen()
-  } else if (frame.msRequestFullscreen) {
-    frame.msRequestFullscreen()
-  }
-
-  frame.style.backgroundColor = getComputedStyle(
-    document.documentElement
-  ).getPropertyValue("--color-bg")
-})
-
 /***************************************************
  *                     EVENTS
  **************************************************/
@@ -869,6 +853,22 @@ document.getElementById("hideInfobar").addEventListener("click", toggleInfobar)
 
 overlay.addEventListener("click", () => {
   clearPanels()
+})
+
+document.getElementById("fullScreen").addEventListener("click", () => {
+  if (frame.requestFullscreen) {
+    frame.requestFullscreen()
+  } else if (frame.mozRequestFullScreen) {
+    frame.mozRequestFullScreen()
+  } else if (frame.webkitRequestFullscreen) {
+    frame.webkitRequestFullscreen()
+  } else if (frame.msRequestFullscreen) {
+    frame.msRequestFullscreen()
+  }
+
+  frame.style.backgroundColor = getComputedStyle(
+    document.documentElement
+  ).getPropertyValue("--color-bg")
 })
 
 /***************************************************
