@@ -89,10 +89,9 @@ body {
   text-align: center;
 }
 
-#loop,
-#favLoop,
 #hideInfobar,
-#fullScreen {
+#drop,
+#stop {
   border: none;
   color: var(--color-btn);
   background-color: transparent;
@@ -100,13 +99,45 @@ body {
   margin: 0;
   padding: 3.5px 5.5px 2.5px;
   border-radius: 5px;
-  transition: color 0.1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
+}
+
+#hideInfobar:hover,
+#drop:hover,
+#stop:hover {
+  background-color: var(--color-bg);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 38px;
+  background-color: var(--color-hvr);
+  border: none;
+  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 100;
+}
+
+#loop,
+#favLoop,
+#curatedLoop {
+  display: block;
+  width: 100%;
+  font-size: 1em;
+  padding: 3px 5px;
+  color: var(--color-btn);
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  text-align: left;
+  transition: background-color 0.1s ease-in-out;
 }
 
 #loop:hover,
 #favLoop:hover,
-#hideInfobar:hover,
-#fullScreen:hover {
+#curatedLoop:hover {
   background-color: var(--color-bg);
 }
 

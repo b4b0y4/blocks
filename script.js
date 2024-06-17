@@ -16,6 +16,9 @@ const panel = document.querySelector(".panel")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
 const search = document.getElementById("searchInput")
+const dropButton = document.getElementById("drop")
+const dropdownMenu = document.getElementById("dropdownMenu")
+const stopButton = document.getElementById("stop")
 
 const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
@@ -596,6 +599,10 @@ function loopRandom(interval, action) {
 function performAction(action, list, favorite) {
   if (action === "loop") getRandom(list)
   else if (action === "favLoop") getRandomKey(favorite)
+  else if (action === "curatedLoop") {
+    filterList(list, "curated")
+    getRandom(filteredList)
+  }
 }
 
 function stopRandomLoop() {
@@ -622,13 +629,8 @@ function handleLoopClick(action) {
       : inputVal * 60000
 
   if (!isNaN(interval) && interval > 0) {
-    if (loopState.isLooping !== "true") {
-      loopRandom(interval, action)
-      toggleInfobar()
-    } else {
-      stopRandomLoop()
-      toggleInfobar()
-    }
+    loopRandom(interval, action)
+    toggleInfobar()
   } else {
     alert("Please enter a time in minutes.")
   }
@@ -637,6 +639,11 @@ function handleLoopClick(action) {
     loopState = { isLooping: "false", interval: interval, action: action }
     localStorage.setItem("loopState", JSON.stringify(loopState))
   }
+}
+
+function stopLoop() {
+  stopRandomLoop()
+  toggleInfobar()
 }
 
 /***************************************************
@@ -763,7 +770,16 @@ function toggleKeyShort(event) {
     event.type === "focusin" ? "none" : "block"
 }
 
-function setupInfobar() {
+function toggleInfobar() {
+  const isInfobarInactive = infobar.classList.toggle("inactive")
+  localStorage.setItem("infobarInactive", isInfobarInactive)
+  if (loopState.isLooping !== "true") location.reload()
+}
+
+function updateButtons() {
+  stopButton.style.display = loopState.isLooping === "true" ? "block" : "none"
+  dropButton.style.display = loopState.isLooping === "true" ? "none" : "block"
+
   const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
   infobar.classList.toggle("inactive", isInfobarInactive)
   document.querySelector(
@@ -771,17 +787,11 @@ function setupInfobar() {
   ).style.display = "none"
 }
 
-function toggleInfobar() {
-  const isInfobarInactive = infobar.classList.toggle("inactive")
-  localStorage.setItem("infobarInactive", isInfobarInactive)
-  if (loopState.isLooping !== "true") location.reload()
-}
-
 /***************************************************
  *                     EVENTS
  **************************************************/
 document.addEventListener("DOMContentLoaded", () => {
-  setupInfobar()
+  updateButtons()
   checkLocalStorage()
 
   contractData = JSON.parse(localStorage.getItem("contractData"))
@@ -845,33 +855,27 @@ search.addEventListener("input", () => {
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
 
+dropButton.addEventListener("click", function () {
+  dropdownMenu.style.display =
+    dropdownMenu.style.display === "block" ? "none" : "block"
+})
+
 document
   .getElementById("loop")
   .addEventListener("click", () => handleLoopClick("loop"))
 document
   .getElementById("favLoop")
   .addEventListener("click", () => handleLoopClick("favLoop"))
+document
+  .getElementById("curatedLoop")
+  .addEventListener("click", () => handleLoopClick("curatedLoop"))
+
+stopButton.addEventListener("click", stopLoop)
 
 document.getElementById("hideInfobar").addEventListener("click", toggleInfobar)
 
 overlay.addEventListener("click", () => {
   clearPanels()
-})
-
-document.getElementById("fullScreen").addEventListener("click", () => {
-  if (frame.requestFullscreen) {
-    frame.requestFullscreen()
-  } else if (frame.mozRequestFullScreen) {
-    frame.mozRequestFullScreen()
-  } else if (frame.webkitRequestFullscreen) {
-    frame.webkitRequestFullscreen()
-  } else if (frame.msRequestFullscreen) {
-    frame.msRequestFullscreen()
-  }
-
-  frame.style.backgroundColor = getComputedStyle(
-    document.documentElement
-  ).getPropertyValue("--color-bg")
 })
 
 /***************************************************

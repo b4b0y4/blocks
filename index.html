@@ -20,23 +20,21 @@
   <div class="container">
     <div class="loop-box">
       <input type="text" id="loopInput" placeholder="" autocomplete="off">
-      <button id="loop" data-action="loop">
-        <i class="fa-solid fa-repeat"></i>
+      <button id="drop"><i class="fa-solid fa-repeat"></i>
+        <button id="stop"><i class="fa-regular fa-circle-stop"></i></button>
       </button>
-      <button id="favLoop" data-action="favLoop">
-        <i class="fa-regular fa-heart"></i>
-      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <button id="loop" data-action="loop">All</button>
+        <button id="favLoop" data-action="favLoop">Favorites</button>
+        <button id="curatedLoop" data-action="curated">Curated</button>
+      </div>
     </div>
     <div class="screen-box">
       <button id="hideInfobar">
         <i class="fa-regular fa-eye-slash"></i>
         <i class="fa-regular fa-eye"></i>
       </button>
-      <button id="fullScreen">
-        <i class="fa-solid fa-expand"></i>
-      </button>
     </div>
-
     <div class="frame-container">
       <iframe id="frame" class="frame" src="about:blank"></iframe>
     </div>
@@ -87,8 +85,7 @@
         </ul>
         <li>Click <i class="fa-regular fa-eye-slash"></i> on the upper right-hand corner to hide the info bar.
         </li>
-        <li>Click <i class="fa-solid fa-repeat"></i> on the upper left-hand corner to enter a random loop ( <i
-            class="fa-regular fa-heart"></i> will loop through your favorites).
+        <li>Click <i class="fa-solid fa-repeat"></i> on the upper left-hand corner to enter a random loop.
         </li>
         <li>Press <span class="key">\</span> to clear the page.</li>
         <li>Pin this app to your IPFS node to
