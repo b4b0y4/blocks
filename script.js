@@ -1,6 +1,6 @@
 import { ethers } from "./ethers.min.js"
 import { isV2, contractsData } from "./contracts.js"
-import { libs, list } from "./lists.js"
+import { libs, list, curated } from "./lists.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -230,14 +230,6 @@ function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
 }
 
 function determineCuration(projId) {
-  const curated = [
-    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-    41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-    159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-    284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-    379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-    456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
-  ]
   const playground = [
     6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
     94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
@@ -251,9 +243,7 @@ function determineCuration(projId) {
     ? "Art Blocks Playground"
     : projId < 374
     ? "Art Blocks Factory"
-    : projId < 494
-    ? "Art Blocks Presents"
-    : "Art Blocks"
+    : "Art Blocks Presents"
 }
 
 const getPlatform = (contract, curation) => {
@@ -482,9 +472,20 @@ function displayList(lines) {
 }
 
 function filterList(lines, query) {
-  filteredList = lines.filter((line) =>
-    line.toLowerCase().includes(query.toLowerCase())
-  )
+  if (query.toLowerCase() === "curated") {
+    filteredList = lines.filter((line) => {
+      const idMatch = line.match(/^AB(?:III|II)?(\d+)/)
+      if (idMatch) {
+        const id = parseInt(idMatch[1])
+        return curated.includes(id)
+      }
+    })
+  } else {
+    filteredList = lines.filter((line) =>
+      line.toLowerCase().includes(query.toLowerCase())
+    )
+  }
+
   displayList(filteredList)
   selectedIndex = -1
 }
