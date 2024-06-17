@@ -410,7 +410,9 @@ async function injectFrame() {
  *            FUNCTIONS TO GET TOKEN
  **************************************************/
 function getToken(line, searchQuery) {
-  if (/^\d+$/.test(searchQuery)) {
+  if (searchQuery === "curated") {
+    getRandom(filteredList)
+  } else if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery)
   } else {
     handleOtherQuery(line, searchQuery)
