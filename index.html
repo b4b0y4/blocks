@@ -18,6 +18,7 @@
 
 <body>
   <div class="container">
+
     <div class="loop-box">
       <input type="text" id="loopInput" placeholder="" autocomplete="off">
       <button id="drop"><i class="fa-solid fa-repeat"></i>
@@ -29,7 +30,11 @@
         <button id="curatedLoop" data-action="curated">Curated</button>
       </div>
     </div>
+
     <div class="screen-box">
+      <button id="theme">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
       <button id="hideInfobar">
         <i class="fa-regular fa-eye-slash"></i>
         <i class="fa-regular fa-eye"></i>
@@ -42,19 +47,19 @@
     <div class="infobar">
       <div id="infoBox" class="info-box">
         <div id="info" class="info"></div>
-        <div class="button-container">
+        <div class="button-box">
           <button id="saveBtn" class="save">
             <i class="fa-regular fa-floppy-disk"></i>
           </button>
           <button id="decrementBtn" class="previous">
             <i class="fa-solid fa-chevron-left"></i>
           </button>
-          <div class="search-container">
+          <div class="search-box">
             <input id="searchInput" class="search-input" placeholder="Search" autocomplete="off">
             <i class="search-icon fa-solid fa-magnifying-glass"></i>
             <div class="key-short">/</div>
             <div class="spinner"></div>
-            <button id="favList">
+            <button class="fav-icon">
               <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
           </div>
@@ -97,15 +102,12 @@
       <label for="rpcUrl"></label>
       <input id="rpcUrl" class="rpc-url" placeholder="enter rpc url" autocomplete="off" />
     </div>
-    <div class="panel">
-      <button id="modeToggle">
-        <i class="fa-solid fa-circle-half-stroke"></i>
-      </button>
-      <div id="panelContent"></div>
-    </div>
+
+    <div class="panel"></div>
     <div class="list-panel"></div>
     <div class="fav-panel"></div>
     <div class="overlay"></div>
+
   </div>
 
   <script src="./script.js" type="module"></script>

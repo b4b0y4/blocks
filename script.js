@@ -314,9 +314,7 @@ function updateInfo(
 
   const updateInfo = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
-    document.getElementById(
-      "panelContent"
-    ).innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
+    panel.innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
         ${mintedOut}</p><br>
       <p>${detail[2]} <a href="${detail[3]}" target="_blank">${extractDomain(
@@ -840,7 +838,7 @@ document.querySelector(".search-icon").addEventListener("click", () => {
   togglePanel(listPanel)
 })
 
-document.getElementById("favList").addEventListener("click", () => {
+document.querySelector(".fav-icon").addEventListener("click", () => {
   displayFavoriteList()
   togglePanel(favPanel)
 })
@@ -887,7 +885,7 @@ const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
 
 if (isDarkMode) root.classList.toggle("dark-mode")
 
-document.getElementById("modeToggle").addEventListener("click", () => {
+document.getElementById("theme").addEventListener("click", () => {
   root.classList.toggle("dark-mode")
   const updateMode = root.classList.contains("dark-mode")
   localStorage.setItem("darkMode", updateMode)
