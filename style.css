@@ -96,7 +96,7 @@ body {
   border: none;
   box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  padding: 5px;
+  padding: 4px;
   z-index: 100;
   opacity: 0;
   pointer-events: none;
