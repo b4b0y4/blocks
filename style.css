@@ -105,7 +105,8 @@ body {
 
 #loop,
 #favLoop,
-#curatedLoop {
+#curatedLoop,
+#selectedLoop {
   display: block;
   width: 100%;
   font-size: 1em;
@@ -120,7 +121,8 @@ body {
 
 #loop:hover,
 #favLoop:hover,
-#curatedLoop:hover {
+#curatedLoop:hover,
+#selectedLoop:hover {
   background-color: var(--color-bg);
 }
 

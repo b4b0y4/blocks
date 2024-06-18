@@ -602,6 +602,11 @@ function performAction(action, favorite) {
   else if (action === "curatedLoop") {
     filterList(list, "curated")
     getRandom(filteredList)
+  } else if (action === "selectedLoop") {
+    let random = Math.floor(
+      Math.random() * (contractData.edition + 1)
+    ).toString()
+    getToken(list, random)
   }
 }
 
@@ -619,6 +624,8 @@ function checkLocalStorage() {
 }
 
 function handleLoopClick(action) {
+  dropdownMenu.classList.toggle("active")
+
   let inputValue = loopInput.value.trim()
   const inputVal = parseInt(inputValue, 10)
 
@@ -861,15 +868,15 @@ dropButton.addEventListener("click", () => {
 
 document.getElementById("loop").addEventListener("click", () => {
   handleLoopClick("loop")
-  dropdownMenu.classList.toggle("active")
 })
 document.getElementById("favLoop").addEventListener("click", () => {
   handleLoopClick("favLoop")
-  dropdownMenu.classList.toggle("active")
 })
 document.getElementById("curatedLoop").addEventListener("click", () => {
   handleLoopClick("curatedLoop")
-  dropdownMenu.classList.toggle("active")
+})
+document.getElementById("selectedLoop").addEventListener("click", () => {
+  handleLoopClick("selectedLoop")
 })
 
 stopButton.addEventListener("click", stopLoop)
