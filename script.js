@@ -805,7 +805,7 @@ function addHoverEffect(button, menu) {
   function hideMenu() {
     timer = setTimeout(() => {
       menu.classList.remove("active")
-    }, 200)
+    }, 300)
   }
 
   button.addEventListener("mouseover", showMenu)
