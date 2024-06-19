@@ -90,7 +90,7 @@ body {
 
 .dropdown-menu {
   position: absolute;
-  top: 38px;
+  top: 40px;
   left: 0;
   background-color: var(--color-hvr);
   border: none;
