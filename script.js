@@ -624,7 +624,7 @@ function checkLocalStorage() {
 }
 
 function handleLoopClick(action) {
-  dropdownMenu.classList.toggle("active")
+  dropdownMenu.classList.remove("active")
 
   let inputValue = loopInput.value.trim()
   const inputVal = parseInt(inputValue, 10)
@@ -794,6 +794,28 @@ function updateButtons() {
   ).style.display = "none"
 }
 
+function addHoverEffect(button, menu) {
+  let timer
+
+  function showMenu() {
+    clearTimeout(timer)
+    menu.classList.add("active")
+  }
+
+  function hideMenu() {
+    timer = setTimeout(() => {
+      menu.classList.remove("active")
+    }, 200)
+  }
+
+  button.addEventListener("mouseover", showMenu)
+  button.addEventListener("mouseout", hideMenu)
+  menu.addEventListener("mouseover", showMenu)
+  menu.addEventListener("mouseout", hideMenu)
+}
+
+addHoverEffect(dropButton, dropdownMenu)
+
 /***************************************************
  *                     EVENTS
  **************************************************/
@@ -861,10 +883,6 @@ search.addEventListener("input", () => {
 
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
-
-dropButton.addEventListener("click", () => {
-  dropdownMenu.classList.toggle("active")
-})
 
 document.getElementById("loop").addEventListener("click", () => {
   handleLoopClick("loop")
