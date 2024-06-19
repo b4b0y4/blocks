@@ -884,10 +884,6 @@ search.addEventListener("input", () => {
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
 
-dropButton.addEventListener("click", () => {
-  dropdownMenu.classList.toggle("active")
-})
-
 document.getElementById("loop").addEventListener("click", () => {
   handleLoopClick("loop")
 })
