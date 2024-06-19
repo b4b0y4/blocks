@@ -38,27 +38,23 @@ body {
   overflow: hidden;
 }
 
-.loop-box,
-.screen-box {
+.hidden-box {
   position: absolute;
   top: 10px;
+  right: 10px;
   padding: 4px;
   display: flex;
   align-items: center;
-  background-color: var(--color-hvr);
+  background-color: var(--color-bg);
   border-radius: 5px;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
   opacity: 0;
   z-index: 100;
   transition: opacity 0.1s ease-in-out;
 }
 
-.loop-box {
-  left: 10px;
-}
-
-.loop-box input,
-.loop-box button {
+.hidden-box input,
+.hidden-box button {
   margin: 0;
   padding: 0;
   font-size: inherit;
@@ -66,12 +62,7 @@ body {
   box-sizing: border-box;
 }
 
-.screen-box {
-  right: 10px;
-}
-
-.loop-box:hover,
-.screen-box:hover {
+.hidden-box:hover {
   opacity: 0.95;
 }
 
@@ -81,20 +72,20 @@ body {
   font-size: 1em;
   border: none;
   outline: none;
-  background-color: var(--color-bg);
+  background-color: var(--color-hvr);
   color: var(--color-btn);
   width: 50px;
-  margin-right: 4px;
+  margin: 0 4px;
   text-align: center;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 40px;
-  left: 0;
-  background-color: var(--color-hvr);
+  top: 38px;
+  right: 0;
+  background-color: var(--color-bg);
   border: none;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   padding: 4px;
   z-index: 100;
@@ -123,7 +114,7 @@ body {
 #favLoop:hover,
 #curatedLoop:hover,
 #selectedLoop:hover {
-  background-color: var(--color-bg);
+  background-color: var(--color-hvr);
 }
 
 #theme,
@@ -148,7 +139,7 @@ body {
 #hideInfobar:hover,
 #drop:hover,
 #stop:hover {
-  background-color: var(--color-bg);
+  background-color: var(--color-hvr);
 }
 
 .frame-container {
@@ -308,7 +299,7 @@ a:hover {
   color: var(--color-txt);
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;

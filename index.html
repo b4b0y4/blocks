@@ -19,11 +19,17 @@
 <body>
   <div class="container">
 
-    <div class="loop-box">
-      <input type="text" id="loopInput" placeholder="" autocomplete="off">
-      <button id="drop"><i class="fa-solid fa-repeat"></i>
-        <button id="stop"><i class="fa-regular fa-circle-stop"></i></button>
+    <div class="hidden-box">
+      <button id="theme">
+        <i class="fa-solid fa-circle-half-stroke"></i>
       </button>
+      <button id="hideInfobar">
+        <i class="fa-regular fa-eye-slash"></i>
+        <i class="fa-regular fa-eye"></i>
+      </button>
+      <input type="text" id="loopInput" placeholder="" autocomplete="off">
+      <button id="drop"><i class="fa-solid fa-repeat"></i></button>
+      <button id="stop"><i class="fa-regular fa-circle-stop"></i></button>
       <div class="dropdown-menu" id="dropdownMenu">
         <button id="loop" data-action="loop">Everything</button>
         <button id="favLoop" data-action="favLoop">Favorites</button>
@@ -32,15 +38,6 @@
       </div>
     </div>
 
-    <div class="screen-box">
-      <button id="theme">
-        <i class="fa-solid fa-circle-half-stroke"></i>
-      </button>
-      <button id="hideInfobar">
-        <i class="fa-regular fa-eye-slash"></i>
-        <i class="fa-regular fa-eye"></i>
-      </button>
-    </div>
     <div class="frame-container">
       <iframe id="frame" class="frame" src="about:blank"></iframe>
     </div>
@@ -89,11 +86,9 @@
           <li>(work's name #id) get the exact token for that collection.</li>
           <li>(id) get the exact token id on a displayed collection.</li>
         </ul>
-        <li>Click <i class="fa-regular fa-eye-slash"></i> on the upper right-hand corner to hide the info bar.
-        </li>
-        <li>Click <i class="fa-solid fa-repeat"></i> on the upper left-hand corner to enter a random loop.
-        </li>
         <li>Press <span class="key">\</span> to clear the page.</li>
+        <li>There is a hidden menu on the upper right-hand corner!
+        </li>
         <li>Pin this app to your IPFS node to
           help decentralisation
           <a href="https://app.ens.eth.limo/profile/?from=%2F&name=blocks.baboya.eth&tab=records" target="_blank"><i
