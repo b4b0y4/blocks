@@ -520,7 +520,7 @@ export const list = [
   "ABSI0 - One More Day / Aaron Penne - 50 minted",
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 48 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
-  "ABSIV0 - Monochronos / Heeey - 12 minted",
+  "ABSIV0 - Monochronos / Heeey - 13 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
