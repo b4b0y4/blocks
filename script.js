@@ -1,6 +1,6 @@
-import { ethers } from "./ethers.min.js"
-import { isV2, contractsData } from "./contracts.js"
-import { libs, list, curated } from "./lists.js"
+import {ethers} from "./ethers.min.js"
+import {isV2, contractsData} from "./contracts.js"
+import {libs, list, curated} from "./lists.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -28,7 +28,7 @@ const contractNameMap = {}
 const contractIndexMap = {}
 
 Object.keys(contractsData).forEach((key, index) => {
-  const { abi, address } = contractsData[key]
+  const {abi, address} = contractsData[key]
   contracts.push(new ethers.Contract(address, abi, provider))
   contractNameMap[index] = key
   contractIndexMap[key] = index
@@ -63,7 +63,7 @@ async function grabData(tokenId, contract) {
     const scriptPromise = constructScript(projId, projectInfo, contract)
     const extLibPromise = extractLibraryName(projectInfo)
 
-    const [hash, { owner, ensName }, detail, script, editionInfo, extLib] =
+    const [hash, {owner, ensName}, detail, script, editionInfo, extLib] =
       await Promise.all([
         hashPromise,
         ownerPromise,
@@ -133,7 +133,7 @@ async function fetchOwner(tokenId, contract) {
   } catch (error) {
     ensName = null
   }
-  return { owner, ensName }
+  return {owner, ensName}
 }
 
 function extractLibraryName(projectInfo) {
@@ -163,7 +163,7 @@ async function updateContractData(tokenId, contract) {
 
     const hashPromise = fetchHash(tokenId, contract)
     const ownerPromise = fetchOwner(tokenId, contract)
-    const [hash, { owner, ensName }] = await Promise.all([
+    const [hash, {owner, ensName}] = await Promise.all([
       hashPromise,
       ownerPromise,
     ])
@@ -228,7 +228,7 @@ function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
 
   localStorage.setItem(
     "scriptData",
-    JSON.stringify({ src, tokenIdHash, process, script })
+    JSON.stringify({src, tokenIdHash, process, script})
   )
 }
 
@@ -421,7 +421,7 @@ function getToken(line, searchQuery) {
 }
 
 function handleNumericQuery(searchQuery) {
-  const { contract, projId } = contractData
+  const {contract, projId} = contractData
   const id = parseInt(searchQuery.match(/\s*(\d+)/)[1])
   const tokenId =
     projId == 0
@@ -530,7 +530,7 @@ function handleKeyboardNavigation(event) {
   })
 
   if (selectedIndex !== -1)
-    items[selectedIndex].scrollIntoView({ block: "nearest" })
+    items[selectedIndex].scrollIntoView({block: "nearest"})
 }
 displayList(list)
 
@@ -592,7 +592,7 @@ function loopRandom(interval, action) {
     performAction(action, favorite)
   }, interval)
 
-  loopState = { isLooping: "true", interval, action }
+  loopState = {isLooping: "true", interval, action}
   localStorage.setItem("loopState", JSON.stringify(loopState))
 }
 
@@ -643,7 +643,7 @@ function handleLoopClick(action) {
   }
 
   if (inputValue !== "" && interval !== loopState.interval) {
-    loopState = { isLooping: "false", interval: interval, action: action }
+    loopState = {isLooping: "false", interval: interval, action: action}
     localStorage.setItem("loopState", JSON.stringify(loopState))
   }
 }
@@ -664,7 +664,7 @@ async function saveOutput() {
     /\s+/g,
     "-"
   )}#${id}.html`
-  const blob = new Blob([content], { type: "text/html" })
+  const blob = new Blob([content], {type: "text/html"})
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
 
