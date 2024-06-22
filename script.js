@@ -905,6 +905,18 @@ overlay.addEventListener("click", () => {
   clearPanels()
 })
 
+document.getElementById("fullscreen").addEventListener("click", () => {
+  if (frame.requestFullscreen) {
+    frame.requestFullscreen()
+  } else if (frame.mozRequestFullScreen) {
+    frame.mozRequestFullScreen()
+  } else if (frame.webkitRequestFullscreen) {
+    frame.webkitRequestFullscreen()
+  } else if (frame.msRequestFullscreen) {
+    frame.msRequestFullscreen()
+  }
+})
+
 /***************************************************
  *              DARK/LIGHT MODE TOGGLE
  **************************************************/
