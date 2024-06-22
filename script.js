@@ -56,20 +56,20 @@ async function grabData(tokenId, contract) {
 
     const projectInfoPromise = fetchProjectInfo(projId, contract, isContractV2)
     const detailPromise = fetchProjectDetails(projId, contract)
-    const editionPromise = fetchEditionInfo(projId, contract, isContractV2)
+    const editionInfoPromise = fetchEditionInfo(projId, contract, isContractV2)
 
     const projectInfo = await projectInfoPromise
 
     const scriptPromise = constructScript(projId, projectInfo, contract)
     const extLibPromise = extractLibraryName(projectInfo)
 
-    const [hash, {owner, ensName}, detail, script, edition, extLib] =
+    const [hash, {owner, ensName}, detail, script, editionInfo, extLib] =
       await Promise.all([
         hashPromise,
         ownerPromise,
         detailPromise,
         scriptPromise,
-        editionPromise,
+        editionInfoPromise,
         extLibPromise,
       ])
 
@@ -85,7 +85,8 @@ async function grabData(tokenId, contract) {
         owner,
         ensName,
         extLib,
-        edition,
+        edition: editionInfo.edition,
+        remaining: editionInfo.remaining,
       })
     )
     location.reload()
@@ -148,7 +149,10 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
     ? contracts[contract].projectTokenInfo(projId)
     : contracts[contract].projectStateData(projId))
 
-  return Number(invo.invocations)
+  return {
+    edition: Number(invo.maxInvocations),
+    remaining: Number(invo.maxInvocations - invo.invocations),
+  }
 }
 
 async function updateContractData(tokenId, contract) {
@@ -191,7 +195,8 @@ function update(
   owner,
   ensName,
   extLib,
-  edition
+  edition,
+  remaining
 ) {
   pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
   const curation = [0, 1, 2].includes(contract)
@@ -199,7 +204,16 @@ function update(
     : null
   const platform = getPlatform(contract, curation)
 
-  updateInfo(contract, owner, ensName, detail, tokenId, platform, edition)
+  updateInfo(
+    contract,
+    owner,
+    ensName,
+    detail,
+    tokenId,
+    platform,
+    edition,
+    remaining
+  )
   injectFrame()
 }
 
@@ -280,7 +294,8 @@ function updateInfo(
   detail,
   tokenId,
   platform,
-  edition
+  edition,
+  remaining
 ) {
   let artist = detail[1]
   const logs = []
@@ -293,11 +308,16 @@ function updateInfo(
     }
   }
 
+  const mintedOut =
+    remaining == 0
+      ? `Edition of ${edition} works.`
+      : `Edition of ${edition} works, ${remaining} remaining.`
+
   const updateInfo = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
     panel.innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist} ● ${platform}<br>
-        Edition of ${edition} works.</p><br>
+        ${mintedOut}</p><br>
       <p>${detail[2]} <a href="${detail[3]}" target="_blank">${extractDomain(
       detail[3]
     )}</a></p><br>
