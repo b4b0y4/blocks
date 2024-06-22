@@ -35,7 +35,7 @@ Object.keys(contractsData).forEach((key, index) => {
 })
 
 /***************************************************
- *        FUNCTIONS TO GET DATA FROM ETHEREUM
+ *        GET DATA FROM ETHEREUM FUNCTIONS
  **************************************************/
 let contractData = {}
 
@@ -183,7 +183,7 @@ async function updateContractData(tokenId, contract) {
 }
 
 /***************************************************
- *              FUNCTIONS TO UPDATE UI
+ *              UPDATE UI FUNCTIONS
  **************************************************/
 function update(
   tokenId,
@@ -372,7 +372,7 @@ function copyToClipboard(text) {
 }
 
 /***************************************************
- *        FUNCTION TO INJECT INTO IFRAME
+ *          INJECT INTO IFRAME FUNCTION
  **************************************************/
 async function injectFrame() {
   try {
@@ -409,7 +409,7 @@ async function injectFrame() {
 }
 
 /***************************************************
- *            FUNCTIONS TO GET TOKEN
+ *              GET TOKEN FUNCTIONS
  **************************************************/
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
@@ -458,7 +458,7 @@ function handleOtherQuery(line, searchQuery) {
 }
 
 /***************************************************
- *          FUNCTIONS TO DISPLAY LIST
+ *            DISPLAY LIST FUNCTIONS
  **************************************************/
 let filteredList = list
 let selectedIndex = -1
@@ -655,7 +655,7 @@ function stopLoop() {
 }
 
 /***************************************************
- *          FUNCTION TO SAVE THE OUTPUT
+ *           SAVE THE OUTPUT FUNCTION
  **************************************************/
 async function saveOutput() {
   clearPanels()
@@ -682,7 +682,7 @@ async function saveOutput() {
 save.addEventListener("click", saveOutput)
 
 /***************************************************
- * FUNCTIONS TO MANIPULATE SAVED OUTPUT IN STORAGE
+ *   MANIPULATE SAVED OUTPUT IN STORAGE FUNCTIONS
  **************************************************/
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {}
 
@@ -733,7 +733,7 @@ function displayFavoriteList() {
 }
 
 /***************************************************
- *      FUNCTIONS TO GET PREVIOUS/NEXT ID TOKEN
+ *       GET PREVIOUS/NEXT ID FUNCTIONS
  **************************************************/
 function incrementTokenId() {
   contractData.tokenId = contractData.tokenId + 1
@@ -749,7 +749,7 @@ inc.addEventListener("click", incrementTokenId)
 dec.addEventListener("click", decrementTokenId)
 
 /***************************************************
- *              HELPER FUNCTIONS
+ *               HELPER FUNCTIONS
  **************************************************/
 function clearDataStorage() {
   ;["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d))
@@ -921,7 +921,7 @@ document.getElementById("theme").addEventListener("click", () => {
 })
 
 /***************************************************
- *         FUNCTION TO UPDATE THE LIST
+ *           UPDATE LIST FUNCTION
  **************************************************/
 const contractNames = ["ABSII", "ABSIII", "ABSIV"]
 // fetchBlocks(contractNames)
