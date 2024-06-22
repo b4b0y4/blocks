@@ -372,7 +372,7 @@ function copyToClipboard(text) {
 }
 
 /***************************************************
- *          INJECT INTO IFRAME FUNCTION
+ *           INJECT IFRAME FUNCTION
  **************************************************/
 async function injectFrame() {
   try {
@@ -458,7 +458,7 @@ function handleOtherQuery(line, searchQuery) {
 }
 
 /***************************************************
- *            DISPLAY LIST FUNCTIONS
+ *        LIST DISPLAY/NAVIGATION FUNCTIONS
  **************************************************/
 let filteredList = list
 let selectedIndex = -1
@@ -493,6 +493,7 @@ function filterList(lines, query) {
   displayList(filteredList)
   selectedIndex = -1
 }
+displayList(list)
 
 function handleItemClick(event) {
   const listItem = event.target.closest(".list-item")
@@ -533,7 +534,6 @@ function handleKeyboardNavigation(event) {
   if (selectedIndex !== -1)
     items[selectedIndex].scrollIntoView({block: "nearest"})
 }
-displayList(list)
 
 search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim()
@@ -814,7 +814,6 @@ function addHoverEffect(button, menu) {
   menu.addEventListener("mouseover", showMenu)
   menu.addEventListener("mouseout", hideMenu)
 }
-
 addHoverEffect(dropButton, dropdownMenu)
 
 /***************************************************
