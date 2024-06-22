@@ -273,6 +273,7 @@ const getPlatform = (contract, curation) => {
     ARTCODE: "Redlion",
     TBOA: "TBOA Club",
     LOM: "Legends of Metaterra",
+    PROOF: "PROOF",
   }
 
   ;[
@@ -922,7 +923,7 @@ document.getElementById("theme").addEventListener("click", () => {
 /***************************************************
  *         FUNCTION TO UPDATE THE LIST
  **************************************************/
-const contractNames = ["ABSII", "ABSIII", "ABSIV", "AOI"]
+const contractNames = ["ABSII", "ABSIII", "ABSIV"]
 // fetchBlocks(contractNames)
 
 async function fetchBlocks(contractNames) {
