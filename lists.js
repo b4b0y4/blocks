@@ -647,7 +647,6 @@ export const list = [
   "ATP0 - LOVE / Martin Grasser - 300 minted",
   "GRAIL1 - Fold / rudxane - 400 minted",
   "GRAIL2 - Atlas / Eric De Giuli - 333 minted",
-  "PROOF0 - Rorschach Test / r4v3n - 1 minted",
   "PROOF1 - aaa / fingacode - 99 minted",
   "PROOF2 - Memorias del espacio olvidado / Juan Rodríguez García - 150 minted",
   "PROOF3 - 7 Factorial / Lars Wander - 19 minted",

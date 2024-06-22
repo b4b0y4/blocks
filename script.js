@@ -937,7 +937,7 @@ async function fetchBlocks(contractNames) {
         ? 374
         : contractName === "ABXPACEII"
         ? 5
-        : ["GRAIL", "HODL", "UNITLDN", "GLITCH"].includes(contractName)
+        : ["GRAIL", "HODL", "UNITLDN", "GLITCH", "PROOF"].includes(contractName)
         ? 1
         : 0
     let newList = ""
