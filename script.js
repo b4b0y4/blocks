@@ -59,9 +59,6 @@ const libs = {
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
 }
 
-/***************************************************
- *                UPDATE LIST FUNCTION
- **************************************************/
 const list = [
   "AB0 - Chromie Squiggle / Snowfro - 9998 minted",
   "AB1 - Genesis / DCA - 512 minted",
@@ -758,6 +755,7 @@ const list = [
   "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
   "LOM0 - Sacred Trees / hideo - 267 minted",
 ]
+
 const curated = [
   0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
   41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
@@ -766,6 +764,10 @@ const curated = [
   379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ]
+
+/***************************************************
+ *                UPDATE LIST FUNCTION
+ **************************************************/
 const bloncks = ["ABSII", "ABSIII", "ABSIV"]
 // fetchBlocks(bloncks)
 
