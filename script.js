@@ -15,7 +15,7 @@ const panel = document.querySelector(".panel")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
 const search = document.getElementById("searchInput")
-const loopButton = document.getElementById("loop")
+const loopButton = document.querySelector(".fa-repeat")
 const dropdownMenu = document.getElementById("dropdownMenu")
 
 const rpcUrl = localStorage.getItem("rpcUrl")
