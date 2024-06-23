@@ -15,7 +15,6 @@ const panel = document.querySelector(".panel")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
 const search = document.getElementById("searchInput")
-const loopButton = document.querySelector(".fa-repeat")
 const dropdownMenu = document.getElementById("dropdownMenu")
 
 const rpcUrl = localStorage.getItem("rpcUrl")
@@ -1589,7 +1588,7 @@ function addHoverEffect(button, menu) {
   menu.addEventListener("mouseover", showMenu)
   menu.addEventListener("mouseout", hideMenu)
 }
-addHoverEffect(loopButton, dropdownMenu)
+addHoverEffect(document.querySelector(".fa-repeat"), dropdownMenu)
 
 /***************************************************
  *                     EVENTS
