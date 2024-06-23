@@ -1,45 +1,45 @@
 // GenArt721
-const contractV1 = "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"
+const addrV1 = "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"
 
 // GenArt721CoreV2
-const contractV2 = "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270"
-const contractABXPACE = "0x64780CE53f6e966E18a22Af13a2F97369580Ec11"
-const contractBM = "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" //weird
-const contractPLOTS = "0xa319C382a702682129fcbF55d514E61a16f97f9c"
-const contractATP = "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3"
-const contractVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436"
-const contractMINTS = "0xEafE7b73A3cfA804b761debcF077D4574588dfe7"
-const contractTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
-const contractFLUTTER = "0x13aAe6f9599880edbB7d144BB13F1212CeE99533"
-const contractCDESK = "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15"
-const contractARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
-const contractTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
-const contractLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
-const contractCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
+const addrV2 = "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270"
+const addrABXPACE = "0x64780CE53f6e966E18a22Af13a2F97369580Ec11"
+const addrBM = "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" //weird
+const addrPLOTS = "0xa319C382a702682129fcbF55d514E61a16f97f9c"
+const addrATP = "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3"
+const addrVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436"
+const addrMINTS = "0xEafE7b73A3cfA804b761debcF077D4574588dfe7"
+const addrTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
+const addrFLUTTER = "0x13aAe6f9599880edbB7d144BB13F1212CeE99533"
+const addrCDESK = "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15"
+const addrARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
+const addrTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
+const addrLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
+const addrCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
 
 // GenArt721CoreV3
-const contractV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
-const contractEXPLORE = "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
-const contractABXPACE2 = "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
-const contractABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
-const contractBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD"
-const contractPLOTS2 = "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
-const contractSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
-const contractGRAILS = "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
-const contractAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C"
-const contractSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706"
-const contractTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253"
-const contractVFA = "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4"
-const contractUNITLDN = "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
-const contractHODLERS = "0x9F79e46A309f804Aa4B7B53a1F72c69137427794"
-const contractFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
-const contractTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
-const contractABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
-const contractABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
-const contractABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
-const contractABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
-const contractABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
-const contractPROOF = "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8"
+const addrV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
+const addrEXPLORE = "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
+const addrABXPACE2 = "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
+const addrABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
+const addrBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD"
+const addrPLOTS2 = "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
+const addrSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
+const addrGRAILS = "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
+const addrAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C"
+const addrSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706"
+const addrTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253"
+const addrVFA = "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4"
+const addrUNITLDN = "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
+const addrHODLERS = "0x9F79e46A309f804Aa4B7B53a1F72c69137427794"
+const addrFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
+const addrTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
+const addrABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
+const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
+const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
+const addrABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
+const addrABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
+const addrPROOF = "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8"
 
 const abiV1 = [
   {
@@ -892,7 +892,7 @@ const abiV2 = [
     inputs: [
       {internalType: "string", name: "_tokenName", type: "string"},
       {internalType: "string", name: "_tokenSymbol", type: "string"},
-      {internalType: "address", name: "_randomizerContract", type: "address"},
+      {internalType: "address", name: "_randomizeraddr", type: "address"},
     ],
     payable: false,
     stateMutability: "nonpayable",
@@ -1352,8 +1352,8 @@ const abiV2 = [
   {
     constant: true,
     inputs: [],
-    name: "randomizerContract",
-    outputs: [{internalType: "contract Randomizer", name: "", type: "address"}],
+    name: "randomizeraddr",
+    outputs: [{internalType: "addr Randomizer", name: "", type: "address"}],
     payable: false,
     stateMutability: "view",
     type: "function",
@@ -1831,8 +1831,8 @@ const abiV3 = [
     inputs: [
       {internalType: "string", name: "_tokenName", type: "string"},
       {internalType: "string", name: "_tokenSymbol", type: "string"},
-      {internalType: "address", name: "_randomizerContract", type: "address"},
-      {internalType: "address", name: "_adminACLContract", type: "address"},
+      {internalType: "address", name: "_randomizeraddr", type: "address"},
+      {internalType: "address", name: "_adminACLaddr", type: "address"},
       {internalType: "uint248", name: "_startingProjectId", type: "uint248"},
     ],
     stateMutability: "nonpayable",
@@ -2080,7 +2080,7 @@ const abiV3 = [
   {
     inputs: [
       {internalType: "address", name: "_sender", type: "address"},
-      {internalType: "address", name: "_contract", type: "address"},
+      {internalType: "address", name: "_addr", type: "address"},
       {internalType: "bytes4", name: "_selector", type: "bytes4"},
     ],
     name: "adminACLAllowed",
@@ -2090,10 +2090,8 @@ const abiV3 = [
   },
   {
     inputs: [],
-    name: "adminACLContract",
-    outputs: [
-      {internalType: "contract IAdminACLV0", name: "", type: "address"},
-    ],
+    name: "adminACLaddr",
+    outputs: [{internalType: "addr IAdminACLV0", name: "", type: "address"}],
     stateMutability: "view",
     type: "function",
   },
@@ -2339,7 +2337,7 @@ const abiV3 = [
   },
   {
     inputs: [],
-    name: "minterContract",
+    name: "minteraddr",
     outputs: [{internalType: "address", name: "", type: "address"}],
     stateMutability: "view",
     type: "function",
@@ -2570,10 +2568,8 @@ const abiV3 = [
   },
   {
     inputs: [],
-    name: "randomizerContract",
-    outputs: [
-      {internalType: "contract IRandomizerV2", name: "", type: "address"},
-    ],
+    name: "randomizeraddr",
+    outputs: [{internalType: "addr IRandomizerV2", name: "", type: "address"}],
     stateMutability: "view",
     type: "function",
   },
@@ -2795,7 +2791,7 @@ const abiV3 = [
   },
   {
     inputs: [{internalType: "address", name: "_address", type: "address"}],
-    name: "updateMinterContract",
+    name: "updateMinteraddr",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -2949,7 +2945,7 @@ const abiBM = [
     inputs: [
       {internalType: "string", name: "_tokenName", type: "string"},
       {internalType: "string", name: "_tokenSymbol", type: "string"},
-      {internalType: "address", name: "_randomizerContract", type: "address"},
+      {internalType: "address", name: "_randomizeraddr", type: "address"},
     ],
     payable: false,
     stateMutability: "nonpayable",
@@ -3354,10 +3350,8 @@ const abiBM = [
   {
     constant: true,
     inputs: [],
-    name: "randomizerContract",
-    outputs: [
-      {internalType: "contract IRandomizer", name: "", type: "address"},
-    ],
+    name: "randomizeraddr",
+    outputs: [{internalType: "addr IRandomizer", name: "", type: "address"}],
     payable: false,
     stateMutability: "view",
     type: "function",
@@ -3832,41 +3826,41 @@ export const isV2 = [
 ]
 
 export const contractsData = {
-  AB: {abi: abiV1, address: contractV1},
-  ABII: {abi: abiV2, address: contractV2},
-  ABIII: {abi: abiV3, address: contractV3},
-  EXP: {abi: abiV3, address: contractEXPLORE},
-  ABXPACE: {abi: abiV2, address: contractABXPACE},
-  ABXPACEII: {abi: abiV3, address: contractABXPACE2},
-  ABXBM: {abi: abiV3, address: contractABXBM},
-  ABS: {abi: abiV3, address: contractABS0},
-  ABSI: {abi: abiV3, address: contractABS1},
-  ABSII: {abi: abiV3, address: contractABS2},
-  ABSIII: {abi: abiV3, address: contractABS3},
-  ABSIV: {abi: abiV3, address: contractABS4},
-  BM: {abi: abiBM, address: contractBM},
-  BMF: {abi: abiV3, address: contractBMF},
-  CITIZEN: {abi: abiV2, address: contractCITIZEN},
-  PLOT: {abi: abiV2, address: contractPLOTS},
-  PLOTII: {abi: abiV3, address: contractPLOTS2},
-  STBYS: {abi: abiV3, address: contractSTBYS},
-  ATP: {abi: abiV2, address: contractATP},
-  GRAIL: {abi: abiV3, address: contractGRAILS},
-  AOI: {abi: abiV3, address: contractAOI},
-  VCA: {abi: abiV2, address: contractVCA},
-  SDAO: {abi: abiV3, address: contractSDAO},
-  MINTS: {abi: abiV2, address: contractMINTS},
-  FLUTTER: {abi: abiV2, address: contractFLUTTER},
-  CDESK: {abi: abiV2, address: contractCDESK},
-  ARTCODE: {abi: abiV2, address: contractARTCODE},
-  TBOA: {abi: abiV2, address: contractTBOA},
-  LOM: {abi: abiV2, address: contractLOM},
-  TDG: {abi: abiV3, address: contractTDG},
-  VFA: {abi: abiV3, address: contractVFA},
-  UNITLDN: {abi: abiV3, address: contractUNITLDN},
-  TRAME: {abi: abiV2, address: contractTRAME},
-  HODL: {abi: abiV3, address: contractHODLERS},
-  FAB: {abi: abiV3, address: contractFAB},
-  TENDER: {abi: abiV3, address: contractTENDER},
-  PROOF: {abi: abiV3, address: contractPROOF},
+  AB: {abi: abiV1, address: addrV1},
+  ABII: {abi: abiV2, address: addrV2},
+  ABIII: {abi: abiV3, address: addrV3},
+  EXP: {abi: abiV3, address: addrEXPLORE},
+  ABXPACE: {abi: abiV2, address: addrABXPACE},
+  ABXPACEII: {abi: abiV3, address: addrABXPACE2},
+  ABXBM: {abi: abiV3, address: addrABXBM},
+  ABS: {abi: abiV3, address: addrABS0},
+  ABSI: {abi: abiV3, address: addrABS1},
+  ABSII: {abi: abiV3, address: addrABS2},
+  ABSIII: {abi: abiV3, address: addrABS3},
+  ABSIV: {abi: abiV3, address: addrABS4},
+  BM: {abi: abiBM, address: addrBM},
+  BMF: {abi: abiV3, address: addrBMF},
+  CITIZEN: {abi: abiV2, address: addrCITIZEN},
+  PLOT: {abi: abiV2, address: addrPLOTS},
+  PLOTII: {abi: abiV3, address: addrPLOTS2},
+  STBYS: {abi: abiV3, address: addrSTBYS},
+  ATP: {abi: abiV2, address: addrATP},
+  GRAIL: {abi: abiV3, address: addrGRAILS},
+  AOI: {abi: abiV3, address: addrAOI},
+  VCA: {abi: abiV2, address: addrVCA},
+  SDAO: {abi: abiV3, address: addrSDAO},
+  MINTS: {abi: abiV2, address: addrMINTS},
+  FLUTTER: {abi: abiV2, address: addrFLUTTER},
+  CDESK: {abi: abiV2, address: addrCDESK},
+  ARTCODE: {abi: abiV2, address: addrARTCODE},
+  TBOA: {abi: abiV2, address: addrTBOA},
+  LOM: {abi: abiV2, address: addrLOM},
+  TDG: {abi: abiV3, address: addrTDG},
+  VFA: {abi: abiV3, address: addrVFA},
+  UNITLDN: {abi: abiV3, address: addrUNITLDN},
+  TRAME: {abi: abiV2, address: addrTRAME},
+  HODL: {abi: abiV3, address: addrHODLERS},
+  FAB: {abi: abiV3, address: addrFAB},
+  TENDER: {abi: abiV3, address: addrTENDER},
+  PROOF: {abi: abiV3, address: addrPROOF},
 }
