@@ -94,7 +94,7 @@ body {
   transition: opacity 0.3s ease-in-out;
 }
 
-#loop,
+#loopAll,
 #favLoop,
 #curatedLoop,
 #selectedLoop {
@@ -110,7 +110,7 @@ body {
   transition: background-color 0.1s ease-in-out;
 }
 
-#loop:hover,
+#loopAll:hover,
 #favLoop:hover,
 #curatedLoop:hover,
 #selectedLoop:hover {
@@ -120,13 +120,12 @@ body {
 #theme,
 #hideInfobar,
 #fullscreen,
-#drop,
-#stop {
+#loop {
   border: none;
   color: var(--color-btn);
   background-color: transparent;
   font-size: 1.1em;
-  margin: 0 0 0 4px;
+  margin: 0 0 0 2px;
   padding: 3.5px 5px 2.5px;
   border-radius: 5px;
   transition: background-color 0.1s ease-in-out;
@@ -139,8 +138,7 @@ body {
 #theme:hover,
 #hideInfobar:hover,
 #fullscreen:hover,
-#drop:hover,
-#stop:hover {
+#loop:hover {
   background-color: var(--color-hvr);
 }
 

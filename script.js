@@ -15,9 +15,8 @@ const panel = document.querySelector(".panel")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
 const search = document.getElementById("searchInput")
-const dropButton = document.getElementById("drop")
+const loopButton = document.getElementById("loop")
 const dropdownMenu = document.getElementById("dropdownMenu")
-const stopButton = document.getElementById("stop")
 
 const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
@@ -61,6 +60,9 @@ const libs = {
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
 }
 
+/***************************************************
+ *                UPDATE LIST FUNCTION
+ **************************************************/
 const list = [
   "AB0 - Chromie Squiggle / Snowfro - 9998 minted",
   "AB1 - Genesis / DCA - 512 minted",
@@ -757,7 +759,6 @@ const list = [
   "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
   "LOM0 - Sacred Trees / hideo - 267 minted",
 ]
-
 const curated = [
   0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
   41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
@@ -766,10 +767,6 @@ const curated = [
   379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ]
-
-/***************************************************
- *                UPDATE LIST FUNCTION
- **************************************************/
 const bloncks = ["ABSII", "ABSIII", "ABSIV"]
 // fetchBlocks(bloncks)
 
@@ -1359,7 +1356,9 @@ function loopRandom(interval, action) {
   clearInterval(intervalId)
   const favorite = JSON.parse(localStorage.getItem("favorite")) || "{}"
 
-  if (loopState.isLooping !== "true") performAction(action, favorite)
+  if (loopState.isLooping !== "true") {
+    performAction(action, favorite)
+  }
 
   intervalId = setInterval(() => {
     performAction(action, favorite)
@@ -1370,7 +1369,7 @@ function loopRandom(interval, action) {
 }
 
 function performAction(action, favorite) {
-  if (action === "loop") getRandom(list)
+  if (action === "loopAll") getRandom(list)
   else if (action === "favLoop") getRandomKey(favorite)
   else if (action === "curatedLoop") {
     filterList(list, "curated")
@@ -1424,6 +1423,7 @@ function handleLoopClick(action) {
 function stopLoop() {
   stopRandomLoop()
   toggleInfobar()
+  location.reload()
 }
 
 /***************************************************
@@ -1553,18 +1553,21 @@ function toggleKeyShort(event) {
 function toggleInfobar() {
   const isInfobarInactive = infobar.classList.toggle("inactive")
   localStorage.setItem("infobarInactive", isInfobarInactive)
-  if (loopState.isLooping !== "true") location.reload()
 }
 
 function updateButtons() {
-  stopButton.style.display = loopState.isLooping === "true" ? "block" : "none"
-  dropButton.style.display = loopState.isLooping === "true" ? "none" : "block"
-
+  const isLooping = loopState.isLooping === "true"
   const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
-  infobar.classList.toggle("inactive", isInfobarInactive)
+
+  document.querySelector(
+    isLooping ? ".fa-repeat" : ".fa-circle-stop"
+  ).style.display = "none"
+
   document.querySelector(
     isInfobarInactive ? ".fa-eye-slash" : ".fa-eye"
   ).style.display = "none"
+
+  infobar.classList.toggle("inactive", isInfobarInactive)
 }
 
 function addHoverEffect(button, menu) {
@@ -1586,7 +1589,7 @@ function addHoverEffect(button, menu) {
   menu.addEventListener("mouseover", showMenu)
   menu.addEventListener("mouseout", hideMenu)
 }
-addHoverEffect(dropButton, dropdownMenu)
+addHoverEffect(loopButton, dropdownMenu)
 
 /***************************************************
  *                     EVENTS
@@ -1656,8 +1659,8 @@ search.addEventListener("input", () => {
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
 
-document.getElementById("loop").addEventListener("click", () => {
-  handleLoopClick("loop")
+document.getElementById("loopAll").addEventListener("click", () => {
+  handleLoopClick("loopAll")
 })
 document.getElementById("favLoop").addEventListener("click", () => {
   handleLoopClick("favLoop")
@@ -1669,9 +1672,12 @@ document.getElementById("selectedLoop").addEventListener("click", () => {
   handleLoopClick("selectedLoop")
 })
 
-stopButton.addEventListener("click", stopLoop)
+document.querySelector(".fa-circle-stop").addEventListener("click", stopLoop)
 
-document.getElementById("hideInfobar").addEventListener("click", toggleInfobar)
+document.getElementById("hideInfobar").addEventListener("click", () => {
+  toggleInfobar()
+  location.reload()
+})
 
 overlay.addEventListener("click", () => {
   clearPanels()
@@ -1693,12 +1699,23 @@ document.getElementById("fullscreen").addEventListener("click", () => {
  *              DARK/LIGHT MODE TOGGLE
  **************************************************/
 const root = document.documentElement
-const isDarkMode = JSON.parse(localStorage.getItem("darkMode"))
 
-if (isDarkMode) root.classList.toggle("dark-mode")
+function setDarkMode(isDarkMode) {
+  root.classList.toggle("dark-mode", isDarkMode)
+  document.querySelector(".fa-sun").style.display = isDarkMode
+    ? "inline-block"
+    : "none"
+  document.querySelector(".fa-moon").style.display = isDarkMode
+    ? "none"
+    : "inline-block"
+}
 
-document.getElementById("theme").addEventListener("click", () => {
-  root.classList.toggle("dark-mode")
-  const updateMode = root.classList.contains("dark-mode")
-  localStorage.setItem("darkMode", updateMode)
-})
+function toggleDarkMode() {
+  const updateTheme = !root.classList.contains("dark-mode")
+  localStorage.setItem("darkMode", updateTheme)
+  setDarkMode(updateTheme)
+}
+
+document.getElementById("theme").addEventListener("click", toggleDarkMode)
+
+setDarkMode(JSON.parse(localStorage.getItem("darkMode")))

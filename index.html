@@ -21,18 +21,21 @@
 
     <div class="hidden-box">
       <button id="theme">
-        <i class="fa-solid fa-circle-half-stroke"></i>
+        <i class="fa-regular fa-moon"></i>
+        <i class="fa-regular fa-sun"></i>
       </button>
       <button id="hideInfobar">
-        <i class="fa-solid fa-eye-slash"></i>
-        <i class="fa-solid fa-eye"></i>
+        <i class="fa-regular fa-eye-slash"></i>
+        <i class="fa-regular fa-eye"></i>
       </button>
-      <button id="fullscreen"><i class="fa-solid fa-maximize"></i></button>
-      <button id="drop"><i class="fa-solid fa-repeat"></i></button>
-      <button id="stop"><i class="fa-regular fa-circle-stop"></i></button>
+      <button id="fullscreen"><i class="fa-solid fa-expand"></i></button>
+      <button id="loop">
+        <i class="fa-solid fa-repeat"></i>
+        <i class="fa-regular fa-circle-stop"></i>
+      </button>
       <input type="text" id="loopInput" placeholder="" autocomplete="off">
       <div class="dropdown-menu" id="dropdownMenu">
-        <button id="loop" data-action="loop">Everything</button>
+        <button id="loopAll" data-action="loop">Everything</button>
         <button id="favLoop" data-action="favLoop">Favorites</button>
         <button id="curatedLoop" data-action="curated">Curated</button>
         <button id="selectedLoop" data-action="selected">Selected</button>
