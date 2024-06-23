@@ -293,7 +293,7 @@ a:hover {
   color: var(--color-txt);
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
