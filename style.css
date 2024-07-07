@@ -63,7 +63,7 @@ body {
 }
 
 .hidden-box:hover {
-  opacity: 0.95;
+  opacity: 0.98;
 }
 
 #loopInput {
@@ -95,7 +95,7 @@ body {
 }
 
 .dropdown-menu.active {
-  opacity: 0.95;
+  opacity: 0.98;
   pointer-events: auto;
 }
 
@@ -309,7 +309,7 @@ a:hover {
 .instruction {
   display: none;
   bottom: 8px;
-  opacity: 0.95;
+  opacity: 0.98;
   z-index: 100;
   pointer-events: auto;
 }
@@ -318,7 +318,7 @@ a:hover {
 .list-panel.active,
 .fav-panel.active {
   bottom: 45px;
-  opacity: 0.95;
+  opacity: 0.98;
   pointer-events: auto;
 }
 
