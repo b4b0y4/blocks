@@ -26,7 +26,6 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--color-bg);
-  overflow: hidden;
 }
 
 .container {
@@ -34,6 +33,7 @@ body {
   flex-direction: column;
   height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
 .hidden-box {
@@ -158,7 +158,8 @@ iframe {
 .infobar {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   height: 30px;
   max-width: 100%;
   display: flex;
@@ -505,8 +506,10 @@ a:hover {
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-    /* overflow-y: auto; */
+    height: calc(
+      100% - 80px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+    );
+    overflow-y: auto;
   }
 
   .infobar {
@@ -564,7 +567,7 @@ a:hover {
   .fav-panel.active {
     position: fixed;
     max-width: 100%;
-    max-height: calc(100% - 100px);
+    max-height: calc(100% - 80px);
     right: 0;
     left: 0;
     bottom: 90px;
