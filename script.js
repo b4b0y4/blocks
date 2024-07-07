@@ -1530,7 +1530,7 @@ function clearDataStorage() {
 
 function clearPanels() {
   ;[listPanel, panel, favPanel].forEach((p) => p.classList.remove("active"))
-  overlay.classList.toggle("active")
+  overlay.classList.remove("active")
 }
 
 function toggleSpin() {
@@ -1636,17 +1636,34 @@ document.addEventListener("keypress", (event) => {
   }
 })
 
-info.addEventListener("click", () => {
+info.addEventListener("click", (event) => {
+  event.stopPropagation()
   togglePanel(panel)
 })
 
-document.querySelector(".search-icon").addEventListener("click", () => {
+document.querySelector(".search-icon").addEventListener("click", (event) => {
+  event.stopPropagation()
   togglePanel(listPanel)
 })
 
-document.querySelector(".fav-icon").addEventListener("click", () => {
+document.querySelector(".fav-icon").addEventListener("click", (event) => {
+  event.stopPropagation()
   displayFavoriteList()
   togglePanel(favPanel)
+})
+
+document.addEventListener("click", () => {
+  clearPanels()
+})
+
+panel.addEventListener("click", (event) => {
+  event.stopPropagation()
+})
+listPanel.addEventListener("click", (event) => {
+  event.stopPropagation()
+})
+favPanel.addEventListener("click", (event) => {
+  event.stopPropagation()
 })
 
 search.addEventListener("input", () => {
@@ -1654,7 +1671,7 @@ search.addEventListener("input", () => {
     listPanel.classList.add("active")
     panel.classList.remove("active")
     favPanel.classList.remove("active")
-    overlay.classList.toggle("active")
+    overlay.classList.add("active")
   }
 })
 
@@ -1679,10 +1696,6 @@ document.querySelector(".fa-circle-stop").addEventListener("click", stopLoop)
 document.getElementById("hideInfobar").addEventListener("click", () => {
   toggleInfobar()
   location.reload()
-})
-
-overlay.addEventListener("click", () => {
-  clearPanels()
 })
 
 document.getElementById("fullscreen").addEventListener("click", () => {
@@ -1718,6 +1731,9 @@ function toggleDarkMode() {
   setDarkMode(updateTheme)
 }
 
-document.getElementById("theme").addEventListener("click", toggleDarkMode)
+document.getElementById("theme").addEventListener("click", (event) => {
+  event.stopPropagation()
+  toggleDarkMode()
+})
 
 setDarkMode(JSON.parse(localStorage.getItem("darkMode")))

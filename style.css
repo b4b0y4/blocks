@@ -3,7 +3,6 @@
   --color-txt: #5c5c5c;
   --color-btn: #969697;
   --color-hvr: #e0e0e0;
-  --color-key: #d3d3d3;
 }
 
 :root.dark-mode {
@@ -11,7 +10,6 @@
   --color-txt: #adadae;
   --color-btn: #7e7d7d;
   --color-hvr: #2d2e2e;
-  --color-key: #3e3e3e;
 }
 
 .no-flash {
@@ -192,7 +190,7 @@ li {
 }
 
 .key {
-  background-color: var(--color-key);
+  background-color: var(--color-hvr);
   border-radius: 5px;
   padding: 2px 5px;
 }
@@ -370,13 +368,13 @@ a:hover {
 
 .fa-copy {
   margin-left: 7px;
-  color: var(--color-key);
+  color: var(--color-btn);
   transition: color 0.1s ease-in-out;
   cursor: default;
 }
 
 .fa-copy:hover {
-  color: var(--color-btn);
+  color: var(--color-txt);
 }
 
 .copy-text:active .fa-copy {
@@ -451,7 +449,8 @@ a:hover {
   transform: translateY(-50%);
   font-size: 0.6em;
   color: var(--color-btn);
-  background-color: var(--color-key);
+  background-color: var(--color-hvr);
+  filter: brightness(90%);
   padding: 2.5px 7px;
   border-radius: 5px;
   cursor: default;
@@ -560,13 +559,14 @@ a:hover {
   .list-panel.active,
   .fav-panel.active {
     max-width: 100%;
-    max-height: 75%;
+    max-height: 60%;
     right: 0;
     left: 0;
     bottom: 90px;
   }
 
   .instruction {
+    max-height: 100%;
     bottom: 5px;
   }
 }
