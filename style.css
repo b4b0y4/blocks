@@ -561,13 +561,6 @@ a:hover {
     margin-left: 20px;
   }
 
-  .panel,
-  .list-panel,
-  .fav-panel {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
   .instruction,
   .panel.active,
   .list-panel.active,
@@ -577,7 +570,7 @@ a:hover {
     max-height: calc(100% - 80px);
     right: 0;
     left: 0;
-    bottom: 80px;
+    bottom: 90px;
   }
 
   .instruction {
