@@ -26,6 +26,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--color-bg);
+  overflow: hidden;
 }
 
 .container {
@@ -33,7 +34,6 @@ body {
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  overflow: hidden;
 }
 
 .hidden-box {
@@ -156,6 +156,9 @@ iframe {
 }
 
 .infobar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
   height: 30px;
   max-width: 100%;
   display: flex;
@@ -568,7 +571,6 @@ a:hover {
   }
 
   .instruction {
-    max-height: 100%;
     bottom: 5px;
   }
 }
