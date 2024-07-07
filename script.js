@@ -1530,7 +1530,7 @@ function clearDataStorage() {
 
 function clearPanels() {
   ;[listPanel, panel, favPanel].forEach((p) => p.classList.remove("active"))
-  overlay.style.display = "none"
+  overlay.classList.toggle("active")
 }
 
 function toggleSpin() {
@@ -1543,7 +1543,8 @@ function togglePanel(panelElement) {
     (p) => p !== panelElement && p.classList.remove("active")
   )
   const isActive = panelElement.classList.toggle("active")
-  overlay.style.display = isActive ? "block" : "none"
+
+  overlay.classList.toggle("active", isActive)
 }
 
 function toggleKeyShort(event) {
@@ -1653,7 +1654,7 @@ search.addEventListener("input", () => {
     listPanel.classList.add("active")
     panel.classList.remove("active")
     favPanel.classList.remove("active")
-    overlay.style.display = "block"
+    overlay.classList.toggle("active")
   }
 })
 

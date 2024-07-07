@@ -476,7 +476,7 @@ a:hover {
 }
 
 .overlay {
-  display: none;
+  visibility: hidden;
   position: fixed;
   top: 0;
   left: 0;
@@ -485,6 +485,16 @@ a:hover {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease-in-out, visibility 0s linear 0.6s;
+}
+
+.overlay.active {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 0.6s ease-in-out, visibility 0s;
 }
 
 @media (max-width: 600px) {
