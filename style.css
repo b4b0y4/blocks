@@ -36,7 +36,6 @@ body {
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  /* overflow: hidden; */
 }
 
 .hidden-box {
@@ -495,7 +494,6 @@ a:hover {
     left: 0;
     width: 100%;
     height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-    overflow-y: auto;
   }
 
   .infobar {
@@ -552,14 +550,13 @@ a:hover {
   .list-panel.active,
   .fav-panel.active {
     max-width: 100%;
-    max-height: 60%;
+    max-height: 75%;
     right: 0;
     left: 0;
     bottom: 90px;
   }
 
   .instruction {
-    max-height: 100%;
     bottom: 5px;
   }
 }
