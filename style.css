@@ -156,10 +156,6 @@ iframe {
 }
 
 .infobar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   height: 30px;
   max-width: 100%;
   display: flex;
@@ -511,6 +507,10 @@ a:hover {
   }
 
   .infobar {
+    /* position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0; */
     justify-content: center;
     height: 80px;
   }
