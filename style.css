@@ -520,6 +520,10 @@ a:hover {
     margin-right: 0;
   }
 
+  .info:hover {
+    color: var(--color-txt);
+  }
+
   .search-input {
     padding: 5px 18px 5px 32px;
     font-size: 1.1em;
@@ -538,12 +542,27 @@ a:hover {
   }
 
   .search-icon,
-  .fav-icon,
+  .fav-icon {
+    font-size: 1.2em;
+  }
+
+  .search-icon:hover,
+  .fav-icon:hover {
+    color: var(--color-btn);
+  }
+
   .save,
   .random,
   .previous,
   .next {
-    font-size: 1.3em;
+    font-size: 1.5em;
+  }
+
+  .save:hover,
+  .random:hover,
+  .previous:hover,
+  .next:hover {
+    background-color: var(--color-bg);
   }
 
   .next {
