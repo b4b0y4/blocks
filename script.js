@@ -1,5 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import { isV2, contractsData } from "./contracts.js"
+import { isV2, isStudio, contractsData } from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -554,6 +554,8 @@ const list = [
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 49 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
   "ABSIV0 - Monochronos / Heeey - 15 minted",
+  "ABSXIII0 - AnnoMetta / Matto - 1 minted",
+  "ABSXVI0 - Incircles / Jos Vromans - 1 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
@@ -676,6 +678,7 @@ const list = [
   "PLOT25 - Happenstance II: Framed / Generative Artworks - 18 minted",
   "PLOT26 - Field Recordings / Jacob Gold - 16 minted",
   "PLOTII0 - Time Between the Lines is Thread Through the Mind / Matto - 40 minted",
+  "PLOTII1 - Scribble Together / minimizer - 330 minted",
   "STBYS0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted",
   "ATP0 - LOVE / Martin Grasser - 300 minted",
   "GRAIL1 - Fold / rudxane - 400 minted",
@@ -721,6 +724,7 @@ const list = [
   "MINTS0 - The Colors That Heal / Ryan Green - 142 minted",
   "TDG1 - Filigree - Collector's Edition / Matt DesLauriers - 10 minted",
   "TDG2 - Filigree - Digital Edition / Matt DesLauriers - 90 minted",
+  "TDG3 - Monument / Hideki Tsukamoto - 128 minted",
   "VFA0 - Fenestra / Rob Scalera - 41 minted",
   "VFA1 - Opuntia / Jake Rockland - 2 minted",
   "UNITLDN1 - Disconnected / Stefano Contiero - 10 minted",
@@ -768,7 +772,7 @@ const curated = [
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = ["ABSII", "ABSIII", "ABSIV", "TDG", "ABSXIII", "ABSXV"]
+const bloncks = ["ABSII", "ABSIII", "ABSIV", "ABSXV", "ABSXVI", "PLOTII"]
 // fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
@@ -1051,7 +1055,7 @@ function getPlatform(contract, curation) {
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
     [["BM", "BMF", "CITIZEN"], "Bright Moments"],
     [["PLOT", "PLOTII"], "Plottables"],
-    [["ABS", "ABSI", "ABSII", "ABSIII", "ABSIV"], "Art Blocks Studio"],
+    [isStudio, "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 
   return platform[contractName] || null

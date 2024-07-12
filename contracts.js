@@ -42,6 +42,7 @@ const addrABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
 const addrABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
 const addrABS13 = "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D"
 const addrABS15 = "0x000000e0808eAe91ad4D81d2789b8cAf89747B61"
+const addrABS16 = "0x000000fF2fBC55B982010B42E235cC2A0ce3250b"
 
 const abiV1 = [
   {
@@ -3837,6 +3838,16 @@ export const isV2 = [
   "LOM",
 ]
 
+export const isStudio = [
+  "ABS",
+  "ABSI",
+  "ABSII",
+  "ABSIII",
+  "ABSXIII",
+  "ABSXV",
+  "ABSXVI",
+]
+
 export const contractsData = {
   AB: { abi: abiV1, address: addrV1 },
   ABII: { abi: abiV2, address: addrV2 },
@@ -3852,6 +3863,7 @@ export const contractsData = {
   ABSIV: { abi: abiV3, address: addrABS4 },
   ABSXIII: { abi: abiV3, address: addrABS13 },
   ABSXV: { abi: abiV3, address: addrABS15 },
+  ABSXVI: { abi: abiV3, address: addrABS16 },
   BM: { abi: abiBM, address: addrBM },
   BMF: { abi: abiV3, address: addrBMF },
   CITIZEN: { abi: abiV2, address: addrCITIZEN },
