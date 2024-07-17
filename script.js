@@ -554,9 +554,10 @@ const list = [
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 49 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
   "ABSIV0 - Monochronos / Heeey - 16 minted",
-  "ABSXV0 - Untitled / Olga Fradina - 13 minted",
+  "ABSXI0 - Alchimie / RVig - 1 minted",
+  "ABSXV0 - Untitled / Olga Fradina - 14 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
-  "ABSXVI0 - Incircles / Jos Vromans - 27 minted",
+  "ABSXVI0 - Incircles / Jos Vromans - 30 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
@@ -679,7 +680,7 @@ const list = [
   "PLOT25 - Happenstance II: Framed / Generative Artworks - 18 minted",
   "PLOT26 - Field Recordings / Jacob Gold - 16 minted",
   "PLOTII0 - Time Between the Lines is Thread Through the Mind / Matto - 40 minted",
-  "PLOTII1 - Scribble Together / minimizer - 370 minted",
+  "PLOTII1 - Scribble Together / minimizer - 435 minted",
   "STBYS0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted",
   "ATP0 - LOVE / Martin Grasser - 300 minted",
   "GRAIL1 - Fold / rudxane - 400 minted",
@@ -772,7 +773,7 @@ const curated = [
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = ["ABSII", "ABSIII", "ABSIV", "ABSXV", "ABSXVI", "PLOTII"]
+const bloncks = ["ABSII", "ABSIII", "ABSIV", "ABSXI", "ABSXV", "ABSXVI"]
 // fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
