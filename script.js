@@ -60,7 +60,7 @@ const libs = {
 }
 
 const list = [
-  "AB0 - Chromie Squiggle / Snowfro - 9998 minted",
+  "AB0 - Chromie Squiggle / Snowfro - 10000 minted",
   "AB1 - Genesis / DCA - 512 minted",
   "AB2 - Construction Token / Jeff Davis - 500 minted",
   "ABII3 - Cryptoblots / Daïm Aggott-Hönsch - 1921 minted",
@@ -554,7 +554,7 @@ const list = [
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 49 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
   "ABSIV0 - Monochronos / Heeey - 17 minted",
-  "ABSXI0 - Alchimie / RVig - 38 minted",
+  "ABSXI0 - Alchimie / RVig - 40 minted",
   "ABSXV0 - Untitled / Olga Fradina - 15 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
   "ABSXVI0 - Incircles / Jos Vromans - 34 minted",
