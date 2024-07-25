@@ -554,7 +554,7 @@ const list = [
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 49 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
   "ABSIV0 - Monochronos / Heeey - 17 minted",
-  "ABSXI0 - Alchimie / RVig - 40 minted",
+  "ABSXI0 - Alchimie / RVig - 44 minted",
   "ABSXV0 - Untitled / Olga Fradina - 15 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
   "ABSXVI0 - Incircles / Jos Vromans - 34 minted",
@@ -1244,9 +1244,20 @@ function displayList(lines) {
       const parts = line.split(" - ")
       const displayText = parts.slice(1, parts.length - 1).join(" - ")
       const mintedInfo = parts[parts.length - 1].replace("minted", "items")
-      return `<p class="list-item" data-index="${index}">${displayText}<span>${mintedInfo}</span></p>`
+
+      return `
+        <div class="list-item-container">
+          <div class="text-container">
+            <p class="list-item" data-index="${index}">${displayText}</p>
+          </div>
+          <div class="info-container">
+            <p>${mintedInfo}</p>
+          </div>
+        </div>
+      `
     })
     .join("")
+
   listPanel.innerHTML = `<div>${panel}</div>`
 }
 
@@ -1281,14 +1292,27 @@ function handleItemClick(event) {
 }
 
 function handleKeyboardNavigation(event) {
-  if (event.key === "ArrowDown") {
-    selectedIndex = (selectedIndex + 1) % filteredList.length
-  } else if (event.key === "ArrowUp") {
-    if (selectedIndex === -1) {
-      selectedIndex = filteredList.length - 1
-    } else {
-      selectedIndex =
-        (selectedIndex - 1 + filteredList.length) % filteredList.length
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    event.preventDefault()
+
+    if (event.key === "ArrowDown") {
+      selectedIndex = (selectedIndex + 1) % filteredList.length
+    } else if (event.key === "ArrowUp") {
+      if (selectedIndex === -1) {
+        selectedIndex = filteredList.length - 1
+      } else {
+        selectedIndex =
+          (selectedIndex - 1 + filteredList.length) % filteredList.length
+      }
+    }
+
+    const items = document.querySelectorAll(".list-item-container")
+    items.forEach((item, index) => {
+      item.classList.toggle("selected", index === selectedIndex)
+    })
+
+    if (selectedIndex !== -1) {
+      items[selectedIndex].scrollIntoView({ block: "nearest" })
     }
   } else if (event.key === "Enter") {
     if (selectedIndex !== -1) {
@@ -1300,14 +1324,6 @@ function handleKeyboardNavigation(event) {
     }
     search.value = ""
   }
-
-  const items = document.querySelectorAll(".list-item")
-  items.forEach((item, index) => {
-    item.classList.toggle("selected", index === selectedIndex)
-  })
-
-  if (selectedIndex !== -1)
-    items[selectedIndex].scrollIntoView({ block: "nearest" })
 }
 
 search.addEventListener("input", (event) => {
@@ -1487,12 +1503,15 @@ function displayFavoriteList() {
 
   for (let key in favorite) {
     if (favorite.hasOwnProperty(key)) {
+      const favorites = document.createElement("div")
+      favorites.classList.add("favorites")
+      const favKey = document.createElement("div")
       const keyElement = document.createElement("p")
       keyElement.textContent = key
-      const delSpan = document.createElement("span")
-      delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`
+      const delet = document.createElement("div")
+      delet.innerHTML = `<i class="fa-solid fa-xmark"></i>`
 
-      delSpan.addEventListener("click", (event) => {
+      delet.addEventListener("click", (event) => {
         event.stopPropagation()
         deleteContractDataFromStorage(key)
         displayFavoriteList()
@@ -1504,8 +1523,10 @@ function displayFavoriteList() {
         clearPanels()
       })
 
-      keyElement.appendChild(delSpan)
-      favPanel.appendChild(keyElement)
+      favKey.appendChild(keyElement)
+      favorites.appendChild(favKey)
+      favorites.appendChild(delet)
+      favPanel.appendChild(favorites)
     }
   }
 }
