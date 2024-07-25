@@ -30,7 +30,7 @@ body {
 }
 
 .container {
-  overflow-x: hidden;
+  overflow: hidden;
   width: 100%;
   position: fixed;
   top: 0;
@@ -520,14 +520,6 @@ a:hover {
 }
 
 @media (max-width: 600px) {
-  /* .container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-  } */
-
   .infobar {
     justify-content: center;
     height: 80px;
