@@ -1244,20 +1244,9 @@ function displayList(lines) {
       const parts = line.split(" - ")
       const displayText = parts.slice(1, parts.length - 1).join(" - ")
       const mintedInfo = parts[parts.length - 1].replace("minted", "items")
-
-      return `
-        <div class="list-item-container">
-          <div class="text-container">
-            <p class="list-item" data-index="${index}">${displayText}</p>
-          </div>
-          <div class="info-container">
-            <p>${mintedInfo}</p>
-          </div>
-        </div>
-      `
+      return `<p class="list-item" data-index="${index}">${displayText}<span>${mintedInfo}</span></p>`
     })
     .join("")
-
   listPanel.innerHTML = `<div>${panel}</div>`
 }
 
@@ -1292,27 +1281,14 @@ function handleItemClick(event) {
 }
 
 function handleKeyboardNavigation(event) {
-  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-    event.preventDefault()
-
-    if (event.key === "ArrowDown") {
-      selectedIndex = (selectedIndex + 1) % filteredList.length
-    } else if (event.key === "ArrowUp") {
-      if (selectedIndex === -1) {
-        selectedIndex = filteredList.length - 1
-      } else {
-        selectedIndex =
-          (selectedIndex - 1 + filteredList.length) % filteredList.length
-      }
-    }
-
-    const items = document.querySelectorAll(".list-item-container")
-    items.forEach((item, index) => {
-      item.classList.toggle("selected", index === selectedIndex)
-    })
-
-    if (selectedIndex !== -1) {
-      items[selectedIndex].scrollIntoView({ block: "nearest" })
+  if (event.key === "ArrowDown") {
+    selectedIndex = (selectedIndex + 1) % filteredList.length
+  } else if (event.key === "ArrowUp") {
+    if (selectedIndex === -1) {
+      selectedIndex = filteredList.length - 1
+    } else {
+      selectedIndex =
+        (selectedIndex - 1 + filteredList.length) % filteredList.length
     }
   } else if (event.key === "Enter") {
     if (selectedIndex !== -1) {
@@ -1324,6 +1300,14 @@ function handleKeyboardNavigation(event) {
     }
     search.value = ""
   }
+
+  const items = document.querySelectorAll(".list-item")
+  items.forEach((item, index) => {
+    item.classList.toggle("selected", index === selectedIndex)
+  })
+
+  if (selectedIndex !== -1)
+    items[selectedIndex].scrollIntoView({ block: "nearest" })
 }
 
 search.addEventListener("input", (event) => {
@@ -1503,15 +1487,12 @@ function displayFavoriteList() {
 
   for (let key in favorite) {
     if (favorite.hasOwnProperty(key)) {
-      const favorites = document.createElement("div")
-      favorites.classList.add("favorites")
-      const favKey = document.createElement("div")
       const keyElement = document.createElement("p")
       keyElement.textContent = key
-      const delet = document.createElement("div")
-      delet.innerHTML = `<i class="fa-solid fa-xmark"></i>`
+      const delSpan = document.createElement("span")
+      delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`
 
-      delet.addEventListener("click", (event) => {
+      delSpan.addEventListener("click", (event) => {
         event.stopPropagation()
         deleteContractDataFromStorage(key)
         displayFavoriteList()
@@ -1523,10 +1504,8 @@ function displayFavoriteList() {
         clearPanels()
       })
 
-      favKey.appendChild(keyElement)
-      favorites.appendChild(favKey)
-      favorites.appendChild(delet)
-      favPanel.appendChild(favorites)
+      keyElement.appendChild(delSpan)
+      favPanel.appendChild(keyElement)
     }
   }
 }
