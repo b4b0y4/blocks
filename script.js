@@ -558,7 +558,7 @@ const list = [
   "ABSXV0 - Untitled / Olga Fradina - 21 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
   "ABSXVI0 - Incircles / Jos Vromans - 42 minted",
-  "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 159 minted",
+  "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 165 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
@@ -783,7 +783,7 @@ const bloncks = [
   "ABSXVI",
   "ABSXX",
 ]
-// fetchBlocks(bloncks)
+fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
   for (const contractName of bloncks) {
