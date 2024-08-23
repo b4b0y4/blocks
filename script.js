@@ -783,7 +783,7 @@ const bloncks = [
   "ABSXVI",
   "ABSXX",
 ]
-fetchBlocks(bloncks)
+// fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
   for (const contractName of bloncks) {
