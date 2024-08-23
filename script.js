@@ -1369,7 +1369,7 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
 
 function loopRandom(interval, action) {
   clearInterval(intervalId)
-  const favorite = JSON.parse(localStorage.getItem("favorite")) || "{}"
+  const favorite = JSON.parse(localStorage.getItem("favorite"))
 
   if (loopState.isLooping !== "true") {
     performAction(action, favorite)
