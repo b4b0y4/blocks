@@ -45,6 +45,7 @@ const addrABS13 = "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D"
 const addrABS15 = "0x000000e0808eAe91ad4D81d2789b8cAf89747B61"
 const addrABS16 = "0x000000fF2fBC55B982010B42E235cC2A0ce3250b"
 const addrABS20 = "0x1725Dc55c1bd5200BF00566CF20000B10800C68e"
+const addrABS25 = "0xDd6800Ac7a54331b00000080Bbd1EF463475005B"
 
 const abiV1 = [
   {
@@ -3851,6 +3852,7 @@ export const isStudio = [
   "ABSXV",
   "ABSXVI",
   "ABSXX",
+  "ABSXXV",
 ]
 
 export const contractsData = {
@@ -3871,6 +3873,7 @@ export const contractsData = {
   ABSXV: { abi: abiV3, address: addrABS15 },
   ABSXVI: { abi: abiV3, address: addrABS16 },
   ABSXX: { abi: abiV3, address: addrABS20 },
+  ABSXXV: { abi: abiV3, address: addrABS25 },
   BM: { abi: abiBM, address: addrBM },
   BMF: { abi: abiV3, address: addrBMF },
   CITIZEN: { abi: abiV2, address: addrCITIZEN },

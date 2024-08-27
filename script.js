@@ -554,11 +554,13 @@ const list = [
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 51 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
   "ABSIV0 - Monochronos / Heeey - 18 minted",
-  "ABSXI0 - Alchimie / RVig - 55 minted",
-  "ABSXV0 - Untitled / Olga Fradina - 21 minted",
+  "ABSXI0 - Alchimie / RVig - 66 minted",
+  "ABSXV0 - Untitled / Olga Fradina - 23 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
-  "ABSXVI0 - Incircles / Jos Vromans - 43 minted",
-  "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 185 minted",
+  "ABSXVI0 - Incircles / Jos Vromans - 44 minted",
+  "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 200 minted",
+  "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 minted",
+  "ABSXXV1 - Ink / mpkoz - 1 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
@@ -782,6 +784,7 @@ const bloncks = [
   "ABSXV",
   "ABSXVI",
   "ABSXX",
+  "ABSXXV",
 ]
 // fetchBlocks(bloncks)
 
