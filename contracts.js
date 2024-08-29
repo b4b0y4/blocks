@@ -40,6 +40,7 @@ const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
 const addrABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
 const addrABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
+const addrABS9 = "0x000009Bb1740EEA484F7DB00000a9227e578bf96"
 const addrABS11 = "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0"
 const addrABS13 = "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D"
 const addrABS15 = "0x000000e0808eAe91ad4D81d2789b8cAf89747B61"
@@ -3847,6 +3848,7 @@ export const isStudio = [
   "ABSII",
   "ABSIII",
   "ABSIV",
+  "ABSIX",
   "ABSXI",
   "ABSXIII",
   "ABSXV",
@@ -3868,6 +3870,7 @@ export const contractsData = {
   ABSII: { abi: abiV3, address: addrABS2 },
   ABSIII: { abi: abiV3, address: addrABS3 },
   ABSIV: { abi: abiV3, address: addrABS4 },
+  ABSIX: { abi: abiV3, address: addrABS9 },
   ABSXI: { abi: abiV3, address: addrABS11 },
   ABSXIII: { abi: abiV3, address: addrABS13 },
   ABSXV: { abi: abiV3, address: addrABS15 },
