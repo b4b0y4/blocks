@@ -554,12 +554,12 @@ const list = [
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 52 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
   "ABSIV0 - Monochronos / Heeey - 25 minted",
-  "ABSIX0 - On-Chain Memory Token / Jeff Davis - 66 minted",
+  "ABSIX0 - On-Chain Memory Token / Jeff Davis - 69 minted",
   "ABSXI0 - Alchimie / RVig - 80 minted",
   "ABSXV0 - Untitled / Olga Fradina - 27 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
   "ABSXVI0 - Incircles / Jos Vromans - 52 minted",
-  "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 228 minted",
+  "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 minted",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 minted",
   "ABSXXV1 - Ink / mpkoz - 1 minted",
   "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
@@ -777,17 +777,7 @@ const curated = [
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = [
-  "ABSII",
-  "ABSIII",
-  "ABSIV",
-  "ABSIX",
-  "ABSXI",
-  "ABSXV",
-  "ABSXVI",
-  "ABSXX",
-  "ABSXXV",
-]
+const bloncks = ["ABSII", "ABSIII", "ABSIV", "ABSIX", "ABSXV", "ABSXVI"]
 // fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
