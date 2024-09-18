@@ -549,20 +549,21 @@ const list = [
   "ABXPACEII6 - World Flag / John Gerrard - 195 minted",
   "ABXPACEII7 - Schema / DRIFT with Jeff Davis - 300 minted",
   "ABXBM0 - Metropolis / mpkoz - 940 minted",
+  "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
   "ABS0 - Misbah / Melissa Wiederrecht - 55 minted",
   "ABSI0 - One More Day / Aaron Penne - 50 minted",
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 52 minted",
-  "ABSIII0 - Fragmented Perception / Motus Art - 18 minted",
-  "ABSIV0 - Monochronos / Heeey - 25 minted",
-  "ABSIX0 - On-Chain Memory Token / Jeff Davis - 74 minted",
+  "ABSIII0 - Fragmented Perception / Motus Art - 19 minted",
+  "ABSIV0 - Monochronos / Heeey - 26 minted",
+  "ABSIX0 - On-Chain Memory Token / Jeff Davis - 83 minted",
   "ABSXI0 - Alchimie / RVig - 80 minted",
   "ABSXV0 - Untitled / Olga Fradina - 27 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
-  "ABSXVI0 - Incircles / Jos Vromans - 56 minted",
+  "ABSXVI0 - Incircles / Jos Vromans - 61 minted",
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 minted",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 minted",
   "ABSXXV1 - Ink / mpkoz - 1 minted",
-  "ABXBM1 - 923 EMPTY ROOMS / Casey REAS - 924 minted",
+  "ABSXXVI0 - Roots / Fernando Jerez - 1 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
   "BM3 - Inflection / Jeff Davis - 96 minted",
@@ -777,7 +778,15 @@ const curated = [
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = ["ABSII", "ABSIII", "ABSIV", "ABSIX", "ABSXV", "ABSXVI"]
+const bloncks = [
+  "ABSII",
+  "ABSIII",
+  "ABSIV",
+  "ABSIX",
+  "ABSXV",
+  "ABSXVI",
+  "ABSXXVI",
+]
 // fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
