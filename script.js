@@ -555,15 +555,16 @@ const list = [
   "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 52 minted",
   "ABSIII0 - Fragmented Perception / Motus Art - 19 minted",
   "ABSIV0 - Monochronos / Heeey - 26 minted",
-  "ABSIX0 - On-Chain Memory Token / Jeff Davis - 83 minted",
+  "ABSIX0 - On-Chain Memory Token / Jeff Davis - 93 minted",
   "ABSXI0 - Alchimie / RVig - 80 minted",
-  "ABSXV0 - Untitled / Olga Fradina - 27 minted",
+  "ABSXV0 - Untitled / Olga Fradina - 28 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
-  "ABSXVI0 - Incircles / Jos Vromans - 61 minted",
+  "ABSXVI0 - Incircles / Jos Vromans - 64 minted",
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 minted",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 minted",
   "ABSXXV1 - Ink / mpkoz - 1 minted",
-  "ABSXXVI0 - Roots / Fernando Jerez - 1 minted",
+  "ABSXXVI0 - Roots / Fernando Jerez - 31 minted",
+  "ABSXXX0 - Heartbeat / AnaPet - 1 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
   "BM3 - Inflection / Jeff Davis - 96 minted",
@@ -786,6 +787,7 @@ const bloncks = [
   "ABSXV",
   "ABSXVI",
   "ABSXXVI",
+  "ABSXXX",
 ]
 // fetchBlocks(bloncks)
 
