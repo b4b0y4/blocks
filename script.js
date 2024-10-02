@@ -38,6 +38,8 @@ const libs = {
   threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   "three@0.124.0":
     "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
+  "three@0.160.0":
+    "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js",
   tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   "tone@14.8.15": "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   paperjs:
@@ -393,7 +395,7 @@ const list = [
   "ABII339 - Ieva / Shvembldr - 500 minted",
   "ABII340 - Vahria / Darien Brito - 299 minted",
   "ABII341 - RASTER / itsgalo - 400 minted",
-  "ABII342 - Being Yourself While Fitting In / LIA - 55 minted",
+  "ABII342 - Being Yourself While Fitting In / LIA - 56 minted",
   "ABII343 - Balletic / Motus Art - 200 minted",
   "ABII344 - Glass / Eric De Giuli - 300 minted",
   "ABII345 - 3 Minute Meditations / thetechnocratic - 159 minted",
@@ -509,19 +511,19 @@ const list = [
   "ABIII460 - Exstasis / Grant Oesterling - 111 minted",
   "ABIII461 - Sonoran Roadways / Jake Rockland - 54 minted",
   "ABIII462 - Gumbo / Mathias Isaksen - 400 minted",
-  "ABIII463 - l.o / Night Sea - 175 minted",
+  "ABIII463 - l.o / Night Sea - 176 minted",
   "ABIII464 - Kubikino / Carolina Melis - 320 minted",
   "ABIII465 - Escherly Seeds / Martijn Cohen - 28 minted",
   "ABIII466 - Torrent / Jeres - 300 minted",
-  "ABIII467 - Glasshouse INAT / Aleksandra Jovanić - 19 minted",
-  "ABIII468 - Woman, Life, Freedom / Armaghan Fatemi - 36 minted",
+  "ABIII467 - Glasshouse INAT / Aleksandra Jovanić - 20 minted",
+  "ABIII468 - Woman, Life, Freedom / Armaghan Fatemi - 37 minted",
   "ABIII469 - Twos / Emily Edelman - 64 minted",
   "ABIII470 - Forecast / Manuel Larino - 365 minted",
   "ABIII471 - This Is Not A Rock / Nicole Vella - 350 minted",
   "ABIII472 - because unless until / ixnayokay - 650 minted",
-  "ABIII473 - Fluiroso / Sebastián Brocher (CryptoArte) - 105 minted",
+  "ABIII473 - Fluiroso / Sebastián Brocher (CryptoArte) - 106 minted",
   "ABIII474 - Lumina / DistCollective - 80 minted",
-  "ABIII475 - Recollection / Robert Hodgin - 168 minted",
+  "ABIII475 - Recollection / Robert Hodgin - 169 minted",
   "ABIII476 - Life and Love and Nothing / Nat Sarkissian - 200 minted",
   "ABIII477 - siempre en mí, siempre en ti / Marcelo Soria-Rodríguez - 200 minted",
   "ABIII478 - Lucky Clover / Sputniko! - 40 minted",
@@ -537,6 +539,7 @@ const list = [
   "ABIII489 - Balance / Kelly Milligan x Amber Vittoria - 250 minted",
   "ABIII490 - Twist / Rafaël Rozendaal - 250 minted",
   "ABIII493 - Melancholic Magical Maiden / Emi Kusano - 300 minted",
+  "ABCURATED496 - Bokeh / mpkoz - 1 minted",
   "EXP0 - Friendship Bracelets / Alexis André - 38664 minted",
   "EXP1 - Marfa Yucca / Daniel Calderon Arenas - 390 minted",
   "EXP2 - marfaMESH / Harvey Rayner | patterndotco - 343 minted",
@@ -561,10 +564,10 @@ const list = [
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
   "ABSXVI0 - Incircles / Jos Vromans - 64 minted",
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 minted",
-  "ABSXXI0 - Carattere / michelangelo (encapsuled) - 12 minted",
+  "ABSXXI0 - Carattere / michelangelo (encapsuled) - 22 minted",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 minted",
   "ABSXXV1 - Ink / mpkoz - 1 minted",
-  "ABSXXVI0 - Roots / Fernando Jerez - 41 minted",
+  "ABSXXVI0 - Roots / Fernando Jerez - 42 minted",
   "ABSXXX0 - Heartbeat / AnaPet - 7 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
@@ -768,19 +771,11 @@ const list = [
   "LOM0 - Sacred Trees / hideo - 267 minted",
 ]
 
-const curated = [
-  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
-]
-
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
 const bloncks = [
+  "ABCURATED",
   "ABSII",
   "ABSIII",
   "ABSIV",
@@ -791,6 +786,7 @@ const bloncks = [
   "ABSXXVI",
   "ABSXXX",
 ]
+// Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
 // fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
@@ -803,6 +799,8 @@ async function fetchBlocks(bloncks) {
         ? 3
         : contractName === "ABIII"
         ? 374
+        : contractName === "ABCURATED"
+        ? 494
         : contractName === "ABXPACEII"
         ? 5
         : ["GRAIL", "HODL", "UNITLDN", "PROOF"].includes(contractName)
@@ -993,7 +991,7 @@ function update(
   remaining
 ) {
   pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
-  const curation = [0, 1, 2].includes(contract) ? getCuration(projId) : null
+  const curation = [0, 1, 2, 3].includes(contract) ? getCuration(projId) : null
   const platform = getPlatform(contract, curation)
 
   updateInfo(
@@ -1025,6 +1023,15 @@ function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
 }
 
 function getCuration(projId) {
+  const curated = [
+    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
+    41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
+    159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
+    284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
+    379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
+    456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
+  ]
+
   const playground = [
     6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
     94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
@@ -1032,7 +1039,7 @@ function getCuration(projId) {
     286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
     373,
   ]
-  return curated.includes(projId)
+  return curated.includes(projId) || projId > 494
     ? "Art Blocks Curated"
     : playground.includes(projId)
     ? "Art Blocks Playground"
@@ -1069,7 +1076,7 @@ function getPlatform(contract, curation) {
   }
 
   ;[
-    [["AB", "ABII", "ABIII"], curation],
+    [["AB", "ABII", "ABIII", "ABCURATED"], curation],
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
     [["BM", "BMF", "CITIZEN"], "Bright Moments"],
     [["PLOT", "PLOTII"], "Plottables"],

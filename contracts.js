@@ -19,6 +19,7 @@ const addrCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
 
 // GenArt721CoreV3
 const addrV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
+const addrCURATED = "0xAB0000000000aa06f89B268D604a9c1C41524Ac6"
 const addrEXPLORE = "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
 const addrABXPACE2 = "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
 const addrABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
@@ -3867,6 +3868,7 @@ export const contractsData = {
   AB: { abi: abiV1, address: addrV1 },
   ABII: { abi: abiV2, address: addrV2 },
   ABIII: { abi: abiV3, address: addrV3 },
+  ABCURATED: { abi: abiV3, address: addrCURATED },
   EXP: { abi: abiV3, address: addrEXPLORE },
   ABXPACE: { abi: abiV2, address: addrABXPACE },
   ABXPACEII: { abi: abiV3, address: addrABXPACE2 },
