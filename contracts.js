@@ -41,6 +41,7 @@ const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
 const addrABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
 const addrABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
+const addrABS7 = "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba"
 const addrABS9 = "0x000009Bb1740EEA484F7DB00000a9227e578bf96"
 const addrABS11 = "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0"
 const addrABS13 = "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D"
@@ -48,9 +49,11 @@ const addrABS15 = "0x000000e0808eAe91ad4D81d2789b8cAf89747B61"
 const addrABS16 = "0x000000fF2fBC55B982010B42E235cC2A0ce3250b"
 const addrABS20 = "0x1725Dc55c1bd5200BF00566CF20000B10800C68e"
 const addrABS21 = "0x9800005DEB3Cfaf80077DBE9B9004c0020C1D6c5"
+const addrABS22 = "0xd40030fd1d00f1A9944462ff0025e9C8D0003500"
 const addrABS25 = "0xDd6800Ac7a54331b00000080Bbd1EF463475005B"
 const addrABS26 = "0x5e581e596e9951BB00246E00a70030009b620054"
 const addrABS30 = "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0"
+const addrABS32 = "0x0000003601Ae3F24a52323705FB36b8833071FD3"
 
 const abiV1 = [
   {
@@ -3852,6 +3855,7 @@ export const isStudio = [
   "ABSII",
   "ABSIII",
   "ABSIV",
+  "ABSVII",
   "ABSIX",
   "ABSXI",
   "ABSXIII",
@@ -3859,9 +3863,11 @@ export const isStudio = [
   "ABSXVI",
   "ABSXX",
   "ABSXXI",
+  "ABSXXII",
   "ABSXXV",
   "ABSXXVI",
   "ABSXXX",
+  "ABSXXXII",
 ]
 
 export const contractsData = {
@@ -3878,6 +3884,7 @@ export const contractsData = {
   ABSII: { abi: abiV3, address: addrABS2 },
   ABSIII: { abi: abiV3, address: addrABS3 },
   ABSIV: { abi: abiV3, address: addrABS4 },
+  ABSVII: { abi: abiV3, address: addrABS7 },
   ABSIX: { abi: abiV3, address: addrABS9 },
   ABSXI: { abi: abiV3, address: addrABS11 },
   ABSXIII: { abi: abiV3, address: addrABS13 },
@@ -3885,9 +3892,11 @@ export const contractsData = {
   ABSXVI: { abi: abiV3, address: addrABS16 },
   ABSXX: { abi: abiV3, address: addrABS20 },
   ABSXXI: { abi: abiV3, address: addrABS21 },
+  ABSXXII: { abi: abiV3, address: addrABS22 },
   ABSXXV: { abi: abiV3, address: addrABS25 },
   ABSXXVI: { abi: abiV3, address: addrABS26 },
   ABSXXX: { abi: abiV3, address: addrABS30 },
+  ABSXXXII: { abi: abiV3, address: addrABS32 },
   BM: { abi: abiBM, address: addrBM },
   BMF: { abi: abiV3, address: addrBMF },
   CITIZEN: { abi: abiV2, address: addrCITIZEN },
