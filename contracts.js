@@ -3850,27 +3850,7 @@ export const isV2 = [
   "LOM",
 ]
 
-export const isStudio = [
-  "ABS",
-  "ABSI",
-  "ABSII",
-  "ABSIII",
-  "ABSIV",
-  "ABSVII",
-  "ABSIX",
-  "ABSXI",
-  "ABSXIII",
-  "ABSXV",
-  "ABSXVI",
-  "ABSXX",
-  "ABSXXI",
-  "ABSXXII",
-  "ABSXXV",
-  "ABSXXVI",
-  "ABSXXVII",
-  "ABSXXX",
-  "ABSXXXII",
-]
+export const isStudio = []
 
 export const contractsData = {
   AB: { abi: abiV1, address: addrV1 },
@@ -3926,3 +3906,13 @@ export const contractsData = {
   TENDER: { abi: abiV3, address: addrTENDER },
   PROOF: { abi: abiV3, address: addrPROOF },
 }
+
+function updateIsStudio() {
+  for (const key in contractsData) {
+    if (key.startsWith("ABS")) {
+      isStudio.push(key)
+    }
+  }
+}
+
+updateIsStudio()

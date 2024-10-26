@@ -573,7 +573,7 @@ const list = [
   "ABSXXVI0 - Roots / Fernando Jerez - 49 minted",
   "ABSXXVII0 - Roll Some Bones / rahul iyer - 10 minted",
   "ABSXXX0 - Heartbeat / AnaPet - 8 minted",
-  "ABSXXXII0 - And Yet We Dance / Ryan Bell 88 minted",
+  "ABSXXXII0 - And Yet We Dance / Ryan Bell - 88 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
   "BM3 - Inflection / Jeff Davis - 96 minted",
