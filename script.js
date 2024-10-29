@@ -725,7 +725,7 @@ function stopLoop() {
 }
 
 /***************************************************
- *           SAVE THE OUTPUT FUNCTION
+ *           SAVE OUTPUT FUNCTION
  **************************************************/
 async function saveOutput() {
   clearPanels()
