@@ -43,8 +43,6 @@ const bloncks = [
   "ABSVII",
   "ABSIX",
   "ABSXV",
-  "ABSXXI",
-  "ABSXXII",
   "ABSXXVI",
   "ABSXXVII",
   "ABSXXX",
