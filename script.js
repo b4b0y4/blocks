@@ -36,7 +36,7 @@ Object.keys(contractsData).forEach((key, index) => {
  *                UPDATE LIST FUNCTION
  **************************************************/
 const bloncks = [
-  // "ABC",
+  "ABC",
   "ABSII",
   "ABSIII",
   "ABSIV",
@@ -62,7 +62,7 @@ async function fetchBlocks(bloncks) {
         : contractName === "ABIII"
         ? 374
         : contractName === "ABC"
-        ? 494
+        ? 495
         : contractName === "ABXPACEII"
         ? 5
         : ["GRAIL", "HODL", "UNITLDN", "PROOF"].includes(contractName)
