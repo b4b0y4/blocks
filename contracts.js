@@ -36,6 +36,7 @@ const addrUNITLDN = "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
 const addrHODLERS = "0x9F79e46A309f804Aa4B7B53a1F72c69137427794"
 const addrFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
 const addrTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
+const addrCPG = "0x000000412217F67742376769695498074f007b97"
 const addrABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
 const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
@@ -3907,6 +3908,7 @@ export const contractsData = {
   FAB: { abi: abiV3, address: addrFAB },
   TENDER: { abi: abiV3, address: addrTENDER },
   PROOF: { abi: abiV3, address: addrPROOF },
+  CPG: { abi: abiV3, address: addrCPG },
 }
 
 function updateIsStudio() {

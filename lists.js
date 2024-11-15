@@ -748,4 +748,5 @@ export const list = [
   "TBOA1 - [post]-konstrukt / Shvembldr - 26 minted",
   "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
   "LOM0 - Sacred Trees / hideo - 267 minted",
+  "CPG0 - jazz / fingacode - 333 minted",
 ]

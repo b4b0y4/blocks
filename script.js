@@ -340,6 +340,7 @@ function getPlatform(contract, curation) {
     TBOA: "TBOA Club",
     LOM: "Legends of Metaterra",
     PROOF: "PROOF",
+    CPG: "Creative product studio",
   }
 
   ;[
