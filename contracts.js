@@ -16,6 +16,7 @@ const addrARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
 const addrTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
 const addrLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
 const addrCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
+const addrNEWRAFAEL = "0x68C01Cb4733a82A58D5e7bB31BdDBFF26A3A35d5"
 
 // GenArt721CoreV3
 const addrV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
@@ -3851,6 +3852,7 @@ export const isV2 = [
   "ARTCODE",
   "TBOA",
   "LOM",
+  "NEWRAFAEL",
 ]
 
 export const isStudio = []
@@ -3911,6 +3913,7 @@ export const contractsData = {
   PROOF: { abi: abiV3, address: addrPROOF },
   CPG: { abi: abiV3, address: addrCPG },
   DE: { abi: abiV3, address: addrDE },
+  NEWRAFAEL: { abi: abiV2, address: addrNEWRAFAEL },
 }
 
 function updateIsStudio() {

@@ -48,10 +48,9 @@ const bloncks = [
   // "ABSXXX",
   // "ABSXXXII",
   // "ABSLXIII",
-  "DE",
 ]
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
-fetchBlocks(bloncks)
+// fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
   for (const contractName of bloncks) {
@@ -295,7 +294,7 @@ const curated = [
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ]
 
-for (let i = 494; i < 500; i++) {
+for (let i = 494; i < 1000; i++) {
   curated.push(i)
 }
 
@@ -343,6 +342,7 @@ function getPlatform(contract, curation) {
     PROOF: "PROOF",
     CPG: "Creative product studio",
     DE: "Davis Editions",
+    NEWRAFAEL: " by Rafaël Rozendaal",
   }
 
   ;[
