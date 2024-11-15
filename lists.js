@@ -749,4 +749,5 @@ export const list = [
   "TENDER0 - Of That Ilk / KRANKARTA - 200 minted",
   "LOM0 - Sacred Trees / hideo - 267 minted",
   "CPG0 - jazz / fingacode - 333 minted",
+  "DE0 - Old Grove / Nat Sarkissian - 11 minted",
 ]

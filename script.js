@@ -36,21 +36,22 @@ Object.keys(contractsData).forEach((key, index) => {
  *                UPDATE LIST FUNCTION
  **************************************************/
 const bloncks = [
-  "ABC",
-  "ABSII",
-  "ABSIII",
-  "ABSIV",
-  "ABSVII",
-  "ABSIX",
-  "ABSXV",
-  "ABSXXVI",
-  "ABSXXVII",
-  "ABSXXX",
-  "ABSXXXII",
-  "ABSLXIII",
+  // "ABC",
+  // "ABSII",
+  // "ABSIII",
+  // "ABSIV",
+  // "ABSVII",
+  // "ABSIX",
+  // "ABSXV",
+  // "ABSXXVI",
+  // "ABSXXVII",
+  // "ABSXXX",
+  // "ABSXXXII",
+  // "ABSLXIII",
+  "DE",
 ]
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
-// fetchBlocks(bloncks)
+fetchBlocks(bloncks)
 
 async function fetchBlocks(bloncks) {
   for (const contractName of bloncks) {
@@ -341,6 +342,7 @@ function getPlatform(contract, curation) {
     LOM: "Legends of Metaterra",
     PROOF: "PROOF",
     CPG: "Creative product studio",
+    DE: "Davis Editions",
   }
 
   ;[
