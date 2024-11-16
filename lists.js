@@ -545,7 +545,7 @@ export const list = [
   "ABSXXVII0 - Roll Some Bones / rahul iyer - 80 minted",
   "ABSXXX0 - Heartbeat / AnaPet - 10 minted",
   "ABSXXXII0 - And Yet We Dance / Ryan Bell - 94 minted",
-  "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 1 minted",
+  "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 11 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
   "BM3 - Inflection / Jeff Davis - 96 minted",
