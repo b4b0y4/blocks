@@ -539,7 +539,6 @@ export const list = [
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 minted",
   "ABSXXI0 - Carattere / michelangelo (encapsuled) - 48 minted",
   "ABSXXII0 - Pax / Eric De Giuli - 100 minted",
-  "ABSXXIII0 - piñata3 / Fahad Karim - 2 minted",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 minted",
   "ABSXXV1 - Ink / mpkoz - 1 minted",
   "ABSXXVI0 - Roots / Fernando Jerez - 54 minted",
