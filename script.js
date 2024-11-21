@@ -36,19 +36,20 @@ Object.keys(contractsData).forEach((key, index) => {
  *                UPDATE LIST FUNCTION
  **************************************************/
 const bloncks = [
-  "ABC",
-  "ABSII",
-  "ABSIII",
-  "ABSIV",
-  "ABSVII",
-  "ABSIX",
-  "ABSXV",
-  "ABSXXVI",
-  "ABSXXVII",
-  "ABSXXX",
-  "ABSXXXII",
-  "ABSLXIII",
-  "XCORE",
+  // "ABC",
+  // "ABSII",
+  // "ABSIII",
+  // "ABSIV",
+  // "ABSVII",
+  // "ABSIX",
+  // "ABSXV",
+  // "ABSXXVI",
+  // "ABSXXVII",
+  // "ABSXXX",
+  // "ABSXXXII",
+  // "ABSLXIII",
+  // "XCORE",
+  "WRLD",
 ]
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
 // fetchBlocks(bloncks)
@@ -67,7 +68,7 @@ async function fetchBlocks(bloncks) {
         ? 495
         : contractName === "ABXPACEII"
         ? 5
-        : ["GRAIL", "HODL", "UNITLDN", "PROOF"].includes(contractName)
+        : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD"].includes(contractName)
         ? 1
         : 0
     let newList = ""
@@ -345,6 +346,7 @@ function getPlatform(contract, curation) {
     DE: "Davis Editions",
     NEWRAFAEL: "by Rafaël Rozendaal",
     XCORE: "by XCOPY",
+    WRLD: "Artwrld",
   }
 
   ;[

@@ -674,7 +674,6 @@ export const list = [
   "ATP0 - LOVE / Martin Grasser - 300 minted",
   "GRAIL1 - Fold / rudxane - 400 minted",
   "GRAIL2 - Atlas / Eric De Giuli - 333 minted",
-  "XCORE0 - ICXN / XCOPY - 50 minted",
   "PROOF1 - aaa / fingacode - 99 minted",
   "PROOF2 - Memorias del espacio olvidado / Juan Rodríguez García - 150 minted",
   "PROOF3 - 7 Factorial / Lars Wander - 19 minted",
@@ -783,4 +782,6 @@ export const list = [
   "NEWRAFAEL29 - Push / Rafaël Rozendaal - 24 minted",
   "NEWRAFAEL30 - Home / Rafaël Rozendaal - 18 minted",
   "NEWRAFAEL31 - Circulate / Rafaël Rozendaal - 11 minted",
+  "XCORE0 - ICXN / XCOPY - 50 minted",
+  "WRLD1 - ComplexCity (2000/2023) / John F. Simon, Jr. - 256 minted",
 ]
