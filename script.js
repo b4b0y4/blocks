@@ -343,7 +343,8 @@ function getPlatform(contract, curation) {
     PROOF: "PROOF",
     CPG: "Creative product studio",
     DE: "Davis Editions",
-    NEWRAFAEL: " by Rafaël Rozendaal",
+    NEWRAFAEL: "by Rafaël Rozendaal",
+    XCORE: "by XCOPY",
   }
 
   ;[
