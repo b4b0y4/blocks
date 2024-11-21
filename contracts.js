@@ -39,6 +39,7 @@ const addrFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
 const addrTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
 const addrCPG = "0x000000412217F67742376769695498074f007b97"
 const addrDE = "0x5306e34B7437200E0189CbC5F80B0990E49DCBE7"
+const addrXCORE = "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65"
 const addrABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
 const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
@@ -3916,6 +3917,7 @@ export const contractsData = {
   CPG: { abi: abiV3, address: addrCPG },
   DE: { abi: abiV3, address: addrDE },
   NEWRAFAEL: { abi: abiV2, address: addrNEWRAFAEL },
+  XCORE: { abi: abiV3, address: addrXCORE },
 }
 
 function updateIsStudio() {

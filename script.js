@@ -48,6 +48,7 @@ const bloncks = [
   "ABSXXX",
   "ABSXXXII",
   "ABSLXIII",
+  "XCORE",
 ]
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
 // fetchBlocks(bloncks)
