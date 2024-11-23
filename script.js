@@ -36,20 +36,18 @@ Object.keys(contractsData).forEach((key, index) => {
  *                UPDATE LIST FUNCTION
  **************************************************/
 const bloncks = [
-  // "ABC",
-  // "ABSII",
-  // "ABSIII",
-  // "ABSIV",
-  // "ABSVII",
-  // "ABSIX",
-  // "ABSXV",
-  // "ABSXXVI",
-  // "ABSXXVII",
-  // "ABSXXX",
-  // "ABSXXXII",
-  // "ABSLXIII",
-  // "XCORE",
-  "WRLD",
+  "ABC",
+  "ABSII",
+  "ABSIII",
+  "ABSIV",
+  "ABSVII",
+  "ABSIX",
+  "ABSXV",
+  "ABSXXVI",
+  "ABSXXVII",
+  "ABSXXX",
+  "ABSXXXII",
+  "ABSLXIII",
 ]
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
 // fetchBlocks(bloncks)
