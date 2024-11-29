@@ -344,10 +344,7 @@ function getPlatform(contract, curation) {
     PROOF: "PROOF",
     CPG: "Creative product studio",
     DE: "Davis Editions",
-    NEWRAFAEL: "by Rafaël Rozendaal",
-    XCORE: "by XCOPY",
     WRLD: "Artwrld",
-    OONA: "by OONA",
   }
 
   ;[
@@ -358,7 +355,7 @@ function getPlatform(contract, curation) {
     [isStudio, "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 
-  return platform[contractName] || null
+  return platform[contractName] || ""
 }
 
 function updateInfo(
@@ -390,7 +387,7 @@ function updateInfo(
   const updateInfo = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
     panel.innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
-        ${artist} ● ${platform}<br>
+        ${artist}${platform ? ` ● ${platform}` : ""}<br>
         ${mintedOut}</p><br>
       <p>${detail[2]} <a href="${detail[3]}" target="_blank">${extractDomain(
       detail[3]
