@@ -533,7 +533,7 @@ export const list = [
   "ABSIX0 - On-Chain Memory Token / Jeff Davis - 100 minted",
   "ABSIX2 - Framework / Jeff Davis - 10 minted",
   "ABSXI0 - Alchimie / RVig - 80 minted",
-  "ABSXV0 - Untitled / Olga Fradina - 32 minted",
+  "ABSXV0 - Untitled / Olga Fradina - 33 minted",
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
   "ABSXVI0 - Incircles / Jos Vromans - 64 minted",
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 minted",
@@ -785,4 +785,7 @@ export const list = [
   "NEWRAFAEL31 - Circulate / Rafaël Rozendaal - 11 minted",
   "XCORE0 - ICXN / XCOPY - 50 minted",
   "WRLD1 - ComplexCity (2000/2023) / John F. Simon, Jr. - 256 minted",
+  "OONA2026 - Moo, Milk, Marfa - Moo / OONA - 25 minted",
+  "OONA2027 - Moo, Milk, Marfa - Milk / OONA - 13 minted",
+  "OONA2028 - Moo, Milk, Marfa - Skinning / OONA - 3 minted",
 ]

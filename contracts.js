@@ -41,6 +41,7 @@ const addrCPG = "0x000000412217F67742376769695498074f007b97"
 const addrDE = "0x5306e34B7437200E0189CbC5F80B0990E49DCBE7"
 const addrXCORE = "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65"
 const addrWRLD = "0x5fdf5E6CAf7b8b0F64c3612aFd85E9407A7e1389"
+const addrOONA = "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8"
 const addrABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
 const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
@@ -3920,6 +3921,7 @@ export const contractsData = {
   NEWRAFAEL: { abi: abiV2, address: addrNEWRAFAEL },
   XCORE: { abi: abiV3, address: addrXCORE },
   WRLD: { abi: abiV3, address: addrWRLD },
+  OONA: { abi: abiV3, address: addrOONA },
 }
 
 function updateIsStudio() {

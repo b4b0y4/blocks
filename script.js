@@ -66,6 +66,8 @@ async function fetchBlocks(bloncks) {
         ? 495
         : contractName === "ABXPACEII"
         ? 5
+        : contractName === "OONA"
+        ? 2026
         : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD"].includes(contractName)
         ? 1
         : 0
@@ -345,6 +347,7 @@ function getPlatform(contract, curation) {
     NEWRAFAEL: "by Rafaël Rozendaal",
     XCORE: "by XCOPY",
     WRLD: "Artwrld",
+    OONA: "by OONA",
   }
 
   ;[
