@@ -696,6 +696,7 @@ export const list = [
   "AOI4 - Trademark / Jack Butcher - 10000 minted",
   "AOI5 - Decision Matrix / Kjetil Golid - 377 minted",
   "AOI6 - Risk / Reward / Kjetil Golid - 1855 minted",
+  "AOI7 - Intervals / Martin Grasser - 30 minted",
   "VCA1 - Concrete Letters / makio135 - 200 minted",
   "VCA2 - A Tender Count(ing) / Lisa Orth - 200 minted",
   "VCA3 - The Art behind the Code / Luca Ionescu - 5 minted",
