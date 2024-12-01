@@ -716,6 +716,7 @@ export const list = [
   "MINTS0 - The Colors That Heal / Ryan Green - 142 minted",
   "TDG1 - Filigree – Collector's Edition / Matt DesLauriers - 10 minted",
   "TDG2 - Filigree – Digital Edition / Matt DesLauriers - 90 minted",
+  "TDG4 - Keepsakes – Curated / Per Kristian Stoveland - 16 minted",
   "TDG5 - Keepsakes – Long Form / Per Kristian Stoveland - 400 minted",
   "VFA0 - Fenestra / Rob Scalera - 41 minted",
   "VFA1 - Opuntia / Jake Rockland - 2 minted",
