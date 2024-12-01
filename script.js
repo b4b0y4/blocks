@@ -387,7 +387,7 @@ function updateInfo(
   const updateInfo = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
     panel.innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
-        ${artist}${platform ? ` ● ${platform}` : ""}<br>
+        ${artist} ${platform ? `● ${platform}` : ""}<br>
         ${mintedOut}</p><br>
       <p>${detail[2]} <a href="${detail[3]}" target="_blank">${extractDomain(
       detail[3]
