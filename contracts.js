@@ -17,6 +17,7 @@ const addrTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
 const addrLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
 const addrCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
 const addrNEWRAFAEL = "0x68C01Cb4733a82A58D5e7bB31BdDBFF26A3A35d5"
+const addrVERSE = "0xBB5471c292065d3b01b2e81e299267221ae9a250"
 
 // GenArt721CoreV3
 const addrV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
@@ -3857,6 +3858,7 @@ export const isV2 = [
   "TBOA",
   "LOM",
   "NEWRAFAEL",
+  "VERSE",
 ]
 
 export const isStudio = []
@@ -3922,6 +3924,7 @@ export const contractsData = {
   XCORE: { abi: abiV3, address: addrXCORE },
   WRLD: { abi: abiV3, address: addrWRLD },
   OONA: { abi: abiV3, address: addrOONA },
+  VERSE: { abi: abiV2, address: addrVERSE },
 }
 
 function updateIsStudio() {

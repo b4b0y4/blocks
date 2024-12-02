@@ -36,18 +36,19 @@ Object.keys(contractsData).forEach((key, index) => {
  *                UPDATE LIST FUNCTION
  **************************************************/
 const bloncks = [
-  "ABC",
-  "ABSII",
-  "ABSIII",
-  "ABSIV",
-  "ABSVII",
-  "ABSIX",
-  "ABSXV",
-  "ABSXXVI",
-  "ABSXXVII",
-  "ABSXXX",
-  "ABSXXXII",
-  "ABSLXIII",
+  // "ABC",
+  // "ABSII",
+  // "ABSIII",
+  // "ABSIV",
+  // "ABSVII",
+  // "ABSIX",
+  // "ABSXV",
+  // "ABSXXVI",
+  // "ABSXXVII",
+  // "ABSXXX",
+  // "ABSXXXII",
+  // "ABSLXIII",
+  "VERSE",
 ]
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
 // fetchBlocks(bloncks)
@@ -345,6 +346,7 @@ function getPlatform(contract, curation) {
     CPG: "Creative product studio",
     DE: "Davis Editions",
     WRLD: "Artwrld",
+    VERSE: "Verse",
   }
 
   ;[

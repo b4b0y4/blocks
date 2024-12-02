@@ -790,4 +790,7 @@ export const list = [
   "OONA2026 - Moo, Milk, Marfa - Moo / OONA - 25 minted",
   "OONA2027 - Moo, Milk, Marfa - Milk / OONA - 13 minted",
   "OONA2028 - Moo, Milk, Marfa - Skinning / OONA - 3 minted",
+  "VERSE1 - Co(r)ral / Phaust - 100 minted",
+  "VERSE2 - Generativemasks Japan Edition / Shunsuke Takawo - 60 minted",
+  "VERSE3 - ◯ circle(s) / john provencher - 120 minted",
 ]
