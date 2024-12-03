@@ -796,4 +796,5 @@ export const list = [
   "VERSE1 - Co(r)ral / Phaust - 100 minted",
   "VERSE2 - Generativemasks Japan Edition / Shunsuke Takawo - 60 minted",
   "VERSE3 - ◯ circle(s) / john provencher - 120 minted",
+  "HVOID0 - Aleph-0 / HACKATAO + Insigℏt - 392 minted",
 ]
