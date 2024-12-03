@@ -59,6 +59,8 @@ async function fetchBlocks(bloncks) {
         ? 5
         : contractName === "OONA"
         ? 2026
+        : contractName === "AXIOM"
+        ? 35
         : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD"].includes(contractName)
         ? 1
         : 0
@@ -334,6 +336,7 @@ function getPlatform(contract, curation) {
     WRLD: "Artwrld",
     VERSE: "Verse",
     GAZ: "Gazelli Art House",
+    AXIOM: "Axiom",
   }
 
   ;[

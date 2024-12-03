@@ -802,4 +802,5 @@ export const list = [
   "GAZ3 - Laterals / Darien Brito - 2 minted",
   "GAZ5 - draw-something-onchain / Rhea Myers - 24 minted",
   "GAZ6 - Meshy / Golan Levin - 5 minted",
+  "AXIOM35 - Imagine / Nadieh Bremer - 36 minted",
 ]
