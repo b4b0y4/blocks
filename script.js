@@ -35,7 +35,7 @@ Object.keys(contractsData).forEach((key, index) => {
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = ["ABC"]
+const bloncks = ["ABC", "NGEN"]
 
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
 
@@ -337,6 +337,7 @@ function getPlatform(contract, curation) {
     VERSE: "Verse",
     GAZ: "Gazelli Art House",
     AXIOM: "Axiom",
+    NGEN: "Noble Gallery",
   }
 
   ;[

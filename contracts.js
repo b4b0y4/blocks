@@ -46,6 +46,7 @@ const addrOONA = "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8"
 const addrHVOID = "0xF03511eC774289DA497CDb2070Df4c711580fF7A"
 const addrGAZ = "0xA86cD4EceBd96085fCe4697614d30600803455C4"
 const addrAXIOM = "0x9209070E1447018638e15b73Dbee46Bf085fcf5f"
+const addrNGEN = "0x440E1B5A98332BcA7564DbffA4146f976CE75397"
 const addrABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
 const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
@@ -3931,6 +3932,7 @@ export const contractsData = {
   HVOID: { abi: abiV3, address: addrHVOID },
   GAZ: { abi: abiV3, address: addrGAZ },
   AXIOM: { abi: abiV3, address: addrAXIOM },
+  NGEN: { abi: abiV3, address: addrNGEN },
 }
 
 function updateIsStudio() {
