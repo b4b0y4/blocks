@@ -333,6 +333,7 @@ function getPlatform(contract, curation) {
     DE: "Davis Editions",
     WRLD: "Artwrld",
     VERSE: "Verse",
+    GAZ: "Gazelli Art House",
   }
 
   ;[

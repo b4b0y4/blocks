@@ -797,4 +797,9 @@ export const list = [
   "VERSE2 - Generativemasks Japan Edition / Shunsuke Takawo - 60 minted",
   "VERSE3 - ◯ circle(s) / john provencher - 120 minted",
   "HVOID0 - Aleph-0 / HACKATAO + Insigℏt - 392 minted",
+  "GAZ0 - Dance to Forgotten Noise / Monica Rizzolli - 1 minted",
+  "GAZ1 - Efflorescence / Loren Bednar - 4 minted",
+  "GAZ3 - Laterals / Darien Brito - 2 minted",
+  "GAZ5 - draw-something-onchain / Rhea Myers - 24 minted",
+  "GAZ6 - Meshy / Golan Levin - 5 minted",
 ]
