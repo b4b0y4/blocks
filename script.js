@@ -35,36 +35,26 @@ Object.keys(contractsData).forEach((key, index) => {
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = [
-  // "ABC",
-  // "ABSII",
-  // "ABSIII",
-  // "ABSIV",
-  // "ABSVII",
-  // "ABSIX",
-  // "ABSXV",
-  // "ABSXXVI",
-  // "ABSXXVII",
-  // "ABSXXX",
-  // "ABSXXXII",
-  // "ABSLXIII",
-  "VERSE",
-]
+const bloncks = ["ABC"]
+
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
+
 // fetchBlocks(bloncks)
+
+// fetchBlocks(isStudio)
 
 async function fetchBlocks(bloncks) {
   for (const contractName of bloncks) {
     const n = contractIndexMap[contractName]
     const isContractV2 = isV2.includes(contractName)
     const end = Number(await contracts[n].nextProjectId())
-    const iStart =
+    const start =
       contractName === "ABII"
         ? 3
         : contractName === "ABIII"
         ? 374
         : contractName === "ABC"
-        ? 495
+        ? 494
         : contractName === "ABXPACEII"
         ? 5
         : contractName === "OONA"
@@ -74,7 +64,7 @@ async function fetchBlocks(bloncks) {
         : 0
     let newList = ""
 
-    for (let i = iStart; i < end; i++) {
+    for (let i = start; i < end; i++) {
       const [detail, token] = await Promise.all([
         contracts[n].projectDetails(i.toString()),
         isContractV2
@@ -82,11 +72,7 @@ async function fetchBlocks(bloncks) {
           : contracts[n].projectStateData(i),
       ])
 
-      if (token.invocations > 0) {
-        newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted", `
-      } else {
-        console.log(`no token for ${contractName}${i}`)
-      }
+      newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted", `
     }
     console.log(newList)
   }
