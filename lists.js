@@ -674,6 +674,7 @@ export const list = [
   "PLOTII1 - Scribble Together / minimizer - 435 minted",
   "PLOTII2 - Scribble Party / minimizer - 54 minted",
   "STBYS0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 minted",
+  "STBYS1 - EVENT / Bernar Venet - 90 minted",
   "ATP0 - LOVE / Martin Grasser - 300 minted",
   "GRAIL1 - Fold / rudxane - 400 minted",
   "GRAIL2 - Atlas / Eric De Giuli - 333 minted",
