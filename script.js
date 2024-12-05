@@ -35,7 +35,7 @@ Object.keys(contractsData).forEach((key, index) => {
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = ["ABC", "NGEN"]
+const bloncks = ["ABC"]
 
 // Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
 

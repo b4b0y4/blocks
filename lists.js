@@ -508,7 +508,7 @@ export const list = [
   "ABIII493 - Melancholic Magical Maiden / Emi Kusano - 300 minted",
   "ABC495 - Bokeh (lamps) / mpkoz - 20 minted",
   "ABC496 - Bokeh / mpkoz - 300 minted",
-  "ABC497 - INK / Iskra Velitchkova - 1 minted",
+  "ABC497 - INK / Iskra Velitchkova - 100 minted",
   "ABC498 - while true / Lars Wander - 1 minted",
   "ABC499 - Box Light Studies / Zach Lieberman - 2 minted",
   "ABC500 - INK (fragrances) / Iskra Velitchkova - 6 minted",
