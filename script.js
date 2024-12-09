@@ -330,7 +330,6 @@ function getPlatform(contract, curation) {
     ARTCODE: "Redlion",
     TBOA: "TBOA Club",
     LOM: "Legends of Metaterra",
-    PROOF: "PROOF",
     CPG: "Creative product studio",
     DE: "Davis Editions",
     WRLD: "Artwrld",
@@ -345,6 +344,7 @@ function getPlatform(contract, curation) {
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
     [["BM", "BMF", "CITIZEN"], "Bright Moments"],
     [["PLOT", "PLOTII"], "Plottables"],
+    [["PROOF", "PROOFII"], "PROOF"],
     [isStudio, "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
 

@@ -30,6 +30,7 @@ const addrPLOTS2 = "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
 const addrSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
 const addrGRAILS = "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
 const addrPROOF = "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8"
+const addrPROOF2 = "0x294fED5F1D3D30cfA6Fe86A937dC3141EEc8bC6d"
 const addrAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C"
 const addrSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706"
 const addrTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253"
@@ -3928,6 +3929,7 @@ export const contractsData = {
   FAB: { abi: abiV3, address: addrFAB },
   TENDER: { abi: abiV3, address: addrTENDER },
   PROOF: { abi: abiV3, address: addrPROOF },
+  PROOFII: { abi: abiV3, address: addrPROOF2 },
   CPG: { abi: abiV3, address: addrCPG },
   DE: { abi: abiV3, address: addrDE },
   NEWRAFAEL: { abi: abiV2, address: addrNEWRAFAEL },
