@@ -61,7 +61,9 @@ async function fetchBlocks(bloncks) {
         ? 2026
         : contractName === "AXIOM"
         ? 35
-        : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD"].includes(contractName)
+        : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD", "GLITCH"].includes(
+            contractName
+          )
         ? 1
         : 0
     let newList = ""
@@ -109,15 +111,21 @@ async function grabData(tokenId, contract) {
     const scriptPromise = constructScript(projId, projectInfo, contract)
     const extLibPromise = extractLibraryName(projectInfo)
 
-    const [hash, { owner, ensName }, detail, script, editionInfo, extLib] =
-      await Promise.all([
-        hashPromise,
-        ownerPromise,
-        detailPromise,
-        scriptPromise,
-        editionInfoPromise,
-        extLibPromise,
-      ])
+    const [
+      hash,
+      { owner, ensName },
+      detail,
+      script,
+      { edition, remaining },
+      extLib,
+    ] = await Promise.all([
+      hashPromise,
+      ownerPromise,
+      detailPromise,
+      scriptPromise,
+      editionInfoPromise,
+      extLibPromise,
+    ])
 
     localStorage.setItem(
       "contractData",
@@ -131,8 +139,8 @@ async function grabData(tokenId, contract) {
         owner,
         ensName,
         extLib,
-        edition: editionInfo.edition,
-        remaining: editionInfo.remaining,
+        edition,
+        remaining,
       })
     )
     location.reload()
@@ -195,10 +203,9 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
     ? contracts[contract].projectTokenInfo(projId)
     : contracts[contract].projectStateData(projId))
 
-  return {
-    edition: Number(invo.maxInvocations),
-    remaining: Number(invo.maxInvocations - invo.invocations),
-  }
+  const edition = Number(invo.maxInvocations)
+  const remaining = Number(invo.maxInvocations - invo.invocations)
+  return { edition, remaining }
 }
 
 async function updateContractData(tokenId, contract) {
