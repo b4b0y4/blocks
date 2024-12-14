@@ -48,6 +48,7 @@ const addrHVOID = "0xF03511eC774289DA497CDb2070Df4c711580fF7A"
 const addrGAZ = "0xA86cD4EceBd96085fCe4697614d30600803455C4"
 const addrAXIOM = "0x9209070E1447018638e15b73Dbee46Bf085fcf5f"
 const addrNGEN = "0x440E1B5A98332BcA7564DbffA4146f976CE75397"
+
 const addrABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
 const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
 const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
@@ -55,6 +56,7 @@ const addrABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
 const addrABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
 const addrABS7 = "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba"
 const addrABS9 = "0x000009Bb1740EEA484F7DB00000a9227e578bf96"
+const addrABS10 = "0x000010EFE35a97f37FcDfd00fd20006e5228650A"
 const addrABS11 = "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0"
 const addrABS13 = "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D"
 const addrABS15 = "0x000000e0808eAe91ad4D81d2789b8cAf89747B61"
@@ -70,6 +72,7 @@ const addrABS27 = "0x45e94b8c6087775c0074003B0056dEeC41008f00"
 const addrABS30 = "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0"
 const addrABS31 = "0xB3526a6400260078517643cFD8490078803E0000"
 const addrABS32 = "0x0000003601Ae3F24a52323705FB36b8833071FD3"
+const addrABS38 = "0x000000Adf65E202866a4a405AE9629E12a039a62"
 const addrABS54 = "0x0000B52017e1eC58F64171B6001518C07a9AeC00"
 const addrABS63 = "0x000000637FddCdD459b047897afB3ea46aa6f334"
 
@@ -3887,6 +3890,7 @@ export const contractsData = {
   ABSIV: { abi: abiV3, address: addrABS4 },
   ABSVII: { abi: abiV3, address: addrABS7 },
   ABSIX: { abi: abiV3, address: addrABS9 },
+  ABSX: { abi: abiV3, address: addrABS10 },
   ABSXI: { abi: abiV3, address: addrABS11 },
   ABSXIII: { abi: abiV3, address: addrABS13 },
   ABSXV: { abi: abiV3, address: addrABS15 },
@@ -3902,6 +3906,7 @@ export const contractsData = {
   ABSXXX: { abi: abiV3, address: addrABS30 },
   ABSXXXI: { abi: abiV3, address: addrABS31 },
   ABSXXXII: { abi: abiV3, address: addrABS32 },
+  ABSXXXVIII: { abi: abiV3, address: addrABS38 },
   ABSLIV: { abi: abiV3, address: addrABS54 },
   ABSLXIII: { abi: abiV3, address: addrABS63 },
   BM: { abi: abiBM, address: addrBM },
