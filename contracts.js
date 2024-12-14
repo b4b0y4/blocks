@@ -1,81 +1,3 @@
-// GenArt721
-const addrV1 = "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"
-
-// GenArt721CoreV2
-const addrV2 = "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270"
-const addrABXPACE = "0x64780CE53f6e966E18a22Af13a2F97369580Ec11"
-const addrBM = "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" //weird
-const addrPLOTS = "0xa319C382a702682129fcbF55d514E61a16f97f9c"
-const addrATP = "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3"
-const addrVCA = "0x32D4BE5eE74376e08038d652d4dc26E62C67F436"
-const addrMINTS = "0xEafE7b73A3cfA804b761debcF077D4574588dfe7"
-const addrTRAME = "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1"
-const addrFLUTTER = "0x13aAe6f9599880edbB7d144BB13F1212CeE99533"
-const addrCDESK = "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15"
-const addrARTCODE = "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB"
-const addrTBOA = "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b"
-const addrLOM = "0x010bE6545e14f1DC50256286d9920e833F809C6A"
-const addrCITIZEN = "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0"
-const addrNEWRAFAEL = "0x68C01Cb4733a82A58D5e7bB31BdDBFF26A3A35d5"
-const addrVERSE = "0xBB5471c292065d3b01b2e81e299267221ae9a250"
-
-// GenArt721CoreV3
-const addrV3 = "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069"
-const addrABC = "0xAB0000000000aa06f89B268D604a9c1C41524Ac6"
-const addrEXPLORE = "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a"
-const addrABXPACE2 = "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36"
-const addrABXBM = "0x145789247973C5D612bF121e9E4Eef84b63Eb707"
-const addrBMF = "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD"
-const addrPLOTS2 = "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f"
-const addrSTBYS = "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D"
-const addrGRAILS = "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F"
-const addrPROOF = "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8"
-const addrPROOF2 = "0x294fED5F1D3D30cfA6Fe86A937dC3141EEc8bC6d"
-const addrAOI = "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C"
-const addrSDAO = "0x77D4b54e91822E9799AB0900876D6B1cdA752706"
-const addrTDG = "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253"
-const addrVFA = "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4"
-const addrUNITLDN = "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2"
-const addrHODLERS = "0x9F79e46A309f804Aa4B7B53a1F72c69137427794"
-const addrFAB = "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743"
-const addrTENDER = "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d"
-const addrCPG = "0x000000412217F67742376769695498074f007b97"
-const addrDE = "0x5306e34B7437200E0189CbC5F80B0990E49DCBE7"
-const addrXCORE = "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65"
-const addrWRLD = "0x5fdf5E6CAf7b8b0F64c3612aFd85E9407A7e1389"
-const addrOONA = "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8"
-const addrHVOID = "0xF03511eC774289DA497CDb2070Df4c711580fF7A"
-const addrGAZ = "0xA86cD4EceBd96085fCe4697614d30600803455C4"
-const addrAXIOM = "0x9209070E1447018638e15b73Dbee46Bf085fcf5f"
-const addrNGEN = "0x440E1B5A98332BcA7564DbffA4146f976CE75397"
-
-const addrABS0 = "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"
-const addrABS1 = "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"
-const addrABS2 = "0x0000000A77593CDa3f3434454AE534163Fe1A431"
-const addrABS3 = "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B"
-const addrABS4 = "0x0000000826d45c6b947d485eeB8322AccCad8DdB"
-const addrABS7 = "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba"
-const addrABS9 = "0x000009Bb1740EEA484F7DB00000a9227e578bf96"
-const addrABS10 = "0x000010EFE35a97f37FcDfd00fd20006e5228650A"
-const addrABS11 = "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0"
-const addrABS13 = "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D"
-const addrABS15 = "0x000000e0808eAe91ad4D81d2789b8cAf89747B61"
-const addrABS16 = "0x000000fF2fBC55B982010B42E235cC2A0ce3250b"
-const addrABS18 = "0x0000018afA7Ca51648ed4B2B00C133005Ea17115"
-const addrABS20 = "0x1725Dc55c1bd5200BF00566CF20000B10800C68e"
-const addrABS21 = "0x9800005DEB3Cfaf80077DBE9B9004c0020C1D6c5"
-const addrABS22 = "0xd40030fd1d00f1A9944462ff0025e9C8D0003500"
-const addrABS23 = "0xa73300003E020C436A67809E9300301600013000"
-const addrABS25 = "0xDd6800Ac7a54331b00000080Bbd1EF463475005B"
-const addrABS26 = "0x5e581e596e9951BB00246E00a70030009b620054"
-const addrABS27 = "0x45e94b8c6087775c0074003B0056dEeC41008f00"
-const addrABS30 = "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0"
-const addrABS31 = "0xB3526a6400260078517643cFD8490078803E0000"
-const addrABS32 = "0x0000003601Ae3F24a52323705FB36b8833071FD3"
-const addrABS38 = "0x000000Adf65E202866a4a405AE9629E12a039a62"
-const addrABS54 = "0x0000B52017e1eC58F64171B6001518C07a9AeC00"
-const addrABS63 = "0x000000637FddCdD459b047897afB3ea46aa6f334"
-
 const abiV1 = [
   {
     inputs: [
@@ -3852,6 +3774,80 @@ const abiBM = [
   },
 ]
 
+export const contractsData = {
+  AB: { abi: abiV1, address: "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a" },
+  ABII: { abi: abiV2, address: "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270" },
+  ABIII: { abi: abiV3, address: "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069" },
+  ABC: { abi: abiV3, address: "0xAB0000000000aa06f89B268D604a9c1C41524Ac6" },
+  EXP: { abi: abiV3, address: "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a" },
+  ABXPACE: { abi: abiV2, address: "0x64780CE53f6e966E18a22Af13a2F97369580Ec11" },
+  ABXPACEII: { abi: abiV3, address: "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36" },
+  ABXBM: { abi: abiV3, address: "0x145789247973C5D612bF121e9E4Eef84b63Eb707" },
+  ABS: { abi: abiV3, address: "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2" },
+  ABSI: { abi: abiV3, address: "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c" },
+  ABSII: { abi: abiV3, address: "0x0000000A77593CDa3f3434454AE534163Fe1A431" },
+  ABSIII: { abi: abiV3, address: "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B" },
+  ABSIV: { abi: abiV3, address: "0x0000000826d45c6b947d485eeB8322AccCad8DdB" },
+  ABSVII: { abi: abiV3, address: "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba" },
+  ABSIX: { abi: abiV3, address: "0x000009Bb1740EEA484F7DB00000a9227e578bf96" },
+  ABSX: { abi: abiV3, address: "0x000010EFE35a97f37FcDfd00fd20006e5228650A" },
+  ABSXI: { abi: abiV3, address: "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0" },
+  ABSXIII: { abi: abiV3, address: "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D" },
+  ABSXV: { abi: abiV3, address: "0x000000e0808eAe91ad4D81d2789b8cAf89747B61" },
+  ABSXVI: { abi: abiV3, address: "0x000000fF2fBC55B982010B42E235cC2A0ce3250b" },
+  ABSXVIII: { abi: abiV3, address: "0x0000018afA7Ca51648ed4B2B00C133005Ea17115" },
+  ABSXX: { abi: abiV3, address: "0x1725Dc55c1bd5200BF00566CF20000B10800C68e" },
+  ABSXXI: { abi: abiV3, address: "0x9800005DEB3Cfaf80077DBE9B9004c0020C1D6c5" },
+  ABSXXII: { abi: abiV3, address: "0xd40030fd1d00f1A9944462ff0025e9C8D0003500" },
+  ABSXXIII: { abi: abiV3, address: "0xa73300003E020C436A67809E9300301600013000" },
+  ABSXXV: { abi: abiV3, address: "0xDd6800Ac7a54331b00000080Bbd1EF463475005B" },
+  ABSXXVI: { abi: abiV3, address: "0x5e581e596e9951BB00246E00a70030009b620054" },
+  ABSXXVII: { abi: abiV3, address: "0x45e94b8c6087775c0074003B0056dEeC41008f00" },
+  ABSXXX: { abi: abiV3, address: "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0" },
+  ABSXXXI: { abi: abiV3, address: "0xB3526a6400260078517643cFD8490078803E0000" },
+  ABSXXXII: { abi: abiV3, address: "0x0000003601Ae3F24a52323705FB36b8833071FD3" },
+  ABSXXXVIII: { abi: abiV3, address: "0x000000Adf65E202866a4a405AE9629E12a039a62" },
+  ABSLIV: { abi: abiV3, address: "0x0000B52017e1eC58F64171B6001518C07a9AeC00" },
+  ABSLXIII: { abi: abiV3, address: "0x000000637FddCdD459b047897afB3ea46aa6f334" },
+  BM: { abi: abiBM, address: "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" },
+  BMF: { abi: abiV3, address: "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD" },
+  CITIZEN: { abi: abiV2, address: "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0" },
+  PLOT: { abi: abiV2, address: "0xa319C382a702682129fcbF55d514E61a16f97f9c" },
+  PLOTII: { abi: abiV3, address: "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f" },
+  STBYS: { abi: abiV3, address: "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D" },
+  ATP: { abi: abiV2, address: "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3" },
+  GRAIL: { abi: abiV3, address: "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F" },
+  AOI: { abi: abiV3, address: "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C" },
+  VCA: { abi: abiV2, address: "0x32D4BE5eE74376e08038d652d4dc26E62C67F436" },
+  SDAO: { abi: abiV3, address: "0x77D4b54e91822E9799AB0900876D6B1cdA752706" },
+  MINTS: { abi: abiV2, address: "0xEafE7b73A3cfA804b761debcF077D4574588dfe7" },
+  FLUTTER: { abi: abiV2, address: "0x13aAe6f9599880edbB7d144BB13F1212CeE99533" },
+  CDESK: { abi: abiV2, address: "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15" },
+  ARTCODE: { abi: abiV2, address: "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB" },
+  TBOA: { abi: abiV2, address: "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b" },
+  LOM: { abi: abiV2, address: "0x010bE6545e14f1DC50256286d9920e833F809C6A" },
+  TDG: { abi: abiV3, address: "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253" },
+  VFA: { abi: abiV3, address: "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4" },
+  UNITLDN: { abi: abiV3, address: "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2" },
+  TRAME: { abi: abiV2, address: "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1" },
+  HODL: { abi: abiV3, address: "0x9F79e46A309f804Aa4B7B53a1F72c69137427794" },
+  FAB: { abi: abiV3, address: "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743" },
+  TENDER: { abi: abiV3, address: "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d" },
+  PROOF: { abi: abiV3, address: "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8" },
+  PROOFII: { abi: abiV3, address: "0x294fED5F1D3D30cfA6Fe86A937dC3141EEc8bC6d" },
+  CPG: { abi: abiV3, address: "0x000000412217F67742376769695498074f007b97" },
+  DE: { abi: abiV3, address: "0x5306e34B7437200E0189CbC5F80B0990E49DCBE7" },
+  NEWRAFAEL: { abi: abiV2, address: "0x68C01Cb4733a82A58D5e7bB31BdDBFF26A3A35d5" },
+  XCORE: { abi: abiV3, address: "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65" },
+  WRLD: { abi: abiV3, address: "0x5fdf5E6CAf7b8b0F64c3612aFd85E9407A7e1389" },
+  OONA: { abi: abiV3, address: "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8" },
+  VERSE: { abi: abiV2, address: "0xBB5471c292065d3b01b2e81e299267221ae9a250" },
+  HVOID: { abi: abiV3, address: "0xF03511eC774289DA497CDb2070Df4c711580fF7A" },
+  GAZ: { abi: abiV3, address: "0xA86cD4EceBd96085fCe4697614d30600803455C4" },
+  AXIOM: { abi: abiV3, address: "0x9209070E1447018638e15b73Dbee46Bf085fcf5f" },
+  NGEN: { abi: abiV3, address: "0x440E1B5A98332BcA7564DbffA4146f976CE75397" },
+}
+
 export const isV2 = [
   "AB",
   "ABII",
@@ -3873,80 +3869,6 @@ export const isV2 = [
 ]
 
 export const isStudio = []
-
-export const contractsData = {
-  AB: { abi: abiV1, address: addrV1 },
-  ABII: { abi: abiV2, address: addrV2 },
-  ABIII: { abi: abiV3, address: addrV3 },
-  ABC: { abi: abiV3, address: addrABC },
-  EXP: { abi: abiV3, address: addrEXPLORE },
-  ABXPACE: { abi: abiV2, address: addrABXPACE },
-  ABXPACEII: { abi: abiV3, address: addrABXPACE2 },
-  ABXBM: { abi: abiV3, address: addrABXBM },
-  ABS: { abi: abiV3, address: addrABS0 },
-  ABSI: { abi: abiV3, address: addrABS1 },
-  ABSII: { abi: abiV3, address: addrABS2 },
-  ABSIII: { abi: abiV3, address: addrABS3 },
-  ABSIV: { abi: abiV3, address: addrABS4 },
-  ABSVII: { abi: abiV3, address: addrABS7 },
-  ABSIX: { abi: abiV3, address: addrABS9 },
-  ABSX: { abi: abiV3, address: addrABS10 },
-  ABSXI: { abi: abiV3, address: addrABS11 },
-  ABSXIII: { abi: abiV3, address: addrABS13 },
-  ABSXV: { abi: abiV3, address: addrABS15 },
-  ABSXVI: { abi: abiV3, address: addrABS16 },
-  ABSXVIII: { abi: abiV3, address: addrABS18 },
-  ABSXX: { abi: abiV3, address: addrABS20 },
-  ABSXXI: { abi: abiV3, address: addrABS21 },
-  ABSXXII: { abi: abiV3, address: addrABS22 },
-  ABSXXIII: { abi: abiV3, address: addrABS23 },
-  ABSXXV: { abi: abiV3, address: addrABS25 },
-  ABSXXVI: { abi: abiV3, address: addrABS26 },
-  ABSXXVII: { abi: abiV3, address: addrABS27 },
-  ABSXXX: { abi: abiV3, address: addrABS30 },
-  ABSXXXI: { abi: abiV3, address: addrABS31 },
-  ABSXXXII: { abi: abiV3, address: addrABS32 },
-  ABSXXXVIII: { abi: abiV3, address: addrABS38 },
-  ABSLIV: { abi: abiV3, address: addrABS54 },
-  ABSLXIII: { abi: abiV3, address: addrABS63 },
-  BM: { abi: abiBM, address: addrBM },
-  BMF: { abi: abiV3, address: addrBMF },
-  CITIZEN: { abi: abiV2, address: addrCITIZEN },
-  PLOT: { abi: abiV2, address: addrPLOTS },
-  PLOTII: { abi: abiV3, address: addrPLOTS2 },
-  STBYS: { abi: abiV3, address: addrSTBYS },
-  ATP: { abi: abiV2, address: addrATP },
-  GRAIL: { abi: abiV3, address: addrGRAILS },
-  AOI: { abi: abiV3, address: addrAOI },
-  VCA: { abi: abiV2, address: addrVCA },
-  SDAO: { abi: abiV3, address: addrSDAO },
-  MINTS: { abi: abiV2, address: addrMINTS },
-  FLUTTER: { abi: abiV2, address: addrFLUTTER },
-  CDESK: { abi: abiV2, address: addrCDESK },
-  ARTCODE: { abi: abiV2, address: addrARTCODE },
-  TBOA: { abi: abiV2, address: addrTBOA },
-  LOM: { abi: abiV2, address: addrLOM },
-  TDG: { abi: abiV3, address: addrTDG },
-  VFA: { abi: abiV3, address: addrVFA },
-  UNITLDN: { abi: abiV3, address: addrUNITLDN },
-  TRAME: { abi: abiV2, address: addrTRAME },
-  HODL: { abi: abiV3, address: addrHODLERS },
-  FAB: { abi: abiV3, address: addrFAB },
-  TENDER: { abi: abiV3, address: addrTENDER },
-  PROOF: { abi: abiV3, address: addrPROOF },
-  PROOFII: { abi: abiV3, address: addrPROOF2 },
-  CPG: { abi: abiV3, address: addrCPG },
-  DE: { abi: abiV3, address: addrDE },
-  NEWRAFAEL: { abi: abiV2, address: addrNEWRAFAEL },
-  XCORE: { abi: abiV3, address: addrXCORE },
-  WRLD: { abi: abiV3, address: addrWRLD },
-  OONA: { abi: abiV3, address: addrOONA },
-  VERSE: { abi: abiV2, address: addrVERSE },
-  HVOID: { abi: abiV3, address: addrHVOID },
-  GAZ: { abi: abiV3, address: addrGAZ },
-  AXIOM: { abi: abiV3, address: addrAXIOM },
-  NGEN: { abi: abiV3, address: addrNGEN },
-}
 
 function updateIsStudio() {
   for (const key in contractsData) {
