@@ -550,7 +550,7 @@ export const list = [
   "ABSXXVII0 - Roll Some Bones / rahul iyer - 92 minted",
   "ABSXXX0 - Heartbeat / AnaPet - 11 minted",
   "ABSXXX1 - re:Fleur / AnaPet - 1 minted",
-  "ABSXXXI0 - Chroma Genesis / xnmtrc - 22 minted",
+  "ABSXXXI0 - Chroma Genesis / xnmtrc - 24 minted",
   "ABSXXXII0 - And Yet We Dance / Ryan Bell - 100 minted",
   "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 2 minted",
   "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 1 minted",
