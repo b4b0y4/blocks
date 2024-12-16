@@ -513,7 +513,7 @@ export const list = [
   "ABC499 - Box Light Studies / Zach Lieberman - 2 minted",
   "ABC500 - INK (fragrances) / Iskra Velitchkova - 6 minted",
   "ABC501 - while true (fabric) / Lars Wander - 0 minted",
-  "ABC502 - Box Light Studies (sculpture) / Zach Lieberman - 0 minted",
+  "ABC502 - Box Light Studies (sculpture) / Zach Lieberman - 1 minted",
   "EXP0 - Friendship Bracelets / Alexis André - 38664 minted",
   "EXP1 - Marfa Yucca / Daniel Calderon Arenas - 390 minted",
   "EXP2 - marfaMESH / Harvey Rayner | patterndotco - 343 minted",
