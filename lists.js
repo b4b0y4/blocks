@@ -556,6 +556,7 @@ export const list = [
   "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 2 minted",
   "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 1 minted",
   "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 100 minted",
+  "ABSLXVII0 - Coral Colors / Sputniko! - 1 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
   "BM2 - Parnassus / mpkoz - 100 minted",
   "BM3 - Inflection / Jeff Davis - 96 minted",

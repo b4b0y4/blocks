@@ -3809,6 +3809,8 @@ export const contractsData = {
   ABSXXXVIII: { abi: abiV3, address: "0x000000Adf65E202866a4a405AE9629E12a039a62" },
   ABSLIV: { abi: abiV3, address: "0x0000B52017e1eC58F64171B6001518C07a9AeC00" },
   ABSLXIII: { abi: abiV3, address: "0x000000637FddCdD459b047897afB3ea46aa6f334" },
+  ABSLXVII:{ abi: abiV3, address:
+  "0x0000000BF96eb73f37239F61c9344E40d4c3F665"},
   BM: { abi: abiBM, address: "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" },
   BMF: { abi: abiV3, address: "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD" },
   CITIZEN: { abi: abiV2, address: "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0" },
