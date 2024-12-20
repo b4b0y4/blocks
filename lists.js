@@ -819,4 +819,5 @@ export const list = [
   "GAZ6 - Meshy / Golan Levin - 5 minted",
   "AXIOM35 - Imagine / Nadieh Bremer - 36 minted",
   "NGEN0 - fifty-five fake runs / yungwknd - 55 minted",
+  "MARILYN0 - Modern Muse: Marilyn Monroe x Zeblocks / Zeblocks - 743 minted",
 ]

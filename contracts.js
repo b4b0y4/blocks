@@ -3848,7 +3848,9 @@ export const contractsData = {
   GAZ: { abi: abiV3, address: "0xA86cD4EceBd96085fCe4697614d30600803455C4" },
   AXIOM: { abi: abiV3, address: "0x9209070E1447018638e15b73Dbee46Bf085fcf5f" },
   NGEN: { abi: abiV3, address: "0x440E1B5A98332BcA7564DbffA4146f976CE75397" },
+  MARILYN: { abi: abiV2, address: "0xFF124D975c7792E706552b18ec9DA24781751CAb"},
 }
+
 
 export const isV2 = [
   "AB",
@@ -3868,6 +3870,7 @@ export const isV2 = [
   "LOM",
   "NEWRAFAEL",
   "VERSE",
+  "MARILYN"
 ]
 
 export const isStudio = []
