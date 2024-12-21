@@ -32,9 +32,9 @@ Object.keys(contractsData).forEach((key, index) => {
   contractIndexMap[key] = index
 })
 
-/***************************************************
+/**********************************************************
  *                UPDATE LIST FUNCTION
- **************************************************/
+ *********************************************************/
 const bloncks = ["ABC", ...isStudio]
 
 // fetchBlocks(bloncks)
@@ -76,9 +76,9 @@ async function fetchBlocks(blocks) {
   }
 }
 
-/***************************************************
+/**********************************************************
  *        GET DATA FROM ETHEREUM FUNCTIONS
- **************************************************/
+ *********************************************************/
 let contractData = {}
 
 async function grabData(tokenId, contract) {
@@ -229,9 +229,9 @@ async function updateContractData(tokenId, contract) {
   }
 }
 
-/***************************************************
+/**********************************************************
  *              UPDATE UI FUNCTIONS
- **************************************************/
+ *********************************************************/
 function update(
   tokenId,
   contract,
@@ -436,9 +436,9 @@ function copyToClipboard(text) {
   navigator.clipboard.writeText(text)
 }
 
-/***************************************************
+/**********************************************************
  *           INJECT IFRAME FUNCTION
- **************************************************/
+ *********************************************************/
 async function injectFrame() {
   try {
     const iframeDocument = frame.contentDocument || frame.contentWindow.document
@@ -473,9 +473,9 @@ async function injectFrame() {
   }
 }
 
-/***************************************************
+/**********************************************************
  *              GET TOKEN FUNCTIONS
- **************************************************/
+ *********************************************************/
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
     getRandom(filteredList)
@@ -522,9 +522,9 @@ function handleOtherQuery(line, searchQuery) {
   grabData(tokenId, contract)
 }
 
-/***************************************************
+/**********************************************************
  *        LIST DISPLAY/NAVIGATION FUNCTIONS
- **************************************************/
+ *********************************************************/
 let filteredList = list
 let selectedIndex = -1
 
@@ -609,9 +609,9 @@ search.addEventListener("keydown", handleKeyboardNavigation)
 
 listPanel.addEventListener("click", handleItemClick)
 
-/***************************************************
+/**********************************************************
  *              RANDOMNESS FUNCTIONS
- **************************************************/
+ *********************************************************/
 function getRandom(lines) {
   const randomLine = lines[Math.floor(Math.random() * lines.length)]
   console.log("Randomly selected line:", randomLine)
@@ -638,9 +638,9 @@ document.getElementById("randomButton").addEventListener("click", () => {
   getRandom(list)
 })
 
-/***************************************************
+/**********************************************************
  *                  LOOP FUNCTIONS
- **************************************************/
+ *********************************************************/
 let intervalId
 let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   isLooping: "false",
@@ -722,9 +722,9 @@ function stopLoop() {
   location.reload()
 }
 
-/***************************************************
+/**********************************************************
  *           SAVE OUTPUT FUNCTION
- **************************************************/
+ *********************************************************/
 async function saveOutput() {
   clearPanels()
   const content = frame.contentDocument.documentElement.outerHTML
@@ -749,9 +749,9 @@ async function saveOutput() {
 
 save.addEventListener("click", saveOutput)
 
-/***************************************************
+/**********************************************************
  *   MANIPULATE SAVED OUTPUT IN STORAGE FUNCTIONS
- **************************************************/
+ *********************************************************/
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {}
 
 function pushContractDataToStorage(id) {
@@ -800,9 +800,9 @@ function displayFavoriteList() {
   }
 }
 
-/***************************************************
+/**********************************************************
  *       GET PREVIOUS/NEXT ID FUNCTIONS
- **************************************************/
+ *********************************************************/
 function incrementTokenId() {
   contractData.tokenId = contractData.tokenId + 1
   updateContractData(contractData.tokenId, contractData.contract)
@@ -816,9 +816,9 @@ function decrementTokenId() {
 inc.addEventListener("click", incrementTokenId)
 dec.addEventListener("click", decrementTokenId)
 
-/***************************************************
+/**********************************************************
  *               HELPER FUNCTIONS
- **************************************************/
+ *********************************************************/
 function clearDataStorage() {
   ;["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d))
 }
@@ -888,9 +888,9 @@ function addHoverEffect(button, menu) {
 }
 addHoverEffect(document.querySelector(".fa-repeat"), dropdownMenu)
 
-/***************************************************
+/**********************************************************
  *                     EVENTS
- **************************************************/
+ *********************************************************/
 document.addEventListener("DOMContentLoaded", () => {
   updateButtons()
   checkLocalStorage()
@@ -1005,9 +1005,9 @@ document.getElementById("fullscreen").addEventListener("click", () => {
   }
 })
 
-/***************************************************
+/**********************************************************
  *              DARK/LIGHT MODE TOGGLE
- **************************************************/
+ *********************************************************/
 const root = document.documentElement
 
 function setDarkMode(isDarkMode) {
