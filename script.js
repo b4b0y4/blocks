@@ -37,14 +37,10 @@ Object.keys(contractsData).forEach((key, index) => {
  **************************************************/
 const bloncks = ["ABC"]
 
-// Fluiroso, Lumina, Escherly Seeds, Glasshouse INAT, Recollection, Lucky Clover, Muttenz, Woman, Life, Freedom, l.o, Assembly
-
 // fetchBlocks(bloncks)
 
-// fetchBlocks(isStudio)
-
-async function fetchBlocks(bloncks) {
-  for (const contractName of bloncks) {
+async function fetchBlocks(blocks) {
+  for (const contractName of blocks) {
     const n = contractIndexMap[contractName]
     const isContractV2 = isV2.includes(contractName)
     const end = Number(await contracts[n].nextProjectId())
@@ -61,9 +57,7 @@ async function fetchBlocks(bloncks) {
         ? 2026
         : contractName === "AXIOM"
         ? 35
-        : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD", "GLITCH"].includes(
-            contractName
-          )
+        : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD"].includes(contractName)
         ? 1
         : 0
     let newList = ""
