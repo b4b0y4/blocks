@@ -37,7 +37,7 @@ Object.keys(contractsData).forEach((key, index) => {
  **************************************************/
 const bloncks = ["ABC", ...isStudio]
 
-fetchBlocks(bloncks)
+// fetchBlocks(bloncks)
 
 async function fetchBlocks(blocks) {
   for (const contractName of blocks) {
@@ -298,7 +298,7 @@ function getCuration(projId) {
     286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
     373,
   ]
-  return curated.includes(projId) || projId > 494
+  return curated.includes(projId)
     ? "Art Blocks Curated"
     : playground.includes(projId)
     ? "Art Blocks Playground"
