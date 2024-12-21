@@ -35,9 +35,9 @@ Object.keys(contractsData).forEach((key, index) => {
 /***************************************************
  *                UPDATE LIST FUNCTION
  **************************************************/
-const bloncks = ["ABC"]
+const bloncks = ["ABC", ...isStudio]
 
-// fetchBlocks(bloncks)
+fetchBlocks(bloncks)
 
 async function fetchBlocks(blocks) {
   for (const contractName of blocks) {
