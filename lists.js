@@ -540,7 +540,7 @@ export const list = [
   "ABSXIII0 - AnnoMetta / Matto - 1 minted",
   "ABSXV0 - Untitled / Olga Fradina - 33 minted",
   "ABSXVI0 - Incircles / Jos Vromans - 64 minted",
-  "ABSXVI1 - Art from code / Jos Vromans - 24 minted",
+  "ABSXVI1 - Art from code / Jos Vromans - 28 minted",
   "ABSXVIII0 - Origin / Monokai - 30 minted",
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 minted",
   "ABSXXI0 - Carattere / michelangelo (encapsuled) - 48 minted",
