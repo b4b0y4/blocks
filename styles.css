@@ -397,11 +397,11 @@ a:hover {
   background-color: var(--color-hvr);
   color: var(--color-txt);
   font-size: 1em;
-  width: 80px;
+  width: 100px;
   text-align: start;
   border-radius: 5px;
   padding: 4px 15px 4px 26px;
-  outline: 0.5px solid transparent;
+  outline: 2px solid transparent;
   transition: outline-color 0.1s ease-in-out;
 }
 
