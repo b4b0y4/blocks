@@ -553,7 +553,7 @@ export const list = [
   "ABSXXX1 - re:Fleur / AnaPet - 1 minted",
   "ABSXXXI0 - Chroma Genesis / xnmtrc - 28 minted",
   "ABSXXXII0 - And Yet We Dance / Ryan Bell - 100 minted",
-  "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 14 minted",
+  "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 26 minted",
   "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 1 minted",
   "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 100 minted",
   "ABSLXVII0 - Coral Colors / Sputniko! - 1 minted",
