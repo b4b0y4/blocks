@@ -1,6 +1,6 @@
 import { ethers } from "./ethers.min.js"
 import { libs, list } from "./lists.js"
-import { isV2, isStudio, contractsData } from "./contracts.js"
+import { contractsData, isV2, isStudio } from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
