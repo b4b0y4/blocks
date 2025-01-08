@@ -822,9 +822,7 @@ const clearDataStorage = () => {
 }
 
 const clearPanels = () => {
-  ;[listPanel, panel, favPanel].forEach((p) => p.classList.remove("active"))
-  overlay.classList.remove("active")
-  infobar.classList.remove("active")
+  ;[listPanel, panel, favPanel, overlay, infobar].forEach((el) => el.classList.remove("active"))
 }
 
 const toggleSpin = () => {
@@ -838,8 +836,7 @@ const togglePanel = panelElement => {
   )
   const isActive = panelElement.classList.toggle("active")
 
-  overlay.classList.toggle("active", isActive)
-  infobar.classList.toggle("active", isActive)
+  ;[overlay, infobar].forEach((el) => el.classList.toggle("active", isActive));
 }
 
 const toggleKeyShort = event =>{
@@ -953,12 +950,14 @@ favPanel.addEventListener("click", (event) => {
 
 search.addEventListener("input", () => {
   if (search.value.trim() !== "") {
-    listPanel.classList.add("active")
-    panel.classList.remove("active")
-    favPanel.classList.remove("active")
-    overlay.classList.add("active")
+    if (!listPanel.classList.contains("active")) {
+      togglePanel(listPanel);
+    }
+  } else {
+    clearPanels();
   }
-})
+});
+
 
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
