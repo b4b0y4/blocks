@@ -835,7 +835,6 @@ const togglePanel = panelElement => {
     (p) => p !== panelElement && p.classList.remove("active")
   )
   const isActive = panelElement.classList.toggle("active")
-
   ;[overlay, infobar].forEach((el) => el.classList.toggle("active", isActive));
 }
 
@@ -853,8 +852,8 @@ const updateButtons = () =>  {
 }
 
 const setDisplay = (elements, value) => {
-  elements.forEach(el => (el.style.display = value));
-};
+  elements.forEach(el => (el.style.display = value))
+}
 
 function addHoverEffect(button, menu) {
   let timer
