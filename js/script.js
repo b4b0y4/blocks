@@ -705,7 +705,6 @@ function handleLoopClick(action) {
 
   if (!isNaN(interval) && interval > 0) {
     loopRandom(interval, action)
-    toggleInfobar()
   } else {
     alert("Please enter a time in minutes.")
   }
@@ -718,7 +717,6 @@ function handleLoopClick(action) {
 
 function stopLoop() {
   stopRandomLoop()
-  toggleInfobar()
   location.reload()
 }
 
@@ -826,6 +824,7 @@ function clearDataStorage() {
 function clearPanels() {
   ;[listPanel, panel, favPanel].forEach((p) => p.classList.remove("active"))
   overlay.classList.remove("active")
+  infobar.classList.remove("active")
 }
 
 function toggleSpin() {
@@ -840,6 +839,7 @@ function togglePanel(panelElement) {
   const isActive = panelElement.classList.toggle("active")
 
   overlay.classList.toggle("active", isActive)
+  infobar.classList.toggle("active", isActive)
 }
 
 function toggleKeyShort(event) {
@@ -847,24 +847,12 @@ function toggleKeyShort(event) {
     event.type === "focusin" ? "none" : "block"
 }
 
-function toggleInfobar() {
-  const isInfobarInactive = infobar.classList.toggle("inactive")
-  localStorage.setItem("infobarInactive", isInfobarInactive)
-}
-
 function updateButtons() {
   const isLooping = loopState.isLooping === "true"
-  const isInfobarInactive = localStorage.getItem("infobarInactive") === "true"
 
   document.querySelector(
     isLooping ? ".fa-repeat" : ".fa-circle-stop"
   ).style.display = "none"
-
-  document.querySelector(
-    isInfobarInactive ? ".fa-eye-slash" : ".fa-eye"
-  ).style.display = "none"
-
-  infobar.classList.toggle("inactive", isInfobarInactive)
 }
 
 function addHoverEffect(button, menu) {
@@ -904,11 +892,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const val = rpcUrl ? "none" : "block"
   ;[rpcUrlInput, instruction].forEach((el) => (el.style.display = val))
 
-  if (!contractData) infobar.classList.add("active")
-
   if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
   console.log(contractData)
   root.classList.remove("no-flash")
+
+  if (!contractData) infobar.classList.add("active")
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
@@ -989,11 +977,6 @@ document.getElementById("selectedLoop").addEventListener("click", () => {
 })
 
 document.querySelector(".fa-circle-stop").addEventListener("click", stopLoop)
-
-document.getElementById("hideInfobar").addEventListener("click", () => {
-  toggleInfobar()
-  location.reload()
-})
 
 document.getElementById("fullscreen").addEventListener("click", () => {
   if (frame.requestFullscreen) {

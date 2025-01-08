@@ -121,7 +121,6 @@ body {
 }
 
 #theme,
-#hideInfobar,
 #fullscreen,
 #loop {
   border: none;
@@ -139,7 +138,6 @@ body {
 }
 
 #theme:hover,
-#hideInfobar:hover,
 #fullscreen:hover,
 #loop:hover {
   background-color: var(--color-hvr);
@@ -175,11 +173,6 @@ iframe {
 .infobar.active,
 .infobar:hover {
   opacity: 0.98;
-}
-
-.infobar.inactive {
-  display: none;
-  height: 0;
 }
 
 ::placeholder {
