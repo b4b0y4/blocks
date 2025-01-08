@@ -817,22 +817,22 @@ dec.addEventListener("click", decrementTokenId)
 /**********************************************************
  *               HELPER FUNCTIONS
  *********************************************************/
-function clearDataStorage() {
+const clearDataStorage = () => {
   ;["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d))
 }
 
-function clearPanels() {
+const clearPanels = () => {
   ;[listPanel, panel, favPanel].forEach((p) => p.classList.remove("active"))
   overlay.classList.remove("active")
   infobar.classList.remove("active")
 }
 
-function toggleSpin() {
+const toggleSpin = () => {
   document.querySelector(".spinner").style.display = "block"
   document.querySelector(".key-short").style.display = "none"
 }
 
-function togglePanel(panelElement) {
+const togglePanel = panelElement => {
   ;[panel, listPanel, favPanel].forEach(
     (p) => p !== panelElement && p.classList.remove("active")
   )
@@ -842,18 +842,22 @@ function togglePanel(panelElement) {
   infobar.classList.toggle("active", isActive)
 }
 
-function toggleKeyShort(event) {
+const toggleKeyShort = event =>{
   document.querySelector(".key-short").style.display =
     event.type === "focusin" ? "none" : "block"
 }
 
-function updateButtons() {
+const updateButtons = () =>  {
   const isLooping = loopState.isLooping === "true"
 
   document.querySelector(
     isLooping ? ".fa-repeat" : ".fa-circle-stop"
   ).style.display = "none"
 }
+
+const setDisplay = (elements, value) => {
+  elements.forEach(el => (el.style.display = value));
+};
 
 function addHoverEffect(button, menu) {
   let timer
@@ -885,18 +889,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   contractData = JSON.parse(localStorage.getItem("contractData"))
   if (contractData) update(...Object.values(contractData))
-
-  const value = contractData ? "block" : "none"
-  ;[inc, dec, save].forEach((el) => (el.style.display = value))
-
-  const val = rpcUrl ? "none" : "block"
-  ;[rpcUrlInput, instruction].forEach((el) => (el.style.display = val))
-
-  if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
-  console.log(contractData)
-  root.classList.remove("no-flash")
-
   if (!contractData) infobar.classList.add("active")
+  if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
+  
+  setDisplay([inc, dec, save], contractData ? "block" : "none");
+  setDisplay([rpcUrlInput, instruction], rpcUrl ? "none" : "block");
+
+  root.classList.remove("no-flash")
+  console.log(contractData)
 })
 
 rpcUrlInput.addEventListener("keypress", (event) => {
