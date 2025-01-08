@@ -904,6 +904,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const val = rpcUrl ? "none" : "block"
   ;[rpcUrlInput, instruction].forEach((el) => (el.style.display = val))
 
+  if (!contractData) infobar.classList.add("active")
+
   if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
   console.log(contractData)
   root.classList.remove("no-flash")

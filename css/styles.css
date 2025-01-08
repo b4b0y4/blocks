@@ -48,7 +48,7 @@ body {
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
   opacity: 0;
   z-index: 100;
-  transition: opacity 0.1s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .hidden-box input,
@@ -156,6 +156,10 @@ iframe {
 }
 
 .infobar {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
   height: 30px;
   max-width: 100%;
   display: flex;
@@ -164,6 +168,13 @@ iframe {
   background-color: var(--color-bg);
   padding: 5px;
   z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.infobar.active,
+.infobar:hover {
+  opacity: 0.98;
 }
 
 .infobar.inactive {
@@ -505,8 +516,10 @@ a:hover {
   }
 
   .infobar {
+    position: static;
     justify-content: center;
     height: 80px;
+    opacity: 1;
   }
 
   .info-box {
@@ -577,8 +590,6 @@ a:hover {
   .list-panel,
   .fav-panel {
     position: fixed;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
     max-width: 100%;
     max-height: 60%;
     right: 0;
