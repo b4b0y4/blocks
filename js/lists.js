@@ -554,7 +554,7 @@ export const list = [
   "ABSXXXI0 - Chroma Genesis / xnmtrc - 28 minted",
   "ABSXXXII0 - And Yet We Dance / Ryan Bell - 100 minted",
   "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 30 minted",
-  "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 64 minted",
+  "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 67 minted",
   "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 100 minted",
   "ABSLXVII0 - Coral Colors / Sputniko! - 1 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
