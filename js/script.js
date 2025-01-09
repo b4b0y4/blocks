@@ -1,6 +1,6 @@
 import { ethers } from "./ethers.min.js"
 import { libs, list } from "./lists.js"
-import { contractsData, isV2, isStudio } from "./contracts.js"
+import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -57,7 +57,9 @@ async function fetchBlocks(blocks) {
         ? 2026
         : contractName === "AXIOM"
         ? 35
-        : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD"].includes(contractName)
+        : ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD", "GLITCH"].includes(
+            contractName
+          )
         ? 1
         : 0
     let newList = ""
@@ -75,7 +77,6 @@ async function fetchBlocks(blocks) {
     console.log(newList)
   }
 }
-
 /**********************************************************
  *        GET DATA FROM ETHEREUM FUNCTIONS
  *********************************************************/
@@ -101,6 +102,23 @@ async function grabData(tokenId, contract) {
     const editionInfoPromise = fetchEditionInfo(projId, contract, isContractV2)
 
     const projectInfo = await projectInfoPromise
+
+    let extDepCount = isFLEX.includes(contractNameMap[contract])
+      ? await fetchExtDepCount(projId, contract)
+      : null
+
+    let extDependencies = []
+    let ipfs = null
+    let arweave = null
+
+    if (extDepCount) {
+      const extDepPromise = fetchCIDs(projId, extDepCount, contract, tokenId)
+      const gatewayPromise = fetchGateway(contract)
+      ;[extDependencies, { ipfs, arweave }] = await Promise.all([
+        extDepPromise,
+        gatewayPromise,
+      ])
+    }
 
     const scriptPromise = constructScript(projId, projectInfo, contract)
     const extLibPromise = extractLibraryName(projectInfo)
@@ -135,6 +153,9 @@ async function grabData(tokenId, contract) {
         extLib,
         edition,
         remaining,
+        extDependencies,
+        ipfs,
+        arweave,
       })
     )
     location.reload()
@@ -202,6 +223,44 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
   return { edition, remaining }
 }
 
+async function fetchExtDepCount(projId, contract) {
+  const count = await contracts[contract].projectExternalAssetDependencyCount(
+    projId
+  )
+  return count == 0 ? null : count
+}
+
+async function fetchCIDs(projId, extDepCount, contract, tokenId) {
+  const cidPromises = []
+  for (let i = 0; i < extDepCount; i++) {
+    cidPromises.push(
+      contracts[contract].projectExternalAssetDependencyByIndex(projId, i)
+    )
+  }
+  const cidTuples = await Promise.all(cidPromises)
+  let cids = cidTuples.map((tuple) => tuple[0])
+  if (
+    contractNameMap[contract] == "BMFLEX" &&
+    tokenId < 17000000 &&
+    tokenId > 16000000
+  ) {
+    cids = cids.map((cid) =>
+      cid.replace(
+        "https://cyan-probable-mandrill-658.mypinata.cloud/",
+        "https://ipfs.io/"
+      )
+    )
+  }
+  return cids
+}
+
+async function fetchGateway(contract) {
+  const ipfsPromise = contracts[contract].preferredIPFSGateway()
+  const arweavePromise = contracts[contract].preferredArweaveGateway()
+  const [ipfs, arweave] = await Promise.all([ipfsPromise, arweavePromise])
+  return { ipfs, arweave }
+}
+
 async function updateContractData(tokenId, contract) {
   try {
     toggleSpin()
@@ -243,9 +302,21 @@ function update(
   ensName,
   extLib,
   edition,
-  remaining
+  remaining,
+  extDependencies,
+  ipfs,
+  arweave
 ) {
-  pushItemToLocalStorage(contract, tokenId, hash, script, extLib)
+  pushItemToLocalStorage(
+    contract,
+    tokenId,
+    hash,
+    script,
+    extLib,
+    extDependencies,
+    ipfs,
+    arweave
+  )
   const curation = [0, 1, 2, 3].includes(contract) ? getCuration(projId) : null
   const platform = getPlatform(contract, curation)
 
@@ -262,13 +333,53 @@ function update(
   injectFrame()
 }
 
-function pushItemToLocalStorage(contract, tokenId, hash, script, extLib) {
-  const src = libs[extLib]
+function pushItemToLocalStorage(
+  contract,
+  tokenId,
+  hash,
+  script,
+  extLib,
+  extDependencies,
+  ipfs,
+  arweave
+) {
+  const src = [libs[extLib]]
 
-  const tokenIdHash =
-    contract == 0
-      ? `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
-      : `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`
+  if (extDependencies.length > 0 && extDependencies[0].startsWith("p5@")) {
+    src.push(libs[extDependencies[0]])
+  }
+
+  let tokenIdHash = ""
+
+  if (extDependencies.length > 0) {
+    const cids = extDependencies
+      .map((cid) => {
+        const dependencyType = cid.startsWith("p5@")
+          ? "ART_BLOCKS_DEPENDENCY_REGISTRY"
+          : cid.length === 46
+          ? "IPFS"
+          : "ARWEAVE"
+        return `{
+          "cid": "${cid}",
+          "dependency_type": "${dependencyType}",
+          "data": null
+        }`
+      })
+      .join(",")
+
+    tokenIdHash = `let tokenData = {
+      "tokenId": "${tokenId}",
+      "externalAssetDependencies": [${cids}],
+      "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
+      "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
+      "hash": "${hash}"
+    }`
+  } else if (contract === 0) {
+    tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`
+  } else {
+    tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`
+  }
+
   let process = extLib == "processing" ? "application/processing" : ""
 
   localStorage.setItem(
@@ -338,6 +449,7 @@ function getPlatform(contract, curation) {
     GAZ: "Gazelli Art House",
     AXIOM: "Axiom",
     NGEN: "Noble Gallery",
+    GLITCH: "Glitch Gallery",
   }
 
   ;[
@@ -454,11 +566,15 @@ async function injectFrame() {
     <script>${scriptData.script}</script>
     </body>`
 
+    const srcScripts = (scriptData.src || [])
+      .map((src) => `<script src='${src}'></script>`)
+      .join("")
+
     let dynamicContent =
       contractData.extLib === "custom"
         ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
         : `<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
-      <script src='${scriptData.src || ""}'></script>
+        ${srcScripts}
       <script>${scriptData.tokenIdHash};</script> <style type="text/css">
         html {height: 100%;}
         body {min-height: 100%; margin: 0; padding: 0; background-color: transparent;}
@@ -822,7 +938,9 @@ const clearDataStorage = () => {
 }
 
 const clearPanels = () => {
-  ;[listPanel, panel, favPanel, overlay, infobar].forEach((el) => el.classList.remove("active"))
+  ;[listPanel, panel, favPanel, overlay, infobar].forEach((el) =>
+    el.classList.remove("active")
+  )
 }
 
 const toggleSpin = () => {
@@ -830,20 +948,20 @@ const toggleSpin = () => {
   document.querySelector(".key-short").style.display = "none"
 }
 
-const togglePanel = panelElement => {
+const togglePanel = (panelElement) => {
   ;[panel, listPanel, favPanel].forEach(
     (p) => p !== panelElement && p.classList.remove("active")
   )
   const isActive = panelElement.classList.toggle("active")
-  ;[overlay, infobar].forEach((el) => el.classList.toggle("active", isActive));
+  ;[overlay, infobar].forEach((el) => el.classList.toggle("active", isActive))
 }
 
-const toggleKeyShort = event =>{
+const toggleKeyShort = (event) => {
   document.querySelector(".key-short").style.display =
     event.type === "focusin" ? "none" : "block"
 }
 
-const updateButtons = () =>  {
+const updateButtons = () => {
   const isLooping = loopState.isLooping === "true"
 
   document.querySelector(
@@ -852,7 +970,7 @@ const updateButtons = () =>  {
 }
 
 const setDisplay = (elements, value) => {
-  elements.forEach(el => (el.style.display = value))
+  elements.forEach((el) => (el.style.display = value))
 }
 
 function addHoverEffect(button, menu) {
@@ -887,9 +1005,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (contractData) update(...Object.values(contractData))
   if (!contractData) infobar.classList.add("active")
   if (!rpcUrl) document.getElementById("infoBox").style.display = "none"
-  
-  setDisplay([inc, dec, save], contractData ? "block" : "none");
-  setDisplay([rpcUrlInput, instruction], rpcUrl ? "none" : "block");
+
+  setDisplay([inc, dec, save], contractData ? "block" : "none")
+  setDisplay([rpcUrlInput, instruction], rpcUrl ? "none" : "block")
 
   root.classList.remove("no-flash")
   console.log(contractData)
@@ -950,13 +1068,12 @@ favPanel.addEventListener("click", (event) => {
 search.addEventListener("input", () => {
   if (search.value.trim() !== "") {
     if (!listPanel.classList.contains("active")) {
-      togglePanel(listPanel);
+      togglePanel(listPanel)
     }
   } else {
-    clearPanels();
+    clearPanels()
   }
-});
-
+})
 
 search.addEventListener("focusin", toggleKeyShort)
 search.addEventListener("focusout", toggleKeyShort)
