@@ -238,20 +238,7 @@ async function fetchCIDs(projId, extDepCount, contract, tokenId) {
     )
   }
   const cidTuples = await Promise.all(cidPromises)
-  let cids = cidTuples.map((tuple) => tuple[0])
-  if (
-    contractNameMap[contract] == "BMFLEX" &&
-    tokenId < 17000000 &&
-    tokenId > 16000000
-  ) {
-    cids = cids.map((cid) =>
-      cid.replace(
-        "https://cyan-probable-mandrill-658.mypinata.cloud/",
-        "https://ipfs.io/"
-      )
-    )
-  }
-  return cids
+  return cidTuples.map((tuple) => tuple[0])
 }
 
 async function fetchGateway(contract) {

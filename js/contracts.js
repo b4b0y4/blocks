@@ -6057,26 +6057,26 @@ export const contractsData = {
   ABSVII: { abi: abiV3FLEX, address: "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba" },
   ABSIX: { abi: abiV3FLEX, address: "0x000009Bb1740EEA484F7DB00000a9227e578bf96" },
   ABSX: { abi: abiV3FLEX, address: "0x000010EFE35a97f37FcDfd00fd20006e5228650A" },
-  ABSXI: { abi: abiV3FLEX, address: "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0" },
+  ABSXI: { abi: abiV3, address: "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0" },
   ABSXIII: { abi: abiV3FLEX, address: "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D" },
   ABSXV: { abi: abiV3FLEX, address: "0x000000e0808eAe91ad4D81d2789b8cAf89747B61" },
-  ABSXVI: { abi: abiV3FLEX, address: "0x000000fF2fBC55B982010B42E235cC2A0ce3250b" },
-  ABSXVIII: { abi: abiV3FLEX, address: "0x0000018afA7Ca51648ed4B2B00C133005Ea17115" },
+  ABSXVI: { abi: abiV3, address: "0x000000fF2fBC55B982010B42E235cC2A0ce3250b" },
+  ABSXVIII: { abi: abiV3, address: "0x0000018afA7Ca51648ed4B2B00C133005Ea17115" },
   ABSXX: { abi: abiV3FLEX, address: "0x1725Dc55c1bd5200BF00566CF20000B10800C68e" },
-  ABSXXI: { abi: abiV3FLEX, address: "0x9800005DEB3Cfaf80077DBE9B9004c0020C1D6c5" },
-  ABSXXII: { abi: abiV3FLEX, address: "0xd40030fd1d00f1A9944462ff0025e9C8D0003500" },
+  ABSXXI: { abi: abiV3, address: "0x9800005DEB3Cfaf80077DBE9B9004c0020C1D6c5" },
+  ABSXXII: { abi: abiV3, address: "0xd40030fd1d00f1A9944462ff0025e9C8D0003500" },
   ABSXXIII: { abi: abiV3FLEX, address: "0xa73300003E020C436A67809E9300301600013000" },
-  ABSXXV: { abi: abiV3FLEX, address: "0xDd6800Ac7a54331b00000080Bbd1EF463475005B" },
+  ABSXXV: { abi: abiV3, address: "0xDd6800Ac7a54331b00000080Bbd1EF463475005B" },
   ABSXXVI: { abi: abiV3FLEX, address: "0x5e581e596e9951BB00246E00a70030009b620054" },
   ABSXXVII: { abi: abiV3FLEX, address: "0x45e94b8c6087775c0074003B0056dEeC41008f00" },
   ABSXXX: { abi: abiV3FLEX, address: "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0" },
-  ABSXXXI: { abi: abiV3FLEX, address: "0xB3526a6400260078517643cFD8490078803E0000" },
+  ABSXXXI: { abi: abiV3, address: "0xB3526a6400260078517643cFD8490078803E0000" },
   ABSXXXII: { abi: abiV3FLEX, address: "0x0000003601Ae3F24a52323705FB36b8833071FD3" },
   ABSXXXV: {abi: abiV3FLEX, address: "0x00000038610bc4C96eF657aa1bcB8902ae65C62a"},
-  ABSXXXVIII: { abi: abiV3FLEX, address: "0x000000Adf65E202866a4a405AE9629E12a039a62" },
-  ABSLIV: { abi: abiV3FLEX, address: "0x0000B52017e1eC58F64171B6001518C07a9AeC00" },
-  ABSLXIII: { abi: abiV3FLEX, address: "0x000000637FddCdD459b047897afB3ea46aa6f334" },
-  ABSLXVII:{ abi: abiV3FLEX, address:
+  ABSXXXVIII: { abi: abiV3, address: "0x000000Adf65E202866a4a405AE9629E12a039a62" },
+  ABSLIV: { abi: abiV3, address: "0x0000B52017e1eC58F64171B6001518C07a9AeC00" },
+  ABSLXIII: { abi: abiV3, address: "0x000000637FddCdD459b047897afB3ea46aa6f334" },
+  ABSLXVII:{ abi: abiV3, address:
   "0x0000000BF96eb73f37239F61c9344E40d4c3F665"},
   BM: { abi: abiBM, address: "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676" },
   BMF: { abi: abiV3, address: "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD" },
@@ -6117,10 +6117,8 @@ export const contractsData = {
   NGEN: { abi: abiV3, address: "0x440E1B5A98332BcA7564DbffA4146f976CE75397" },
   MARILYN: { abi: abiV2, address: "0xFF124D975c7792E706552b18ec9DA24781751CAb"},
   GLITCH: { abi: abiV3FLEX, address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E"},
-  BMFLEX: { abi: abiV2FLEX, address: "0x7c3Ea2b7B3beFA1115aB51c09F0C9f245C500B18" },
   PLOTFLEX: { abi: abiV2FLEX, address: "0x18dE6097cE5B5B2724C9Cae6Ac519917f3F178c0" },
 }
-
 
 export const isV2 = [
   "AB",
@@ -6147,14 +6145,17 @@ export const isV2 = [
 
 export const isStudio = []
 
-function updateIsStudio() {
+export const isFLEX = ["PLOTFLEX", "GLITCH"]
+
+function updateStudioFlex() {
   for (const key in contractsData) {
     if (key.startsWith("ABS")) {
-      isStudio.push(key)
+      isStudio.push(key);
+      if (contractsData[key].abi === abiV3FLEX) {
+        isFLEX.push(key);
+      }
     }
   }
 }
 
-updateIsStudio()
-
-export const isFLEX = ["PLOTFLEX", "BMFLEX", "GLITCH", ...isStudio]
+updateStudioFlex()
