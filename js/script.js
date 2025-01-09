@@ -455,8 +455,8 @@ function getPlatform(contract, curation) {
   ;[
     [["AB", "ABII", "ABIII", "ABC"], curation],
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
-    [["PLOT", "PLOTII"], "Plottables"],
+    [["BM", "BMF", "BMFLEX", "CITIZEN"], "Bright Moments"],
+    [["PLOT", "PLOTII", "PLOTFLEX"], "Plottables"],
     [["PROOF", "PROOFII"], "PROOF"],
     [isStudio, "Art Blocks Studio"],
   ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
