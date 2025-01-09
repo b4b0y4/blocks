@@ -442,7 +442,7 @@ function getPlatform(contract, curation) {
   ;[
     [["AB", "ABII", "ABIII", "ABC"], curation],
     [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-    [["BM", "BMF", "BMFLEX", "CITIZEN"], "Bright Moments"],
+    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
     [["PLOT", "PLOTII", "PLOTFLEX"], "Plottables"],
     [["PROOF", "PROOFII"], "PROOF"],
     [isStudio, "Art Blocks Studio"],
