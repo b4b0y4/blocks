@@ -834,4 +834,6 @@ export const list = [
   "SHIS2 - Transcendence / Hannah Yan - 300 minted",
   "SHIS3 - Whispers of Life / Kaoru Tanaka - 600 minted",
   "SHIS4 - Growth: Threads / Robert Hodgin - 486 minted",
+  "RAVENABE0 - Marfa: Middle of Somewhere / r4v3n x Brett Sylvia - 73 minted",
+  "RAVENABE1 - Marfa: Outtakes / r4v3n - 30 minted",
 ]

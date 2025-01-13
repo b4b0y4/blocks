@@ -6323,7 +6323,7 @@ export const contractsData = {
   CPG: {
     abi: abiV3FLEX,
     address: "0x000000412217F67742376769695498074f007b97",
-    platform: "Creative product studio",
+    platform: "CPG",
   },
   DE: {
     abi: abiV3FLEX,
@@ -6399,6 +6399,10 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0xc74eC888104842277Fa1b74e1C3D415eb673009F",
     platform: "Shiseido",
+  },
+  RAVENABE: {
+    abi: abiV3FLEX,
+    address: "0xd9b7eC74C06c558A59AfdE6a16E614950730F44d",
   },
 }
 
