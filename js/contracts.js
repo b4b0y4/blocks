@@ -6129,7 +6129,7 @@ export const isFLEX = []
 
 function updateV2StudioFlex() {
   for (const key in contractsData) {
-    if ([abiV1, abiV2, abiBM].includes(contractsData[key].abi)) {
+    if ([abiV1, abiV2, abiV2FLEX, abiBM].includes(contractsData[key].abi)) {
       isV2.push(key);
     }
     if ([abiV2FLEX, abiV3FLEX].includes(contractsData[key].abi)) {
