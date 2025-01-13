@@ -1,6 +1,12 @@
 import { ethers } from "./ethers.min.js"
 import { libs, list } from "./lists.js"
-import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js"
+import {
+  contractsData,
+  isV2,
+  isFLEX,
+  isStudio,
+  platformMapping,
+} from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -304,9 +310,7 @@ function update(
     ipfs,
     arweave
   )
-  const curation = [0, 1, 2, 3].includes(contract) ? getCuration(projId) : null
-  const platform = getPlatform(contract, curation)
-
+  const platform = getPlatform(contract, projId)
   updateInfo(
     contract,
     owner,
@@ -405,50 +409,15 @@ function getCuration(projId) {
     : "Art Blocks Presents"
 }
 
-function getPlatform(contract, curation) {
+function getPlatform(contract, projId) {
   const contractName = contractNameMap[contract]
-  const platform = {
-    EXP: "Art Blocks Explorations",
-    ABXBM: "Art Blocks &times; Bright Moments",
-    STBYS: "Sotheby's",
-    ATP: "ATP",
-    GRAIL: "Grailers",
-    AOI: "AOI",
-    VCA: "Vertical Crypto Art",
-    SDAO: "SquiggleDAO",
-    MINTS: "Endaoment",
-    TDG: "The Disruptive Gallery",
-    VFA: "Vertu Fine Art",
-    UNITLDN: "Unit London",
-    TRAME: "Trame",
-    HODL: "Hodlers",
-    FAB: "Foundation for Art and Blockchain",
-    FLUTTER: "FlamingoDAO",
-    TENDER: "Tender",
-    CDESK: "Coindesk",
-    ARTCODE: "Redlion",
-    TBOA: "TBOA Club",
-    LOM: "Legends of Metaterra",
-    CPG: "Creative product studio",
-    DE: "Davis Editions",
-    WRLD: "Artwrld",
-    VERSE: "Verse",
-    GAZ: "Gazelli Art House",
-    AXIOM: "Axiom",
-    NGEN: "Noble Gallery",
-    GLITCH: "Glitch Gallery",
-    DOODLE: "Doodle Labs",
-    STITCH: "Stitchables",
-  }
+  const platform = {}
 
-  ;[
-    [["AB", "ABII", "ABIII", "ABC"], curation],
-    [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-    [["BM", "BMF", "CITIZEN"], "Bright Moments"],
-    [["PLOT", "PLOTII", "PLOTFLEX"], "Plottables"],
-    [["PROOF", "PROOFII"], "PROOF"],
-    [isStudio, "Art Blocks Studio"],
-  ].forEach(([keys, value]) => keys.forEach((key) => (platform[key] = value)))
+  platformMapping.forEach(([keys, value]) => {
+    keys.forEach((key) => {
+      platform[key] = value === null ? getCuration(projId) : value
+    })
+  })
 
   return platform[contractName] || ""
 }
