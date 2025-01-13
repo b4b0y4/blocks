@@ -6206,7 +6206,7 @@ export const contractsData = {
     address: "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f",
   },
   STBYS: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D",
   },
   ATP: {
@@ -6214,19 +6214,19 @@ export const contractsData = {
     address: "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3",
   },
   GRAIL: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F",
   },
   AOI: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C",
   },
   VCA: {
-    abi: abiV2,
+    abi: abiV2FLEX,
     address: "0x32D4BE5eE74376e08038d652d4dc26E62C67F436",
   },
   SDAO: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x77D4b54e91822E9799AB0900876D6B1cdA752706",
   },
   MINTS: {
@@ -6254,23 +6254,23 @@ export const contractsData = {
     address: "0x010bE6545e14f1DC50256286d9920e833F809C6A",
   },
   TDG: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253",
   },
   VFA: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4",
   },
   UNITLDN: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2",
   },
   TRAME: {
-    abi: abiV2,
+    abi: abiV2FLEX,
     address: "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1",
   },
   HODL: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x9F79e46A309f804Aa4B7B53a1F72c69137427794",
   },
   FAB: {
@@ -6282,19 +6282,19 @@ export const contractsData = {
     address: "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d",
   },
   PROOF: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8",
   },
   PROOFII: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x294fED5F1D3D30cfA6Fe86A937dC3141EEc8bC6d",
   },
   CPG: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x000000412217F67742376769695498074f007b97",
   },
   DE: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x5306e34B7437200E0189CbC5F80B0990E49DCBE7",
   },
   NEWRAFAEL: {
@@ -6306,23 +6306,23 @@ export const contractsData = {
     address: "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65",
   },
   WRLD: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x5fdf5E6CAf7b8b0F64c3612aFd85E9407A7e1389",
   },
   OONA: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8",
   },
   VERSE: {
-    abi: abiV2,
+    abi: abiV2FLEX,
     address: "0xBB5471c292065d3b01b2e81e299267221ae9a250",
   },
   HVOID: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0xF03511eC774289DA497CDb2070Df4c711580fF7A",
   },
   GAZ: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0xA86cD4EceBd96085fCe4697614d30600803455C4",
   },
   AXIOM: {
@@ -6330,7 +6330,7 @@ export const contractsData = {
     address: "0x9209070E1447018638e15b73Dbee46Bf085fcf5f",
   },
   NGEN: {
-    abi: abiV3,
+    abi: abiV3FLEX,
     address: "0x440E1B5A98332BcA7564DbffA4146f976CE75397",
   },
   MARILYN: {
