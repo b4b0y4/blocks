@@ -6084,142 +6084,114 @@ export const contractsData = {
   ABS: {
     abi: abiV3FLEX,
     address: "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2",
-    platform: "Art Blocks Studio",
   },
   ABSI: {
     abi: abiV3FLEX,
     address: "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c",
-    platform: "Art Blocks Studio",
   },
   ABSII: {
     abi: abiV3FLEX,
     address: "0x0000000A77593CDa3f3434454AE534163Fe1A431",
-    platform: "Art Blocks Studio",
   },
   ABSIII: {
     abi: abiV3FLEX,
     address: "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B",
-    platform: "Art Blocks Studio",
   },
   ABSIV: {
     abi: abiV3FLEX,
     address: "0x0000000826d45c6b947d485eeB8322AccCad8DdB",
-    platform: "Art Blocks Studio",
   },
   ABSVII: {
     abi: abiV3FLEX,
     address: "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba",
-    platform: "Art Blocks Studio",
   },
   ABSIX: {
     abi: abiV3FLEX,
     address: "0x000009Bb1740EEA484F7DB00000a9227e578bf96",
-    platform: "Art Blocks Studio",
   },
   ABSX: {
     abi: abiV3FLEX,
     address: "0x000010EFE35a97f37FcDfd00fd20006e5228650A",
-    platform: "Art Blocks Studio",
   },
   ABSXI: {
     abi: abiV3,
     address: "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0",
-    platform: "Art Blocks Studio",
   },
   ABSXIII: {
     abi: abiV3FLEX,
     address: "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D",
-    platform: "Art Blocks Studio",
   },
   ABSXV: {
     abi: abiV3FLEX,
     address: "0x000000e0808eAe91ad4D81d2789b8cAf89747B61",
-    platform: "Art Blocks Studio",
   },
   ABSXVI: {
     abi: abiV3,
     address: "0x000000fF2fBC55B982010B42E235cC2A0ce3250b",
-    platform: "Art Blocks Studio",
   },
   ABSXVIII: {
     abi: abiV3,
     address: "0x0000018afA7Ca51648ed4B2B00C133005Ea17115",
-    platform: "Art Blocks Studio",
   },
   ABSXX: {
     abi: abiV3FLEX,
     address: "0x1725Dc55c1bd5200BF00566CF20000B10800C68e",
-    platform: "Art Blocks Studio",
   },
   ABSXXI: {
     abi: abiV3,
     address: "0x9800005DEB3Cfaf80077DBE9B9004c0020C1D6c5",
-    platform: "Art Blocks Studio",
   },
   ABSXXII: {
     abi: abiV3,
     address: "0xd40030fd1d00f1A9944462ff0025e9C8D0003500",
-    platform: "Art Blocks Studio",
   },
   ABSXXIII: {
     abi: abiV3FLEX,
     address: "0xa73300003E020C436A67809E9300301600013000",
-    platform: "Art Blocks Studio",
   },
   ABSXXV: {
     abi: abiV3,
     address: "0xDd6800Ac7a54331b00000080Bbd1EF463475005B",
-    platform: "Art Blocks Studio",
   },
   ABSXXVI: {
     abi: abiV3FLEX,
     address: "0x5e581e596e9951BB00246E00a70030009b620054",
-    platform: "Art Blocks Studio",
   },
   ABSXXVII: {
     abi: abiV3FLEX,
     address: "0x45e94b8c6087775c0074003B0056dEeC41008f00",
-    platform: "Art Blocks Studio",
   },
   ABSXXX: {
     abi: abiV3FLEX,
     address: "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0",
-    platform: "Art Blocks Studio",
   },
   ABSXXXI: {
     abi: abiV3,
     address: "0xB3526a6400260078517643cFD8490078803E0000",
-    platform: "Art Blocks Studio",
   },
   ABSXXXII: {
     abi: abiV3FLEX,
     address: "0x0000003601Ae3F24a52323705FB36b8833071FD3",
-    platform: "Art Blocks Studio",
   },
   ABSXXXV: {
     abi: abiV3FLEX,
     address: "0x00000038610bc4C96eF657aa1bcB8902ae65C62a",
-    platform: "Art Blocks Studio",
   },
   ABSXXXVIII: {
     abi: abiV3,
     address: "0x000000Adf65E202866a4a405AE9629E12a039a62",
-    platform: "Art Blocks Studio",
   },
   ABSLIV: {
     abi: abiV3,
     address: "0x0000B52017e1eC58F64171B6001518C07a9AeC00",
-    platform: "Art Blocks Studio",
   },
   ABSLXIII: {
     abi: abiV3,
     address: "0x000000637FddCdD459b047897afB3ea46aa6f334",
-    platform: "Art Blocks Studio",
   },
   ABSLXVII: {
     abi: abiV3,
     address: "0x0000000BF96eb73f37239F61c9344E40d4c3F665",
-    platform: "Art Blocks Studio",
   },
   BM: {
     abi: abiBM,
@@ -6364,12 +6336,10 @@ export const contractsData = {
   NEWRAFAEL: {
     abi: abiV2,
     address: "0x68C01Cb4733a82A58D5e7bB31BdDBFF26A3A35d5",
-    platform: "",
   },
   XCORE: {
     abi: abiV3FLEX,
     address: "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65",
-    platform: "",
   },
   WRLD: {
     abi: abiV3FLEX,
@@ -6379,7 +6349,6 @@ export const contractsData = {
   OONA: {
     abi: abiV3FLEX,
     address: "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8",
-    platform: "",
   },
   VERSE: {
     abi: abiV2FLEX,
@@ -6389,7 +6358,6 @@ export const contractsData = {
   HVOID: {
     abi: abiV3FLEX,
     address: "0xF03511eC774289DA497CDb2070Df4c711580fF7A",
-    platform: "",
   },
   GAZ: {
     abi: abiV3FLEX,
@@ -6409,7 +6377,6 @@ export const contractsData = {
   MARILYN: {
     abi: abiV2,
     address: "0xFF124D975c7792E706552b18ec9DA24781751CAb",
-    platform: "",
   },
   DOODLE: {
     abi: abiV2,

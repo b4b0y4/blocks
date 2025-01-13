@@ -411,6 +411,9 @@ function getPlatform(contract, projId) {
   if (contractsData[contractName].platform === null) {
     return getCuration(projId)
   }
+  if (isStudio.includes(contractName)) {
+    return "Art Blocks Studio"
+  }
 
   return contractsData[contractName].platform || ""
 }
