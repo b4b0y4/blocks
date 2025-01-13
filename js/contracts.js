@@ -6119,6 +6119,7 @@ export const contractsData = {
   DOODLE: { abi: abiV2, address: "0x28f2D3805652FB5d359486dFfb7D08320D403240" },
   GLITCH: { abi: abiV3FLEX, address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E"},
   PLOTFLEX: { abi: abiV2FLEX, address: "0x18dE6097cE5B5B2724C9Cae6Ac519917f3F178c0" },
+  STITCH: { abi: abiV3FLEX, address: "0x00000000E75eadc620f4FCEfAb32F5173749C3a4"},
 }
 
 export const isV2 = [
@@ -6146,7 +6147,7 @@ export const isV2 = [
 
 export const isStudio = []
 
-export const isFLEX = ["PLOTFLEX", "GLITCH"]
+export const isFLEX = ["PLOTFLEX", "GLITCH", "STITCH"]
 
 function updateStudioFlex() {
   for (const key in contractsData) {

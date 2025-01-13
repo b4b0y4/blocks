@@ -438,6 +438,7 @@ function getPlatform(contract, curation) {
     NGEN: "Noble Gallery",
     GLITCH: "Glitch Gallery",
     DOODLE: "Doodle Labs",
+    STITCH: "Stitchables",
   }
 
   ;[
