@@ -829,4 +829,8 @@ export const list = [
   "DOODLE4 - DeCiphers / Irene Mamiye - 1000 minted",
   "DOODLE5 - Industrial Melanism / Neil Grayson - 999 minted",
   "DOODLE6 - Vistas  / Anton Ermakov - 100 minted",
+  "SHIS1 - Fractal Bloom / Jen Stark - 486 minted",
+  "SHIS2 - Transcendence / Hannah Yan - 300 minted",
+  "SHIS3 - Whispers of Life / Kaoru Tanaka - 600 minted",
+  "SHIS4 - Growth: Threads / Robert Hodgin - 486 minted",
 ]
