@@ -6107,7 +6107,7 @@ export const contractsData = {
   CPG: { abi: abiV3, address: "0x000000412217F67742376769695498074f007b97" },
   DE: { abi: abiV3, address: "0x5306e34B7437200E0189CbC5F80B0990E49DCBE7" },
   NEWRAFAEL: { abi: abiV2, address: "0x68C01Cb4733a82A58D5e7bB31BdDBFF26A3A35d5" },
-  XCORE: { abi: abiV3, address: "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65" },
+  XCORE: { abi: abiV3FLEX, address: "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65" },
   WRLD: { abi: abiV3, address: "0x5fdf5E6CAf7b8b0F64c3612aFd85E9407A7e1389" },
   OONA: { abi: abiV3, address: "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8" },
   VERSE: { abi: abiV2, address: "0xBB5471c292065d3b01b2e81e299267221ae9a250" },
@@ -6123,45 +6123,25 @@ export const contractsData = {
   SHIS: { abi: abiV3FLEX, address: "0xc74eC888104842277Fa1b74e1C3D415eb673009F"},
 }
 
-export const isV2 = [
-  "AB",
-  "ABII",
-  "ABXPACE",
-  "BM",
-  "CITIZEN",
-  "PLOT",
-  "ATP",
-  "VCA",
-  "MINTS",
-  "TRAME",
-  "FLUTTER",
-  "CDESK",
-  "ARTCODE",
-  "TBOA",
-  "LOM",
-  "NEWRAFAEL",
-  "VERSE",
-  "MARILYN",
-  "DOODLE",
-  "PLOTFLEX",
-]
-
+export const isV2 = []
 export const isStudio = []
+export const isFLEX = []
 
-export const isFLEX = ["PLOTFLEX", "GLITCH", "STITCH", "SHIS"]
-
-function updateStudioFlex() {
+function updateV2StudioFlex() {
   for (const key in contractsData) {
+    if ([abiV1, abiV2, abiBM].includes(contractsData[key].abi)) {
+      isV2.push(key);
+    }
+    if ([abiV2FLEX, abiV3FLEX].includes(contractsData[key].abi)) {
+      isFLEX.push(key);
+    }
     if (key.startsWith("ABS")) {
       isStudio.push(key);
-      if (contractsData[key].abi === abiV3FLEX) {
-        isFLEX.push(key);
-      }
     }
   }
 }
 
-updateStudioFlex()
+updateV2StudioFlex()
 
 export const platformMapping = [
   [["AB", "ABII", "ABIII", "ABC"], null],
