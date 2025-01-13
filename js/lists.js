@@ -821,4 +821,11 @@ export const list = [
   "AXIOM35 - Imagine / Nadieh Bremer - 36 minted",
   "NGEN0 - fifty-five fake runs / yungwknd - 55 minted",
   "MARILYN0 - Modern Muse: Marilyn Monroe x Zeblocks / Zeblocks - 743 minted",
+  "DOODLE0 - The Family Mooks / Mr. Kaves - 3498 minted",
+  "DOODLE1 - Sliderverse / Che-Yu Wu x White Castle - 1285 minted",
+  "DOODLE2 - Neogen Space Monkeys / Dalek x Generative Artworks - 5000 minted",
+  "DOODLE3 - Agents Brown and Knows / Mr. Kaves - 1172 minted",
+  "DOODLE4 - DeCiphers / Irene Mamiye - 1000 minted",
+  "DOODLE5 - Industrial Melanism / Neil Grayson - 999 minted",
+  "DOODLE6 - Vistas  / Anton Ermakov - 100 minted",
 ]

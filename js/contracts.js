@@ -6116,6 +6116,7 @@ export const contractsData = {
   AXIOM: { abi: abiV3, address: "0x9209070E1447018638e15b73Dbee46Bf085fcf5f" },
   NGEN: { abi: abiV3, address: "0x440E1B5A98332BcA7564DbffA4146f976CE75397" },
   MARILYN: { abi: abiV2, address: "0xFF124D975c7792E706552b18ec9DA24781751CAb"},
+  DOODLE: { abi: abiV2, address: "0x28f2D3805652FB5d359486dFfb7D08320D403240" },
   GLITCH: { abi: abiV3FLEX, address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E"},
   PLOTFLEX: { abi: abiV2FLEX, address: "0x18dE6097cE5B5B2724C9Cae6Ac519917f3F178c0" },
 }
@@ -6139,7 +6140,7 @@ export const isV2 = [
   "NEWRAFAEL",
   "VERSE",
   "MARILYN",
-  "BMFLEX",
+  "DOODLE",
   "PLOTFLEX",
 ]
 
