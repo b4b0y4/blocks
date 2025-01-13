@@ -527,7 +527,7 @@ async function injectFrame() {
     let dynamicContent =
       contractData.extLib === "custom"
         ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
-        : `<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1', maximum-scale=1>
+        : `<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
         ${srcScripts}
       <script>${scriptData.tokenIdHash};</script>
       <style type="text/css">

@@ -6385,6 +6385,10 @@ export const contractsData = {
     address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E",
     platform: "Glitch Gallery",
   },
+  BMFLEX: {
+    abi: abiV2FLEX,
+    address: "0x7c3Ea2b7B3beFA1115aB51c09F0C9f245C500B18",
+  },
   PLOTFLEX: {
     abi: abiV2FLEX,
     address: "0x18dE6097cE5B5B2724C9Cae6Ac519917f3F178c0",
