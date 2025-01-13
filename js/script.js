@@ -1,12 +1,6 @@
 import { ethers } from "./ethers.min.js"
 import { libs, list } from "./lists.js"
-import {
-  contractsData,
-  isV2,
-  isFLEX,
-  isStudio,
-  platformMapping,
-} from "./contracts.js"
+import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
@@ -394,10 +388,6 @@ const curated = [
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ]
 
-for (let i = 494; i < 1000; i++) {
-  curated.push(i)
-}
-
 function getCuration(projId) {
   const playground = [
     6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
@@ -417,15 +407,12 @@ function getCuration(projId) {
 
 function getPlatform(contract, projId) {
   const contractName = contractNameMap[contract]
-  const platform = {}
 
-  platformMapping.forEach(([keys, value]) => {
-    keys.forEach((key) => {
-      platform[key] = value === null ? getCuration(projId) : value
-    })
-  })
+  if (contractsData[contractName].platform === null) {
+    return getCuration(projId)
+  }
 
-  return platform[contractName] || ""
+  return contractsData[contractName].platform || ""
 }
 
 function updateInfo(

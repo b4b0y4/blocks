@@ -6044,318 +6044,397 @@ export const contractsData = {
   AB: {
     abi: abiV1,
     address: "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a",
+    platform: null,
   },
   ABII: {
     abi: abiV2,
     address: "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270",
+    platform: null,
   },
   ABIII: {
     abi: abiV3,
     address: "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069",
+    platform: null,
   },
   ABC: {
     abi: abiV3,
     address: "0xAB0000000000aa06f89B268D604a9c1C41524Ac6",
+    platform: "Art Blocks Curated",
   },
   EXP: {
     abi: abiV3,
     address: "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a",
+    platform: "Art Blocks Explorations",
   },
   ABXPACE: {
     abi: abiV2,
     address: "0x64780CE53f6e966E18a22Af13a2F97369580Ec11",
+    platform: "Art Blocks &times; Pace",
   },
   ABXPACEII: {
     abi: abiV3,
     address: "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36",
+    platform: "Art Blocks &times; Pace",
   },
   ABXBM: {
     abi: abiV3,
     address: "0x145789247973C5D612bF121e9E4Eef84b63Eb707",
+    platform: "Art Blocks &times; Bright Moments",
   },
   ABS: {
     abi: abiV3FLEX,
     address: "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2",
+    platform: "Art Blocks Studio",
   },
   ABSI: {
     abi: abiV3FLEX,
     address: "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c",
+    platform: "Art Blocks Studio",
   },
   ABSII: {
     abi: abiV3FLEX,
     address: "0x0000000A77593CDa3f3434454AE534163Fe1A431",
+    platform: "Art Blocks Studio",
   },
   ABSIII: {
     abi: abiV3FLEX,
     address: "0x000000058b5d9E705Ee989fAbc8DFdC1BFBdFA6B",
+    platform: "Art Blocks Studio",
   },
   ABSIV: {
     abi: abiV3FLEX,
     address: "0x0000000826d45c6b947d485eeB8322AccCad8DdB",
+    platform: "Art Blocks Studio",
   },
   ABSVII: {
     abi: abiV3FLEX,
     address: "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba",
+    platform: "Art Blocks Studio",
   },
   ABSIX: {
     abi: abiV3FLEX,
     address: "0x000009Bb1740EEA484F7DB00000a9227e578bf96",
+    platform: "Art Blocks Studio",
   },
   ABSX: {
     abi: abiV3FLEX,
     address: "0x000010EFE35a97f37FcDfd00fd20006e5228650A",
+    platform: "Art Blocks Studio",
   },
   ABSXI: {
     abi: abiV3,
     address: "0x000000a6E6366BAF7c98a2Ab73D3Df1092DD7bB0",
+    platform: "Art Blocks Studio",
   },
   ABSXIII: {
     abi: abiV3FLEX,
     address: "0x000000cB8bad52b0d51f4190Dd1C62Ce1cDE1e9D",
+    platform: "Art Blocks Studio",
   },
   ABSXV: {
     abi: abiV3FLEX,
     address: "0x000000e0808eAe91ad4D81d2789b8cAf89747B61",
+    platform: "Art Blocks Studio",
   },
   ABSXVI: {
     abi: abiV3,
     address: "0x000000fF2fBC55B982010B42E235cC2A0ce3250b",
+    platform: "Art Blocks Studio",
   },
   ABSXVIII: {
     abi: abiV3,
     address: "0x0000018afA7Ca51648ed4B2B00C133005Ea17115",
+    platform: "Art Blocks Studio",
   },
   ABSXX: {
     abi: abiV3FLEX,
     address: "0x1725Dc55c1bd5200BF00566CF20000B10800C68e",
+    platform: "Art Blocks Studio",
   },
   ABSXXI: {
     abi: abiV3,
     address: "0x9800005DEB3Cfaf80077DBE9B9004c0020C1D6c5",
+    platform: "Art Blocks Studio",
   },
   ABSXXII: {
     abi: abiV3,
     address: "0xd40030fd1d00f1A9944462ff0025e9C8D0003500",
+    platform: "Art Blocks Studio",
   },
   ABSXXIII: {
     abi: abiV3FLEX,
     address: "0xa73300003E020C436A67809E9300301600013000",
+    platform: "Art Blocks Studio",
   },
   ABSXXV: {
     abi: abiV3,
     address: "0xDd6800Ac7a54331b00000080Bbd1EF463475005B",
+    platform: "Art Blocks Studio",
   },
   ABSXXVI: {
     abi: abiV3FLEX,
     address: "0x5e581e596e9951BB00246E00a70030009b620054",
+    platform: "Art Blocks Studio",
   },
   ABSXXVII: {
     abi: abiV3FLEX,
     address: "0x45e94b8c6087775c0074003B0056dEeC41008f00",
+    platform: "Art Blocks Studio",
   },
   ABSXXX: {
     abi: abiV3FLEX,
     address: "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0",
+    platform: "Art Blocks Studio",
   },
   ABSXXXI: {
     abi: abiV3,
     address: "0xB3526a6400260078517643cFD8490078803E0000",
+    platform: "Art Blocks Studio",
   },
   ABSXXXII: {
     abi: abiV3FLEX,
     address: "0x0000003601Ae3F24a52323705FB36b8833071FD3",
+    platform: "Art Blocks Studio",
   },
   ABSXXXV: {
     abi: abiV3FLEX,
     address: "0x00000038610bc4C96eF657aa1bcB8902ae65C62a",
+    platform: "Art Blocks Studio",
   },
   ABSXXXVIII: {
     abi: abiV3,
     address: "0x000000Adf65E202866a4a405AE9629E12a039a62",
+    platform: "Art Blocks Studio",
   },
   ABSLIV: {
     abi: abiV3,
     address: "0x0000B52017e1eC58F64171B6001518C07a9AeC00",
+    platform: "Art Blocks Studio",
   },
   ABSLXIII: {
     abi: abiV3,
     address: "0x000000637FddCdD459b047897afB3ea46aa6f334",
+    platform: "Art Blocks Studio",
   },
   ABSLXVII: {
     abi: abiV3,
     address: "0x0000000BF96eb73f37239F61c9344E40d4c3F665",
+    platform: "Art Blocks Studio",
   },
   BM: {
     abi: abiBM,
     address: "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676",
+    platform: "Bright Moments",
   },
   BMF: {
     abi: abiV3,
     address: "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD",
+    platform: "Bright Moments",
   },
   CITIZEN: {
     abi: abiV2,
     address: "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0",
+    platform: "Bright Moments",
   },
   PLOT: {
     abi: abiV2,
     address: "0xa319C382a702682129fcbF55d514E61a16f97f9c",
+    platform: "Plottables",
   },
   PLOTII: {
     abi: abiV3,
     address: "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f",
+    platform: "Plottables",
   },
   STBYS: {
     abi: abiV3FLEX,
     address: "0xe034bb2b1B9471e11cf1a0a9199a156fb227aa5D",
+    platform: "Sotheby's",
   },
   ATP: {
     abi: abiV2,
     address: "0x4D928AB507Bf633DD8e68024A1fB4c99316bBdf3",
+    platform: "ATP",
   },
   GRAIL: {
     abi: abiV3FLEX,
     address: "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F",
+    platform: "Grailers",
   },
   AOI: {
     abi: abiV3FLEX,
     address: "0x8cDBd7010Bd197848e95C1FD7F6E870AaC9b0d3C",
+    platform: "AOI",
   },
   VCA: {
     abi: abiV2FLEX,
     address: "0x32D4BE5eE74376e08038d652d4dc26E62C67F436",
+    platform: "Vertical Crypto Art",
   },
   SDAO: {
     abi: abiV3FLEX,
     address: "0x77D4b54e91822E9799AB0900876D6B1cdA752706",
+    platform: "SquiggleDAO",
   },
   MINTS: {
     abi: abiV2,
     address: "0xEafE7b73A3cfA804b761debcF077D4574588dfe7",
+    platform: "Endaoment",
   },
   FLUTTER: {
     abi: abiV2,
     address: "0x13aAe6f9599880edbB7d144BB13F1212CeE99533",
+    platform: "FlamingoDAO",
   },
   CDESK: {
     abi: abiV2,
     address: "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15",
+    platform: "Coindesk",
   },
   ARTCODE: {
     abi: abiV2,
     address: "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB",
+    platform: "Redlion",
   },
   TBOA: {
     abi: abiV2,
     address: "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b",
+    platform: "TBOA Club",
   },
   LOM: {
     abi: abiV2,
     address: "0x010bE6545e14f1DC50256286d9920e833F809C6A",
+    platform: "Legends of Metaterra",
   },
   TDG: {
     abi: abiV3FLEX,
     address: "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253",
+    platform: "The Disruptive Gallery",
   },
   VFA: {
     abi: abiV3FLEX,
     address: "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4",
+    platform: "Vertu Fine Art",
   },
   UNITLDN: {
     abi: abiV3FLEX,
     address: "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2",
+    platform: "Unit London",
   },
   TRAME: {
     abi: abiV2FLEX,
     address: "0x1D0977e86c70EAbb5c8fD98DB1B08C6d60caa0C1",
+    platform: "Trame",
   },
   HODL: {
     abi: abiV3FLEX,
     address: "0x9F79e46A309f804Aa4B7B53a1F72c69137427794",
+    platform: "Hodlers",
   },
   FAB: {
     abi: abiV3,
     address: "0xC443588d22Fb0f8dAB928e52014CC23d2Df70743",
+    platform: "Foundation for Art and Blockchain",
   },
   TENDER: {
     abi: abiV3,
     address: "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d",
+    platform: "Tender",
   },
   PROOF: {
     abi: abiV3FLEX,
     address: "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8",
+    platform: "PROOF",
   },
   PROOFII: {
     abi: abiV3FLEX,
     address: "0x294fED5F1D3D30cfA6Fe86A937dC3141EEc8bC6d",
+    platform: "PROOF",
   },
   CPG: {
     abi: abiV3FLEX,
     address: "0x000000412217F67742376769695498074f007b97",
+    platform: "Creative product studio",
   },
   DE: {
     abi: abiV3FLEX,
     address: "0x5306e34B7437200E0189CbC5F80B0990E49DCBE7",
+    platform: "Davis Editions",
   },
   NEWRAFAEL: {
     abi: abiV2,
     address: "0x68C01Cb4733a82A58D5e7bB31BdDBFF26A3A35d5",
+    platform: "",
   },
   XCORE: {
     abi: abiV3FLEX,
     address: "0xC04E0000726ED7c5b9f0045Bc0c4806321BC6C65",
+    platform: "",
   },
   WRLD: {
     abi: abiV3FLEX,
     address: "0x5fdf5E6CAf7b8b0F64c3612aFd85E9407A7e1389",
+    platform: "Artwrld",
   },
   OONA: {
     abi: abiV3FLEX,
     address: "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8",
+    platform: "",
   },
   VERSE: {
     abi: abiV2FLEX,
     address: "0xBB5471c292065d3b01b2e81e299267221ae9a250",
+    platform: "Verse",
   },
   HVOID: {
     abi: abiV3FLEX,
     address: "0xF03511eC774289DA497CDb2070Df4c711580fF7A",
+    platform: "",
   },
   GAZ: {
     abi: abiV3FLEX,
     address: "0xA86cD4EceBd96085fCe4697614d30600803455C4",
+    platform: "Gazelli Art House",
   },
   AXIOM: {
     abi: abiV3,
     address: "0x9209070E1447018638e15b73Dbee46Bf085fcf5f",
+    platform: "Axiom",
   },
   NGEN: {
     abi: abiV3FLEX,
     address: "0x440E1B5A98332BcA7564DbffA4146f976CE75397",
+    platform: "Noble Gallery",
   },
   MARILYN: {
     abi: abiV2,
     address: "0xFF124D975c7792E706552b18ec9DA24781751CAb",
+    platform: "",
   },
   DOODLE: {
     abi: abiV2,
     address: "0x28f2D3805652FB5d359486dFfb7D08320D403240",
+    platform: "Doodle Labs",
   },
   GLITCH: {
     abi: abiV3FLEX,
     address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E",
+    platform: "Glitch Gallery",
   },
   PLOTFLEX: {
     abi: abiV2FLEX,
     address: "0x18dE6097cE5B5B2724C9Cae6Ac519917f3F178c0",
+    platform: "Plottables",
   },
   STITCH: {
     abi: abiV3FLEX,
     address: "0x00000000E75eadc620f4FCEfAb32F5173749C3a4",
+    platform: "Stitchables",
   },
   SHIS: {
     abi: abiV3FLEX,
     address: "0xc74eC888104842277Fa1b74e1C3D415eb673009F",
+    platform: "Shiseido",
   },
 }
 
@@ -6378,44 +6457,3 @@ function updateV2StudioFlex() {
 }
 
 updateV2StudioFlex()
-
-export const platformMapping = [
-  [["AB", "ABII", "ABIII", "ABC"], null],
-  [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
-  [["ABXBM"], "Art Blocks &times; Bright Moments"],
-  [["EXP"], "Art Blocks Explorations"],
-  [isStudio, "Art Blocks Studio"],
-  [["BM", "BMF", "CITIZEN"], "Bright Moments"],
-  [["PLOT", "PLOTII", "PLOTFLEX"], "Plottables"],
-  [["STBYS"], "Sotheby's"],
-  [["ATP"], "ATP"],
-  [["GRAIL"], "Grailers"],
-  [["AOI"], "AOI"],
-  [["VCA"], "Vertical Crypto Art"],
-  [["SDAO"], "SquiggleDAO"],
-  [["MINTS"], "Endaoment"],
-  [["TDG"], "The Disruptive Gallery"],
-  [["VFA"], "Vertu Fine Art"],
-  [["UNITLDN"], "Unit London"],
-  [["TRAME"], "Trame"],
-  [["HODL"], "Hodlers"],
-  [["FAB"], "Foundation for Art and Blockchain"],
-  [["FLUTTER"], "FlamingoDAO"],
-  [["TENDER"], "Tender"],
-  [["CDESK"], "Coindesk"],
-  [["ARTCODE"], "Redlion"],
-  [["TBOA"], "TBOA Club"],
-  [["LOM"], "Legends of Metaterra"],
-  [["CPG"], "Creative product studio"],
-  [["DE"], "Davis Editions"],
-  [["WRLD"], "Artwrld"],
-  [["VERSE"], "Verse"],
-  [["GAZ"], "Gazelli Art House"],
-  [["AXIOM"], "Axiom"],
-  [["NGEN"], "Noble Gallery"],
-  [["GLITCH"], "Glitch Gallery"],
-  [["DOODLE"], "Doodle Labs"],
-  [["STITCH"], "Stitchables"],
-  [["PROOF", "PROOFII"], "PROOF"],
-  [["SHIS"], "Shiseido"],
-]
