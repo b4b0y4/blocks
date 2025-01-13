@@ -6162,7 +6162,7 @@ function updateStudioFlex() {
 
 updateStudioFlex()
 
-export let platformMapping = [
+export const platformMapping = [
   [["AB", "ABII", "ABIII", "ABC"], null],
   [["ABXPACE", "ABXPACEII"], "Art Blocks &times; Pace"],
   [["ABXBM"], "Art Blocks &times; Bright Moments"],
