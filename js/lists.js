@@ -555,7 +555,7 @@ export const list = [
   "ABSXXXII0 - And Yet We Dance / Ryan Bell - 100 minted",
   "ABSXXXV0 - Songs of Utopia / KALA - 5 minted",
   "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 30 minted",
-  "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 77 minted",
+  "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 81 minted",
   "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 100 minted",
   "GLITCH1 - nameless dread / diewiththemostlikes - 669 minted",
   "BM1 - Stellaraum / Alida Sun - 66 minted",
