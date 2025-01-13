@@ -408,7 +408,7 @@ function getCuration(projId) {
 function getPlatform(contract, projId) {
   const contractName = contractNameMap[contract]
 
-  if (contractsData[contractName].platform === null) {
+  if (["AB", "ABII", "ABIII"].includes(contractName)) {
     return getCuration(projId)
   }
   if (isStudio.includes(contractName)) {

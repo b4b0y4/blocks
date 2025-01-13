@@ -6044,17 +6044,14 @@ export const contractsData = {
   AB: {
     abi: abiV1,
     address: "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a",
-    platform: null,
   },
   ABII: {
     abi: abiV2,
     address: "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270",
-    platform: null,
   },
   ABIII: {
     abi: abiV3,
     address: "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069",
-    platform: null,
   },
   ABC: {
     abi: abiV3,
