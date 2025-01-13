@@ -6388,6 +6388,7 @@ export const contractsData = {
   BMFLEX: {
     abi: abiV2FLEX,
     address: "0x7c3Ea2b7B3beFA1115aB51c09F0C9f245C500B18",
+    platform: "Bright Moments",
   },
   PLOTFLEX: {
     abi: abiV2FLEX,
