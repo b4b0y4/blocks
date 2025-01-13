@@ -118,7 +118,7 @@ async function grabData(tokenId, contract) {
     let arweave = null
 
     if (extDepCount) {
-      const extDepPromise = fetchCIDs(projId, extDepCount, contract, tokenId)
+      const extDepPromise = fetchCIDs(projId, extDepCount, contract)
       const gatewayPromise = fetchGateway(contract)
       ;[extDependencies, { ipfs, arweave }] = await Promise.all([
         extDepPromise,
@@ -236,7 +236,7 @@ async function fetchExtDepCount(projId, contract) {
   return count == 0 ? null : count
 }
 
-async function fetchCIDs(projId, extDepCount, contract, tokenId) {
+async function fetchCIDs(projId, extDepCount, contract) {
   const cidPromises = []
   for (let i = 0; i < extDepCount; i++) {
     cidPromises.push(
