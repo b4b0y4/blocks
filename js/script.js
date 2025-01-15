@@ -92,60 +92,45 @@ async function grabData(tokenId, contract) {
 
     const isContractV2 = isV2.includes(contractNameMap[contract])
 
-    const projIdPromise = fetchProjectId(tokenId, contract)
-    const hashPromise = fetchHash(tokenId, contract)
-    const ownerPromise = fetchOwner(tokenId, contract)
+    const [projId, hash, { owner, ensName }] = await Promise.all([
+      fetchProjectId(tokenId, contract),
+      fetchHash(tokenId, contract),
+      fetchOwner(tokenId, contract),
+    ])
 
-    const projId = Number(await projIdPromise)
+    const projectId = Number(await projId)
 
-    const projectInfoPromise = fetchProjectInfo(projId, contract, isContractV2)
-    const detailPromise = fetchProjectDetails(projId, contract)
-    const editionInfoPromise = fetchEditionInfo(projId, contract, isContractV2)
+    const [projectInfo, detail, { edition, remaining }] = await Promise.all([
+      fetchProjectInfo(projectId, contract, isContractV2),
+      fetchProjectDetails(projectId, contract),
+      fetchEditionInfo(projectId, contract, isContractV2),
+    ])
 
-    const projectInfo = await projectInfoPromise
-
-    let extDepCount = isFLEX.includes(contractNameMap[contract])
-      ? await fetchExtDepCount(projId, contract)
-      : null
+    const [script, extLib] = await Promise.all([
+      constructScript(projectId, projectInfo, contract),
+      extractLibraryName(projectInfo),
+    ])
 
     let extDependencies = []
     let ipfs = null
     let arweave = null
 
-    if (extDepCount) {
-      const extDepPromise = fetchCIDs(projId, extDepCount, contract)
-      const gatewayPromise = fetchGateway(contract)
-      ;[extDependencies, { ipfs, arweave }] = await Promise.all([
-        extDepPromise,
-        gatewayPromise,
-      ])
+    if (isFLEX.includes(contractNameMap[contract])) {
+      const extDepCount = await fetchExtDepCount(projectId, contract)
+      if (extDepCount) {
+        ;[extDependencies, { ipfs, arweave }] = await Promise.all([
+          fetchCIDs(projectId, extDepCount, contract),
+          fetchGateway(contract),
+        ])
+      }
     }
-
-    const scriptPromise = constructScript(projId, projectInfo, contract)
-    const extLibPromise = extractLibraryName(projectInfo)
-
-    const [
-      hash,
-      { owner, ensName },
-      detail,
-      script,
-      { edition, remaining },
-      extLib,
-    ] = await Promise.all([
-      hashPromise,
-      ownerPromise,
-      detailPromise,
-      scriptPromise,
-      editionInfoPromise,
-      extLibPromise,
-    ])
 
     localStorage.setItem(
       "contractData",
       JSON.stringify({
         tokenId,
         contract,
-        projId,
+        projectId,
         hash,
         script,
         detail,
@@ -176,23 +161,23 @@ async function fetchProjectId(tokenId, contract) {
   return contracts[contract].tokenIdToProjectId(tokenId)
 }
 
-async function fetchProjectInfo(projId, contract, isContractV2) {
+async function fetchProjectInfo(projectId, contract, isContractV2) {
   return isContractV2
-    ? contracts[contract].projectScriptInfo(projId)
-    : contracts[contract].projectScriptDetails(projId)
+    ? contracts[contract].projectScriptInfo(projectId)
+    : contracts[contract].projectScriptDetails(projectId)
 }
 
-async function constructScript(projId, projectInfo, contract) {
+async function constructScript(projectId, projectInfo, contract) {
   const scriptPromises = []
   for (let i = 0; i < projectInfo.scriptCount; i++) {
-    scriptPromises.push(contracts[contract].projectScriptByIndex(projId, i))
+    scriptPromises.push(contracts[contract].projectScriptByIndex(projectId, i))
   }
   const scripts = await Promise.all(scriptPromises)
   return scripts.join("")
 }
 
-async function fetchProjectDetails(projId, contract) {
-  return contracts[contract].projectDetails(projId)
+async function fetchProjectDetails(projectId, contract) {
+  return contracts[contract].projectDetails(projectId)
 }
 
 async function fetchOwner(tokenId, contract) {
@@ -214,28 +199,28 @@ function extractLibraryName(projectInfo) {
   }
 }
 
-async function fetchEditionInfo(projId, contract, isContractV2) {
+async function fetchEditionInfo(projectId, contract, isContractV2) {
   const invo = await (isContractV2
-    ? contracts[contract].projectTokenInfo(projId)
-    : contracts[contract].projectStateData(projId))
+    ? contracts[contract].projectTokenInfo(projectId)
+    : contracts[contract].projectStateData(projectId))
 
   const edition = Number(invo.maxInvocations)
   const remaining = Number(invo.maxInvocations - invo.invocations)
   return { edition, remaining }
 }
 
-async function fetchExtDepCount(projId, contract) {
+async function fetchExtDepCount(projectId, contract) {
   const count = await contracts[contract].projectExternalAssetDependencyCount(
-    projId
+    projectId
   )
   return count == 0 ? null : count
 }
 
-async function fetchCIDs(projId, extDepCount, contract) {
+async function fetchCIDs(projectId, extDepCount, contract) {
   const cidPromises = []
   for (let i = 0; i < extDepCount; i++) {
     cidPromises.push(
-      contracts[contract].projectExternalAssetDependencyByIndex(projId, i)
+      contracts[contract].projectExternalAssetDependencyByIndex(projectId, i)
     )
   }
   const cidTuples = await Promise.all(cidPromises)
@@ -255,11 +240,9 @@ async function updateContractData(tokenId, contract) {
     clearPanels()
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
-    const hashPromise = fetchHash(tokenId, contract)
-    const ownerPromise = fetchOwner(tokenId, contract)
     const [hash, { owner, ensName }] = await Promise.all([
-      hashPromise,
-      ownerPromise,
+      fetchHash(tokenId, contract),
+      fetchOwner(tokenId, contract),
     ])
 
     contractData.tokenId = tokenId
@@ -282,7 +265,7 @@ async function updateContractData(tokenId, contract) {
 function update(
   tokenId,
   contract,
-  projId,
+  projectId,
   hash,
   script,
   detail,
@@ -305,7 +288,7 @@ function update(
     ipfs,
     arweave
   )
-  const platform = getPlatform(contract, projId)
+  const platform = getPlatform(contract, projectId)
   updateInfo(
     contract,
     owner,
@@ -383,7 +366,7 @@ const curated = [
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ]
 
-function getCuration(projId) {
+function getCuration(projectId) {
   const playground = [
     6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
     94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
@@ -391,20 +374,20 @@ function getCuration(projId) {
     286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
     373,
   ]
-  return curated.includes(projId)
+  return curated.includes(projectId)
     ? "Art Blocks Curated"
-    : playground.includes(projId)
+    : playground.includes(projectId)
     ? "Art Blocks Playground"
-    : projId < 374
+    : projectId < 374
     ? "Art Blocks Factory"
     : "Art Blocks Presents"
 }
 
-function getPlatform(contract, projId) {
+function getPlatform(contract, projectId) {
   const contractName = contractNameMap[contract]
 
   if (["AB", "ABII", "ABIII"].includes(contractName)) {
-    return getCuration(projId)
+    return getCuration(projectId)
   }
   if (isStudio.includes(contractName)) {
     return "Art Blocks Studio"
@@ -553,20 +536,20 @@ function getToken(line, searchQuery) {
 }
 
 function handleNumericQuery(searchQuery) {
-  const { contract, projId } = contractData
+  const { contract, projectId } = contractData
   const id = parseInt(searchQuery.match(/\s*(\d+)/)[1])
   const tokenId =
-    projId == 0
+    projectId == 0
       ? id
-      : Number((projId * 1000000 + id).toString().padStart(6, "0"))
+      : Number((projectId * 1000000 + id).toString().padStart(6, "0"))
 
   updateContractData(tokenId, contract)
 }
 
 function handleOtherQuery(line, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*item/
-  const [_, listContract, projIdStr, tokenStr] = line.match(regex)
-  const projId = parseInt(projIdStr)
+  const [_, listContract, projectIdStr, tokenStr] = line.match(regex)
+  const projectId = parseInt(projectIdStr)
   const token = parseInt(tokenStr)
   const contract = contractIndexMap[listContract]
   let tokenId
@@ -574,15 +557,17 @@ function handleOtherQuery(line, searchQuery) {
   if (searchQuery.includes("#")) {
     const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1])
     tokenId =
-      projId === 0
+      projectId === 0
         ? searchId
-        : Number((projId * 1000000 + searchId).toString().padStart(6, "0"))
+        : Number((projectId * 1000000 + searchId).toString().padStart(6, "0"))
   } else {
     const randomToken = Math.floor(Math.random() * token)
     tokenId =
-      projId === 0
+      projectId === 0
         ? randomToken
-        : Number((projId * 1000000 + randomToken).toString().padStart(6, "0"))
+        : Number(
+            (projectId * 1000000 + randomToken).toString().padStart(6, "0")
+          )
   }
 
   grabData(tokenId, contract)
