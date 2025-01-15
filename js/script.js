@@ -125,25 +125,23 @@ async function grabData(tokenId, contract) {
       }
     }
 
-    localStorage.setItem(
-      "contractData",
-      JSON.stringify({
-        tokenId,
-        contract,
-        projectId,
-        hash,
-        script,
-        detail,
-        owner,
-        ensName,
-        extLib,
-        edition,
-        remaining,
-        extDependencies,
-        ipfs,
-        arweave,
-      })
-    )
+    const data = {
+      tokenId,
+      contract,
+      projectId,
+      hash,
+      script,
+      detail,
+      owner,
+      ensName,
+      extLib,
+      edition,
+      remaining,
+      extDependencies,
+      ipfs,
+      arweave,
+    }
+    localStorage.setItem("contractData", JSON.stringify(data))
     location.reload()
   } catch (error) {
     console.error("grabData:", error)
