@@ -226,9 +226,10 @@ async function fetchCIDs(projectId, extDepCount, contract) {
 }
 
 async function fetchGateway(contract) {
-  const ipfsPromise = contracts[contract].preferredIPFSGateway()
-  const arweavePromise = contracts[contract].preferredArweaveGateway()
-  const [ipfs, arweave] = await Promise.all([ipfsPromise, arweavePromise])
+  const [ipfs, arweave] = await Promise.all([
+    contracts[contract].preferredIPFSGateway(),
+    contracts[contract].preferredArweaveGateway(),
+  ])
   return { ipfs, arweave }
 }
 
