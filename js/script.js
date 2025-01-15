@@ -71,7 +71,6 @@ async function fetchBlocks(blocks) {
           ? contracts[n].projectTokenInfo(i)
           : contracts[n].projectStateData(i),
       ])
-
       const minted = Number(token.invocations) === 1 ? "item" : "items"
       newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}", `
     }
