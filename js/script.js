@@ -766,7 +766,7 @@ function handleLoopClick(action) {
 
 function stopLoop() {
   stopRandomLoop()
-  location.reload()
+  updateButtons("loop")
 }
 
 /**********************************************************
@@ -894,12 +894,22 @@ const toggleKeyShort = (event) => {
     event.type === "focusin" ? "none" : "block"
 }
 
-const updateButtons = () => {
-  const isLooping = loopState.isLooping === "true"
-
-  document.querySelector(
-    isLooping ? ".fa-repeat" : ".fa-circle-stop"
-  ).style.display = "none"
+const updateButtons = (mode) => {
+  const buttonConfig = {
+    loop: {
+      ".fa-repeat": loopState.isLooping !== "true",
+      ".fa-circle-stop": loopState.isLooping === "true",
+    },
+    theme: {
+      ".fa-sun": root.classList.contains("dark-mode"),
+      ".fa-moon": !root.classList.contains("dark-mode"),
+    },
+  }
+  Object.entries(buttonConfig[mode]).forEach(([selector, shouldDisplay]) => {
+    document.querySelector(selector).style.display = shouldDisplay
+      ? "inline-block"
+      : "none"
+  })
 }
 
 const setDisplay = (elements, value) => {
@@ -931,7 +941,7 @@ addHoverEffect(document.querySelector(".fa-repeat"), dropdownMenu)
  *                     EVENTS
  *********************************************************/
 document.addEventListener("DOMContentLoaded", () => {
-  updateButtons()
+  updateButtons("loop")
   checkLocalStorage()
 
   contractData = JSON.parse(localStorage.getItem("contractData"))
@@ -1045,18 +1055,13 @@ const root = document.documentElement
 
 function setDarkMode(isDarkMode) {
   root.classList.toggle("dark-mode", isDarkMode)
-  document.querySelector(".fa-sun").style.display = isDarkMode
-    ? "inline-block"
-    : "none"
-  document.querySelector(".fa-moon").style.display = isDarkMode
-    ? "none"
-    : "inline-block"
+  localStorage.setItem("darkMode", isDarkMode)
+  updateButtons("theme")
 }
 
 function toggleDarkMode() {
-  const updateTheme = !root.classList.contains("dark-mode")
-  localStorage.setItem("darkMode", updateTheme)
-  setDarkMode(updateTheme)
+  const isDarkMode = !root.classList.contains("dark-mode")
+  setDarkMode(isDarkMode)
 }
 
 document.getElementById("theme").addEventListener("click", (event) => {
