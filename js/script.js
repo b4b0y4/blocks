@@ -411,7 +411,7 @@ function updateInfo(
       message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
       logs.push(message)
       artist = logs[0]
-      updateInfo()
+      update()
     }
   }
 
@@ -420,25 +420,46 @@ function updateInfo(
       ? `Edition of ${edition} works.`
       : `Edition of ${edition} works, ${remaining} remaining.`
 
-  const updateInfo = () => {
+  const update = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
-    panel.innerHTML = `<p><span style="font-size: 1.4em">${detail[0]}</span><br>
-        ${artist} ${platform ? `● ${platform}` : ""}<br>
-        ${mintedOut}</p><br>
-      <p>${detail[2]} <a href="${detail[3]}" target="_blank">${extractDomain(
-      detail[3]
-    )}</a></p><br>
-      <p>Owner <a href="https://zapper.xyz/account/${owner}" target="_blank">${
-      ensName || shortAddr(owner)
-    }</a><span class="copy-text" data-text="${owner}"><i class="fa-regular fa-copy"></i></span><br>
-        Contract <a href="https://etherscan.io/address/${
-          contracts[contract].target
-        }" target="_blank">${shortAddr(
-      contracts[contract].target
-    )}</a><span class="copy-text" data-text="${
-      contracts[contract].target
-    }"><i class="fa-regular fa-copy"></i></span><br>
-        Token Id <span class="copy-text" data-text="${tokenId}">${tokenId}<i class="fa-regular fa-copy"></i></span></p>`
+    panel.innerHTML = `
+    <p>
+      <span style="font-size: 1.4em">${detail[0]}</span><br>
+      ${artist}${platform ? ` ● ${platform}` : ""}<br>
+      ${mintedOut}
+    </p>
+    <br>
+    <p>
+      ${detail[2]} 
+      <a href="${detail[3]}" target="_blank">${extractDomain(detail[3])}</a>
+    </p>
+    <br>
+    <p>
+      Owner 
+      <a href="https://zapper.xyz/account/${owner}" target="_blank">
+        ${ensName || shortAddr(owner)}
+      </a>
+      <span class="copy-text" data-text="${owner}">
+        <i class="fa-regular fa-copy"></i>
+      </span>
+      <br>
+      Contract 
+      <a href="https://etherscan.io/address/${
+        contracts[contract].target
+      }" target="_blank">
+        ${shortAddr(contracts[contract].target)}
+      </a>
+      <span class="copy-text" data-text="${contracts[contract].target}">
+        <i class="fa-regular fa-copy"></i>
+      </span>
+      <br>
+      Token Id 
+      <span class="copy-text" data-text="${tokenId}">
+        ${tokenId}
+        <i class="fa-regular fa-copy"></i>
+      </span>
+    </p>
+  `
 
     document.querySelectorAll(".copy-text").forEach((element) =>
       element.addEventListener("click", (event) => {
@@ -454,7 +475,7 @@ function updateInfo(
       })
     )
   }
-  updateInfo()
+  update()
 }
 
 function shortId(tokenId) {
@@ -470,7 +491,9 @@ function shortAddr(address) {
 function extractDomain(url) {
   const match = url.match(/https?:\/\/(www\.)?([^\/]+)/)
   return match
-    ? `<span class="domain-link"><i class="fa-solid fa-link"></i> ${match[2]}</span>`
+    ? `<span class="domain-link">
+        <i class="fa-solid fa-link"></i> ${match[2]}
+      </span>`
     : ""
 }
 
@@ -484,33 +507,37 @@ function copyToClipboard(text) {
 async function injectFrame() {
   try {
     const iframeDocument = frame.contentDocument || frame.contentWindow.document
-    let scriptData = JSON.parse(localStorage.getItem("scriptData"))
+    const scriptData = JSON.parse(localStorage.getItem("scriptData"))
 
     const frameBody = scriptData.process
       ? `<body>
-    <script type='${scriptData.process}'>${scriptData.script}</script>
-    <canvas></canvas>
-    </body>`
+          <script type='${scriptData.process}'>${scriptData.script}</script>
+          <canvas></canvas>
+         </body>`
       : `<body>
-    <canvas id="babylon-canvas"></canvas>
-    <script>${scriptData.script}</script>
-    </body>`
+          <canvas id="babylon-canvas"></canvas>
+          <script>${scriptData.script}</script>
+         </body>`
 
     const srcScripts = (scriptData.src || [])
       .map((src) => `<script src='${src}'></script>`)
       .join("")
 
-    let dynamicContent =
-      contractData.extLib === "custom"
-        ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
-        : `<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+    const dynamicContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
         ${srcScripts}
-      <script>${scriptData.tokenIdHash};</script>
-      <style type="text/css">
-        html {height: 100%;}
-        body {min-height: 100%; margin: 0; padding: 0; background-color: transparent;}
-        canvas {padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;}
-      </style></head>${frameBody}</html>`
+        <script>${scriptData.tokenIdHash};</script>
+        <style type="text/css">
+          html {height: 100%;}
+          body {min-height: 100%; margin: 0; padding: 0; background-color: transparent;}
+          canvas {padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;}
+        </style>
+      </head>
+      ${frameBody}
+      </html>`
 
     iframeDocument.open()
     iframeDocument.write(dynamicContent)
