@@ -564,7 +564,7 @@ function handleNumericQuery(searchQuery) {
 }
 
 function handleOtherQuery(line, searchQuery) {
-  const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*minted/
+  const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*item/
   const [_, listContract, projIdStr, tokenStr] = line.match(regex)
   const projId = parseInt(projIdStr)
   const token = parseInt(tokenStr)
