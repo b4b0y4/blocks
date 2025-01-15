@@ -58,10 +58,8 @@ async function fetchBlocks(blocks) {
     AXIOM: 35,
     ...Object.fromEntries(StartAtOne.map((contract) => [contract, 1])),
   }
-
   for (const contractName of blocks) {
     const n = contractIndexMap[contractName]
-    const isContractV2 = isV2.includes(contractName)
     const end = Number(await contracts[n].nextProjectId())
     const start = startMap[contractName] || 0
     let newList = ""
@@ -69,7 +67,7 @@ async function fetchBlocks(blocks) {
     for (let i = start; i < end; i++) {
       const [detail, token] = await Promise.all([
         contracts[n].projectDetails(i.toString()),
-        isContractV2
+        isV2.includes(contractName)
           ? contracts[n].projectTokenInfo(i)
           : contracts[n].projectStateData(i),
       ])
