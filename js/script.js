@@ -98,7 +98,7 @@ async function grabData(tokenId, contract) {
       fetchOwner(tokenId, contract),
     ])
 
-    const projectId = Number(await projId)
+    const projectId = Number(projId)
 
     const [projectInfo, detail, { edition, remaining }] = await Promise.all([
       fetchProjectInfo(projectId, contract, isContractV2),
