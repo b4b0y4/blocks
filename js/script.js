@@ -60,8 +60,8 @@ async function fetchBlocks(blocks) {
   }
   for (const contractName of blocks) {
     const n = contractIndexMap[contractName]
-    const end = Number(await contracts[n].nextProjectId())
     const start = startMap[contractName] || 0
+    const end = Number(await contracts[n].nextProjectId())
     let newList = ""
 
     for (let i = start; i < end; i++) {
@@ -71,7 +71,9 @@ async function fetchBlocks(blocks) {
           ? contracts[n].projectTokenInfo(i)
           : contracts[n].projectStateData(i),
       ])
-      newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted", `
+
+      const minted = Number(token.invocations) === 1 ? "item" : "items"
+      newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}", `
     }
     console.log(newList)
   }
@@ -598,7 +600,7 @@ function displayList(lines) {
     .map((line, index) => {
       const parts = line.split(" - ")
       const displayText = parts.slice(1, parts.length - 1).join(" - ")
-      const mintedInfo = parts[parts.length - 1].replace("minted", "items")
+      const mintedInfo = parts[parts.length - 1]
       return `<p class="list-item" data-index="${index}">${displayText}<span>${mintedInfo}</span></p>`
     })
     .join("")
