@@ -40,34 +40,30 @@ const bloncks = ["ABC", ...isStudio, "STBYS"]
 // fetchBlocks(bloncks)
 
 async function fetchBlocks(blocks) {
+  const StartAtOne = [
+    "GRAIL",
+    "HODL",
+    "UNITLDN",
+    "PROOF",
+    "WRLD",
+    "GLITCH",
+    "SHIS",
+  ]
+  const startMap = {
+    ABII: 3,
+    ABIII: 374,
+    ABC: 494,
+    ABXPACEII: 5,
+    OONA: 2026,
+    AXIOM: 35,
+    ...Object.fromEntries(StartAtOne.map((contract) => [contract, 1])),
+  }
+
   for (const contractName of blocks) {
     const n = contractIndexMap[contractName]
     const isContractV2 = isV2.includes(contractName)
     const end = Number(await contracts[n].nextProjectId())
-    const start =
-      contractName === "ABII"
-        ? 3
-        : contractName === "ABIII"
-        ? 374
-        : contractName === "ABC"
-        ? 494
-        : contractName === "ABXPACEII"
-        ? 5
-        : contractName === "OONA"
-        ? 2026
-        : contractName === "AXIOM"
-        ? 35
-        : [
-            "GRAIL",
-            "HODL",
-            "UNITLDN",
-            "PROOF",
-            "WRLD",
-            "GLITCH",
-            "SHIS",
-          ].includes(contractName)
-        ? 1
-        : 0
+    const start = startMap[contractName] || 0
     let newList = ""
 
     for (let i = start; i < end; i++) {
@@ -77,12 +73,56 @@ async function fetchBlocks(blocks) {
           ? contracts[n].projectTokenInfo(i)
           : contracts[n].projectStateData(i),
       ])
-
       newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted", `
     }
     console.log(newList)
   }
 }
+
+// async function fetchBlocks(blocks) {
+//   for (const contractName of blocks) {
+//     const n = contractIndexMap[contractName]
+//     const isContractV2 = isV2.includes(contractName)
+//     const end = Number(await contracts[n].nextProjectId())
+//     const start =
+//       contractName === "ABII"
+//         ? 3
+//         : contractName === "ABIII"
+//         ? 374
+//         : contractName === "ABC"
+//         ? 494
+//         : contractName === "ABXPACEII"
+//         ? 5
+//         : contractName === "OONA"
+//         ? 2026
+//         : contractName === "AXIOM"
+//         ? 35
+//         : [
+//             "GRAIL",
+//             "HODL",
+//             "UNITLDN",
+//             "PROOF",
+//             "WRLD",
+//             "GLITCH",
+//             "SHIS",
+//           ].includes(contractName)
+//         ? 1
+//         : 0
+//     let newList = ""
+
+//     for (let i = start; i < end; i++) {
+//       const [detail, token] = await Promise.all([
+//         contracts[n].projectDetails(i.toString()),
+//         isContractV2
+//           ? contracts[n].projectTokenInfo(i)
+//           : contracts[n].projectStateData(i),
+//       ])
+
+//       newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} minted", `
+//     }
+//     console.log(newList)
+//   }
+// }
 /**********************************************************
  *        GET DATA FROM ETHEREUM FUNCTIONS
  *********************************************************/
