@@ -40,15 +40,6 @@ const bloncks = ["ABC", ...isStudio, "STBYS"]
 // fetchBlocks(bloncks)
 
 async function fetchBlocks(blocks) {
-  const StartAtOne = [
-    "GRAIL",
-    "HODL",
-    "UNITLDN",
-    "PROOF",
-    "WRLD",
-    "GLITCH",
-    "SHIS",
-  ]
   const startMap = {
     ABII: 3,
     ABIII: 374,
@@ -56,7 +47,13 @@ async function fetchBlocks(blocks) {
     ABXPACEII: 5,
     OONA: 2026,
     AXIOM: 35,
-    ...Object.fromEntries(StartAtOne.map((contract) => [contract, 1])),
+    GRAIL: 1,
+    HODL: 1,
+    UNITLDN: 1,
+    PROOF: 1,
+    WRLD: 1,
+    GLITCH: 1,
+    SHIS: 1,
   }
   for (const contractName of blocks) {
     const n = contractIndexMap[contractName]
