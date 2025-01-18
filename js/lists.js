@@ -558,7 +558,7 @@ export const list = [
   "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 32 items",
   "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 81 items",
   "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 100 items",
-  "ABSLXVII1 - Coral Colors / Sputniko! - 3 items",
+  "ABSLXVII1 - Coral Colors / Sputniko! - 8 items",
   "GLITCH1 - nameless dread / diewiththemostlikes - 669 items",
   "BM1 - Stellaraum / Alida Sun - 66 items",
   "BM2 - Parnassus / mpkoz - 100 items",
