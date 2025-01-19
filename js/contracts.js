@@ -6408,6 +6408,10 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0xd9b7eC74C06c558A59AfdE6a16E614950730F44d",
   },
+  NUMBER: {
+    abi: abiV3FLEX,
+    address: "0xB8E8Bec0891A7519091E18590e0b60221853dd2B",
+  },
 }
 
 export const isV2 = []
