@@ -1,5 +1,5 @@
 import { ethers } from "./ethers.min.js"
-import { list } from "./list.js"
+import { libs, list } from "./lists.js"
 import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js"
 
 const loopInput = document.getElementById("loopInput")
@@ -31,28 +31,6 @@ Object.keys(contractsData).forEach((key, index) => {
   contractNameMap[index] = key
   contractIndexMap[key] = index
 })
-
-const libs = {
-  "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
-  "p5@1.9.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
-  "three@0.124.0":
-    "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
-  "three@0.160.0":
-    "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js",
-  "tone@14.8.15": "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  "paper@0.12.15":
-    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
-  processing:
-    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js",
-  "regl@2.1.0": "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
-  zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
-  "a-frame":
-    "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
-  "twemoji@14.0.2":
-    'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
-  "babylon@5.0.0":
-    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
-}
 
 /**********************************************************
  *                UPDATE LIST FUNCTION
@@ -211,20 +189,9 @@ async function fetchOwner(tokenId, contract) {
 function extractLibraryName(projectInfo) {
   if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
     return projectInfo[0].trim()
+  } else {
+    return JSON.parse(projectInfo[0]).type
   }
-
-  const { type, version } = JSON.parse(projectInfo[0])
-  const library =
-    type.toLowerCase() === "js" ? "js" : type.toLowerCase().replace("js", "")
-
-  if (!version) {
-    const fallbackVersion = Object.keys(libs).find((key) =>
-      key.startsWith(library + "@")
-    )
-    return fallbackVersion || library
-  }
-
-  return `${library}@${version}`
 }
 
 async function fetchEditionInfo(projId, contract, isContractV2) {
@@ -343,9 +310,7 @@ function pushItemToLocalStorage(
   ipfs,
   arweave
 ) {
-  const src = extLib.startsWith("processing")
-    ? [libs["processing"]]
-    : [libs[extLib]]
+  const src = [libs[extLib]]
 
   if (extDependencies.length > 0 && extDependencies[0].startsWith("p5@")) {
     src.push(libs[extDependencies[0]])
@@ -533,7 +498,7 @@ function updateInfo(
               <p class="more">
                 LIBRARY <br>
                 <span class="no-copy-txt">
-                  ${extLib} <br>
+                  ${getLibraryVersion(extLib)} <br>
                   ${
                     extDependencies.length > 0 && extDependencies[0].length < 10
                       ? extDependencies[0]
@@ -614,6 +579,14 @@ function shortAddr(address) {
 function extractDomain(url) {
   const match = url.match(/https?:\/\/(?:www\.)?([^\/]+)(\/.*)?/)
   return match ? `${match[1]}${match[2] || ""}` : `${url}`
+}
+
+function getLibraryVersion(extLib) {
+  return (
+    Object.keys(libs).find((key) =>
+      key.startsWith(extLib.replace(/js$/, "") + "@")
+    ) || extLib
+  )
 }
 
 function copyToClipboard(text) {
