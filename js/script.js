@@ -322,7 +322,7 @@ function pushItemToLocalStorage(
     const cids = extDependencies
       .map((cid) => {
         const dependencyType =
-          (cid.startsWith("Qm") && cid.length === 46) || cid.startsWith("bafy")
+          cid.startsWith("Qm") || cid.startsWith("baf")
             ? "IPFS"
             : /^[a-zA-Z0-9_-]{43}$/.test(cid)
             ? "ARWEAVE"
