@@ -490,7 +490,10 @@ function updateInfo(
           : ""
       }
       ${
-        extLib && !extLib.startsWith("js")
+        extLib &&
+        !extLib.startsWith("js") &&
+        !extLib.startsWith("svg") &&
+        !extLib.startsWith("custom")
           ? `<div class="section">
               <p class="more">
                 LIBRARY <br>
