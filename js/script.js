@@ -439,7 +439,8 @@ function updateInfo(
       <p>
         ${detail[2]}
       </p>
-      <br>
+      <div class="column-box">
+      <div class="column">
       <div class="section">
         <p class="more">
           OWNER <br>
@@ -472,6 +473,8 @@ function updateInfo(
           </span>
         </p>
       </div>
+      </div>
+      <div class="column">
       ${
         detail[3]
           ? `<div class="section">
@@ -500,27 +503,28 @@ function updateInfo(
               </p>
             </div>`
           : ""
-      }      
+      } 
       ${
-        extDependencies.length > 0
+        extDependencies.length > 0 &&
+        (extDependencies[0].startsWith("Qm") ||
+          extDependencies[0].startsWith("baf") ||
+          /^[a-zA-Z0-9_-]{43}$/.test(extDependencies[0]))
           ? `<div class="section">
               <p class="more">
                 EXTERNAL DEPENDENCY <br>
                 <span class="no-copy-txt">
                   ${
-                    (extDependencies[0].startsWith("Qm") &&
-                      extDependencies[0].length === 46) ||
-                    extDependencies[0].startsWith("baf")
+                    extDependencies[0].startsWith("Qm")
                       ? "ipfs"
-                      : /^[a-zA-Z0-9_-]{43}$/.test(extDependencies[0])
-                      ? "arweave"
-                      : ""
+                      : extDependencies[0].startsWith("baf")
+                      ? "ipfs"
+                      : "arweave"
                   }
                 </span>
               </p>
             </div>`
           : ""
-      }
+      }      
       ${
         detail[4]
           ? `<div class="section">
@@ -533,6 +537,8 @@ function updateInfo(
             </div>`
           : ""
       }
+      </div>
+      </div>
     `
 
     document.querySelectorAll(".copy-txt").forEach((element) =>
