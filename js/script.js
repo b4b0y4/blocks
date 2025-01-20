@@ -489,7 +489,7 @@ function updateInfo(
           ? `<div class="section">
               <p class="more">
                 LIBRARY <br>
-                <span class="copy-text">
+                <span class="no-copy-text">
                   ${extLib} <br>
                   ${
                     extDependencies.length > 0 && extDependencies[0].length < 10
@@ -506,7 +506,7 @@ function updateInfo(
           ? `<div class="section">
               <p class="more">
                 EXTERNAL DEPENDENCY <br>
-                <span class="copy-text">
+                <span class="no-copy-text">
                   ${
                     (extDependencies[0].startsWith("Qm") &&
                       extDependencies[0].length === 46) ||
@@ -526,7 +526,7 @@ function updateInfo(
           ? `<div class="section">
               <p class="more">
                 LICENSE <br>
-                <span class="copy-text">
+                <span class="no-copy-text">
                   ${detail[4]}
                 </span>
               </p>

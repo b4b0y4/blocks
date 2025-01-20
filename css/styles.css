@@ -373,6 +373,10 @@ a:hover {
   color: var(--color-txt);
 }
 
+.no-copy-text {
+  color: var(--color-txt);
+}
+
 .copy-text {
   color: var(--color-txt);
   cursor: default;
