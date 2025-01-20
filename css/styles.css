@@ -362,8 +362,13 @@ a:hover {
 }
 
 .work {
-  font-size: 1.4em;
+  font-size: 1.3em;
+  font-weight: bold;
   margin-bottom: 8px;
+}
+
+.artist {
+  font-size: 1.1em;
 }
 
 .edition {

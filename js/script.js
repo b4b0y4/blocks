@@ -432,7 +432,9 @@ function updateInfo(
     panel.innerHTML = `
       <div class="work">${detail[0]}</div>
       <p>
-        ${artist}${platform ? ` ● ${platform}` : ""}<br>
+        <span class="artist">${artist}${
+      platform ? ` ● ${platform}` : ""
+    }</span><br>
         <span class="edition">${mintedOut}</span>
       </p>
       <br>
