@@ -14,7 +14,7 @@ export const libs = {
   "paper@0.12.15":
     "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
   processing:
-    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.6/processing.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js",
   regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
   "regl@2.1.0": "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
