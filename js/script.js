@@ -446,7 +446,7 @@ function updateInfo(
           <a href="https://zapper.xyz/account/${owner}" target="_blank">
             ${ensName || shortAddr(owner)}
           </a>
-          <span class="copy-text" data-text="${owner}">
+          <span class="copy-txt" data-text="${owner}">
             <i class="fa-regular fa-copy"></i>
           </span>
         </p>
@@ -459,7 +459,7 @@ function updateInfo(
           }" target="_blank">
             ${shortAddr(contracts[contract].target)}
           </a>
-          <span class="copy-text" data-text="${contracts[contract].target}">
+          <span class="copy-txt" data-text="${contracts[contract].target}">
             <i class="fa-regular fa-copy"></i>
           </span>
         </p>
@@ -467,7 +467,7 @@ function updateInfo(
       <div class="section">
         <p class="more">
           TOKEN ID <br>
-          <span class="copy-text" data-text="${tokenId}">
+          <span class="copy-txt" data-text="${tokenId}">
             ${tokenId} <i class="fa-regular fa-copy"></i>
           </span>
         </p>
@@ -489,7 +489,7 @@ function updateInfo(
           ? `<div class="section">
               <p class="more">
                 LIBRARY <br>
-                <span class="no-copy-text">
+                <span class="no-copy-txt">
                   ${extLib} <br>
                   ${
                     extDependencies.length > 0 && extDependencies[0].length < 10
@@ -506,7 +506,7 @@ function updateInfo(
           ? `<div class="section">
               <p class="more">
                 EXTERNAL DEPENDENCY <br>
-                <span class="no-copy-text">
+                <span class="no-copy-txt">
                   ${
                     (extDependencies[0].startsWith("Qm") &&
                       extDependencies[0].length === 46) ||
@@ -526,7 +526,7 @@ function updateInfo(
           ? `<div class="section">
               <p class="more">
                 LICENSE <br>
-                <span class="no-copy-text">
+                <span class="no-copy-txt">
                   ${detail[4]}
                 </span>
               </p>
@@ -535,7 +535,7 @@ function updateInfo(
       }
     `
 
-    document.querySelectorAll(".copy-text").forEach((element) =>
+    document.querySelectorAll(".copy-txt").forEach((element) =>
       element.addEventListener("click", (event) => {
         const textToCopy = element.getAttribute("data-text")
         copyToClipboard(textToCopy)

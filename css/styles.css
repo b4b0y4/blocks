@@ -373,11 +373,11 @@ a:hover {
   color: var(--color-txt);
 }
 
-.no-copy-text {
+.no-copy-txt {
   color: var(--color-txt);
 }
 
-.copy-text {
+.copy-txt {
   color: var(--color-txt);
   cursor: default;
 }
@@ -394,7 +394,7 @@ a:hover {
   color: var(--color-btn);
 }
 
-.copy-text:active .fa-copy {
+.copy-txt:active .fa-copy {
   transform: scale(1.2);
 }
 
