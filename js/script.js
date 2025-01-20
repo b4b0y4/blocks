@@ -321,11 +321,13 @@ function pushItemToLocalStorage(
   if (extDependencies.length > 0) {
     const cids = extDependencies
       .map((cid) => {
-        const dependencyType = cid.startsWith("p5@")
-          ? "ART_BLOCKS_DEPENDENCY_REGISTRY"
-          : cid.length === 46
-          ? "IPFS"
-          : "ARWEAVE"
+        const dependencyType =
+          (cid.startsWith("Qm") && cid.length === 46) || cid.startsWith("bafy")
+            ? "IPFS"
+            : /^[a-zA-Z0-9_-]{43}$/.test(cid)
+            ? "ARWEAVE"
+            : "ART_BLOCKS_DEPENDENCY_REGISTRY"
+
         return `{
           "cid": "${cid}",
           "dependency_type": "${dependencyType}",
@@ -483,7 +485,7 @@ function updateInfo(
           : ""
       }
       ${
-        extLib
+        extLib && !extLib.startsWith("js")
           ? `<div class="section">
               <p class="more">
                 LIBRARY <br>
@@ -498,8 +500,27 @@ function updateInfo(
               </p>
             </div>`
           : ""
+      }      
+      ${
+        extDependencies.length > 0
+          ? `<div class="section">
+              <p class="more">
+                EXTERNAL DEPENDENCY <br>
+                <span class="copy-text">
+                  ${
+                    (extDependencies[0].startsWith("Qm") &&
+                      extDependencies[0].length === 46) ||
+                    extDependencies[0].startsWith("baf")
+                      ? "ipfs"
+                      : /^[a-zA-Z0-9_-]{43}$/.test(extDependencies[0])
+                      ? "arweave"
+                      : ""
+                  }
+                </span>
+              </p>
+            </div>`
+          : ""
       }
-      
       ${
         detail[4]
           ? `<div class="section">
