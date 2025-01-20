@@ -329,10 +329,6 @@ a:hover {
   border-radius: 5px;
 }
 
-.domain-link {
-  white-space: nowrap;
-}
-
 .fa-link {
   color: var(--color-btn);
 }
@@ -364,20 +360,34 @@ a:hover {
   margin-left: 10px;
 }
 
-.copy-text {
+.section {
+  margin-top: 8px;
+}
+
+.more {
+  font-size: 0.8em;
   color: var(--color-btn);
+}
+
+.more a {
+  color: var(--color-txt);
+}
+
+.copy-text {
+  color: var(--color-txt);
   cursor: default;
 }
 
 .fa-copy {
   margin-left: 7px;
-  color: var(--color-btn);
+  color: var(--color-txt);
   transition: color 0.1s ease-in-out;
   cursor: default;
 }
 
+.more a:hover,
 .fa-copy:hover {
-  color: var(--color-txt);
+  color: var(--color-btn);
 }
 
 .copy-text:active .fa-copy {

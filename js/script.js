@@ -289,11 +289,13 @@ function update(
     contract,
     owner,
     ensName,
+    extLib,
     detail,
     tokenId,
     platform,
     edition,
-    remaining
+    remaining,
+    extDependencies
   )
   injectFrame()
 }
@@ -396,14 +398,17 @@ function updateInfo(
   contract,
   owner,
   ensName,
+  extLib,
   detail,
   tokenId,
   platform,
   edition,
-  remaining
+  remaining,
+  extDependencies
 ) {
   let artist = detail[1]
   const logs = []
+
   frame.contentWindow.console.log = function (message) {
     if (contractNameMap[contract] == "BMF" && logs.length === 0) {
       message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
@@ -423,58 +428,110 @@ function updateInfo(
   const update = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
     panel.innerHTML = `
-    <p>
-      <span style="font-size: 1.4em">${detail[0]}</span><br>
-      ${artist}${platform ? ` ● ${platform}` : ""}<br>
-      ${mintedOut}
-    </p>
-    <br>
-    <p>
-      ${detail[2]} 
-      <a href="${detail[3]}" target="_blank">${extractDomain(detail[3])}</a>
-    </p>
-    <br>
-    <p>
-      Owner 
-      <a href="https://zapper.xyz/account/${owner}" target="_blank">
-        ${ensName || shortAddr(owner)}
-      </a>
-      <span class="copy-text" data-text="${owner}">
-        <i class="fa-regular fa-copy"></i>
-      </span>
+      <p>
+        <span style="font-size: 1.4em">${detail[0]}</span><br>
+        ${artist}${platform ? ` ● ${platform}` : ""}<br>
+        ${mintedOut}
+      </p>
       <br>
-      Contract 
-      <a href="https://etherscan.io/address/${
-        contracts[contract].target
-      }" target="_blank">
-        ${shortAddr(contracts[contract].target)}
-      </a>
-      <span class="copy-text" data-text="${contracts[contract].target}">
-        <i class="fa-regular fa-copy"></i>
-      </span>
+      <p>
+        ${detail[2]}
+      </p>
       <br>
-      Token Id 
-      <span class="copy-text" data-text="${tokenId}">
-        ${tokenId}
-        <i class="fa-regular fa-copy"></i>
-      </span>
-    </p>
-  `
+      <div class="section">
+        <p class="more">
+          OWNER <br>
+          <a href="https://zapper.xyz/account/${owner}" target="_blank">
+            ${ensName || shortAddr(owner)}
+          </a>
+          <span class="copy-text" data-text="${owner}">
+            <i class="fa-regular fa-copy"></i>
+          </span>
+        </p>
+      </div>
+      <div class="section">
+        <p class="more">
+          CONTRACT <br>
+          <a href="https://etherscan.io/address/${
+            contracts[contract].target
+          }" target="_blank">
+            ${shortAddr(contracts[contract].target)}
+          </a>
+          <span class="copy-text" data-text="${contracts[contract].target}">
+            <i class="fa-regular fa-copy"></i>
+          </span>
+        </p>
+      </div>
+      <div class="section">
+        <p class="more">
+          TOKEN ID <br>
+          <span class="copy-text" data-text="${tokenId}">
+            ${tokenId} <i class="fa-regular fa-copy"></i>
+          </span>
+        </p>
+      </div>
+      ${
+        detail[3]
+          ? `<div class="section">
+              <p class="more">
+                ARTIST WEBSITE <br>
+                <a href="${detail[3]}" target="_blank">
+                  ${extractDomain(detail[3])}
+                </a>
+              </p>
+            </div>`
+          : ""
+      }
+      ${
+        extLib
+          ? `<div class="section">
+              <p class="more">
+                LIBRARY <br>
+                <span class="copy-text">
+                  ${extLib} <br>
+                  ${
+                    extDependencies.length > 0 && extDependencies[0].length < 10
+                      ? extDependencies[0]
+                      : ""
+                  }
+                </span>
+              </p>
+            </div>`
+          : ""
+      }
+      
+      ${
+        detail[4]
+          ? `<div class="section">
+              <p class="more">
+                LICENSE <br>
+                <span class="copy-text">
+                  ${detail[4]}
+                </span>
+              </p>
+            </div>`
+          : ""
+      }
+    `
 
     document.querySelectorAll(".copy-text").forEach((element) =>
       element.addEventListener("click", (event) => {
         const textToCopy = element.getAttribute("data-text")
         copyToClipboard(textToCopy)
+
         const toast = document.createElement("span")
         toast.classList.add("toast")
         toast.textContent = "Copied"
+
         element.querySelector("i").after(toast)
+
         setTimeout(() => {
           toast.remove()
         }, 1000)
       })
     )
   }
+
   update()
 }
 
@@ -489,12 +546,8 @@ function shortAddr(address) {
 }
 
 function extractDomain(url) {
-  const match = url.match(/https?:\/\/(www\.)?([^\/]+)/)
-  return match
-    ? `<span class="domain-link">
-        <i class="fa-solid fa-link"></i> ${match[2]}
-      </span>`
-    : ""
+  const match = url.match(/https?:\/\/(?:www\.)?([^\/]+)(\/.*)?/)
+  return match ? `${match[1]}${match[2] || ""}` : ""
 }
 
 function copyToClipboard(text) {
