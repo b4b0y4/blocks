@@ -514,9 +514,8 @@ function updateInfo(
                 EXTERNAL DEPENDENCY <br>
                 <span class="no-copy-txt">
                   ${
-                    extDependencies[0].startsWith("Qm")
-                      ? "ipfs"
-                      : extDependencies[0].startsWith("baf")
+                    extDependencies[0].startsWith("Qm") ||
+                    extDependencies[0].startsWith("baf")
                       ? "ipfs"
                       : "arweave"
                   }
