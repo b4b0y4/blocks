@@ -292,6 +292,7 @@ a:hover {
   position: absolute;
   bottom: 45px;
   right: 8px;
+  min-width: 300px;
   max-width: 450px;
   max-height: 500px;
   background-color: var(--color-bg);
