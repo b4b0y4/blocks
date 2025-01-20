@@ -414,9 +414,11 @@ function updateInfo(
   }
 
   const mintedOut =
-    remaining == 0
-      ? `Edition of ${edition} works.`
-      : `Edition of ${edition} works, ${remaining} remaining.`
+    edition == 1
+      ? `Edition of ${edition} work`
+      : remaining == 0
+      ? `Edition of ${edition} works`
+      : `Edition of ${edition} works, ${remaining} remaining`
 
   const update = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
