@@ -361,6 +361,16 @@ a:hover {
   margin-left: 10px;
 }
 
+.work {
+  font-size: 1.4em;
+  margin-bottom: 8px;
+}
+
+.edition {
+  font-size: 0.95em;
+  color: var(--color-btn);
+}
+
 .column-box {
   display: flex;
   border-top: 1px solid var(--color-btn);

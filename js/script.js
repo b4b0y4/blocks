@@ -430,10 +430,10 @@ function updateInfo(
   const update = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
     panel.innerHTML = `
+      <div class="work">${detail[0]}</div>
       <p>
-        <span style="font-size: 1.4em">${detail[0]}</span><br>
         ${artist}${platform ? ` ● ${platform}` : ""}<br>
-        ${mintedOut}
+        <span class="edition">${mintedOut}</span>
       </p>
       <br>
       <p>
