@@ -585,7 +585,7 @@ async function injectFrame() {
 
     const frameBody = scriptData.process
       ? `<body>
-          <script type='${scriptData.process}'>${scriptData.script}</script>
+          <script type="${scriptData.process}">${scriptData.script}</script>
           <canvas></canvas>
          </body>`
       : `<body>
@@ -594,23 +594,39 @@ async function injectFrame() {
          </body>`
 
     const srcScripts = (scriptData.src || [])
-      .map((src) => `<script src='${src}'></script>`)
+      .map((src) => `<script src="${src}"></script>`)
       .join("")
 
-    const dynamicContent = `
-      <!DOCTYPE html>
+    const dynamicContent =
+      contractData.extLib === "custom"
+        ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
+        : `<!DOCTYPE html>
       <html>
-      <head>
-        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
-        ${srcScripts}
-        <script>${scriptData.tokenIdHash};</script>
-        <style type="text/css">
-          html {height: 100%;}
-          body {min-height: 100%; margin: 0; padding: 0; background-color: transparent;}
-          canvas {padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0;}
-        </style>
-      </head>
-      ${frameBody}
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+          ${srcScripts}
+          <script>${scriptData.tokenIdHash};</script>
+          <style type="text/css">
+            html { height: 100%; }
+            body { 
+              min-height: 100%; 
+              margin: 0; 
+              padding: 0; 
+              background-color: transparent; 
+            }
+            canvas { 
+              padding: 0; 
+              margin: auto; 
+              display: block; 
+              position: absolute; 
+              top: 0; 
+              bottom: 0; 
+              left: 0; 
+              right: 0; 
+            }
+          </style>
+        </head>
+        ${frameBody}
       </html>`
 
     iframeDocument.open()
