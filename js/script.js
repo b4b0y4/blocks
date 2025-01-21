@@ -306,9 +306,12 @@ function pushItemToLocalStorage(
   ipfs,
   arweave
 ) {
+  const process = extLib.startsWith("processing")
+    ? "application/processing"
+    : ""
   const src = [libs[extLib]]
 
-  if (extDep.length > 0 && extDep[0].startsWith("p5@")) {
+  if (extDep.length > 0 && extDep[0].includes("@")) {
     src.push(libs[extDep[0]])
   }
 
@@ -344,8 +347,6 @@ function pushItemToLocalStorage(
   } else {
     tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`
   }
-
-  let process = extLib.startsWith("processing") ? "application/processing" : ""
 
   localStorage.setItem(
     "scriptData",
