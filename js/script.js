@@ -97,7 +97,7 @@ async function grabData(tokenId, contract) {
 
     const projId = Number(projectId)
 
-    const [projectInfo, detail, { edition, remaining }] = await Promise.all([
+    const [projectInfo, detail, { edition, minted }] = await Promise.all([
       fetchProjectInfo(projId, contract, isContractV2),
       fetchProjectDetails(projId, contract),
       fetchEditionInfo(projId, contract, isContractV2),
@@ -108,14 +108,14 @@ async function grabData(tokenId, contract) {
       extractLibraryName(projectInfo),
     ])
 
-    let extDependencies = []
+    let extDep = []
     let ipfs = null
     let arweave = null
 
     if (isFLEX.includes(nameMap[contract])) {
       const extDepCount = await fetchExtDepCount(projId, contract)
       if (extDepCount) {
-        ;[extDependencies, { ipfs, arweave }] = await Promise.all([
+        ;[extDep, { ipfs, arweave }] = await Promise.all([
           fetchCIDs(projId, extDepCount, contract),
           fetchGateway(contract),
         ])
@@ -133,8 +133,8 @@ async function grabData(tokenId, contract) {
       ensName,
       extLib,
       edition,
-      remaining,
-      extDependencies,
+      minted,
+      extDep,
       ipfs,
       arweave,
     }
@@ -200,8 +200,8 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
     : contracts[contract].projectStateData(projId))
 
   const edition = Number(invo.maxInvocations)
-  const remaining = Number(invo.maxInvocations - invo.invocations)
-  return { edition, remaining }
+  const minted = Number(invo.invocations)
+  return { edition, minted }
 }
 
 async function fetchExtDepCount(projId, contract) {
@@ -269,8 +269,8 @@ function update(
   ensName,
   extLib,
   edition,
-  remaining,
-  extDependencies,
+  minted,
+  extDep,
   ipfs,
   arweave
 ) {
@@ -280,7 +280,7 @@ function update(
     hash,
     script,
     extLib,
-    extDependencies,
+    extDep,
     ipfs,
     arweave
   )
@@ -294,8 +294,8 @@ function update(
     tokenId,
     platform,
     edition,
-    remaining,
-    extDependencies
+    minted,
+    extDep
   )
   injectFrame()
 }
@@ -306,20 +306,20 @@ function pushItemToLocalStorage(
   hash,
   script,
   extLib,
-  extDependencies,
+  extDep,
   ipfs,
   arweave
 ) {
   const src = [libs[extLib]]
 
-  if (extDependencies.length > 0 && extDependencies[0].startsWith("p5@")) {
-    src.push(libs[extDependencies[0]])
+  if (extDep.length > 0 && extDep[0].startsWith("p5@")) {
+    src.push(libs[extDep[0]])
   }
 
   let tokenIdHash = ""
 
-  if (extDependencies.length > 0) {
-    const cids = extDependencies
+  if (extDep.length > 0) {
+    const cids = extDep
       .map((cid) => {
         const dependencyType =
           cid.startsWith("Qm") || cid.startsWith("baf")
@@ -405,8 +405,8 @@ function updateInfo(
   tokenId,
   platform,
   edition,
-  remaining,
-  extDependencies
+  minted,
+  extDep
 ) {
   let artist = detail[1]
   const logs = []
@@ -427,7 +427,7 @@ function updateInfo(
         <span class="artist">${artist}${
       platform ? ` ● ${platform}` : ""
     }</span><br>
-        <span class="edition">${editionTxt(edition, remaining)}</span>
+        <span class="edition">${editionTxt(edition, minted)}</span>
       </p><br>
       <p>${detail[2]}</p>
       <div class="column-box">
@@ -479,26 +479,21 @@ function updateInfo(
                   "LIBRARY",
                   `<span class="no-copy-txt">
                   ${getLibVersion(extLib)} <br>
-                  ${
-                    extDependencies.length > 0 && extDependencies[0].length < 10
-                      ? extDependencies[0]
-                      : ""
-                  }
+                  ${extDep.length > 0 && extDep[0].length < 10 ? extDep[0] : ""}
                 </span>`
                 )
               : ""
           }
           ${
-            extDependencies.length > 0 &&
-            (extDependencies[0].startsWith("Qm") ||
-              extDependencies[0].startsWith("baf") ||
-              /^[a-zA-Z0-9_-]{43}$/.test(extDependencies[0]))
+            extDep.length > 0 &&
+            (extDep[0].startsWith("Qm") ||
+              extDep[0].startsWith("baf") ||
+              /^[a-zA-Z0-9_-]{43}$/.test(extDep[0]))
               ? createSection(
                   "EXTERNAL DEPENDENCY",
                   `<span class="no-copy-txt">
                   ${
-                    extDependencies[0].startsWith("Qm") ||
-                    extDependencies[0].startsWith("baf")
+                    extDep[0].startsWith("Qm") || extDep[0].startsWith("baf")
                       ? "ipfs"
                       : "arweave"
                   }
@@ -546,9 +541,10 @@ function shortAddr(address) {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
 }
 
-function editionTxt(edition, remaining) {
-  const baseText = `Edition of ${edition} work${edition > 1 ? "s" : ""}`
-  return remaining > 0 ? `${baseText}, ${remaining} remaining` : baseText
+function editionTxt(edition, minted) {
+  return edition - minted > 0
+    ? `${minted} / ${edition} Minted`
+    : `${edition} Work${edition > 1 ? "s" : ""}`
 }
 
 function createSection(title, content) {
