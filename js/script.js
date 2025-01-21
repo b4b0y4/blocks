@@ -177,12 +177,7 @@ async function fetchProjectDetails(projId, contract) {
 
 async function fetchOwner(tokenId, contract) {
   const owner = await contracts[contract].ownerOf(tokenId)
-  let ensName = null
-  try {
-    ensName = await provider.lookupAddress(owner)
-  } catch (error) {
-    ensName = null
-  }
+  const ensName = await provider.lookupAddress(owner).catch(() => null)
   return { owner, ensName }
 }
 
@@ -195,13 +190,14 @@ function extractLibraryName(projectInfo) {
 }
 
 async function fetchEditionInfo(projId, contract, isContractV2) {
-  const invo = await (isContractV2
-    ? contracts[contract].projectTokenInfo(projId)
-    : contracts[contract].projectStateData(projId))
+  const invo = await contracts[contract][
+    isContractV2 ? "projectTokenInfo" : "projectStateData"
+  ](projId)
 
-  const edition = Number(invo.maxInvocations)
-  const minted = Number(invo.invocations)
-  return { edition, minted }
+  return {
+    edition: Number(invo.maxInvocations),
+    minted: Number(invo.invocations),
+  }
 }
 
 async function fetchExtDepCount(projId, contract) {
