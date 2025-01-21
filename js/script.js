@@ -479,7 +479,7 @@ function updateInfo(
               ? createSection(
                   "LIBRARY",
                   `<span class="no-copy-txt">
-                  ${getLibraryVersion(extLib)} <br>
+                  ${getLibVersion(extLib)} <br>
                   ${
                     extDependencies.length > 0 && extDependencies[0].length < 10
                       ? extDependencies[0]
@@ -568,7 +568,7 @@ function extractDomain(url) {
   return match ? `${match[1]}${match[2] || ""}` : `${url}`
 }
 
-function getLibraryVersion(extLib) {
+function getLibVersion(extLib) {
   return (
     Object.keys(libs).find((key) =>
       key.startsWith(extLib.replace(/js$/, "") + "@")
