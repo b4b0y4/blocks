@@ -420,13 +420,6 @@ function updateInfo(
     }
   }
 
-  const mintedOut =
-    edition == 1
-      ? `Edition of ${edition} work`
-      : remaining == 0
-      ? `Edition of ${edition} works`
-      : `Edition of ${edition} works, ${remaining} remaining`
-
   const update = () => {
     info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`
     panel.innerHTML = `
@@ -435,7 +428,7 @@ function updateInfo(
         <span class="artist">${artist}${
       platform ? ` ● ${platform}` : ""
     }</span><br>
-        <span class="edition">${mintedOut}</span>
+        <span class="edition">${getEditionText(edition, remaining)}</span>
       </p><br>
       <p>${detail[2]}</p>
       <div class="column-box">
@@ -552,6 +545,11 @@ function shortId(tokenId) {
 
 function shortAddr(address) {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
+}
+
+function getEditionText(edition, remaining) {
+  const baseText = `Edition of ${edition} work${edition > 1 ? "s" : ""}`
+  return remaining > 0 ? `${baseText}, ${remaining} remaining` : baseText
 }
 
 function createSection(title, content) {
