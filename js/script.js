@@ -22,14 +22,14 @@ const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
 
 const contracts = []
-const contractNameMap = {}
-const contractIndexMap = {}
+const nameMap = {}
+const indexMap = {}
 
 Object.keys(contractsData).forEach((key, index) => {
   const { abi, address } = contractsData[key]
   contracts.push(new ethers.Contract(address, abi, provider))
-  contractNameMap[index] = key
-  contractIndexMap[key] = index
+  nameMap[index] = key
+  indexMap[key] = index
 })
 
 /**********************************************************
@@ -56,7 +56,7 @@ async function fetchBlocks(blocks) {
     SHIS: 1,
   }
   for (const contractName of blocks) {
-    const n = contractIndexMap[contractName]
+    const n = indexMap[contractName]
     const start = startMap[contractName] || 0
     const end = Number(await contracts[n].nextProjectId())
     let newList = ""
@@ -87,7 +87,7 @@ async function grabData(tokenId, contract) {
     clearDataStorage()
     console.log("Contract:", contract, "\nToken Id:", tokenId)
 
-    const isContractV2 = isV2.includes(contractNameMap[contract])
+    const isContractV2 = isV2.includes(nameMap[contract])
 
     const [projectId, hash, { owner, ensName }] = await Promise.all([
       fetchProjectId(tokenId, contract),
@@ -112,7 +112,7 @@ async function grabData(tokenId, contract) {
     let ipfs = null
     let arweave = null
 
-    if (isFLEX.includes(contractNameMap[contract])) {
+    if (isFLEX.includes(nameMap[contract])) {
       const extDepCount = await fetchExtDepCount(projId, contract)
       if (extDepCount) {
         ;[extDependencies, { ipfs, arweave }] = await Promise.all([
@@ -384,7 +384,7 @@ function getCuration(projId) {
 }
 
 function getPlatform(contract, projId) {
-  const contractName = contractNameMap[contract]
+  const contractName = nameMap[contract]
 
   if (["AB", "ABII", "ABIII"].includes(contractName)) {
     return getCuration(projId)
@@ -411,11 +411,10 @@ function updateInfo(
   let artist = detail[1]
   const logs = []
 
-  frame.contentWindow.console.log = function (message) {
-    if (contractNameMap[contract] == "BMF" && logs.length === 0) {
-      message = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
-      logs.push(message)
-      artist = logs[0]
+  frame.contentWindow.console.log = (message) => {
+    if (nameMap[contract] === "BMF" && !logs.length) {
+      artist = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "")
+      logs.push(artist)
       update()
     }
   }
@@ -670,7 +669,7 @@ function handleOtherQuery(line, searchQuery) {
   const [_, listContract, projIdStr, tokenStr] = line.match(regex)
   const projId = parseInt(projIdStr)
   const token = parseInt(tokenStr)
-  const contract = contractIndexMap[listContract]
+  const contract = indexMap[listContract]
   let tokenId
 
   if (searchQuery.includes("#")) {
