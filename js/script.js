@@ -436,8 +436,7 @@ function updateInfo(
       platform ? ` ● ${platform}` : ""
     }</span><br>
         <span class="edition">${mintedOut}</span>
-      </p>
-      <br>
+      </p><br>
       <p>
         ${detail[2]}
       </p>
