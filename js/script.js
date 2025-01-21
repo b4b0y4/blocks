@@ -437,113 +437,94 @@ function updateInfo(
     }</span><br>
         <span class="edition">${mintedOut}</span>
       </p><br>
-      <p>
-        ${detail[2]}
-      </p>
+      <p>${detail[2]}</p>
       <div class="column-box">
-      <div class="column">
-      <div class="section">
-        <p class="more">
-          OWNER <br>
-          <a href="https://zapper.xyz/account/${owner}" target="_blank">
-            ${ensName || shortAddr(owner)}
-          </a>
-          <span class="copy-txt" data-text="${owner}">
-            <i class="fa-regular fa-copy"></i>
-          </span>
-        </p>
-      </div>
-      <div class="section">
-        <p class="more">
-          CONTRACT <br>
-          <a href="https://etherscan.io/address/${
-            contracts[contract].target
-          }" target="_blank">
-            ${shortAddr(contracts[contract].target)}
-          </a>
-          <span class="copy-txt" data-text="${contracts[contract].target}">
-            <i class="fa-regular fa-copy"></i>
-          </span>
-        </p>
-      </div>
-      <div class="section">
-        <p class="more">
-          TOKEN ID <br>
-          <span class="copy-txt" data-text="${tokenId}">
-            ${tokenId} <i class="fa-regular fa-copy"></i>
-          </span>
-        </p>
-      </div>
-      </div>
-      <div class="column">
-      ${
-        detail[3]
-          ? `<div class="section">
-              <p class="more">
-                ARTIST WEBSITE <br>
-                <a href="${detail[3]}" target="_blank">
+        <div class="column">
+          ${createSection(
+            "OWNER",
+            `<a href="https://zapper.xyz/account/${owner}" target="_blank">
+              ${ensName || shortAddr(owner)}
+            </a>
+            <span class="copy-txt" data-text="${owner}">
+              <i class="fa-regular fa-copy"></i>
+            </span>`
+          )}
+          ${createSection(
+            "CONTRACT",
+            `<a href="https://etherscan.io/address/${
+              contracts[contract].target
+            }" target="_blank">
+              ${shortAddr(contracts[contract].target)}
+            </a>
+            <span class="copy-txt" data-text="${contracts[contract].target}">
+              <i class="fa-regular fa-copy"></i>
+            </span>`
+          )}
+          ${createSection(
+            "TOKEN ID",
+            `<span class="copy-txt" data-text="${tokenId}">
+              ${tokenId} <i class="fa-regular fa-copy"></i>
+            </span>`
+          )}
+        </div>
+        <div class="column">
+          ${
+            detail[3]
+              ? createSection(
+                  "ARTIST WEBSITE",
+                  `<a href="${detail[3]}" target="_blank">
                   ${extractDomain(detail[3])}
-                </a>
-              </p>
-            </div>`
-          : ""
-      }
-      ${
-        extLib &&
-        !extLib.startsWith("js") &&
-        !extLib.startsWith("svg") &&
-        !extLib.startsWith("custom")
-          ? `<div class="section">
-              <p class="more">
-                LIBRARY <br>
-                <span class="no-copy-txt">
+                </a>`
+                )
+              : ""
+          }
+          ${
+            extLib &&
+            !extLib.startsWith("js") &&
+            !extLib.startsWith("svg") &&
+            !extLib.startsWith("custom")
+              ? createSection(
+                  "LIBRARY",
+                  `<span class="no-copy-txt">
                   ${getLibraryVersion(extLib)} <br>
                   ${
                     extDependencies.length > 0 && extDependencies[0].length < 10
                       ? extDependencies[0]
                       : ""
                   }
-                </span>
-              </p>
-            </div>`
-          : ""
-      } 
-      ${
-        extDependencies.length > 0 &&
-        (extDependencies[0].startsWith("Qm") ||
-          extDependencies[0].startsWith("baf") ||
-          /^[a-zA-Z0-9_-]{43}$/.test(extDependencies[0]))
-          ? `<div class="section">
-              <p class="more">
-                EXTERNAL DEPENDENCY <br>
-                <span class="no-copy-txt">
+                </span>`
+                )
+              : ""
+          }
+          ${
+            extDependencies.length > 0 &&
+            (extDependencies[0].startsWith("Qm") ||
+              extDependencies[0].startsWith("baf") ||
+              /^[a-zA-Z0-9_-]{43}$/.test(extDependencies[0]))
+              ? createSection(
+                  "EXTERNAL DEPENDENCY",
+                  `<span class="no-copy-txt">
                   ${
                     extDependencies[0].startsWith("Qm") ||
                     extDependencies[0].startsWith("baf")
                       ? "ipfs"
                       : "arweave"
                   }
-                </span>
-              </p>
-            </div>`
-          : ""
-      }      
-      ${
-        detail[4]
-          ? `<div class="section">
-              <p class="more">
-                LICENSE <br>
-                <span class="no-copy-txt">
-                  ${detail[4]}
-                </span>
-              </p>
-            </div>`
-          : ""
-      }
-      </div>
+                </span>`
+                )
+              : ""
+          }
+          ${
+            detail[4]
+              ? createSection(
+                  "LICENSE",
+                  `<span class="no-copy-txt">${detail[4]}</span>`
+                )
+              : ""
+          }
+        </div>
       </div>
     `
-
     document.querySelectorAll(".copy-txt").forEach((element) =>
       element.addEventListener("click", (event) => {
         const textToCopy = element.getAttribute("data-text")
@@ -554,14 +535,12 @@ function updateInfo(
         toast.textContent = "Copied"
 
         element.querySelector("i").after(toast)
-
         setTimeout(() => {
           toast.remove()
         }, 1000)
       })
     )
   }
-
   update()
 }
 
@@ -573,6 +552,17 @@ function shortId(tokenId) {
 
 function shortAddr(address) {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
+}
+
+function createSection(title, content) {
+  return content
+    ? `<div class="section">
+        <p class="more">
+          ${title} <br>
+          ${content}
+        </p>
+      </div>`
+    : ""
 }
 
 function extractDomain(url) {
