@@ -428,7 +428,7 @@ function updateInfo(
         <span class="artist">${artist}${
       platform ? ` ● ${platform}` : ""
     }</span><br>
-        <span class="edition">${getEditionText(edition, remaining)}</span>
+        <span class="edition">${editionTxt(edition, remaining)}</span>
       </p><br>
       <p>${detail[2]}</p>
       <div class="column-box">
@@ -547,7 +547,7 @@ function shortAddr(address) {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
 }
 
-function getEditionText(edition, remaining) {
+function editionTxt(edition, remaining) {
   const baseText = `Edition of ${edition} work${edition > 1 ? "s" : ""}`
   return remaining > 0 ? `${baseText}, ${remaining} remaining` : baseText
 }
