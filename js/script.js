@@ -1084,6 +1084,8 @@ document.querySelector(".search-icon").addEventListener("click", (event) => {
 })
 
 document.querySelector(".fav-icon").addEventListener("click", (event) => {
+  if (Object.keys(favorite).length === 0) return
+
   event.stopPropagation()
   displayFavoriteList()
   togglePanel(favPanel)
