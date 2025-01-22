@@ -15,6 +15,7 @@ const overlay = document.querySelector(".overlay")
 const panel = document.querySelector(".panel")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
+const favIcon = document.querySelector(".fav-icon")
 const search = document.getElementById("searchInput")
 const dropdownMenu = document.getElementById("dropdownMenu")
 
@@ -900,11 +901,13 @@ function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`
   favorite[key] = contractData
   localStorage.setItem("favorite", JSON.stringify(favorite))
+  updateFavIcon()
 }
 
 function deleteContractDataFromStorage(key) {
   if (favorite.hasOwnProperty(key)) delete favorite[key]
   localStorage.setItem("favorite", JSON.stringify(favorite))
+  updateFavIcon()
 }
 
 function displayFavorite(key) {
@@ -1011,6 +1014,14 @@ const setDisplay = (elements, value) => {
   elements.forEach((el) => (el.style.display = value))
 }
 
+function updateFavIcon() {
+  const hasFavorites = Object.keys(favorite).length > 0
+
+  setDisplay([favIcon], hasFavorites ? "block" : "none")
+  document.querySelector(".search-box").classList.toggle("nofav", !hasFavorites)
+  if (!hasFavorites) clearPanels()
+}
+
 function addHoverEffect(button, menu) {
   let timer
 
@@ -1046,6 +1057,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setDisplay([inc, dec, save], contractData ? "block" : "none")
   setDisplay([rpcUrlInput, instruction], rpcUrl ? "none" : "block")
+  updateFavIcon()
 
   root.classList.remove("no-flash")
   console.log(contractData)
@@ -1062,11 +1074,7 @@ document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     clearDataStorage()
     location.reload()
-  }
-})
-
-document.addEventListener("keypress", (event) => {
-  if (event.key === "/") {
+  } else if (event.key === "/") {
     event.preventDefault()
     search.focus()
     togglePanel(listPanel)
@@ -1083,9 +1091,7 @@ document.querySelector(".search-icon").addEventListener("click", (event) => {
   togglePanel(listPanel)
 })
 
-document.querySelector(".fav-icon").addEventListener("click", (event) => {
-  if (Object.keys(favorite).length === 0) return
-
+favIcon.addEventListener("click", (event) => {
   event.stopPropagation()
   displayFavoriteList()
   togglePanel(favPanel)
@@ -1134,15 +1140,10 @@ document.getElementById("selectedLoop").addEventListener("click", () => {
 document.querySelector(".fa-circle-stop").addEventListener("click", stopLoop)
 
 document.getElementById("fullscreen").addEventListener("click", () => {
-  if (frame.requestFullscreen) {
-    frame.requestFullscreen()
-  } else if (frame.mozRequestFullScreen) {
-    frame.mozRequestFullScreen()
-  } else if (frame.webkitRequestFullscreen) {
-    frame.webkitRequestFullscreen()
-  } else if (frame.msRequestFullscreen) {
-    frame.msRequestFullscreen()
-  }
+  if (frame.requestFullscreen) frame.requestFullscreen()
+  else if (frame.mozRequestFullScreen) frame.mozRequestFullScreen()
+  else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen()
+  else if (frame.msRequestFullscreen) frame.msRequestFullscreen()
 })
 
 /**********************************************************

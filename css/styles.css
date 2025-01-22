@@ -513,6 +513,11 @@ a:hover {
   animation: spin 1s linear infinite;
 }
 
+.search-box.nofav .key-short,
+.search-box.nofav .spinner {
+  right: 5px;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
