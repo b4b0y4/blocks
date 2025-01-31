@@ -870,7 +870,6 @@ function stopLoop() {
  *           SAVE OUTPUT FUNCTION
  *********************************************************/
 async function saveOutput() {
-  clearPanels()
   const content = frame.contentDocument.documentElement.outerHTML
   let id = shortId(contractData.tokenId)
   const defaultName = `${contractData.detail[0].replace(
@@ -973,15 +972,15 @@ const clearPanels = () => {
   ;[overlay, infobar, ...panels].forEach((el) => el.classList.remove("active"))
 }
 
-const toggleSpin = () => {
-  document.querySelector(".spinner").style.display = "block"
-  document.querySelector(".key-short").style.display = "none"
-}
-
 const togglePanel = (panelElement) => {
   panels.forEach((p) => p !== panelElement && p.classList.remove("active"))
   const isActive = panelElement.classList.toggle("active")
   ;[overlay, infobar].forEach((el) => el.classList.toggle("active", isActive))
+}
+
+const toggleSpin = () => {
+  document.querySelector(".spinner").style.display = "block"
+  document.querySelector(".key-short").style.display = "none"
 }
 
 const toggleKeyShort = (event) => {
