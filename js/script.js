@@ -2,9 +2,10 @@ import { ethers } from "./ethers.min.js"
 import { libs, list } from "./lists.js"
 import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js"
 
-const loopInput = document.getElementById("loopInput")
 const instruction = document.querySelector(".instruction")
 const rpcUrlInput = document.getElementById("rpcUrl")
+const loopInput = document.getElementById("loopInput")
+const dropMenu = document.getElementById("dropMenu")
 const frame = document.getElementById("frame")
 const infobar = document.querySelector(".infobar")
 const info = document.getElementById("info")
@@ -13,7 +14,6 @@ const dec = document.getElementById("decrementBtn")
 const inc = document.getElementById("incrementBtn")
 const favIcon = document.querySelector(".fav-icon")
 const search = document.getElementById("searchInput")
-const dropMenu = document.getElementById("dropMenu")
 const overlay = document.querySelector(".overlay")
 const panel = document.querySelector(".panel")
 const listPanel = document.querySelector(".list-panel")
