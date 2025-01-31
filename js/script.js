@@ -12,12 +12,13 @@ const save = document.getElementById("saveBtn")
 const dec = document.getElementById("decrementBtn")
 const inc = document.getElementById("incrementBtn")
 const overlay = document.querySelector(".overlay")
-const panel = document.querySelector(".panel")
-const listPanel = document.querySelector(".list-panel")
-const favPanel = document.querySelector(".fav-panel")
 const favIcon = document.querySelector(".fav-icon")
 const search = document.getElementById("searchInput")
 const dropdownMenu = document.getElementById("dropdownMenu")
+const panel = document.querySelector(".panel")
+const listPanel = document.querySelector(".list-panel")
+const favPanel = document.querySelector(".fav-panel")
+const panels = [panel, listPanel, favPanel]
 
 const rpcUrl = localStorage.getItem("rpcUrl")
 const provider = new ethers.JsonRpcProvider(rpcUrl)
@@ -32,7 +33,6 @@ Object.keys(contractsData).forEach((key, index) => {
   nameMap[index] = key
   indexMap[key] = index
 })
-const panels = [panel, listPanel, favPanel]
 
 /**********************************************************
  *                UPDATE LIST FUNCTION
