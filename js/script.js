@@ -32,6 +32,7 @@ Object.keys(contractsData).forEach((key, index) => {
   nameMap[index] = key
   indexMap[key] = index
 })
+const panels = [panel, listPanel, favPanel]
 
 /**********************************************************
  *                UPDATE LIST FUNCTION
@@ -969,9 +970,7 @@ const clearDataStorage = () => {
 }
 
 const clearPanels = () => {
-  ;[listPanel, panel, favPanel, overlay, infobar].forEach((el) =>
-    el.classList.remove("active")
-  )
+  ;[overlay, infobar, ...panels].forEach((el) => el.classList.remove("active"))
 }
 
 const toggleSpin = () => {
@@ -980,9 +979,7 @@ const toggleSpin = () => {
 }
 
 const togglePanel = (panelElement) => {
-  ;[panel, listPanel, favPanel].forEach(
-    (p) => p !== panelElement && p.classList.remove("active")
-  )
+  panels.forEach((p) => p !== panelElement && p.classList.remove("active"))
   const isActive = panelElement.classList.toggle("active")
   ;[overlay, infobar].forEach((el) => el.classList.toggle("active", isActive))
 }
@@ -1101,14 +1098,10 @@ document.addEventListener("click", () => {
   clearPanels()
 })
 
-panel.addEventListener("click", (event) => {
-  event.stopPropagation()
-})
-listPanel.addEventListener("click", (event) => {
-  event.stopPropagation()
-})
-favPanel.addEventListener("click", (event) => {
-  event.stopPropagation()
+panels.forEach((panel) => {
+  panel.addEventListener("click", (event) => {
+    event.stopPropagation()
+  })
 })
 
 search.addEventListener("input", () => {
