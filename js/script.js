@@ -14,7 +14,7 @@ const inc = document.getElementById("incrementBtn")
 const overlay = document.querySelector(".overlay")
 const favIcon = document.querySelector(".fav-icon")
 const search = document.getElementById("searchInput")
-const dropdownMenu = document.getElementById("dropdownMenu")
+const dropMenu = document.getElementById("dropMenu")
 const panel = document.querySelector(".panel")
 const listPanel = document.querySelector(".list-panel")
 const favPanel = document.querySelector(".fav-panel")
@@ -838,7 +838,7 @@ function checkLocalStorage() {
 }
 
 function handleLoopClick(action) {
-  dropdownMenu.classList.remove("active")
+  dropMenu.classList.remove("active")
 
   let inputValue = loopInput.value.trim()
   const inputVal = parseInt(inputValue, 10)
@@ -1037,7 +1037,7 @@ function addHoverEffect(button, menu) {
   menu.addEventListener("mouseover", showMenu)
   menu.addEventListener("mouseout", hideMenu)
 }
-addHoverEffect(document.querySelector(".fa-repeat"), dropdownMenu)
+addHoverEffect(document.querySelector(".fa-repeat"), dropMenu)
 
 /**********************************************************
  *                     EVENTS
