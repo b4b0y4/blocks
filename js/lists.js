@@ -506,7 +506,7 @@ export const list = [
   "ABSIX2 - Framework / Jeff Davis - 10 items",
   "ABSX0 - Cosmicodes / Insigħt × Leonardo Petrucci - 16 items",
   "ABSXI0 - Alchimie / RVig - 80 items",
-  "ABSXII0 - tied up, tied down, let loose, unwound / Ben Snell - 25 items",
+  "ABSXII0 - tied up, tied down, let loose, unwound / Ben Snell - 26 items",
   "ABSXIII0 - AnnoMetta / Matto - 1 item",
   "ABSXV0 - Untitled / Olga Fradina - 33 items",
   "ABSXVI0 - Incircles / Jos Vromans - 64 items",
