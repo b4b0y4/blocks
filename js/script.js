@@ -689,10 +689,10 @@ function displayList(lines) {
 function filterList(lines, query) {
   if (query.toLowerCase() === "curated") {
     filteredList = lines.filter((line) => {
-      const idMatch = line.match(/^AB(?:C|III|II)?(\d+)/)
+      const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/)
       if (idMatch) {
         const id = parseInt(idMatch[1])
-        return curated.includes(id)
+        return curated.includes(id) || line.startsWith("ABC")
       }
     })
   } else {
