@@ -512,17 +512,17 @@ function updateInfo(
       </div>
     `
     document.querySelectorAll(".copy-txt").forEach((element) =>
-      element.addEventListener("click", (event) => {
+      element.addEventListener("click", () => {
         const textToCopy = element.getAttribute("data-text")
         copyToClipboard(textToCopy)
 
-        const toast = document.createElement("span")
-        toast.classList.add("toast")
-        toast.textContent = "Copied"
+        const icon = element.querySelector("i")
+        icon.classList.replace("fa-regular", "fa-solid")
+        icon.classList.replace("fa-copy", "fa-check")
 
-        element.querySelector("i").after(toast)
         setTimeout(() => {
-          toast.remove()
+          icon.classList.replace("fa-solid", "fa-regular")
+          icon.classList.replace("fa-check", "fa-copy")
         }, 1000)
       })
     )

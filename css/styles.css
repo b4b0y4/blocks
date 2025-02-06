@@ -97,10 +97,7 @@ body {
   pointer-events: auto;
 }
 
-#loopAll,
-#favLoop,
-#curatedLoop,
-#selectedLoop {
+.drop-menu button {
   display: block;
   width: 100%;
   font-size: 1em;
@@ -113,10 +110,7 @@ body {
   transition: background-color 0.1s ease-in-out;
 }
 
-#loopAll:hover,
-#favLoop:hover,
-#curatedLoop:hover,
-#selectedLoop:hover {
+.drop-menu button:hover {
   background-color: var(--color-hvr);
 }
 
@@ -410,7 +404,8 @@ a:hover {
   cursor: default;
 }
 
-.fa-copy {
+.fa-copy,
+.fa-check {
   margin-left: 7px;
   color: var(--color-txt);
   transition: color 0.1s ease-in-out;
