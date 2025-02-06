@@ -948,13 +948,35 @@ function displayFavoriteList() {
 /**********************************************************
  *       GET PREVIOUS/NEXT ID FUNCTIONS
  *********************************************************/
+function getId(tokenId) {
+  return tokenId % 1000000
+}
+
 function incrementTokenId() {
-  contractData.tokenId = contractData.tokenId + 1
+  let numericId = getId(contractData.tokenId)
+
+  if (numericId === contractData.minted - 1) {
+    numericId = 0
+  } else {
+    numericId += 1
+  }
+
+  contractData.tokenId = contractData.projId * 1000000 + numericId
+
   updateContractData(contractData.tokenId, contractData.contract)
 }
 
 function decrementTokenId() {
-  contractData.tokenId = contractData.tokenId - 1
+  let numericId = getId(contractData.tokenId)
+
+  if (numericId === 0) {
+    numericId = contractData.minted - 1
+  } else {
+    numericId -= 1
+  }
+
+  contractData.tokenId = contractData.projId * 1000000 + numericId
+
   updateContractData(contractData.tokenId, contractData.contract)
 }
 
