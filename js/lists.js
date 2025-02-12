@@ -508,7 +508,7 @@ export const list = [
   "ABSXI0 - Alchimie / RVig - 80 items",
   "ABSXII0 - tied up, tied down, let loose, unwound / Ben Snell - 36 items",
   "ABSXIII0 - AnnoMetta / Matto - 1 item",
-  "ABSXV0 - Untitled / Olga Fradina - 35 items",
+  "ABSXV0 - Untitled / Olga Fradina - 36 items",
   "ABSXVI0 - Incircles / Jos Vromans - 64 items",
   "ABSXVI1 - Art from code / Jos Vromans - 35 items",
   "ABSXVIII0 - Origin / Monokai - 34 items",
