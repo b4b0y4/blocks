@@ -192,9 +192,10 @@ function extractLibraryName(projectInfo) {
 }
 
 async function fetchEditionInfo(projId, contract, isContractV2) {
-  const invo = await contracts[contract][
-    isContractV2 ? "projectTokenInfo" : "projectStateData"
-  ](projId);
+  const invo =
+    await contracts[contract][
+      isContractV2 ? "projectTokenInfo" : "projectStateData"
+    ](projId);
 
   return {
     edition: Number(invo.maxInvocations),
@@ -203,9 +204,8 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
 }
 
 async function fetchExtDepCount(projId, contract) {
-  const count = await contracts[contract].projectExternalAssetDependencyCount(
-    projId
-  );
+  const count =
+    await contracts[contract].projectExternalAssetDependencyCount(projId);
   return count == 0 ? null : count;
 }
 
@@ -213,7 +213,7 @@ async function fetchCIDs(projId, extDepCount, contract) {
   const cidPromises = [];
   for (let i = 0; i < extDepCount; i++) {
     cidPromises.push(
-      contracts[contract].projectExternalAssetDependencyByIndex(projId, i)
+      contracts[contract].projectExternalAssetDependencyByIndex(projId, i),
     );
   }
   const cidTuples = await Promise.all(cidPromises);
@@ -270,7 +270,7 @@ function update(
   minted,
   extDep,
   ipfs,
-  arweave
+  arweave,
 ) {
   pushItemToLocalStorage(
     contract,
@@ -280,7 +280,7 @@ function update(
     extLib,
     extDep,
     ipfs,
-    arweave
+    arweave,
   );
   const platform = getPlatform(contract, projId);
   updateInfo(
@@ -293,7 +293,7 @@ function update(
     platform,
     edition,
     minted,
-    extDep
+    extDep,
   );
   injectFrame();
 }
@@ -306,7 +306,7 @@ function pushItemToLocalStorage(
   extLib,
   extDep,
   ipfs,
-  arweave
+  arweave,
 ) {
   const process = extLib.startsWith("processing")
     ? "application/processing"
@@ -326,8 +326,8 @@ function pushItemToLocalStorage(
           cid.startsWith("Qm") || cid.startsWith("baf")
             ? "IPFS"
             : /^[a-zA-Z0-9_-]{43}$/.test(cid)
-            ? "ARWEAVE"
-            : "ART_BLOCKS_DEPENDENCY_REGISTRY";
+              ? "ARWEAVE"
+              : "ART_BLOCKS_DEPENDENCY_REGISTRY";
 
         return `{
           "cid": "${cid}",
@@ -352,7 +352,7 @@ function pushItemToLocalStorage(
 
   localStorage.setItem(
     "scriptData",
-    JSON.stringify({ src, tokenIdHash, process, script })
+    JSON.stringify({ src, tokenIdHash, process, script }),
   );
 }
 
@@ -376,10 +376,10 @@ function getCuration(projId) {
   return curated.includes(projId)
     ? "Art Blocks Curated"
     : playground.includes(projId)
-    ? "Art Blocks Playground"
-    : projId < 374
-    ? "Art Blocks Factory"
-    : "Art Blocks Presents";
+      ? "Art Blocks Playground"
+      : projId < 374
+        ? "Art Blocks Factory"
+        : "Art Blocks Presents";
 }
 
 function getPlatform(contract, projId) {
@@ -405,7 +405,7 @@ function updateInfo(
   platform,
   edition,
   minted,
-  extDep
+  extDep,
 ) {
   let artist = detail[1];
   const logs = [];
@@ -424,8 +424,8 @@ function updateInfo(
       <div class="work">${detail[0]}</div>
       <p>
         <span class="artist">${artist}${
-      platform ? ` ● ${platform}` : ""
-    }</span><br>
+          platform ? ` ● ${platform}` : ""
+        }</span><br>
         <span class="edition">${editionTxt(edition, minted)}</span>
       </p><br>
       <p>${detail[2]}</p>
@@ -438,7 +438,7 @@ function updateInfo(
             </a>
             <span class="copy-txt" data-text="${owner}">
               <i class="fa-regular fa-copy"></i>
-            </span>`
+            </span>`,
           )}
           ${createSection(
             "CONTRACT",
@@ -449,13 +449,13 @@ function updateInfo(
             </a>
             <span class="copy-txt" data-text="${contracts[contract].target}">
               <i class="fa-regular fa-copy"></i>
-            </span>`
+            </span>`,
           )}
           ${createSection(
             "TOKEN ID",
             `<span class="copy-txt" data-text="${tokenId}">
               ${tokenId} <i class="fa-regular fa-copy"></i>
-            </span>`
+            </span>`,
           )}
         </div>
         <div class="column">
@@ -465,7 +465,7 @@ function updateInfo(
                   "ARTIST WEBSITE",
                   `<a href="${detail[3]}" target="_blank">
                   ${extractDomain(detail[3])}
-                </a>`
+                </a>`,
                 )
               : ""
           }
@@ -479,7 +479,7 @@ function updateInfo(
                   `<span class="no-copy-txt">
                   ${getLibVersion(extLib)} <br>
                   ${extDep.length > 0 && extDep[0].length < 10 ? extDep[0] : ""}
-                </span>`
+                </span>`,
                 )
               : ""
           }
@@ -496,7 +496,7 @@ function updateInfo(
                       ? "ipfs"
                       : "arweave"
                   }
-                </span>`
+                </span>`,
                 )
               : ""
           }
@@ -504,7 +504,7 @@ function updateInfo(
             detail[4]
               ? createSection(
                   "LICENSE",
-                  `<span class="no-copy-txt">${detail[4]}</span>`
+                  `<span class="no-copy-txt">${detail[4]}</span>`,
                 )
               : ""
           }
@@ -524,7 +524,7 @@ function updateInfo(
           icon.classList.replace("fa-solid", "fa-regular");
           icon.classList.replace("fa-check", "fa-copy");
         }, 1000);
-      })
+      }),
     );
   };
   update();
@@ -538,7 +538,7 @@ function shortId(tokenId) {
 
 function shortAddr(address) {
   return `${address.substring(0, 6)}...${address.substring(
-    address.length - 4
+    address.length - 4,
   )}`;
 }
 
@@ -567,7 +567,7 @@ function extractDomain(url) {
 function getLibVersion(extLib) {
   return (
     Object.keys(libs).find((key) =>
-      key.startsWith(extLib.replace(/js$/, "") + "@")
+      key.startsWith(extLib.replace(/js$/, "") + "@"),
     ) || extLib
   );
 }
@@ -700,7 +700,7 @@ function filterList(lines, query) {
     });
   } else {
     filteredList = lines.filter((line) =>
-      line.toLowerCase().includes(query.toLowerCase())
+      line.toLowerCase().includes(query.toLowerCase()),
     );
   }
 
@@ -821,7 +821,7 @@ function performAction(action, favorite) {
     getRandom(filteredList);
   } else if (action === "selectedLoop") {
     let random = Math.floor(
-      Math.random() * (contractData.edition + 1)
+      Math.random() * (contractData.edition + 1),
     ).toString();
     getToken(list, random);
   }
@@ -877,7 +877,7 @@ async function saveOutput() {
   let id = shortId(contractData.tokenId);
   const defaultName = `${contractData.detail[0].replace(
     /\s+/g,
-    "-"
+    "-",
   )}#${id}.html`;
   const blob = new Blob([content], { type: "text/html" });
   const url = URL.createObjectURL(blob);
