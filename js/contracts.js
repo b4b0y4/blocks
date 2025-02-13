@@ -842,7 +842,7 @@ const abiV1 = [
     stateMutability: "nonpayable",
     type: "function",
   },
-]
+];
 
 const abiV2 = [
   {
@@ -1781,7 +1781,7 @@ const abiV2 = [
     stateMutability: "nonpayable",
     type: "function",
   },
-]
+];
 
 const abiV3 = [
   {
@@ -2901,7 +2901,7 @@ const abiV3 = [
     stateMutability: "nonpayable",
     type: "function",
   },
-]
+];
 
 const abiBM = [
   {
@@ -3772,7 +3772,7 @@ const abiBM = [
     stateMutability: "nonpayable",
     type: "function",
   },
-]
+];
 
 const abiV2FLEX = [
   {
@@ -4695,7 +4695,7 @@ const abiV2FLEX = [
     stateMutability: "nonpayable",
     type: "function",
   },
-]
+];
 
 const abiV3FLEX = [
   {
@@ -6038,7 +6038,7 @@ const abiV3FLEX = [
     stateMutability: "nonpayable",
     type: "function",
   },
-]
+];
 
 export const contractsData = {
   AB: {
@@ -6412,24 +6412,24 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0xB8E8Bec0891A7519091E18590e0b60221853dd2B",
   },
-}
+};
 
-export const isV2 = []
-export const isStudio = []
-export const isFLEX = []
+export const isV2 = [];
+export const isStudio = [];
+export const isFLEX = [];
 
 function updateV2StudioFlex() {
   for (const key in contractsData) {
     if ([abiV1, abiV2, abiV2FLEX, abiBM].includes(contractsData[key].abi)) {
-      isV2.push(key)
+      isV2.push(key);
     }
     if ([abiV2FLEX, abiV3FLEX].includes(contractsData[key].abi)) {
-      isFLEX.push(key)
+      isFLEX.push(key);
     }
     if (key.startsWith("ABS")) {
-      isStudio.push(key)
+      isStudio.push(key);
     }
   }
 }
 
-updateV2StudioFlex()
+updateV2StudioFlex();
