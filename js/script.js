@@ -78,7 +78,7 @@ async function fetchBlocks(blocks) {
 }
 
 /**********************************************************
- *        GET DATA FROM ETHEREUM FUNCTIONS
+ *             GET DATA FROM ETHEREUM FUNCTIONS
  *********************************************************/
 let contractData = {};
 
