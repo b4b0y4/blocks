@@ -61,7 +61,7 @@ async function fetchBlocks(blocks) {
     const n = indexMap[contractName];
     const start = startMap[contractName] || 0;
     const end = Number(await contracts[n].nextProjectId());
-    let newList = "";
+    const results = [];
 
     for (let i = start; i < end; i++) {
       const [detail, token] = await Promise.all([
@@ -71,9 +71,11 @@ async function fetchBlocks(blocks) {
           : contracts[n].projectStateData(i),
       ]);
       const minted = Number(token.invocations) === 1 ? "item" : "items";
-      newList += `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}", `;
+      results.push(
+        `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted},`,
+      );
     }
-    console.log(newList);
+    console.log(results.join(" "));
   }
 }
 
