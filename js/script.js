@@ -72,7 +72,7 @@ async function fetchBlocks(blocks) {
       ]);
       const minted = Number(token.invocations) === 1 ? "item" : "items";
       results.push(
-        `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted},`,
+        `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}",`,
       );
     }
     console.log(results.join(" "));
