@@ -656,7 +656,7 @@ export const list = [
   "PLOTII2 - Scribble Party / minimizer - 130 items",
   "PLOTFLEX0 - Instructions for Defacement / Steve Pikelny - 712 items",
   "STBYS0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 items",
-  "STBYS1 - EVENT / Bernar Venet - 104 items",
+  "STBYS1 - EVENT / Bernar Venet - 105 items",
   "ATP0 - LOVE / Martin Grasser - 300 items",
   "GRAIL1 - Fold / rudxane - 400 items",
   "GRAIL2 - Atlas / Eric De Giuli - 333 items",

@@ -37,7 +37,7 @@ Object.keys(contractsData).forEach((key, index) => {
 /**********************************************************
  *                UPDATE LIST FUNCTION
  *********************************************************/
-const bloncks = ["ABC", ...isStudio];
+const bloncks = ["ABC", ...isStudio, "STBYS"];
 
 // fetchBlocks(bloncks);
 
