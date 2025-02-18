@@ -5169,19 +5169,17 @@ const abiV3FLEX = [
   },
 ];
 
-function getBMAbi() {
-  return abiV2.map((entry) => {
-    if (entry.name === "projectScriptInfo") {
-      return {
-        ...entry,
-        outputs: entry.outputs.filter(
-          (output) => output.name !== "useHashString",
-        ),
-      };
-    }
-    return entry;
-  });
-}
+const getBMAbi = () =>
+  abiV2.map((entry) =>
+    entry.name === "projectScriptInfo"
+      ? {
+          ...entry,
+          outputs: entry.outputs.filter(
+            (output) => output.name !== "useHashString",
+          ),
+        }
+      : entry,
+  );
 
 const abiBM = getBMAbi();
 
