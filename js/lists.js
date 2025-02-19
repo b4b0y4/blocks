@@ -514,7 +514,7 @@ export const list = [
   "ABSXVIII0 - Origin / Monokai - 35 items",
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 items",
   "ABSXXI0 - Carattere / michelangelo (encapsuled) - 48 items",
-  "ABSXXI1 - Linea / michelangelo (encapsuled) - 7 items",
+  "ABSXXI1 - Linea / michelangelo (encapsuled) - 9 items",
   "ABSXXII0 - Pax / Eric De Giuli - 100 items",
   "ABSXXIII0 - piñata3 / Fahad Karim - 82 items",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 item",
