@@ -23,13 +23,13 @@ const panels = [panel, listPanel, favPanel];
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 
-const contracts = [];
+const instance = [];
 const nameMap = {};
 const indexMap = {};
 
 Object.keys(contractsData).forEach((key, index) => {
   const { abi, address } = contractsData[key];
-  contracts.push(new ethers.Contract(address, abi, provider));
+  instance.push(new ethers.Contract(address, abi, provider));
   nameMap[index] = key;
   indexMap[key] = index;
 });
@@ -59,15 +59,15 @@ async function fetchBlocks(blocks) {
   for (const contractName of blocks) {
     const n = indexMap[contractName];
     const start = startMap[contractName] || 0;
-    const end = Number(await contracts[n].nextProjectId());
+    const end = Number(await instance[n].nextProjectId());
     const results = [];
 
     for (let i = start; i < end; i++) {
       const [detail, token] = await Promise.all([
-        contracts[n].projectDetails(i.toString()),
+        instance[n].projectDetails(i.toString()),
         isV2.includes(contractName)
-          ? contracts[n].projectTokenInfo(i)
-          : contracts[n].projectStateData(i),
+          ? instance[n].projectTokenInfo(i)
+          : instance[n].projectStateData(i),
       ]);
       const minted = Number(token.invocations) === 1 ? "item" : "items";
       const newItem = `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}",`;
@@ -155,35 +155,35 @@ async function grabData(tokenId, contract) {
 
 async function fetchHash(tokenId, contract) {
   return contract == 0
-    ? contracts[contract].showTokenHashes(tokenId)
-    : contracts[contract].tokenIdToHash(tokenId);
+    ? instance[contract].showTokenHashes(tokenId)
+    : instance[contract].tokenIdToHash(tokenId);
 }
 
 async function fetchProjectId(tokenId, contract) {
-  return contracts[contract].tokenIdToProjectId(tokenId);
+  return instance[contract].tokenIdToProjectId(tokenId);
 }
 
 async function fetchProjectInfo(projId, contract, isContractV2) {
   return isContractV2
-    ? contracts[contract].projectScriptInfo(projId)
-    : contracts[contract].projectScriptDetails(projId);
+    ? instance[contract].projectScriptInfo(projId)
+    : instance[contract].projectScriptDetails(projId);
 }
 
 async function constructScript(projId, projectInfo, contract) {
   const scriptPromises = [];
   for (let i = 0; i < projectInfo.scriptCount; i++) {
-    scriptPromises.push(contracts[contract].projectScriptByIndex(projId, i));
+    scriptPromises.push(instance[contract].projectScriptByIndex(projId, i));
   }
   const scripts = await Promise.all(scriptPromises);
   return scripts.join("");
 }
 
 async function fetchProjectDetails(projId, contract) {
-  return contracts[contract].projectDetails(projId);
+  return instance[contract].projectDetails(projId);
 }
 
 async function fetchOwner(tokenId, contract) {
-  const owner = await contracts[contract].ownerOf(tokenId);
+  const owner = await instance[contract].ownerOf(tokenId);
   const ensName = await provider.lookupAddress(owner).catch(() => null);
   return { owner, ensName };
 }
@@ -198,7 +198,7 @@ function extractLibraryName(projectInfo) {
 
 async function fetchEditionInfo(projId, contract, isContractV2) {
   const invo =
-    await contracts[contract][
+    await instance[contract][
       isContractV2 ? "projectTokenInfo" : "projectStateData"
     ](projId);
 
@@ -210,7 +210,7 @@ async function fetchEditionInfo(projId, contract, isContractV2) {
 
 async function fetchExtDepCount(projId, contract) {
   const count =
-    await contracts[contract].projectExternalAssetDependencyCount(projId);
+    await instance[contract].projectExternalAssetDependencyCount(projId);
   return count == 0 ? null : count;
 }
 
@@ -218,7 +218,7 @@ async function fetchCIDs(projId, extDepCount, contract) {
   const cidPromises = [];
   for (let i = 0; i < extDepCount; i++) {
     cidPromises.push(
-      contracts[contract].projectExternalAssetDependencyByIndex(projId, i),
+      instance[contract].projectExternalAssetDependencyByIndex(projId, i),
     );
   }
   const cidTuples = await Promise.all(cidPromises);
@@ -227,8 +227,8 @@ async function fetchCIDs(projId, extDepCount, contract) {
 
 async function fetchGateway(contract) {
   const [ipfs, arweave] = await Promise.all([
-    contracts[contract].preferredIPFSGateway(),
-    contracts[contract].preferredArweaveGateway(),
+    instance[contract].preferredIPFSGateway(),
+    instance[contract].preferredArweaveGateway(),
   ]);
   return { ipfs, arweave };
 }
@@ -448,11 +448,11 @@ function updateInfo(
           ${createSection(
             "CONTRACT",
             `<a href="https://etherscan.io/address/${
-              contracts[contract].target
+              instance[contract].target
             }" target="_blank">
-              ${shortAddr(contracts[contract].target)}
+              ${shortAddr(instance[contract].target)}
             </a>
-            <span class="copy-txt" data-text="${contracts[contract].target}">
+            <span class="copy-txt" data-text="${instance[contract].target}">
               <i class="fa-regular fa-copy"></i>
             </span>`,
           )}
