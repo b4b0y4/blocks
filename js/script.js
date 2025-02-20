@@ -79,11 +79,9 @@ async function fetchBlocks(blocks) {
 
       if (!itemExists) results.push(newItem);
     }
-
-    results.length > 0
-      ? console.log(results.join(" "))
-      : console.log(`No new items for ${contractName}`);
+    if (results.length > 0) console.log(results.join(" "));
   }
+  console.log("blocks fetched.");
 }
 
 /**********************************************************
