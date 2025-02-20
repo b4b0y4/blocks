@@ -39,7 +39,7 @@ Object.keys(contractsData).forEach((key, index) => {
  *********************************************************/
 const bloncks = ["ABC", ...isStudio];
 
-// fetchBlocks(bloncks);
+fetchBlocks(bloncks);
 
 async function fetchBlocks(blocks) {
   const startMap = {
@@ -57,6 +57,7 @@ async function fetchBlocks(blocks) {
     GLITCH: 1,
     SHIS: 1,
   };
+
   for (const contractName of blocks) {
     const n = indexMap[contractName];
     const start = startMap[contractName] || 0;
@@ -71,11 +72,19 @@ async function fetchBlocks(blocks) {
           : contracts[n].projectStateData(i),
       ]);
       const minted = Number(token.invocations) === 1 ? "item" : "items";
-      results.push(
-        `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}",`,
-      );
+      const newItem = `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}",`;
+      const noQuoteItem = newItem.replace(/"/g, "").slice(0, -1);
+
+      const itemExists = list.some((listItem) => listItem === noQuoteItem);
+
+      if (!itemExists) {
+        results.push(newItem);
+      }
     }
-    console.log(results.join(" "));
+
+    results.length > 0
+      ? console.log(results.join(" "))
+      : console.log(`No new items for ${contractName}`);
   }
 }
 
