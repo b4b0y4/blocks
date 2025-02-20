@@ -416,7 +416,7 @@ function updateInfo(
   minted,
   extDep,
 ) {
-  let artist = detail[1] || nameMap[contract] === "ITERATION" ? "Snowfro" : "";
+  let artist = nameMap[contract] === "ITERATION" ? "Snowfro" : detail[1];
   const logs = [];
 
   frame.contentWindow.console.log = (message) => {
