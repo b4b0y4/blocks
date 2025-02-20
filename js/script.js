@@ -77,9 +77,7 @@ async function fetchBlocks(blocks) {
 
       const itemExists = list.some((listItem) => listItem === noQuoteItem);
 
-      if (!itemExists) {
-        results.push(newItem);
-      }
+      if (!itemExists) results.push(newItem);
     }
 
     results.length > 0
