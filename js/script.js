@@ -39,7 +39,7 @@ Object.keys(contractsData).forEach((key, index) => {
  *********************************************************/
 const bloncks = ["ABC", ...isStudio];
 
-fetchBlocks(bloncks);
+// fetchBlocks(bloncks);
 
 async function fetchBlocks(blocks) {
   const startMap = {
@@ -418,7 +418,7 @@ function updateInfo(
   minted,
   extDep,
 ) {
-  let artist = detail[1];
+  let artist = detail[1] || nameMap[contract] === "ITERATION" ? "Snowfro" : "";
   const logs = [];
 
   frame.contentWindow.console.log = (message) => {
