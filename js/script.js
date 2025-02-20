@@ -49,13 +49,11 @@ async function fetchBlocks(blocks) {
     ABXPACEII: 5,
     OONA: 2026,
     AXIOM: 35,
-    GRAIL: 1,
-    HODL: 1,
-    UNITLDN: 1,
-    PROOF: 1,
-    WRLD: 1,
-    GLITCH: 1,
-    SHIS: 1,
+    ...Object.fromEntries(
+      ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD", "GLITCH", "SHIS"].map(
+        (key) => [key, 1],
+      ),
+    ),
   };
 
   for (const contractName of blocks) {
