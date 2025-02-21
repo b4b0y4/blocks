@@ -5305,6 +5305,10 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0x45e94b8c6087775c0074003B0056dEeC41008f00",
   },
+  ABSXXVIII: {
+    abi: abiV3FLEX,
+    address: "0xf3cC21a4009093B45B5d005ce7a0A80000580056",
+  },
   ABSXXX: {
     abi: abiV3FLEX,
     address: "0x8db6f700A7c90000F92Ac90084aD93a500f1eAE0",

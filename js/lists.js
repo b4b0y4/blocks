@@ -521,6 +521,7 @@ export const list = [
   "ABSXXV1 - Ink / mpkoz - 1 item",
   "ABSXXVI0 - Roots / Fernando Jerez - 57 items",
   "ABSXXVII0 - Roll Some Bones / rahul iyer - 95 items",
+  "ABSXXVIII0 - Defrag Me / Jorge Ledezma - 1 item",
   "ABSXXX0 - Heartbeat / AnaPet - 12 items",
   "ABSXXX1 - re:Fleur / AnaPet - 80 items",
   "ABSXXXI0 - Chroma Genesis / xnmtrc - 30 items",
