@@ -5191,15 +5191,18 @@ export const contractsData = {
   ABII: {
     abi: abiV2,
     address: "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270",
+    startProjId: 3,
   },
   ABIII: {
     abi: abiV3,
     address: "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069",
+    startProjId: 374,
   },
   ABC: {
     abi: abiV3,
     address: "0xAB0000000000aa06f89B268D604a9c1C41524Ac6",
     platform: "Art Blocks Curated",
+    startProjId: 494,
   },
   EXP: {
     abi: abiV3,
@@ -5215,6 +5218,7 @@ export const contractsData = {
     abi: abiV3,
     address: "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36",
     platform: "Art Blocks &times; Pace",
+    startProjId: 5,
   },
   ABXBM: {
     abi: abiV3,
@@ -5380,6 +5384,7 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0xAf40b66072Fe00CAcF5A25Cd1b7F1688Cde20f2F",
     platform: "Grailers",
+    startProjId: 1,
   },
   AOI: {
     abi: abiV3FLEX,
@@ -5440,6 +5445,7 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0x5D8EFdc20272CD3E24a27DfE7F25795a107c99a2",
     platform: "Unit London",
+    startProjId: 1,
   },
   TRAME: {
     abi: abiV2FLEX,
@@ -5450,6 +5456,7 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0x9F79e46A309f804Aa4B7B53a1F72c69137427794",
     platform: "Hodlers",
+    startProjId: 1,
   },
   FAB: {
     abi: abiV3,
@@ -5465,6 +5472,7 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8",
     platform: "PROOF",
+    startProjId: 1,
   },
   PROOFII: {
     abi: abiV3FLEX,
@@ -5493,10 +5501,12 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0x5fdf5E6CAf7b8b0F64c3612aFd85E9407A7e1389",
     platform: "Artwrld",
+    startProjId: 1,
   },
   OONA: {
     abi: abiV3FLEX,
     address: "0x000000d1dc20aF3f7746dC61a4718eDCe700cED8",
+    startProjId: 2026,
   },
   VERSE: {
     abi: abiV2FLEX,
@@ -5516,6 +5526,7 @@ export const contractsData = {
     abi: abiV3,
     address: "0x9209070E1447018638e15b73Dbee46Bf085fcf5f",
     platform: "Axiom",
+    startProjId: 35,
   },
   NGEN: {
     abi: abiV3FLEX,
@@ -5535,6 +5546,7 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E",
     platform: "Glitch Gallery",
+    startProjId: 1,
   },
   PLOTFLEX: {
     abi: abiV2FLEX,
@@ -5550,6 +5562,7 @@ export const contractsData = {
     abi: abiV3FLEX,
     address: "0xc74eC888104842277Fa1b74e1C3D415eb673009F",
     platform: "Shiseido",
+    startProjId: 1,
   },
   RAVENABE: {
     abi: abiV3FLEX,

@@ -41,23 +41,9 @@ Object.keys(contractsData).forEach((key, index) => {
 // fetchBlocks(["ABC", ...isStudio, "STBYS"]);
 
 async function fetchBlocks(blocks) {
-  const startMap = {
-    ABII: 3,
-    ABIII: 374,
-    ABC: 494,
-    ABXPACEII: 5,
-    OONA: 2026,
-    AXIOM: 35,
-    ...Object.fromEntries(
-      ["GRAIL", "HODL", "UNITLDN", "PROOF", "WRLD", "GLITCH", "SHIS"].map(
-        (key) => [key, 1],
-      ),
-    ),
-  };
-
   for (const contractName of blocks) {
     const n = indexMap[contractName];
-    const start = startMap[contractName] || 0;
+    const start = contractsData[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const results = [];
 
