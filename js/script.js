@@ -39,8 +39,8 @@ Object.keys(contractsData).forEach((key, index) => {
  *********************************************************/
 // fetchBlocks(["ABC", ...isStudio, "STBYS"]);
 
-async function fetchBlocks(blocks) {
-  for (const contractName of blocks) {
+async function fetchBlocks(array) {
+  for (const contractName of array) {
     const n = indexMap[contractName];
     const start = contractsData[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
