@@ -54,13 +54,12 @@ async function fetchBlocks(blocks) {
           : instance[n].projectStateData(i),
       ]);
       const minted = Number(token.invocations) === 1 ? "item" : "items";
-      const newItem = `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}",`;
-      const noQuoteItem = newItem.replace(/"/g, "").slice(0, -1);
-      const itemExists = list.some((listItem) => listItem === noQuoteItem);
+      const newItem = `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}`;
+      const itemExists = list.some((listItem) => listItem === newItem);
 
-      if (!itemExists) results.push(newItem);
+      if (!itemExists) results.push(`"${newItem}",`);
     }
-    if (results.length > 0) console.log(results.join(" "));
+    if (results.length > 0) console.log(results.join("\n"));
   }
   console.log("%cDONE!!!", "color: lime;");
 }
