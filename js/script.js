@@ -56,7 +56,6 @@ async function fetchBlocks(blocks) {
       const minted = Number(token.invocations) === 1 ? "item" : "items";
       const newItem = `"${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}",`;
       const noQuoteItem = newItem.replace(/"/g, "").slice(0, -1);
-
       const itemExists = list.some((listItem) => listItem === noQuoteItem);
 
       if (!itemExists) results.push(newItem);
