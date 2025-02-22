@@ -37,7 +37,7 @@ Object.keys(contractsData).forEach((key, index) => {
 /**********************************************************
  *                UPDATE LIST FUNCTION
  *********************************************************/
-const bloncks = ["ABC", ...isStudio, "PLOTII", "STBYS"];
+const bloncks = ["ABC", ...isStudio, "STBYS"];
 
 // fetchBlocks(bloncks);
 
@@ -79,7 +79,7 @@ async function fetchBlocks(blocks) {
     }
     if (results.length > 0) console.log(results.join(" "));
   }
-  console.log("blocks fetched.");
+  console.log("%cDONE!!!", "color: lime;");
 }
 
 /**********************************************************
