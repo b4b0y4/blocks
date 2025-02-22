@@ -37,9 +37,8 @@ Object.keys(contractsData).forEach((key, index) => {
 /**********************************************************
  *                UPDATE LIST FUNCTION
  *********************************************************/
-const bloncks = ["ABC", ...isStudio, "STBYS"];
 
-// fetchBlocks(bloncks);
+// fetchBlocks(["ABC", ...isStudio, "STBYS"]);
 
 async function fetchBlocks(blocks) {
   const startMap = {
