@@ -640,7 +640,7 @@ function handleNumericQuery(searchQuery) {
   const { contract, projId } = contractData;
   const id = parseInt(searchQuery.match(/\s*(\d+)/)[1]);
   const tokenId =
-    projId == 0
+    projId === 0
       ? id
       : Number((projId * 1000000 + id).toString().padStart(6, "0"));
 
