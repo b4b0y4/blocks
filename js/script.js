@@ -150,7 +150,7 @@ async function grabData(tokenId, contract) {
 }
 
 async function fetchHash(tokenId, contract) {
-  return contract == 0
+  return nameMap[contract] == "AB"
     ? instance[contract].showTokenHashes(tokenId)
     : instance[contract].tokenIdToHash(tokenId);
 }
@@ -345,7 +345,7 @@ function pushItemToLocalStorage(
       "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
       "hash": "${hash}"
     }`;
-  } else if (contract === 0) {
+  } else if (nameMap[contract] === "AB") {
     tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
   } else {
     tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
