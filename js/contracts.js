@@ -172,6 +172,11 @@ export const contractsData = {
     address: "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD",
     platform: "Bright Moments",
   },
+  BMFLEX: {
+    abi: abiV2FLEX,
+    address: "0x7c3Ea2b7B3beFA1115aB51c09F0C9f245C500B18",
+    platform: "Bright Moments",
+  },
   CITIZEN: {
     abi: abiV2,
     address: "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0",
@@ -185,6 +190,11 @@ export const contractsData = {
   PLOTII: {
     abi: abiV3,
     address: "0xAc521EA7A83a3Bc3f9f1e09F8300a6301743fB1f",
+    platform: "Plottables",
+  },
+  PLOTFLEX: {
+    abi: abiV2FLEX,
+    address: "0x18dE6097cE5B5B2724C9Cae6Ac519917f3F178c0",
     platform: "Plottables",
   },
   STBYS: {
@@ -364,11 +374,6 @@ export const contractsData = {
     address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E",
     platform: "Glitch Gallery",
     startProjId: 1,
-  },
-  PLOTFLEX: {
-    abi: abiV2FLEX,
-    address: "0x18dE6097cE5B5B2724C9Cae6Ac519917f3F178c0",
-    platform: "Plottables",
   },
   STITCH: {
     abi: abiV3FLEX,

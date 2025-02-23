@@ -118,10 +118,15 @@ async function grabData(tokenId, contract) {
     if (isFLEX.includes(nameMap[contract])) {
       const extDepCount = await fetchExtDepCount(projId, contract);
       if (extDepCount) {
-        [extDep, { ipfs, arweave }] = await Promise.all([
-          fetchCIDs(projId, extDepCount, contract),
-          fetchGateway(contract),
-        ]);
+        if (nameMap[contract] === "BMFLEX") {
+          extDep = await fetchCIDs(projId, extDepCount, contract);
+          ipfs = "https://ipfs.io/ipfs";
+        } else {
+          [extDep, { ipfs, arweave }] = await Promise.all([
+            fetchCIDs(projId, extDepCount, contract),
+            fetchGateway(contract),
+          ]);
+        }
       }
     }
 
@@ -309,6 +314,10 @@ function pushItemToLocalStorage(
   ipfs,
   arweave,
 ) {
+  if (nameMap[contract] === "BMFLEX" && !tokenId.toString().startsWith("16")) {
+    script = replaceIPFSGateways(script);
+  }
+
   const process = extLib.startsWith("processing")
     ? "application/processing"
     : "";
@@ -323,8 +332,17 @@ function pushItemToLocalStorage(
   if (extDep.length > 0) {
     const cids = extDep
       .map((cid) => {
+        if (
+          nameMap[contract] === "BMFLEX" &&
+          tokenId.toString().startsWith("16")
+        ) {
+          cid = replaceIPFSGateways(cid);
+        }
+
         const dependencyType =
-          cid.startsWith("Qm") || cid.startsWith("baf")
+          cid.startsWith("Qm") ||
+          cid.startsWith("baf") ||
+          cid.includes("/ipfs/")
             ? "IPFS"
             : /^[a-zA-Z0-9_-]{43}$/.test(cid)
               ? "ARWEAVE"
@@ -356,6 +374,12 @@ function pushItemToLocalStorage(
     JSON.stringify({ src, tokenIdHash, process, script }),
   );
 }
+
+const replaceIPFSGateways = (scriptContent) => {
+  return scriptContent
+    .replace(/https:\/\/pinata\.brightmoments\.io/g, "https://ipfs.io")
+    .replace(/https:\/\/[a-z0-9-]+\.mypinata\.cloud/g, "https://ipfs.io");
+};
 
 const curated = [
   0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
@@ -485,15 +509,14 @@ function updateInfo(
               : ""
           }
           ${
-            extDep.length > 0 &&
-            (extDep[0].startsWith("Qm") ||
-              extDep[0].startsWith("baf") ||
-              /^[a-zA-Z0-9_-]{43}$/.test(extDep[0]))
+            extDep.length > 0 || nameMap[contract] === "BMFLEX"
               ? createSection(
                   "EXTERNAL DEPENDENCY",
                   `<span class="no-copy-txt">
                   ${
-                    extDep[0].startsWith("Qm") || extDep[0].startsWith("baf")
+                    nameMap[contract] === "BMFLEX" ||
+                    extDep[0].startsWith("Qm") ||
+                    extDep[0].startsWith("baf")
                       ? "ipfs"
                       : "arweave"
                   }
