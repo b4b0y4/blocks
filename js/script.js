@@ -34,12 +34,16 @@ Object.keys(contractsData).forEach((key, index) => {
   indexMap[key] = index;
 });
 
+checkForNewContracts();
+
 /**********************************************************
  *                UPDATE LIST FUNCTION
  *********************************************************/
 // fetchBlocks(["ABC", ...isStudio, "STBYS"]);
 
 async function fetchBlocks(array) {
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
   for (const contractName of array) {
     const n = indexMap[contractName];
     const start = contractsData[contractName].startProjId || 0;
@@ -61,7 +65,17 @@ async function fetchBlocks(array) {
     }
     if (results.length > 0) console.log(results.join("\n"));
   }
-  console.log("%cDONE!!!", "color: lime;");
+  console.log("%cBLOCKS FETCHED!!!", "color: lime;");
+}
+
+function checkForNewContracts() {
+  const existingContracts = new Set(list.map((item) => item.split(/[0-9]/)[0]));
+  const contracts = Object.keys(contractsData);
+  const newContract = contracts.filter((key) => !existingContracts.has(key));
+
+  if (newContract.length > 0) {
+    fetchBlocks(newContract);
+  }
 }
 
 /**********************************************************
