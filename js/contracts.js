@@ -410,11 +410,11 @@ function updateV2StudioFlex() {
     if ([abiV1, abiV2, abiV2FLEX, abiBM].includes(contractsData[key].abi)) {
       isV2.push(key);
     }
-    if ([abiV2FLEX, abiV3FLEX].includes(contractsData[key].abi)) {
-      isFLEX.push(key);
-    }
     if (key.startsWith("ABS")) {
       isStudio.push(key);
+    }
+    if ([abiV2FLEX, abiV3FLEX].includes(contractsData[key].abi)) {
+      isFLEX.push(key);
     }
   }
 }
