@@ -42,8 +42,6 @@ A web-based viewer for generative art collections on the Ethereum blockchain, fo
 
 ### Adding New Contracts
 
-To add new contracts to the viewer:
-
 1. In `contracts.js`, add your contract data to `contractsData`:
 ```js
 contractsData = {
@@ -57,7 +55,16 @@ contractsData = {
 }
 ```
 
-2. The contract will be automatically categorized based on its ABI:
+2. Run the application and check the console for new blocks using `checkForNewContracts()`:
+   - The function will scan the contract and output formatted entries
+   - Copy these entries and add them manually to the `list` array in `lists.js`
+   - Example output format:
+   ```js
+   "YOURCONTRACT0 - Project Name / Artist Name - X items",
+   "YOURCONTRACT1 - Another Project / Another Artist - Y items",
+   ```
+
+3. The contract will be automatically categorized based on its ABI:
 - V2 contracts (uses `isV2` array)
 - Studio contracts (prefix with "ABS")
 - FLEX contracts (uses FLEX ABIs)
@@ -85,4 +92,4 @@ Help maintain the application's decentralized nature by pinning it to your IPFS 
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
