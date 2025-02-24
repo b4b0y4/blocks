@@ -1,6 +1,6 @@
 # Blocks
 
-A web-based viewer for generative art collections on the Ethereum blockchain, focusing on Art Blocks and associated Engine collections.
+A web-based viewer for generative art collections on Ethereum, focusing on Art Blocks and associated Engine collections.
 
 ## Features
 
@@ -36,7 +36,6 @@ A web-based viewer for generative art collections on the Ethereum blockchain, fo
 - Fullscreen viewing mode
 - Dark/light theme toggle
 - Automatic loop functionality
-- Favorite artwork saving
 
 ## Development
 
@@ -55,7 +54,7 @@ contractsData = {
 }
 ```
 
-2. Run the application and check the console for new blocks using `checkForNewContracts()`:
+2. Run the application and check the console for new contracts using `checkForNewContracts()`:
    - The function will scan the contract and output formatted entries
    - Copy these entries and add them manually to the `list` array in `lists.js`
    - Example output format:
