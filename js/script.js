@@ -70,8 +70,9 @@ async function fetchBlocks(array) {
 
 function checkForNewContracts() {
   const existingContracts = new Set(list.map((item) => item.split(/[0-9]/)[0]));
-  const contracts = Object.keys(contractsData);
-  const newContract = contracts.filter((key) => !existingContracts.has(key));
+  const newContract = Object.keys(contractsData).filter(
+    (key) => !existingContracts.has(key),
+  );
 
   if (newContract.length > 0) {
     fetchBlocks(newContract);
