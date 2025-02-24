@@ -65,7 +65,7 @@ async function fetchBlocks(array) {
     }
     if (results.length > 0) console.log(results.join("\n"));
   }
-  console.log("%cBLOCKS FETCHED!!!", "color: lime;");
+  console.log("%cDONE!!!", "color: lime;");
 }
 
 function checkForNewContracts() {
