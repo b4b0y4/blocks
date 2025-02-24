@@ -39,7 +39,7 @@ checkForNewContracts();
 /**********************************************************
  *                UPDATE LIST FUNCTION
  *********************************************************/
-// fetchBlocks(["ABC", ...isStudio, "STBYS"]);
+// fetchBlocks(["ABC", ...isStudio, "STBYS", "PLOTII"]);
 
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
