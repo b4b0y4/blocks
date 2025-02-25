@@ -952,6 +952,10 @@ function displayFavoriteList() {
     if (favorite.hasOwnProperty(key)) {
       const keyElement = document.createElement("p");
       keyElement.textContent = key;
+      keyElement.style.display = "flex";
+      keyElement.style.justifyContent = "space-between";
+      keyElement.style.alignItems = "center";
+
       const delSpan = document.createElement("span");
       delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
 
