@@ -153,7 +153,6 @@ iframe {
   position: absolute;
   bottom: 0px;
   right: 0px;
-  left: 0px;
   height: 30px;
   max-width: 100%;
   display: flex;
@@ -161,6 +160,9 @@ iframe {
   align-items: center;
   background-color: var(--color-bg);
   padding: 5px;
+  padding-left: 10px;
+  border-top-left-radius: 10px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
   z-index: 100;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
@@ -388,7 +390,7 @@ a:hover {
 }
 
 .more {
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: var(--color-btn);
 }
 
@@ -551,6 +553,9 @@ a:hover {
   .infobar {
     position: static;
     justify-content: center;
+    left: 0px;
+    border-radius: 0;
+    padding-left: 5px;
     height: 80px;
     opacity: 1;
   }
