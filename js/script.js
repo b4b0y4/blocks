@@ -44,27 +44,43 @@ checkForNewContracts();
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
   console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
+
   for (const contractName of array) {
     const n = indexMap[contractName];
     const start = contractsData[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const results = [];
 
-    for (let i = start; i < end; i++) {
-      const [detail, token] = await Promise.all([
-        instance[n].projectDetails(i.toString()),
-        isV2.includes(contractName)
-          ? instance[n].projectTokenInfo(i)
-          : instance[n].projectStateData(i),
-      ]);
-      const minted = Number(token.invocations) === 1 ? "item" : "items";
-      const newItem = `${contractName}${i} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}`;
-      const itemExists = list.some((listItem) => listItem === newItem);
+    const batchSize = 5;
 
-      if (!itemExists) results.push(`"${newItem}",`);
+    for (let batchStart = start; batchStart < end; batchStart += batchSize) {
+      const batchEnd = Math.min(batchStart + batchSize, end);
+      const batchPromises = [];
+
+      for (let i = batchStart; i < batchEnd; i++) {
+        batchPromises.push(
+          (async (id) => {
+            const [detail, token] = await Promise.all([
+              instance[n].projectDetails(id.toString()),
+              isV2.includes(contractName)
+                ? instance[n].projectTokenInfo(id)
+                : instance[n].projectStateData(id),
+            ]);
+
+            const minted = Number(token.invocations) === 1 ? "item" : "items";
+            const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${minted}`;
+
+            return !list.includes(newItem) ? `"${newItem}",` : null;
+          })(i),
+        );
+      }
+
+      results.push(...(await Promise.all(batchPromises)).filter(Boolean));
     }
+
     if (results.length > 0) console.log(results.join("\n"));
   }
+
   console.log("%cDONE!!!", "color: lime;");
 }
 
