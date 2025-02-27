@@ -682,7 +682,7 @@ export const list = [
   "PLOT26 - Field Recordings / Jacob Gold - 16 items",
   "PLOTII0 - Time Between the Lines is Thread Through the Mind / Matto - 40 items",
   "PLOTII1 - Scribble Together / minimizer - 435 items",
-  "PLOTII2 - Scribble Party / minimizer - 236 items",
+  "PLOTII2 - Scribble Party / minimizer - 237 items",
   "PLOTFLEX0 - Instructions for Defacement / Steve Pikelny - 712 items",
   "STBYS0 - Themes and Variations / Vera Molnár, in collaboration with Martin Grasser - 500 items",
   "STBYS1 - EVENT / Bernar Venet - 106 items",
