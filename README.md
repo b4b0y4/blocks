@@ -39,6 +39,13 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 
 ## Development
 
+### Code Structure
+- `contracts.js` - Contract definitions, initializations, and classification
+- `fetch.js` - Functions for discovering new contracts and collections
+- `lists.js` - Collection data and library references
+- `script.js` - Main application logic and UI interactions
+- `dom.js` - DOM element references
+
 ### Adding New Contracts
 
 1. In `contracts.js`, add your contract data to `contractsData`:
@@ -54,7 +61,7 @@ contractsData = {
 }
 ```
 
-2. Run the application and check the console for new contracts using `checkForNewContracts()`:
+2. The new contract will be automatically detected by `checkForNewContracts()`. Check the console for new contracts:
    - The function will scan the contract and output formatted entries
    - Copy these entries and add them manually to the `list` array in `lists.js`
    - Example output format:
@@ -63,10 +70,8 @@ contractsData = {
    "YOURCONTRACT1 - Another Project / Another Artist - Y items",
    ```
 
-3. The contract will be automatically categorized based on its ABI:
-- V2 contracts (uses `isV2` array)
-- Studio contracts (prefix with "ABS")
-- FLEX contracts (uses FLEX ABIs)
+3. Alternatively, you can directly use the fetch functionality:
+   - `fetchBlocks(["YOURCONTRACT"])` - fetch collections from a specific contract
 
 ### Required Contract Functions
 

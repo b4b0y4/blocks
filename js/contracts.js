@@ -1,3 +1,4 @@
+import { ethers } from "./ethers.min.js";
 import { abiV1, abiV2, abiV3, abiV2FLEX, abiV3FLEX, abiBM } from "./abis.js";
 
 const contractsData = {
@@ -421,4 +422,30 @@ function updateV2StudioFlex() {
 
 updateV2StudioFlex();
 
-export { contractsData, isV2, isFLEX, isStudio };
+const instance = [];
+const nameMap = {};
+const indexMap = {};
+
+function initializeContracts(provider) {
+  instance.length = 0;
+
+  Object.keys(contractsData).forEach((key, index) => {
+    const { abi, address } = contractsData[key];
+    instance.push(new ethers.Contract(address, abi, provider));
+    nameMap[index] = key;
+    indexMap[key] = index;
+  });
+
+  return { instance, nameMap, indexMap };
+}
+
+export {
+  contractsData,
+  isV2,
+  isFLEX,
+  isStudio,
+  instance,
+  nameMap,
+  indexMap,
+  initializeContracts,
+};

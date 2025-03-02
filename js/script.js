@@ -1,14 +1,26 @@
 import { ethers } from "./ethers.min.js";
 import { dom, panels } from "./dom.js";
 import { list, libs, curated } from "./lists.js";
-import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js";
+// import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js";
+import { fetchBlocks, checkForNewContracts } from "./fetch.js";
+import {
+  contractsData,
+  isV2,
+  isFLEX,
+  isStudio,
+  instance,
+  nameMap,
+  indexMap,
+  initializeContracts,
+} from "./contracts.js";
 
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 
-const instance = [];
-const nameMap = {};
-const indexMap = {};
+initializeContracts(provider);
+// const instance = [];
+// const nameMap = {};
+// const indexMap = {};
 
 let contractData = {};
 let filteredList = list;
@@ -21,62 +33,7 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
 };
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
 
-Object.keys(contractsData).forEach((key, index) => {
-  const { abi, address } = contractsData[key];
-  instance.push(new ethers.Contract(address, abi, provider));
-  nameMap[index] = key;
-  indexMap[key] = index;
-});
-
-checkForNewContracts();
-
-/**********************************************************
- *                UPDATE LIST FUNCTION
- *********************************************************/
 // fetchBlocks(["ABC", ...isStudio, "STBYS", "PLOTII"]);
-
-async function fetchBlocks(array) {
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
-  for (const contractName of array) {
-    const n = indexMap[contractName];
-    const start = contractsData[contractName].startProjId || 0;
-    const end = Number(await instance[n].nextProjectId());
-    const results = [];
-    const batchSize = 5;
-    for (let batchStart = start; batchStart < end; batchStart += batchSize) {
-      const batchEnd = Math.min(batchStart + batchSize, end);
-      const batchPromises = [];
-      for (let i = batchStart; i < batchEnd; i++) {
-        batchPromises.push(
-          (async (id) => {
-            const [detail, token] = await Promise.all([
-              instance[n].projectDetails(id.toString()),
-              isV2.includes(contractName)
-                ? instance[n].projectTokenInfo(id)
-                : instance[n].projectStateData(id),
-            ]);
-            const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${Number(token.invocations) === 1 ? "item" : "items"}`;
-            return !list.includes(newItem) ? `"${newItem}",` : null;
-          })(i),
-        );
-      }
-      results.push(...(await Promise.all(batchPromises)).filter(Boolean));
-    }
-    if (results.length > 0) console.log(results.join("\n"));
-  }
-  console.log("%cDONE!!!", "color: lime;");
-}
-
-function checkForNewContracts() {
-  const existingContracts = new Set(list.map((item) => item.split(/[0-9]/)[0]));
-  const newContract = Object.keys(contractsData).filter(
-    (key) => !existingContracts.has(key),
-  );
-  if (newContract.length > 0) {
-    fetchBlocks(newContract);
-  }
-}
 
 /**********************************************************
  *             GET DATA FROM ETHEREUM FUNCTIONS
@@ -1080,6 +1037,7 @@ addHoverEffect(dom.repeatIcon, dropMenu);
 document.addEventListener("DOMContentLoaded", () => {
   updateButtons("loop");
   checkLocalStorage();
+  checkForNewContracts();
 
   contractData = JSON.parse(localStorage.getItem("contractData"));
   if (contractData) update(...Object.values(contractData));
