@@ -54,7 +54,7 @@ Object.keys(contractRegistry).forEach((key, index) => {
   indexMap[key] = index;
 });
 
-let filteredList = list;
+let filteredList;
 let selectedIndex = -1;
 let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
