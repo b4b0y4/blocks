@@ -891,7 +891,7 @@ function checkLocalStorage() {
 function handleLoopClick(action) {
   dom.dropMenu.classList.remove("active");
 
-  let inputValue = loopInput.value.trim();
+  let inputValue = dom.loopInput.value.trim();
   const inputVal = parseInt(inputValue, 10);
 
   const interval =
