@@ -1,6 +1,6 @@
 import { abiV1, abiV2, abiV3, abiV2FLEX, abiV3FLEX, abiBM } from "./abis.js";
 
-export const contractsData = {
+const contractsData = {
   AB: {
     abi: abiV1,
     address: "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a",
@@ -401,9 +401,9 @@ export const contractsData = {
   },
 };
 
-export const isV2 = [];
-export const isStudio = [];
-export const isFLEX = [];
+const isV2 = [];
+const isStudio = [];
+const isFLEX = [];
 
 function updateV2StudioFlex() {
   for (const key in contractsData) {
@@ -420,3 +420,5 @@ function updateV2StudioFlex() {
 }
 
 updateV2StudioFlex();
+
+export { contractsData, isV2, isFLEX, isStudio };

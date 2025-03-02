@@ -1,42 +1,7 @@
 import { ethers } from "./ethers.min.js";
-import { libs, list } from "./lists.js";
+import { dom, panels } from "./dom.js";
+import { list, libs, curated } from "./lists.js";
 import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js";
-
-const dom = {
-  root: document.documentElement,
-  theme: document.getElementById("theme"),
-  instruction: document.querySelector(".instruction"),
-  rpcUrlInput: document.getElementById("rpcUrl"),
-  loopInput: document.getElementById("loopInput"),
-  dropMenu: document.getElementById("dropMenu"),
-  frame: document.getElementById("frame"),
-  infobar: document.querySelector(".infobar"),
-  info: document.getElementById("info"),
-  save: document.getElementById("saveBtn"),
-  dec: document.getElementById("decrementBtn"),
-  inc: document.getElementById("incrementBtn"),
-  favIcon: document.querySelector(".fav-icon"),
-  search: document.getElementById("searchInput"),
-  overlay: document.querySelector(".overlay"),
-  panel: document.querySelector(".panel"),
-  listPanel: document.querySelector(".list-panel"),
-  favPanel: document.querySelector(".fav-panel"),
-  spinner: document.querySelector(".spinner"),
-  keyShort: document.querySelector(".key-short"),
-  searchBox: document.querySelector(".search-box"),
-  infoBox: document.getElementById("infoBox"),
-  randomButton: document.getElementById("randomButton"),
-  loopAll: document.getElementById("loopAll"),
-  favLoop: document.getElementById("favLoop"),
-  curatedLoop: document.getElementById("curatedLoop"),
-  selectedLoop: document.getElementById("selectedLoop"),
-  stopLoop: document.querySelector(".fa-circle-stop"),
-  fullscreen: document.getElementById("fullscreen"),
-  searchIcon: document.querySelector(".search-icon"),
-  repeatIcon: document.querySelector(".fa-repeat"),
-};
-
-const panels = [dom.panel, dom.listPanel, dom.favPanel];
 
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
@@ -44,6 +9,17 @@ const provider = new ethers.JsonRpcProvider(rpcUrl);
 const instance = [];
 const nameMap = {};
 const indexMap = {};
+
+let contractData = {};
+let filteredList = list;
+let selectedIndex = -1;
+let intervalId;
+let loopState = JSON.parse(localStorage.getItem("loopState")) || {
+  isLooping: "false",
+  interval: 60000,
+  action: null,
+};
+let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
 
 Object.keys(contractsData).forEach((key, index) => {
   const { abi, address } = contractsData[key];
@@ -105,8 +81,6 @@ function checkForNewContracts() {
 /**********************************************************
  *             GET DATA FROM ETHEREUM FUNCTIONS
  *********************************************************/
-let contractData = {};
-
 async function grabData(tokenId, contract) {
   try {
     toggleSpin();
@@ -404,15 +378,6 @@ const replaceIPFSGateways = (scriptContent) => {
     .replace(/https:\/\/pinata\.brightmoments\.io/g, "https://ipfs.io")
     .replace(/https:\/\/[a-z0-9-]+\.mypinata\.cloud/g, "https://ipfs.io");
 };
-
-const curated = [
-  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
-];
 
 function getCuration(projId) {
   const playground = [
@@ -723,9 +688,6 @@ function handleOtherQuery(line, searchQuery) {
 /**********************************************************
  *        LIST DISPLAY/NAVIGATION FUNCTIONS
  *********************************************************/
-let filteredList = list;
-let selectedIndex = -1;
-
 function displayList(lines) {
   const panel = lines
     .map((line, index) => {
@@ -839,13 +801,6 @@ dom.randomButton.addEventListener("click", () => {
 /**********************************************************
  *                  LOOP FUNCTIONS
  *********************************************************/
-let intervalId;
-let loopState = JSON.parse(localStorage.getItem("loopState")) || {
-  isLooping: "false",
-  interval: 60000,
-  action: null,
-};
-
 function loopRandom(interval, action) {
   clearInterval(intervalId);
   const favorite = JSON.parse(localStorage.getItem("favorite"));
@@ -947,8 +902,6 @@ dom.save.addEventListener("click", saveOutput);
 /**********************************************************
  *   MANIPULATE SAVED OUTPUT IN STORAGE FUNCTIONS
  *********************************************************/
-let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
-
 function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
   favorite[key] = contractData;

@@ -1,4 +1,4 @@
-export const abiV1 = [
+const abiV1 = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -844,7 +844,7 @@ export const abiV1 = [
   },
 ];
 
-export const abiV2 = [
+const abiV2 = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -1783,7 +1783,7 @@ export const abiV2 = [
   },
 ];
 
-export const abiV3 = [
+const abiV3 = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -2903,7 +2903,7 @@ export const abiV3 = [
   },
 ];
 
-export const abiV2FLEX = [
+const abiV2FLEX = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -3826,7 +3826,7 @@ export const abiV2FLEX = [
   },
 ];
 
-export const abiV3FLEX = [
+const abiV3FLEX = [
   {
     inputs: [
       { internalType: "string", name: "_tokenName", type: "string" },
@@ -5181,4 +5181,6 @@ const getBMAbi = () =>
       : entry,
   );
 
-export const abiBM = getBMAbi();
+const abiBM = getBMAbi();
+
+export { abiV1, abiV2, abiV3, abiV2FLEX, abiV3FLEX, abiBM };
