@@ -279,7 +279,7 @@ async function updateContractData(tokenId, contract) {
     location.reload();
   } catch (error) {
     console.error("updateContractData:", error);
-    search.placeholder = "error";
+    dom.search.placeholder = "error";
   }
 }
 
