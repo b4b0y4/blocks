@@ -844,6 +844,42 @@ const list = [
   "NUMBER0 - Number / Wang - 165 items",
 ];
 
+const dom = {
+  root: document.documentElement,
+  theme: document.getElementById("theme"),
+  instruction: document.querySelector(".instruction"),
+  rpcUrlInput: document.getElementById("rpcUrl"),
+  loopInput: document.getElementById("loopInput"),
+  dropMenu: document.getElementById("dropMenu"),
+  frame: document.getElementById("frame"),
+  infobar: document.querySelector(".infobar"),
+  info: document.getElementById("info"),
+  save: document.getElementById("saveBtn"),
+  dec: document.getElementById("decrementBtn"),
+  inc: document.getElementById("incrementBtn"),
+  favIcon: document.querySelector(".fav-icon"),
+  search: document.getElementById("searchInput"),
+  overlay: document.querySelector(".overlay"),
+  panel: document.querySelector(".panel"),
+  listPanel: document.querySelector(".list-panel"),
+  favPanel: document.querySelector(".fav-panel"),
+  spinner: document.querySelector(".spinner"),
+  keyShort: document.querySelector(".key-short"),
+  searchBox: document.querySelector(".search-box"),
+  infoBox: document.getElementById("infoBox"),
+  randomButton: document.getElementById("randomButton"),
+  loopAll: document.getElementById("loopAll"),
+  favLoop: document.getElementById("favLoop"),
+  curatedLoop: document.getElementById("curatedLoop"),
+  selectedLoop: document.getElementById("selectedLoop"),
+  stopLoop: document.querySelector(".fa-circle-stop"),
+  fullscreen: document.getElementById("fullscreen"),
+  searchIcon: document.querySelector(".search-icon"),
+  repeatIcon: document.querySelector(".fa-repeat"),
+};
+
+const panels = [dom.panel, dom.listPanel, dom.favPanel];
+
 const libs = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
@@ -883,4 +919,4 @@ const curated = [
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ];
 
-export { list, libs, curated };
+export { list, dom, panels, libs, curated };
