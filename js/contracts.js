@@ -1,7 +1,7 @@
 import { ethers } from "./ethers.min.js";
 import { abiV1, abiV2, abiV3, abiV2FLEX, abiV3FLEX, abiBM } from "./abis.js";
 
-const contractsData = {
+const contractRegistry = {
   AB: {
     abi: abiV1,
     address: "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a",
@@ -402,35 +402,18 @@ const contractsData = {
   },
 };
 
+const instance = [];
+const nameMap = {};
+const indexMap = {};
 const isV2 = [];
 const isStudio = [];
 const isFLEX = [];
 
-function updateV2StudioFlex() {
-  for (const key in contractsData) {
-    if ([abiV1, abiV2, abiV2FLEX, abiBM].includes(contractsData[key].abi)) {
-      isV2.push(key);
-    }
-    if (key.startsWith("ABS")) {
-      isStudio.push(key);
-    }
-    if ([abiV2FLEX, abiV3FLEX].includes(contractsData[key].abi)) {
-      isFLEX.push(key);
-    }
-  }
-}
-
-updateV2StudioFlex();
-
-const instance = [];
-const nameMap = {};
-const indexMap = {};
-
 function initializeContracts(provider) {
   instance.length = 0;
 
-  Object.keys(contractsData).forEach((key, index) => {
-    const { abi, address } = contractsData[key];
+  Object.keys(contractRegistry).forEach((key, index) => {
+    const { abi, address } = contractRegistry[key];
     instance.push(new ethers.Contract(address, abi, provider));
     nameMap[index] = key;
     indexMap[key] = index;
@@ -439,8 +422,24 @@ function initializeContracts(provider) {
   return { instance, nameMap, indexMap };
 }
 
+function updateV2StudioFlex() {
+  for (const key in contractRegistry) {
+    if ([abiV1, abiV2, abiV2FLEX, abiBM].includes(contractRegistry[key].abi)) {
+      isV2.push(key);
+    }
+    if (key.startsWith("ABS")) {
+      isStudio.push(key);
+    }
+    if ([abiV2FLEX, abiV3FLEX].includes(contractRegistry[key].abi)) {
+      isFLEX.push(key);
+    }
+  }
+}
+
+updateV2StudioFlex();
+
 export {
-  contractsData,
+  contractRegistry,
   isV2,
   isFLEX,
   isStudio,

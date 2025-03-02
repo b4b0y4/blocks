@@ -1,10 +1,10 @@
 import { ethers } from "./ethers.min.js";
 import { dom, panels } from "./dom.js";
+import { storage } from "./storage.js";
 import { list, libs, curated } from "./lists.js";
-// import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js";
 import { fetchBlocks, checkForNewContracts } from "./fetch.js";
 import {
-  contractsData,
+  contractRegistry,
   isV2,
   isFLEX,
   isStudio,
@@ -14,24 +14,21 @@ import {
   initializeContracts,
 } from "./contracts.js";
 
-const rpcUrl = localStorage.getItem("rpcUrl");
+const rpcUrl = storage.get("rpcUrl", false);
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 
 initializeContracts(provider);
-// const instance = [];
-// const nameMap = {};
-// const indexMap = {};
 
-let contractData = {};
+let contractData = storage.get("contractData");
 let filteredList = list;
 let selectedIndex = -1;
 let intervalId;
-let loopState = JSON.parse(localStorage.getItem("loopState")) || {
+let loopState = storage.get("loopState") || {
   isLooping: "false",
   interval: 60000,
   action: null,
 };
-let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
+let favorite = storage.get("favorite") || {};
 
 // fetchBlocks(["ABC", ...isStudio, "STBYS", "PLOTII"]);
 
@@ -42,7 +39,7 @@ async function grabData(tokenId, contract) {
   try {
     toggleSpin();
     clearPanels();
-    clearDataStorage();
+    storage.clear(["contractData", "scriptData"]);
     console.log("Contract:", contract, "\nToken Id:", tokenId);
 
     const isContractV2 = isV2.includes(nameMap[contract]);
@@ -101,7 +98,7 @@ async function grabData(tokenId, contract) {
       ipfs,
       arweave,
     };
-    localStorage.setItem("contractData", JSON.stringify(data));
+    storage.set("contractData", data);
     location.reload();
   } catch (error) {
     console.error("grabData:", error);
@@ -205,7 +202,7 @@ async function updateContractData(tokenId, contract) {
     contractData.owner = owner;
     contractData.ensName = ensName;
 
-    localStorage.setItem("contractData", JSON.stringify(contractData));
+    storage.set("contractData", contractData);
 
     location.reload();
   } catch (error) {
@@ -324,10 +321,7 @@ function pushItemToLocalStorage(
     tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
   }
 
-  localStorage.setItem(
-    "scriptData",
-    JSON.stringify({ src, tokenIdHash, process, script }),
-  );
+  storage.set("scriptData", { src, tokenIdHash, process, script });
 }
 
 const replaceIPFSGateways = (scriptContent) => {
@@ -363,7 +357,7 @@ function getPlatform(contract, projId) {
     return "Art Blocks Studio";
   }
 
-  return contractsData[contractName].platform || "";
+  return contractRegistry[contractName].platform || "";
 }
 
 function updateInfo(
@@ -554,7 +548,7 @@ async function injectFrame() {
   try {
     const iframeDocument =
       dom.frame.contentDocument || dom.frame.contentWindow.document;
-    const scriptData = JSON.parse(localStorage.getItem("scriptData"));
+    const scriptData = storage.get("scriptData");
 
     const frameBody = scriptData.process
       ? `<body><script type="${scriptData.process}">${scriptData.script}</script><canvas></canvas></body>`
@@ -741,10 +735,10 @@ function getRandomKey(favorite) {
   if (keys.length > 0) {
     const randomKey = keys[Math.floor(Math.random() * keys.length)];
 
-    clearDataStorage();
+    storage.clear(["contractData", "scriptData"]);
 
     contractData = favorite[randomKey];
-    localStorage.setItem("contractData", JSON.stringify(contractData));
+    storage.set("contractData", contractData);
     console.log(randomKey);
     console.log(contractData);
     location.reload();
@@ -760,7 +754,7 @@ dom.randomButton.addEventListener("click", () => {
  *********************************************************/
 function loopRandom(interval, action) {
   clearInterval(intervalId);
-  const favorite = JSON.parse(localStorage.getItem("favorite"));
+  const favorite = storage.get("favorite");
 
   if (loopState.isLooping !== "true") {
     performAction(action, favorite);
@@ -771,7 +765,7 @@ function loopRandom(interval, action) {
   }, interval);
 
   loopState = { isLooping: "true", interval, action };
-  localStorage.setItem("loopState", JSON.stringify(loopState));
+  storage.set("loopState", loopState);
 }
 
 function performAction(action, favorite) {
@@ -791,7 +785,7 @@ function performAction(action, favorite) {
 function stopRandomLoop() {
   clearInterval(intervalId);
   loopState.isLooping = "false";
-  localStorage.setItem("loopState", JSON.stringify(loopState));
+  storage.set("loopState", loopState);
 }
 
 function checkLocalStorage() {
@@ -821,7 +815,7 @@ function handleLoopClick(action) {
 
   if (inputValue !== "" && interval !== loopState.interval) {
     loopState = { isLooping: "false", interval: interval, action: action };
-    localStorage.setItem("loopState", JSON.stringify(loopState));
+    storage.set("loopState", loopState);
   }
 }
 
@@ -831,7 +825,7 @@ function stopLoop() {
 }
 
 /**********************************************************
- *           SAVE OUTPUT FUNCTION
+ *                SAVE OUTPUT FUNCTION
  *********************************************************/
 async function saveOutput() {
   const content = dom.frame.contentDocument.documentElement.outerHTML;
@@ -862,20 +856,20 @@ dom.save.addEventListener("click", saveOutput);
 function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
   favorite[key] = contractData;
-  localStorage.setItem("favorite", JSON.stringify(favorite));
+  storage.set("favorite", favorite);
   updateFavIcon();
 }
 
 function deleteContractDataFromStorage(key) {
   if (favorite.hasOwnProperty(key)) delete favorite[key];
-  localStorage.setItem("favorite", JSON.stringify(favorite));
+  storage.set("favorite", favorite);
   updateFavIcon();
 }
 
 function displayFavorite(key) {
-  clearDataStorage();
+  storage.clear(["contractData", "scriptData"]);
   contractData = favorite[key];
-  localStorage.setItem("contractData", JSON.stringify(contractData));
+  storage.set("contractData", contractData);
   location.reload();
 }
 
@@ -952,10 +946,6 @@ dom.dec.addEventListener("click", decrementTokenId);
 /**********************************************************
  *               HELPER FUNCTIONS
  *********************************************************/
-const clearDataStorage = () => {
-  ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
-};
-
 const clearPanels = () => {
   [dom.overlay, dom.infobar, ...panels].forEach((el) =>
     el.classList.remove("active"),
@@ -1039,7 +1029,6 @@ document.addEventListener("DOMContentLoaded", () => {
   checkLocalStorage();
   checkForNewContracts();
 
-  contractData = JSON.parse(localStorage.getItem("contractData"));
   if (contractData) update(...Object.values(contractData));
   if (!contractData) dom.infobar.classList.add("active");
   if (!rpcUrl) dom.infoBox.style.display = "none";
@@ -1054,14 +1043,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 dom.rpcUrlInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
-    localStorage.setItem("rpcUrl", dom.rpcUrlInput.value);
+    storage.set("rpcUrl", dom.rpcUrlInput.value, false);
     location.reload();
   }
 });
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
-    clearDataStorage();
+    storage.clear(["contractData", "scriptData"]);
     location.reload();
   } else if (event.key === "/") {
     event.preventDefault();
@@ -1136,7 +1125,7 @@ dom.fullscreen.addEventListener("click", () => {
  *********************************************************/
 function setDarkMode(isDarkMode) {
   dom.root.classList.toggle("dark-mode", isDarkMode);
-  localStorage.setItem("darkMode", isDarkMode);
+  storage.set("darkMode", isDarkMode);
   updateButtons("theme");
 }
 
@@ -1150,4 +1139,4 @@ dom.theme.addEventListener("click", (event) => {
   toggleDarkMode();
 });
 
-setDarkMode(JSON.parse(localStorage.getItem("darkMode")));
+setDarkMode(storage.get("darkMode"));

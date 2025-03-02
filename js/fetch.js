@@ -1,12 +1,12 @@
 import { list } from "./lists.js";
-import { contractsData, isV2, indexMap, instance } from "./contracts.js";
+import { contractRegistry, isV2, indexMap, instance } from "./contracts.js";
 
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
   console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
   for (const contractName of array) {
     const n = indexMap[contractName];
-    const start = contractsData[contractName].startProjId || 0;
+    const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const results = [];
     const batchSize = 5;
@@ -36,7 +36,7 @@ async function fetchBlocks(array) {
 
 function checkForNewContracts() {
   const existingContracts = new Set(list.map((item) => item.split(/[0-9]/)[0]));
-  const newContract = Object.keys(contractsData).filter(
+  const newContract = Object.keys(contractRegistry).filter(
     (key) => !existingContracts.has(key),
   );
   if (newContract.length > 0) {
