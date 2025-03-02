@@ -559,12 +559,13 @@ function updateInfo(
         </div>
       </div>
     `;
-    document.querySelectorAll(".copy-txt").forEach((element) =>
-      element.addEventListener("click", () => {
-        const textToCopy = element.getAttribute("data-text");
+    dom.panel.addEventListener("click", (e) => {
+      const copyBtn = e.target.closest(".copy-txt");
+      if (copyBtn) {
+        const textToCopy = copyBtn.getAttribute("data-text");
         copyToClipboard(textToCopy);
 
-        const icon = element.querySelector("i");
+        const icon = copyBtn.querySelector("i");
         icon.classList.replace("fa-regular", "fa-solid");
         icon.classList.replace("fa-copy", "fa-check");
 
@@ -572,8 +573,8 @@ function updateInfo(
           icon.classList.replace("fa-solid", "fa-regular");
           icon.classList.replace("fa-check", "fa-copy");
         }, 1000);
-      }),
-    );
+      }
+    });
   };
   update();
 }
