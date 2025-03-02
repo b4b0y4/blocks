@@ -1,6 +1,5 @@
 import { ethers } from "./ethers.min.js";
 import { dom, panels } from "./dom.js";
-import { storage } from "./storage.js";
 import { list, libs, curated } from "./lists.js";
 import { fetchBlocks, checkForNewContracts } from "./fetch.js";
 import {
@@ -14,16 +13,16 @@ import {
   initializeContracts,
 } from "./contracts.js";
 
-const rpcUrl = storage.get("rpcUrl", false);
+const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 initializeContracts(provider);
 
-let contractData = storage.get("contractData") || {};
+let contractData = JSON.parse(localStorage.getItem("contractData")) || {};
 let filteredList = list;
 let selectedIndex = -1;
 let intervalId;
-let favorite = storage.get("favorite") || {};
-let loopState = storage.get("loopState") || {
+let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
+let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   isLooping: "false",
   interval: 60000,
   action: null,
@@ -38,7 +37,7 @@ async function grabData(tokenId, contract) {
   try {
     toggleSpin();
     clearPanels();
-    storage.clear(["contractData", "scriptData"]);
+    clearDataStorage();
     console.log("Contract:", contract, "\nToken Id:", tokenId);
 
     const isContractV2 = isV2.includes(nameMap[contract]);
@@ -97,7 +96,7 @@ async function grabData(tokenId, contract) {
       ipfs,
       arweave,
     };
-    storage.set("contractData", data);
+    localStorage.setItem("contractData", JSON.stringify(data));
     location.reload();
   } catch (error) {
     console.error("grabData:", error);
@@ -201,7 +200,7 @@ async function updateContractData(tokenId, contract) {
     contractData.owner = owner;
     contractData.ensName = ensName;
 
-    storage.set("contractData", contractData);
+    localStorage.setItem("contractData", JSON.stringify(contractData));
 
     location.reload();
   } catch (error) {
@@ -320,7 +319,10 @@ function pushItemToLocalStorage(
     tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
   }
 
-  storage.set("scriptData", { src, tokenIdHash, process, script });
+  localStorage.setItem(
+    "scriptData",
+    JSON.stringify({ src, tokenIdHash, process, script }),
+  );
 }
 
 const replaceIPFSGateways = (scriptContent) => {
@@ -547,7 +549,7 @@ async function injectFrame() {
   try {
     const iframeDocument =
       dom.frame.contentDocument || dom.frame.contentWindow.document;
-    const scriptData = storage.get("scriptData");
+    const scriptData = JSON.parse(localStorage.getItem("scriptData"));
 
     const frameBody = scriptData.process
       ? `<body><script type="${scriptData.process}">${scriptData.script}</script><canvas></canvas></body>`
@@ -734,10 +736,10 @@ function getRandomKey(favorite) {
   if (keys.length > 0) {
     const randomKey = keys[Math.floor(Math.random() * keys.length)];
 
-    storage.clear(["contractData", "scriptData"]);
+    clearDataStorage();
 
     contractData = favorite[randomKey];
-    storage.set("contractData", contractData);
+    localStorage.setItem("contractData", JSON.stringify(contractData));
     console.log(randomKey);
     console.log(contractData);
     location.reload();
@@ -753,7 +755,6 @@ dom.randomButton.addEventListener("click", () => {
  *********************************************************/
 function loopRandom(interval, action) {
   clearInterval(intervalId);
-  const favorite = storage.get("favorite");
 
   if (loopState.isLooping !== "true") {
     performAction(action, favorite);
@@ -764,7 +765,7 @@ function loopRandom(interval, action) {
   }, interval);
 
   loopState = { isLooping: "true", interval, action };
-  storage.set("loopState", loopState);
+  localStorage.setItem("loopState", JSON.stringify(loopState));
 }
 
 function performAction(action, favorite) {
@@ -784,7 +785,7 @@ function performAction(action, favorite) {
 function stopRandomLoop() {
   clearInterval(intervalId);
   loopState.isLooping = "false";
-  storage.set("loopState", loopState);
+  localStorage.setItem("loopState", JSON.stringify(loopState));
 }
 
 function checkLocalStorage() {
@@ -814,7 +815,7 @@ function handleLoopClick(action) {
 
   if (inputValue !== "" && interval !== loopState.interval) {
     loopState = { isLooping: "false", interval: interval, action: action };
-    storage.set("loopState", loopState);
+    localStorage.setItem("loopState", JSON.stringify(loopState));
   }
 }
 
@@ -855,20 +856,20 @@ dom.save.addEventListener("click", saveOutput);
 function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
   favorite[key] = contractData;
-  storage.set("favorite", favorite);
+  localStorage.setItem("favorite", JSON.stringify(favorite));
   updateFavIcon();
 }
 
 function deleteContractDataFromStorage(key) {
   if (favorite.hasOwnProperty(key)) delete favorite[key];
-  storage.set("favorite", favorite);
+  localStorage.setItem("favorite", JSON.stringify(favorite));
   updateFavIcon();
 }
 
 function displayFavorite(key) {
-  storage.clear(["contractData", "scriptData"]);
+  clearDataStorage();
   contractData = favorite[key];
-  storage.set("contractData", contractData);
+  localStorage.setItem("contractData", JSON.stringify(contractData));
   location.reload();
 }
 
@@ -945,6 +946,10 @@ dom.dec.addEventListener("click", decrementTokenId);
 /**********************************************************
  *               HELPER FUNCTIONS
  *********************************************************/
+const clearDataStorage = () => {
+  ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
+};
+
 const clearPanels = () => {
   [dom.overlay, dom.infobar, ...panels].forEach((el) =>
     el.classList.remove("active"),
@@ -1042,14 +1047,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 dom.rpcUrlInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
-    storage.set("rpcUrl", dom.rpcUrlInput.value, false);
+    localStorage.setItem("rpcUrl", dom.rpcUrlInput.value);
     location.reload();
   }
 });
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
-    storage.clear(["contractData", "scriptData"]);
+    clearDataStorage();
     location.reload();
   } else if (event.key === "/") {
     event.preventDefault();
@@ -1072,10 +1077,6 @@ dom.favIcon.addEventListener("click", (event) => {
   event.stopPropagation();
   displayFavoriteList();
   togglePanel(dom.favPanel);
-});
-
-document.addEventListener("click", () => {
-  clearPanels();
 });
 
 panels.forEach((panel) => {
@@ -1119,12 +1120,16 @@ dom.fullscreen.addEventListener("click", () => {
   else if (dom.frame.msRequestFullscreen) dom.frame.msRequestFullscreen();
 });
 
+document.addEventListener("click", () => {
+  clearPanels();
+});
+
 /**********************************************************
  *              DARK/LIGHT MODE TOGGLE
  *********************************************************/
 function setDarkMode(isDarkMode) {
   dom.root.classList.toggle("dark-mode", isDarkMode);
-  storage.set("darkMode", isDarkMode);
+  localStorage.setItem("darkMode", isDarkMode);
   updateButtons("theme");
 }
 
@@ -1138,4 +1143,4 @@ dom.theme.addEventListener("click", (event) => {
   toggleDarkMode();
 });
 
-setDarkMode(storage.get("darkMode"));
+setDarkMode(JSON.parse(localStorage.getItem("darkMode")));
