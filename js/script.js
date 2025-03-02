@@ -1,8 +1,44 @@
 import { ethers } from "./ethers.min.js";
-import { list, dom, panels, libs, curated } from "./lists.js";
+import { list, libs } from "./lists.js";
 import { contractRegistry, isV2, isFLEX, isStudio } from "./contracts.js";
 
 // fetchBlocks(["ABC", ...isStudio, "STBYS", "PLOTII"]);
+
+const dom = {
+  root: document.documentElement,
+  theme: document.getElementById("theme"),
+  instruction: document.querySelector(".instruction"),
+  rpcUrlInput: document.getElementById("rpcUrl"),
+  loopInput: document.getElementById("loopInput"),
+  dropMenu: document.getElementById("dropMenu"),
+  frame: document.getElementById("frame"),
+  infobar: document.querySelector(".infobar"),
+  info: document.getElementById("info"),
+  save: document.getElementById("saveBtn"),
+  dec: document.getElementById("decrementBtn"),
+  inc: document.getElementById("incrementBtn"),
+  favIcon: document.querySelector(".fav-icon"),
+  search: document.getElementById("searchInput"),
+  overlay: document.querySelector(".overlay"),
+  panel: document.querySelector(".panel"),
+  listPanel: document.querySelector(".list-panel"),
+  favPanel: document.querySelector(".fav-panel"),
+  spinner: document.querySelector(".spinner"),
+  keyShort: document.querySelector(".key-short"),
+  searchBox: document.querySelector(".search-box"),
+  infoBox: document.getElementById("infoBox"),
+  randomButton: document.getElementById("randomButton"),
+  loopAll: document.getElementById("loopAll"),
+  favLoop: document.getElementById("favLoop"),
+  curatedLoop: document.getElementById("curatedLoop"),
+  selectedLoop: document.getElementById("selectedLoop"),
+  stopLoop: document.querySelector(".fa-circle-stop"),
+  fullscreen: document.getElementById("fullscreen"),
+  searchIcon: document.querySelector(".search-icon"),
+  repeatIcon: document.querySelector(".fa-repeat"),
+};
+
+const panels = [dom.panel, dom.listPanel, dom.favPanel];
 
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
@@ -388,13 +424,9 @@ const replaceIPFSGateways = (scriptContent) => {
 };
 
 function getCuration(projId) {
-  const playground = [
-    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
-    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
-    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
-    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
-    373,
-  ];
+  const curated = getCurated();
+  const playground = getPlayground();
+
   return curated.includes(projId)
     ? "Art Blocks Curated"
     : playground.includes(projId)
@@ -402,6 +434,27 @@ function getCuration(projId) {
       : projId < 374
         ? "Art Blocks Factory"
         : "Art Blocks Presents";
+}
+
+function getCurated() {
+  return [
+    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
+    41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
+    159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
+    284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
+    379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
+    456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
+  ];
+}
+
+function getPlayground() {
+  return [
+    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
+    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
+    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
+    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
+    373,
+  ];
 }
 
 function getPlatform(contract, projId) {
@@ -714,6 +767,7 @@ function filterList(lines, query) {
       const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
       if (idMatch) {
         const id = parseInt(idMatch[1]);
+        const curated = getCurated();
         return curated.includes(id) || line.startsWith("ABC");
       }
     });
