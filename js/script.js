@@ -54,15 +54,15 @@ Object.keys(contractRegistry).forEach((key, index) => {
   indexMap[key] = index;
 });
 
-let contractData = JSON.parse(localStorage.getItem("contractData"));
 let filteredList = list;
 let selectedIndex = -1;
-let intervalId;
+let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
 let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   isLooping: "false",
   interval: 60000,
   action: null,
+  intervalId: null,
 };
 
 /**********************************************************
@@ -761,7 +761,7 @@ function displayList(lines) {
   dom.listPanel.innerHTML = `<div>${panel}</div>`;
 }
 
-function filterList(lines, query) {
+function applyFilter(lines, query) {
   if (query.toLowerCase() === "curated") {
     filteredList = lines.filter((line) => {
       const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
@@ -785,9 +785,9 @@ displayList(list);
 function handleItemClick(event) {
   const listItem = event.target.closest(".list-item");
   if (listItem) {
-    const selectedIndex = listItem.getAttribute("data-index");
-    console.log("Item clicked:", filteredList[selectedIndex]);
-    getToken(filteredList[selectedIndex], "");
+    const clickIndex = listItem.getAttribute("data-index");
+    console.log("Item clicked:", filteredList[clickIndex]);
+    getToken(filteredList[clickIndex], "");
     dom.search.value = "";
   }
 }
@@ -824,7 +824,7 @@ function handleKeyboardNavigation(event) {
 
 dom.search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim();
-  filterList(list, query);
+  applyFilter(list, query);
 });
 
 dom.search.addEventListener("keydown", handleKeyboardNavigation);
@@ -864,17 +864,24 @@ dom.randomButton.addEventListener("click", () => {
  *                  LOOP FUNCTIONS
  *********************************************************/
 function loopRandom(interval, action) {
-  clearInterval(intervalId);
+  if (loopState.intervalId) {
+    clearInterval(loopState.intervalId);
+  }
 
   if (loopState.isLooping !== "true") {
     performAction(action, favorite);
   }
 
-  intervalId = setInterval(() => {
+  loopState.intervalId = setInterval(() => {
     performAction(action, favorite);
   }, interval);
 
-  loopState = { isLooping: "true", interval, action };
+  loopState = {
+    isLooping: "true",
+    interval,
+    action,
+    intervalId: loopState.intervalId,
+  };
   localStorage.setItem("loopState", JSON.stringify(loopState));
 }
 
@@ -882,7 +889,7 @@ function performAction(action, favorite) {
   if (action === "loopAll") getRandom(list);
   else if (action === "favLoop") getRandomKey(favorite);
   else if (action === "curatedLoop") {
-    filterList(list, "curated");
+    applyFilter(list, "curated");
     getRandom(filteredList);
   } else if (action === "selectedLoop") {
     let random = Math.floor(
@@ -893,7 +900,9 @@ function performAction(action, favorite) {
 }
 
 function stopRandomLoop() {
-  clearInterval(intervalId);
+  if (loopState.intervalId) {
+    clearInterval(loopState.intervalId);
+  }
   loopState.isLooping = "false";
   localStorage.setItem("loopState", JSON.stringify(loopState));
 }
