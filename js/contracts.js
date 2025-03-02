@@ -1,4 +1,3 @@
-import { ethers } from "./ethers.min.js";
 import { abiV1, abiV2, abiV3, abiV2FLEX, abiV3FLEX, abiBM } from "./abis.js";
 
 const contractRegistry = {
@@ -402,23 +401,9 @@ const contractRegistry = {
   },
 };
 
-const instance = [];
-const nameMap = {};
-const indexMap = {};
 const isV2 = [];
 const isStudio = [];
 const isFLEX = [];
-
-function initializeContracts(provider) {
-  Object.keys(contractRegistry).forEach((key, index) => {
-    const { abi, address } = contractRegistry[key];
-    instance.push(new ethers.Contract(address, abi, provider));
-    nameMap[index] = key;
-    indexMap[key] = index;
-  });
-
-  return { instance, nameMap, indexMap };
-}
 
 function updateV2StudioFlex() {
   for (const key in contractRegistry) {
@@ -436,13 +421,4 @@ function updateV2StudioFlex() {
 
 updateV2StudioFlex();
 
-export {
-  contractRegistry,
-  isV2,
-  isFLEX,
-  isStudio,
-  instance,
-  nameMap,
-  indexMap,
-  initializeContracts,
-};
+export { contractRegistry, isV2, isFLEX, isStudio };
