@@ -2,23 +2,41 @@ import { ethers } from "./ethers.min.js";
 import { libs, list } from "./lists.js";
 import { contractsData, isV2, isFLEX, isStudio } from "./contracts.js";
 
-const instruction = document.querySelector(".instruction");
-const rpcUrlInput = document.getElementById("rpcUrl");
-const loopInput = document.getElementById("loopInput");
-const dropMenu = document.getElementById("dropMenu");
-const frame = document.getElementById("frame");
-const infobar = document.querySelector(".infobar");
-const info = document.getElementById("info");
-const save = document.getElementById("saveBtn");
-const dec = document.getElementById("decrementBtn");
-const inc = document.getElementById("incrementBtn");
-const favIcon = document.querySelector(".fav-icon");
-const search = document.getElementById("searchInput");
-const overlay = document.querySelector(".overlay");
-const panel = document.querySelector(".panel");
-const listPanel = document.querySelector(".list-panel");
-const favPanel = document.querySelector(".fav-panel");
-const panels = [panel, listPanel, favPanel];
+const dom = {
+  root: document.documentElement,
+  theme: document.getElementById("theme"),
+  instruction: document.querySelector(".instruction"),
+  rpcUrlInput: document.getElementById("rpcUrl"),
+  loopInput: document.getElementById("loopInput"),
+  dropMenu: document.getElementById("dropMenu"),
+  frame: document.getElementById("frame"),
+  infobar: document.querySelector(".infobar"),
+  info: document.getElementById("info"),
+  save: document.getElementById("saveBtn"),
+  dec: document.getElementById("decrementBtn"),
+  inc: document.getElementById("incrementBtn"),
+  favIcon: document.querySelector(".fav-icon"),
+  search: document.getElementById("searchInput"),
+  overlay: document.querySelector(".overlay"),
+  panel: document.querySelector(".panel"),
+  listPanel: document.querySelector(".list-panel"),
+  favPanel: document.querySelector(".fav-panel"),
+  spinner: document.querySelector(".spinner"),
+  keyShort: document.querySelector(".key-short"),
+  searchBox: document.querySelector(".search-box"),
+  infoBox: document.getElementById("infoBox"),
+  randomButton: document.getElementById("randomButton"),
+  loopAll: document.getElementById("loopAll"),
+  favLoop: document.getElementById("favLoop"),
+  curatedLoop: document.getElementById("curatedLoop"),
+  selectedLoop: document.getElementById("selectedLoop"),
+  stopLoop: document.querySelector(".fa-circle-stop"),
+  fullscreen: document.getElementById("fullscreen"),
+  searchIcon: document.querySelector(".search-icon"),
+  repeatIcon: document.querySelector(".fa-repeat"),
+};
+
+const panels = [dom.panel, dom.listPanel, dom.favPanel];
 
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
@@ -156,7 +174,7 @@ async function grabData(tokenId, contract) {
     location.reload();
   } catch (error) {
     console.error("grabData:", error);
-    search.placeholder = "error";
+    dom.search.placeholder = "error";
   }
 }
 
@@ -441,7 +459,7 @@ function updateInfo(
   let artist = detail[1] || "Snowfro";
   const logs = [];
 
-  frame.contentWindow.console.log = (message) => {
+  dom.frame.contentWindow.console.log = (message) => {
     if (nameMap[contract] === "BMF" && !logs.length) {
       artist = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "");
       logs.push(artist);
@@ -450,8 +468,8 @@ function updateInfo(
   };
 
   const update = () => {
-    info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`;
-    panel.innerHTML = `
+    dom.info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`;
+    dom.panel.innerHTML = `
       <div class="work">${detail[0]}</div>
       <p>
         <span class="artist">${artist}${
@@ -612,7 +630,7 @@ function copyToClipboard(text) {
 async function injectFrame() {
   try {
     const iframeDocument =
-      frame.contentDocument || frame.contentWindow.document;
+      dom.frame.contentDocument || dom.frame.contentWindow.document;
     const scriptData = JSON.parse(localStorage.getItem("scriptData"));
 
     const frameBody = scriptData.process
@@ -716,7 +734,7 @@ function displayList(lines) {
       return `<p class="list-item" data-index="${index}">${displayText}<span>${mintedInfo}</span></p>`;
     })
     .join("");
-  listPanel.innerHTML = `<div>${panel}</div>`;
+  dom.listPanel.innerHTML = `<div>${panel}</div>`;
 }
 
 function filterList(lines, query) {
@@ -745,7 +763,7 @@ function handleItemClick(event) {
     const selectedIndex = listItem.getAttribute("data-index");
     console.log("Item clicked:", filteredList[selectedIndex]);
     getToken(filteredList[selectedIndex], "");
-    search.value = "";
+    dom.search.value = "";
   }
 }
 
@@ -764,10 +782,10 @@ function handleKeyboardNavigation(event) {
       console.log("Item clicked:", filteredList[selectedIndex]);
       getToken(filteredList[selectedIndex], "");
     } else {
-      const query = search.value.trim();
+      const query = dom.search.value.trim();
       query === "" ? getRandom(list) : getToken(filteredList.join("\n"), query);
     }
-    search.value = "";
+    dom.search.value = "";
   }
 
   const items = document.querySelectorAll(".list-item");
@@ -779,14 +797,14 @@ function handleKeyboardNavigation(event) {
     items[selectedIndex].scrollIntoView({ block: "nearest" });
 }
 
-search.addEventListener("input", (event) => {
+dom.search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim();
   filterList(list, query);
 });
 
-search.addEventListener("keydown", handleKeyboardNavigation);
+dom.search.addEventListener("keydown", handleKeyboardNavigation);
 
-listPanel.addEventListener("click", handleItemClick);
+dom.listPanel.addEventListener("click", handleItemClick);
 
 /**********************************************************
  *              RANDOMNESS FUNCTIONS
@@ -813,7 +831,7 @@ function getRandomKey(favorite) {
   }
 }
 
-document.getElementById("randomButton").addEventListener("click", () => {
+dom.randomButton.addEventListener("click", () => {
   getRandom(list);
 });
 
@@ -864,14 +882,14 @@ function stopRandomLoop() {
 }
 
 function checkLocalStorage() {
-  loopInput.placeholder = `${loopState.interval / 60000}m`;
+  dom.loopInput.placeholder = `${loopState.interval / 60000}m`;
 
   if (loopState.isLooping === "true" && loopState.action !== null)
     loopRandom(loopState.interval, loopState.action);
 }
 
 function handleLoopClick(action) {
-  dropMenu.classList.remove("active");
+  dom.dropMenu.classList.remove("active");
 
   let inputValue = loopInput.value.trim();
   const inputVal = parseInt(inputValue, 10);
@@ -903,7 +921,7 @@ function stopLoop() {
  *           SAVE OUTPUT FUNCTION
  *********************************************************/
 async function saveOutput() {
-  const content = frame.contentDocument.documentElement.outerHTML;
+  const content = dom.frame.contentDocument.documentElement.outerHTML;
   let id = shortId(contractData.tokenId);
   const defaultName = `${contractData.detail[0].replace(
     /\s+/g,
@@ -923,7 +941,7 @@ async function saveOutput() {
   pushContractDataToStorage(id);
 }
 
-save.addEventListener("click", saveOutput);
+dom.save.addEventListener("click", saveOutput);
 
 /**********************************************************
  *   MANIPULATE SAVED OUTPUT IN STORAGE FUNCTIONS
@@ -951,7 +969,7 @@ function displayFavorite(key) {
 }
 
 function displayFavoriteList() {
-  favPanel.innerHTML = "";
+  dom.favPanel.innerHTML = "";
 
   for (let key in favorite) {
     if (favorite.hasOwnProperty(key)) {
@@ -977,7 +995,7 @@ function displayFavoriteList() {
       });
 
       keyElement.appendChild(delSpan);
-      favPanel.appendChild(keyElement);
+      dom.favPanel.appendChild(keyElement);
     }
   }
 }
@@ -1017,8 +1035,8 @@ function decrementTokenId() {
   updateContractData(contractData.tokenId, contractData.contract);
 }
 
-inc.addEventListener("click", incrementTokenId);
-dec.addEventListener("click", decrementTokenId);
+dom.inc.addEventListener("click", incrementTokenId);
+dom.dec.addEventListener("click", decrementTokenId);
 
 /**********************************************************
  *               HELPER FUNCTIONS
@@ -1028,23 +1046,26 @@ const clearDataStorage = () => {
 };
 
 const clearPanels = () => {
-  [overlay, infobar, ...panels].forEach((el) => el.classList.remove("active"));
+  [dom.overlay, dom.infobar, ...panels].forEach((el) =>
+    el.classList.remove("active"),
+  );
 };
 
 const togglePanel = (panelElement) => {
   panels.forEach((p) => p !== panelElement && p.classList.remove("active"));
   const isActive = panelElement.classList.toggle("active");
-  [overlay, infobar].forEach((el) => el.classList.toggle("active", isActive));
+  [dom.overlay, dom.infobar].forEach((el) =>
+    el.classList.toggle("active", isActive),
+  );
 };
 
 const toggleSpin = () => {
-  document.querySelector(".spinner").style.display = "block";
-  document.querySelector(".key-short").style.display = "none";
+  dom.spinner.style.display = "block";
+  dom.keyShort.style.display = "none";
 };
 
 const toggleKeyShort = (event) => {
-  document.querySelector(".key-short").style.display =
-    event.type === "focusin" ? "none" : "block";
+  dom.keyShort.style.display = event.type === "focusin" ? "none" : "block";
 };
 
 const updateButtons = (mode) => {
@@ -1054,8 +1075,8 @@ const updateButtons = (mode) => {
       ".fa-circle-stop": loopState.isLooping === "true",
     },
     theme: {
-      ".fa-sun": root.classList.contains("dark-mode"),
-      ".fa-moon": !root.classList.contains("dark-mode"),
+      ".fa-sun": dom.root.classList.contains("dark-mode"),
+      ".fa-moon": !dom.root.classList.contains("dark-mode"),
     },
   };
   Object.entries(buttonConfig[mode]).forEach(([selector, shouldDisplay]) => {
@@ -1072,10 +1093,8 @@ const setDisplay = (elements, value) => {
 function updateFavIcon() {
   const hasFavorites = Object.keys(favorite).length > 0;
 
-  setDisplay([favIcon], hasFavorites ? "block" : "none");
-  document
-    .querySelector(".search-box")
-    .classList.toggle("nofav", !hasFavorites);
+  setDisplay([dom.favIcon], hasFavorites ? "block" : "none");
+  dom.searchBox.classList.toggle("nofav", !hasFavorites);
   if (!hasFavorites) clearPanels();
 }
 
@@ -1098,7 +1117,8 @@ function addHoverEffect(button, menu) {
   menu.addEventListener("mouseover", showMenu);
   menu.addEventListener("mouseout", hideMenu);
 }
-addHoverEffect(document.querySelector(".fa-repeat"), dropMenu);
+
+addHoverEffect(dom.repeatIcon, dropMenu);
 
 /**********************************************************
  *                     EVENTS
@@ -1109,20 +1129,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   contractData = JSON.parse(localStorage.getItem("contractData"));
   if (contractData) update(...Object.values(contractData));
-  if (!contractData) infobar.classList.add("active");
-  if (!rpcUrl) document.getElementById("infoBox").style.display = "none";
+  if (!contractData) dom.infobar.classList.add("active");
+  if (!rpcUrl) dom.infoBox.style.display = "none";
 
-  setDisplay([inc, dec, save], contractData ? "block" : "none");
-  setDisplay([rpcUrlInput, instruction], rpcUrl ? "none" : "block");
+  setDisplay([dom.inc, dom.dec, dom.save], contractData ? "block" : "none");
+  setDisplay([dom.rpcUrlInput, dom.instruction], rpcUrl ? "none" : "block");
   updateFavIcon();
 
-  root.classList.remove("no-flash");
+  dom.root.classList.remove("no-flash");
   console.log(contractData);
 });
 
-rpcUrlInput.addEventListener("keypress", (event) => {
+dom.rpcUrlInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
-    localStorage.setItem("rpcUrl", rpcUrlInput.value);
+    localStorage.setItem("rpcUrl", dom.rpcUrlInput.value);
     location.reload();
   }
 });
@@ -1133,25 +1153,25 @@ document.addEventListener("keypress", (event) => {
     location.reload();
   } else if (event.key === "/") {
     event.preventDefault();
-    search.focus();
-    togglePanel(listPanel);
+    dom.search.focus();
+    togglePanel(dom.listPanel);
   }
 });
 
-info.addEventListener("click", (event) => {
+dom.info.addEventListener("click", (event) => {
   event.stopPropagation();
-  togglePanel(panel);
+  togglePanel(dom.panel);
 });
 
-document.querySelector(".search-icon").addEventListener("click", (event) => {
+dom.searchIcon.addEventListener("click", (event) => {
   event.stopPropagation();
-  togglePanel(listPanel);
+  togglePanel(dom.listPanel);
 });
 
-favIcon.addEventListener("click", (event) => {
+dom.favIcon.addEventListener("click", (event) => {
   event.stopPropagation();
   displayFavoriteList();
-  togglePanel(favPanel);
+  togglePanel(dom.favPanel);
 });
 
 document.addEventListener("click", () => {
@@ -1164,58 +1184,56 @@ panels.forEach((panel) => {
   });
 });
 
-search.addEventListener("input", () => {
-  if (search.value.trim() !== "") {
-    if (!listPanel.classList.contains("active")) {
-      togglePanel(listPanel);
+dom.search.addEventListener("input", () => {
+  if (dom.search.value.trim() !== "") {
+    if (!dom.listPanel.classList.contains("active")) {
+      togglePanel(dom.listPanel);
     }
   } else {
     clearPanels();
   }
 });
 
-search.addEventListener("focusin", toggleKeyShort);
-search.addEventListener("focusout", toggleKeyShort);
+dom.search.addEventListener("focusin", toggleKeyShort);
+dom.search.addEventListener("focusout", toggleKeyShort);
 
-document.getElementById("loopAll").addEventListener("click", () => {
+dom.loopAll.addEventListener("click", () => {
   handleLoopClick("loopAll");
 });
-document.getElementById("favLoop").addEventListener("click", () => {
+dom.favLoop.addEventListener("click", () => {
   handleLoopClick("favLoop");
 });
-document.getElementById("curatedLoop").addEventListener("click", () => {
+dom.curatedLoop.addEventListener("click", () => {
   handleLoopClick("curatedLoop");
 });
-document.getElementById("selectedLoop").addEventListener("click", () => {
+dom.selectedLoop.addEventListener("click", () => {
   handleLoopClick("selectedLoop");
 });
+dom.stopLoop.addEventListener("click", stopLoop);
 
-document.querySelector(".fa-circle-stop").addEventListener("click", stopLoop);
-
-document.getElementById("fullscreen").addEventListener("click", () => {
-  if (frame.requestFullscreen) frame.requestFullscreen();
-  else if (frame.mozRequestFullScreen) frame.mozRequestFullScreen();
-  else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
-  else if (frame.msRequestFullscreen) frame.msRequestFullscreen();
+dom.fullscreen.addEventListener("click", () => {
+  if (dom.frame.requestFullscreen) dom.frame.requestFullscreen();
+  else if (dom.frame.mozRequestFullScreen) dom.frame.mozRequestFullScreen();
+  else if (dom.frame.webkitRequestFullscreen)
+    dom.frame.webkitRequestFullscreen();
+  else if (dom.frame.msRequestFullscreen) dom.frame.msRequestFullscreen();
 });
 
 /**********************************************************
  *              DARK/LIGHT MODE TOGGLE
  *********************************************************/
-const root = document.documentElement;
-
 function setDarkMode(isDarkMode) {
-  root.classList.toggle("dark-mode", isDarkMode);
+  dom.root.classList.toggle("dark-mode", isDarkMode);
   localStorage.setItem("darkMode", isDarkMode);
   updateButtons("theme");
 }
 
 function toggleDarkMode() {
-  const isDarkMode = !root.classList.contains("dark-mode");
+  const isDarkMode = !dom.root.classList.contains("dark-mode");
   setDarkMode(isDarkMode);
 }
 
-document.getElementById("theme").addEventListener("click", (event) => {
+dom.theme.addEventListener("click", (event) => {
   event.stopPropagation();
   toggleDarkMode();
 });
