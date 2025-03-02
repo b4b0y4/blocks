@@ -51,7 +51,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 contractRegistry = {
   // ... existing contracts
   YOURCONTRACT: {
-    abi: abiV3, // Choose from abiV1, abiV2, abiV3, abiV2FLEX, abiV3FLEX
+    abi: abi.v3, // Choose/add abi from abis.js
     address: "0x...", // Contract address
     platform: "Your Platform", // Optional
     startProjId: 1, // Optional, default is 0

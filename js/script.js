@@ -1,6 +1,6 @@
 import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
-import { contractRegistry, isV2, isFLEX, isStudio } from "./contracts.js";
+import { contractRegistry, isV2, isFlex, isStudio } from "./contracts.js";
 
 // fetchBlocks(["ABC", ...isStudio, "STBYS", "PLOTII"]);
 
@@ -157,7 +157,7 @@ async function grabData(tokenId, contract) {
     let ipfs = null;
     let arweave = null;
 
-    if (isFLEX.includes(nameMap[contract])) {
+    if (isFlex.includes(nameMap[contract])) {
       const extDepCount = await fetchExtDepCount(projId, contract);
       if (extDepCount) {
         if (nameMap[contract] === "BMFLEX") {

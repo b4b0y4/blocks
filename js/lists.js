@@ -1,4 +1,4 @@
-const list = [
+export const list = [
   "AB0 - Chromie Squiggle / Snowfro - 10000 items",
   "AB1 - Genesis / DCA - 512 items",
   "AB2 - Construction Token / Jeff Davis - 500 items",
@@ -843,8 +843,7 @@ const list = [
   "ITERATION0 - 9dcc ITERATION-02 / Snowfro - 1183 items",
   "NUMBER0 - Number / Wang - 165 items",
 ];
-
-const libs = {
+export const libs = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.9.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
@@ -873,5 +872,3 @@ const libs = {
   "babylon@5.0.0":
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
 };
-
-export { list, libs };
