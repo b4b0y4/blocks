@@ -16,19 +16,18 @@ import {
 
 const rpcUrl = storage.get("rpcUrl", false);
 const provider = new ethers.JsonRpcProvider(rpcUrl);
-
 initializeContracts(provider);
 
-let contractData = storage.get("contractData");
+let contractData = storage.get("contractData") || {};
 let filteredList = list;
 let selectedIndex = -1;
 let intervalId;
+let favorite = storage.get("favorite") || {};
 let loopState = storage.get("loopState") || {
   isLooping: "false",
   interval: 60000,
   action: null,
 };
-let favorite = storage.get("favorite") || {};
 
 // fetchBlocks(["ABC", ...isStudio, "STBYS", "PLOTII"]);
 

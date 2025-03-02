@@ -410,8 +410,6 @@ const isStudio = [];
 const isFLEX = [];
 
 function initializeContracts(provider) {
-  instance.length = 0;
-
   Object.keys(contractRegistry).forEach((key, index) => {
     const { abi, address } = contractRegistry[key];
     instance.push(new ethers.Contract(address, abi, provider));
