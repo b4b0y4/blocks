@@ -1,8 +1,8 @@
 import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
-import { contractRegistry, isV2, isFlex, isStudio } from "./contracts.js";
+import { contractRegistry, is } from "./contracts.js";
 
-// fetchBlocks(["ABC", ...isStudio, "STBYS", "PLOTII"]);
+// fetchBlocks(["ABC", ...is.studio, "STBYS", "PLOTII"]);
 
 const dom = {
   root: document.documentElement,
@@ -88,7 +88,7 @@ async function fetchBlocks(array) {
           (async (id) => {
             const [detail, token] = await Promise.all([
               instance[n].projectDetails(id.toString()),
-              isV2.includes(contractName)
+              is.v2.includes(contractName)
                 ? instance[n].projectTokenInfo(id)
                 : instance[n].projectStateData(id),
             ]);
@@ -132,7 +132,7 @@ async function grabData(tokenId, contract) {
     clearDataStorage();
     console.log("Contract:", contract, "\nToken Id:", tokenId);
 
-    const isContractV2 = isV2.includes(nameMap[contract]);
+    const isContractV2 = is.v2.includes(nameMap[contract]);
 
     const [projectId, hash, { owner, ensName }] = await Promise.all([
       fetchProjectId(tokenId, contract),
@@ -157,7 +157,7 @@ async function grabData(tokenId, contract) {
     let ipfs = null;
     let arweave = null;
 
-    if (isFlex.includes(nameMap[contract])) {
+    if (is.flex.includes(nameMap[contract])) {
       const extDepCount = await fetchExtDepCount(projId, contract);
       if (extDepCount) {
         if (nameMap[contract] === "BMFLEX") {
@@ -463,7 +463,7 @@ function getPlatform(contract, projId) {
   if (["AB", "ABII", "ABIII"].includes(contractName)) {
     return getCuration(projId);
   }
-  if (isStudio.includes(contractName)) {
+  if (is.studio.includes(contractName)) {
     return "Art Blocks Studio";
   }
 

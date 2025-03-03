@@ -401,22 +401,24 @@ export const contractRegistry = {
   },
 };
 
-export const isV2 = [];
-export const isStudio = [];
-export const isFlex = [];
+export const is = {
+  v2: [],
+  studio: [],
+  flex: [],
+};
 
 function updateV2StudioFlex() {
   for (const key in contractRegistry) {
     if (
       [abi.v1, abi.v2, abi.v2Flex, abi.bm].includes(contractRegistry[key].abi)
     ) {
-      isV2.push(key);
+      is.v2.push(key);
     }
     if (key.startsWith("ABS")) {
-      isStudio.push(key);
+      is.studio.push(key);
     }
     if ([abi.v2Flex, abi.v3Flex].includes(contractRegistry[key].abi)) {
-      isFlex.push(key);
+      is.flex.push(key);
     }
   }
 }
