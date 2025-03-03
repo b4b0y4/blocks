@@ -485,7 +485,7 @@ export const list = [
   "ABC502 - Box Light Studies (sculpture) / Zach Lieberman - 1 item",
   "ABS0 - Misbah / Melissa Wiederrecht - 55 items",
   "ABSI0 - One More Day / Aaron Penne - 50 items",
-  "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 53 items",
+  "ABSII0 - variaciones del yo / Marcelo Soria-Rodríguez - 54 items",
   "ABSIII0 - Fragmented Perception / Motus Art - 23 items",
   "ABSIV0 - Monochronos / Heeey - 40 items",
   "ABSVII0 - Deco Echo / Harvey Rayner - 300 items",
