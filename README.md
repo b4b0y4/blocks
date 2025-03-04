@@ -41,6 +41,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 
 ### Code Structure
 - `contracts.js` - Contract definitions and classification
+- `abis.js` - abi references
 - `lists.js` - Collection data and library references
 - `script.js` - Main application logic and UI interactions
 
