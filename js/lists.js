@@ -607,7 +607,7 @@ export const list = [
   "BM72 - SPINᵗ / NumbersInMotion - 52 items",
   "BM73 - Topology / Rikard Lindström - 29 items",
   "BM74 - Descent / Andreas Gysin - 100 items",
-  "BM75 - Enlace / Aranda\Lasch - 100 items",
+  "BM75 - Enlace / Aranda\\Lasch - 100 items",
   "BM76 - Odysseys / Florian Zumbrunn - 100 items",
   "BM77 - a temporary arrangement of material / Martin Grasser - 100 items",
   "BM78 - Lightbreak / Luke Shannon - 100 items",
