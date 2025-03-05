@@ -494,7 +494,7 @@ export const list = [
   "ABSIX3 - Progression / Jeff Davis - 2 items",
   "ABSX0 - Cosmicodes / Insigħt × Leonardo Petrucci - 17 items",
   "ABSXI0 - Alchimie / RVig - 80 items",
-  "ABSXII0 - tied up, tied down, let loose, unwound / Ben Snell - 87 items",
+  "ABSXII0 - tied up, tied down, let loose, unwound / Ben Snell - 90 items",
   "ABSXIII0 - AnnoMetta / Matto - 1 item",
   "ABSXV0 - Untitled / Olga Fradina - 37 items",
   "ABSXVI0 - Incircles / Jos Vromans - 64 items",
