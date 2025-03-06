@@ -407,7 +407,7 @@ export const is = {
   flex: [],
 };
 
-function updateV2StudioFlex() {
+(function updateIs() {
   for (const key in contractRegistry) {
     if (
       [abi.v1, abi.v2, abi.v2Flex, abi.bm].includes(contractRegistry[key].abi)
@@ -421,6 +421,4 @@ function updateV2StudioFlex() {
       is.flex.push(key);
     }
   }
-}
-
-updateV2StudioFlex();
+})();
