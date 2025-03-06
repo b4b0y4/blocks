@@ -656,8 +656,7 @@ function copyToClipboard(text) {
  *********************************************************/
 async function injectFrame() {
   try {
-    const iframeDocument =
-      dom.frame.contentDocument || dom.frame.contentWindow.document;
+    const iframe = dom.frame.contentDocument;
     const scriptData = JSON.parse(localStorage.getItem("scriptData"));
 
     const frameBody = scriptData.process
@@ -689,9 +688,9 @@ async function injectFrame() {
              ${frameBody}
            </html>`;
 
-    iframeDocument.open();
-    iframeDocument.write(dynamicContent);
-    iframeDocument.close();
+    iframe.open();
+    iframe.write(dynamicContent);
+    iframe.close();
   } catch (error) {
     console.error("injectFrame:", error);
   }
