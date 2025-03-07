@@ -849,8 +849,6 @@ function getRandomKey(favorite) {
 
     contractData = favorite[randomKey];
     localStorage.setItem("contractData", JSON.stringify(contractData));
-    console.log(randomKey);
-    console.log(contractData);
     location.reload();
   }
 }
