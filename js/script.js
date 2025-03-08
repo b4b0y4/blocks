@@ -68,44 +68,107 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
 /**********************************************************
  *                UPDATE LIST FUNCTION
  *********************************************************/
+// async function fetchBlocks(array) {
+//   await new Promise((resolve) => setTimeout(resolve, 100));
+//   console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
+
+//   for (const contractName of array) {
+//     const n = indexMap[contractName];
+//     const start = contractRegistry[contractName].startProjId || 0;
+//     const end = Number(await instance[n].nextProjectId());
+//     const results = [];
+//     const batchSize = 5;
+
+//     for (let batchStart = start; batchStart < end; batchStart += batchSize) {
+//       const batchEnd = Math.min(batchStart + batchSize, end);
+//       const batchPromises = [];
+
+//       for (let i = batchStart; i < batchEnd; i++) {
+//         batchPromises.push(
+//           (async (id) => {
+//             const [detail, token] = await Promise.all([
+//               instance[n].projectDetails(id.toString()),
+//               is.v2.includes(contractName)
+//                 ? instance[n].projectTokenInfo(id)
+//                 : instance[n].projectStateData(id),
+//             ]);
+
+//             const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
+//               Number(token.invocations) === 1 ? "item" : "items"
+//             }`;
+
+//             return !list.includes(newItem) ? `"${newItem}",` : null;
+//           })(i),
+//         );
+//       }
+
+//       results.push(...(await Promise.all(batchPromises)).filter(Boolean));
+//     }
+
+//     if (results.length > 0) console.log(results.join("\n"));
+//   }
+
+//   console.log("%cDONE!!!", "color: lime;");
+// }
+
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
   console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
 
   for (const contractName of array) {
-    const n = indexMap[contractName];
-    const start = contractRegistry[contractName].startProjId || 0;
-    const end = Number(await instance[n].nextProjectId());
-    const results = [];
-    const batchSize = 5;
+    try {
+      const n = indexMap[contractName];
+      const start = contractRegistry[contractName].startProjId || 0;
+      const end = Number(await instance[n].nextProjectId());
+      const results = [];
 
-    for (let batchStart = start; batchStart < end; batchStart += batchSize) {
-      const batchEnd = Math.min(batchStart + batchSize, end);
-      const batchPromises = [];
+      const projectCount = end - start;
+      let batchSize;
 
-      for (let i = batchStart; i < batchEnd; i++) {
-        batchPromises.push(
-          (async (id) => {
-            const [detail, token] = await Promise.all([
-              instance[n].projectDetails(id.toString()),
-              is.v2.includes(contractName)
-                ? instance[n].projectTokenInfo(id)
-                : instance[n].projectStateData(id),
-            ]);
-
-            const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
-              Number(token.invocations) === 1 ? "item" : "items"
-            }`;
-
-            return !list.includes(newItem) ? `"${newItem}",` : null;
-          })(i),
-        );
+      if (projectCount <= 50) {
+        batchSize = projectCount;
+      } else {
+        batchSize = 25;
       }
 
-      results.push(...(await Promise.all(batchPromises)).filter(Boolean));
-    }
+      for (let batchStart = start; batchStart < end; batchStart += batchSize) {
+        const batchEnd = Math.min(batchStart + batchSize, end);
+        const batchPromises = [];
 
-    if (results.length > 0) console.log(results.join("\n"));
+        for (let i = batchStart; i < batchEnd; i++) {
+          batchPromises.push(
+            (async (id) => {
+              try {
+                const [detail, token] = await Promise.all([
+                  instance[n].projectDetails(id.toString()),
+                  is.v2.includes(contractName)
+                    ? instance[n].projectTokenInfo(id)
+                    : instance[n].projectStateData(id),
+                ]);
+
+                const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
+                  Number(token.invocations) === 1 ? "item" : "items"
+                }`;
+
+                return !list.includes(newItem) ? `"${newItem}",` : null;
+              } catch (err) {
+                return null;
+              }
+            })(i),
+          );
+        }
+
+        results.push(...(await Promise.all(batchPromises)).filter(Boolean));
+
+        if (batchStart + batchSize < end && projectCount > 50) {
+          await new Promise((resolve) => setTimeout(resolve, 300));
+        }
+      }
+
+      if (results.length > 0) console.log(results.join("\n"));
+    } catch (error) {
+      console.error(`Error processing contract ${contractName}:`, error);
+    }
   }
 
   console.log("%cDONE!!!", "color: lime;");
@@ -213,12 +276,28 @@ async function fetchProjectInfo(projId, contract, isContractV2) {
 }
 
 async function constructScript(projId, projectInfo, contract) {
-  const scriptPromises = [];
-  for (let i = 0; i < projectInfo.scriptCount; i++) {
-    scriptPromises.push(instance[contract].projectScriptByIndex(projId, i));
+  const scriptCount = Number(projectInfo.scriptCount);
+  let fullScript = "";
+
+  const batchSize = scriptCount > 30 ? 15 : scriptCount;
+
+  for (let i = 0; i < scriptCount; i += batchSize) {
+    const batchPromises = [];
+    const batchEnd = Math.min(i + batchSize, scriptCount);
+
+    for (let j = i; j < batchEnd; j++) {
+      batchPromises.push(instance[contract].projectScriptByIndex(projId, j));
+    }
+
+    const batchScripts = await Promise.all(batchPromises);
+    fullScript += batchScripts.join("");
+
+    if (i + batchSize < scriptCount) {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
   }
-  const scripts = await Promise.all(scriptPromises);
-  return scripts.join("");
+
+  return fullScript;
 }
 
 async function fetchProjectDetails(projId, contract) {

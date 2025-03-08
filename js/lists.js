@@ -671,7 +671,7 @@ export const list = [
   "PLOT11 - Petri Dish / James Dalessandro - 38 items",
   "PLOT12 - Pseudofigure / conundrumer - 144 items",
   "PLOT13 - Reservation / Generative Artworks - 50 items",
-  "PLOT14 - Endless (5,607,250 to Infinity) / Modnar Wolf x NumbersInMotion - 2591 items",
+  "PLOT14 - Endless (5,607,250 to Infinity) / Modnar Wolf x NumbersInMotion - 2592 items",
   "PLOT15 - Shields / r4v3n - 100 items",
   "PLOT16 - Structures / Julien Gachadoat - 256 items",
   "PLOT17 - Happenstance I: CTC / Generative Artworks - 30 items",
