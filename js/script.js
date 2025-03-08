@@ -234,7 +234,7 @@ async function constructScript(projId, projectInfo, contract) {
   const scriptCount = Number(projectInfo.scriptCount);
   let fullScript = "";
 
-  const batchSize = scriptCount > 30 ? 15 : scriptCount;
+  const batchSize = scriptCount > 30 ? 25 : scriptCount;
 
   for (let i = 0; i < scriptCount; i += batchSize) {
     const batchPromises = [];
