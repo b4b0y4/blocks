@@ -73,58 +73,56 @@ async function fetchBlocks(array) {
   console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
 
   for (const contractName of array) {
-    try {
-      const n = indexMap[contractName];
-      const start = contractRegistry[contractName].startProjId || 0;
-      const end = Number(await instance[n].nextProjectId());
-      const results = [];
+    const n = indexMap[contractName];
+    const start = contractRegistry[contractName].startProjId || 0;
+    const end = Number(await instance[n].nextProjectId());
+    const results = [];
 
-      const projectCount = end - start;
-      let batchSize;
+    const projectCount = end - start;
+    let batchSize;
 
-      if (projectCount <= 50) {
-        batchSize = projectCount;
-      } else {
-        batchSize = 25;
+    if (projectCount <= 50) {
+      batchSize = projectCount;
+    } else {
+      batchSize = 25;
+    }
+
+    for (let batchStart = start; batchStart < end; batchStart += batchSize) {
+      const batchEnd = Math.min(batchStart + batchSize, end);
+      const batchPromises = [];
+
+      for (let i = batchStart; i < batchEnd; i++) {
+        batchPromises.push(
+          (async (id) => {
+            try {
+              const [detail, token] = await Promise.all([
+                instance[n].projectDetails(id.toString()),
+                is.v2.includes(contractName)
+                  ? instance[n].projectTokenInfo(id)
+                  : instance[n].projectStateData(id),
+              ]);
+
+              const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
+                Number(token.invocations) === 1 ? "item" : "items"
+              }`;
+
+              return !list.includes(newItem) ? `"${newItem}",` : null;
+            } catch (err) {
+              return null;
+            }
+          })(i),
+        );
       }
 
-      for (let batchStart = start; batchStart < end; batchStart += batchSize) {
-        const batchEnd = Math.min(batchStart + batchSize, end);
-        const batchPromises = [];
+      results.push(...(await Promise.all(batchPromises)).filter(Boolean));
 
-        for (let i = batchStart; i < batchEnd; i++) {
-          batchPromises.push(
-            (async (id) => {
-              try {
-                const [detail, token] = await Promise.all([
-                  instance[n].projectDetails(id.toString()),
-                  is.v2.includes(contractName)
-                    ? instance[n].projectTokenInfo(id)
-                    : instance[n].projectStateData(id),
-                ]);
-
-                const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
-                  Number(token.invocations) === 1 ? "item" : "items"
-                }`;
-
-                return !list.includes(newItem) ? `"${newItem}",` : null;
-              } catch (err) {
-                return null;
-              }
-            })(i),
-          );
-        }
-
-        results.push(...(await Promise.all(batchPromises)).filter(Boolean));
-
-        if (batchStart + batchSize < end && projectCount > 50) {
-          await new Promise((resolve) => setTimeout(resolve, 300));
-        }
+      if (batchStart + batchSize < end && projectCount > 50) {
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
+    }
 
-      if (results.length > 0) console.log(results.join("\n"));
-    } catch (error) {
-      console.error(`Error processing contract ${contractName}:`, error);
+    if (results.length > 0) {
+      console.log(results.join("\n"));
     }
   }
 
