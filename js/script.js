@@ -778,7 +778,6 @@ function handleOtherQuery(line, searchQuery) {
 
   grabData(tokenId, contract);
 }
-
 /**********************************************************
  *        LIST DISPLAY/NAVIGATION FUNCTIONS
  *********************************************************/
@@ -793,6 +792,7 @@ function displayList(lines) {
     .join("");
   dom.listPanel.innerHTML = `<div>${panel}</div>`;
 }
+displayList(filteredList);
 
 function applyFilter(lines, query) {
   if (query.toLowerCase() === "curated") {
@@ -813,7 +813,6 @@ function applyFilter(lines, query) {
   displayList(filteredList);
   selectedIndex = -1;
 }
-displayList(list);
 
 function handleItemClick(event) {
   const listItem = event.target.closest(".list-item");
