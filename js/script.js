@@ -1186,7 +1186,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!contractData) dom.infobar.classList.add("active");
   if (!rpcUrl) dom.infoBox.style.display = "none";
 
-  setDisplay([dom.inc, dom.dec, dom.save], contractData ? "block" : "none");
+  setDisplay(
+    [dom.inc, dom.dec, dom.save, dom.info],
+    contractData ? "block" : "none",
+  );
   setDisplay([dom.rpcUrlInput, dom.instruction], rpcUrl ? "none" : "block");
   updateFavIcon();
 

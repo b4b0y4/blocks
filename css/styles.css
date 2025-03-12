@@ -160,7 +160,6 @@ iframe {
   align-items: center;
   background-color: var(--color-bg);
   padding: 5px;
-  padding-left: 10px;
   border-top-left-radius: 10px;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
   z-index: 100;
@@ -221,7 +220,7 @@ a:hover {
   border-radius: 5px;
   padding: 5px;
   z-index: 100;
-  outline: 2px solid transparent;
+  outline: 1px solid transparent;
   transition: outline-color 0.1s ease-in-out;
   box-sizing: border-box;
 }
@@ -240,7 +239,7 @@ a:hover {
   font-size: 1.1em;
   cursor: default;
   transition: color 0.1s ease-in-out;
-  margin-right: 15px;
+  margin: 0 10px;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -252,6 +251,99 @@ a:hover {
 .button-box {
   display: flex;
   align-items: center;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.search-input {
+  border: none;
+  background-color: var(--color-hvr);
+  color: var(--color-txt);
+  font-size: 1em;
+  width: 90px;
+  text-align: start;
+  border-radius: 5px;
+  padding: 4px 15px 4px 26px;
+  outline: 1px solid transparent;
+  transition: outline-color 0.1s ease-in-out;
+}
+
+.rpc-url:focus,
+.rpc-url:hover,
+.search-input:hover,
+.search-input:focus {
+  outline-color: var(--color-btn);
+}
+
+.search-icon,
+.fav-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-btn);
+  padding: 0;
+  font-size: 1em;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: default;
+  transition: color 0.1s ease-in-out;
+}
+
+.search-icon {
+  left: 5px;
+}
+
+.fav-icon {
+  right: 2px;
+  padding: 0 4px;
+}
+
+.search-icon:hover,
+.fav-icon:hover {
+  color: var(--color-txt);
+}
+
+.key-short {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  font-size: 0.6em;
+  color: var(--color-btn);
+  background-color: var(--color-hvr);
+  filter: brightness(90%);
+  padding: 2.5px 7px;
+  border-radius: 5px;
+  cursor: default;
+}
+
+.spinner {
+  display: none;
+  position: absolute;
+  right: 16px;
+  border: 2.5px solid var(--color-btn);
+  border-left-color: var(--color-hvr);
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  animation: spin 1s linear infinite;
+}
+
+.search-box.nofav .key-short,
+.search-box.nofav .spinner {
+  right: 5px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .save,
@@ -422,99 +514,6 @@ a:hover {
   background-color: var(--color-hvr);
 }
 
-.search-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.search-input {
-  border: none;
-  background-color: var(--color-hvr);
-  color: var(--color-txt);
-  font-size: 1em;
-  width: 90px;
-  text-align: start;
-  border-radius: 5px;
-  padding: 4px 15px 4px 26px;
-  outline: 2px solid transparent;
-  transition: outline-color 0.1s ease-in-out;
-}
-
-.rpc-url:focus,
-.rpc-url:hover,
-.search-input:hover,
-.search-input:focus {
-  outline-color: var(--color-btn);
-}
-
-.search-icon,
-.fav-icon {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-btn);
-  padding: 0;
-  font-size: 1em;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  cursor: default;
-  transition: color 0.1s ease-in-out;
-}
-
-.search-icon {
-  left: 5px;
-}
-
-.fav-icon {
-  right: 2px;
-  padding: 0 4px;
-}
-
-.search-icon:hover,
-.fav-icon:hover {
-  color: var(--color-txt);
-}
-
-.key-short {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-  font-size: 0.6em;
-  color: var(--color-btn);
-  background-color: var(--color-hvr);
-  filter: brightness(90%);
-  padding: 2.5px 7px;
-  border-radius: 5px;
-  cursor: default;
-}
-
-.spinner {
-  display: none;
-  position: absolute;
-  right: 16px;
-  border: 2.5px solid var(--color-btn);
-  border-left-color: var(--color-hvr);
-  border-radius: 50%;
-  width: 12px;
-  height: 12px;
-  animation: spin 1s linear infinite;
-}
-
-.search-box.nofav .key-short,
-.search-box.nofav .spinner {
-  right: 5px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .overlay {
   visibility: hidden;
   position: fixed;
@@ -555,7 +554,6 @@ a:hover {
     justify-content: center;
     left: 0px;
     border-radius: 0;
-    padding-left: 5px;
     height: 80px;
     opacity: 1;
   }
@@ -567,7 +565,7 @@ a:hover {
   }
 
   .info {
-    margin-right: 0;
+    margin: 0;
   }
 
   .info:hover {
