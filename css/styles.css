@@ -149,29 +149,6 @@ iframe {
   border: none;
 }
 
-.infobar {
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  height: 30px;
-  max-width: 100%;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  background-color: var(--color-bg);
-  padding: 5px;
-  border-top-left-radius: 10px;
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.infobar.active,
-.infobar:hover {
-  opacity: 0.98;
-}
-
 ::placeholder {
   color: var(--color-btn);
 }
@@ -223,6 +200,28 @@ a:hover {
   outline: 1.5px solid transparent;
   transition: outline-color 0.1s ease-in-out;
   box-sizing: border-box;
+}
+
+.infobar {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  height: 30px;
+  max-width: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  background-color: var(--color-bg);
+  padding: 5px;
+  border-top-left-radius: 10px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.infobar:hover {
+  opacity: 0.98;
 }
 
 .info-box {

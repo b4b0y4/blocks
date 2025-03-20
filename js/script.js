@@ -26,7 +26,6 @@ const dom = {
   spinner: document.querySelector(".spinner"),
   keyShort: document.querySelector(".key-short"),
   searchBox: document.querySelector(".search-box"),
-  infoBox: document.getElementById("infoBox"),
   randomButton: document.getElementById("randomButton"),
   loopAll: document.getElementById("loopAll"),
   favLoop: document.getElementById("favLoop"),
@@ -1182,9 +1181,11 @@ document.addEventListener("DOMContentLoaded", () => {
   checkLocalStorage();
   checkForNewContracts();
 
-  if (contractData) update(...Object.values(contractData));
-  if (!contractData) dom.infobar.classList.add("active");
-  if (!rpcUrl) dom.infoBox.style.display = "none";
+  contractData
+    ? update(...Object.values(contractData))
+    : (dom.infobar.style.opacity = "0.98");
+
+  if (!rpcUrl) dom.infobar.style.display = "none";
 
   setDisplay(
     [dom.inc, dom.dec, dom.save, dom.info],
