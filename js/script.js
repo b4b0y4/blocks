@@ -2,7 +2,7 @@ import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
-// fetchBlocks(["ABC", ...is.studio]);
+fetchBlocks(["ABC", ...is.studio]);
 
 const dom = {
   root: document.documentElement,
@@ -75,36 +75,50 @@ async function fetchBlocks(array) {
     const n = indexMap[contractName];
     const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
-    const results = [];
-    const promises = [];
+    const blocks = [];
 
-    for (let i = start; i < end; i++) {
-      promises.push(
-        (async (id) => {
-          try {
-            const [detail, token] = await Promise.all([
-              instance[n].projectDetails(id.toString()),
-              is.v2.includes(contractName)
-                ? instance[n].projectTokenInfo(id)
-                : instance[n].projectStateData(id),
-            ]);
-            const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
-              Number(token.invocations) === 1 ? "item" : "items"
-            }`;
-            const isLastProject = id === end - 1;
-            return !list.includes(newItem) &&
-              (Number(token.invocations) !== 0 || isLastProject)
-              ? `"${newItem}",`
-              : null;
-          } catch (err) {
-            return null;
-          }
-        })(i),
-      );
+    const projectCount = end - start;
+    const batchSize = projectCount > 30 ? 25 : projectCount;
+
+    for (let i = start; i < end; i += batchSize) {
+      const batchPromises = [];
+      const batchEnd = Math.min(i + batchSize, end);
+
+      for (let j = i; j < batchEnd; j++) {
+        batchPromises.push(
+          (async (id) => {
+            try {
+              const [detail, token] = await Promise.all([
+                instance[n].projectDetails(id.toString()),
+                is.v2.includes(contractName)
+                  ? instance[n].projectTokenInfo(id)
+                  : instance[n].projectStateData(id),
+              ]);
+
+              const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
+                Number(token.invocations) === 1 ? "item" : "items"
+              }`;
+
+              const isLastProject = id === end - 1;
+              return !list.includes(newItem) &&
+                (Number(token.invocations) !== 0 || isLastProject)
+                ? `"${newItem}",`
+                : null;
+            } catch (err) {
+              return null;
+            }
+          })(j),
+        );
+      }
+
+      blocks.push(...(await Promise.all(batchPromises)).filter(Boolean));
+
+      if (i + batchSize < end) {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
     }
 
-    results.push(...(await Promise.all(promises)).filter(Boolean));
-    if (results.length > 0) console.log(results.join("\n"));
+    if (blocks.length > 0) console.log(blocks.join("\n"));
   }
 
   console.log("%cNO MORE BLOCKS!!!", "color: lime;");
