@@ -766,6 +766,7 @@ export const list = [
   "HODL10 - Chaos Control / Olga Fradina - 41 items",
   "HODL11 - Dead Air / artplusbrad - 12 items",
   "HODL12 - Renaissance / Fernando Jerez - 16 items",
+  "HODL13 - Whispers of Knowledge / Ferdinand Dervieux - 34 items",
   "HODL15 - Gravity / Pawel Dudko - 53 items",
   "HODL16 - Wired wonders / Alessandro Fiore - 53 items",
   "HODL17 - Nebulous / KRANKARTA - 20 items",

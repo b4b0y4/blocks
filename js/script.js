@@ -383,7 +383,10 @@ function pushItemToLocalStorage(
   ipfs,
   arweave,
 ) {
-  if (nameMap[contract] === "BMFLEX" && !tokenId.toString().startsWith("16")) {
+  if (
+    (nameMap[contract] === "BMFLEX" && !tokenId.toString().startsWith("16")) ||
+    (nameMap[contract] === "HODL" && tokenId.toString().startsWith("13"))
+  ) {
     script = replaceIPFSGateways(script);
   }
 
@@ -445,9 +448,10 @@ function pushItemToLocalStorage(
 }
 
 const replaceIPFSGateways = (scriptContent) => {
-  return scriptContent
-    .replace(/https:\/\/pinata\.brightmoments\.io/g, "https://ipfs.io")
-    .replace(/https:\/\/[a-z0-9-]+\.mypinata\.cloud/g, "https://ipfs.io");
+  return scriptContent.replace(
+    /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud)/g,
+    "https://ipfs.io",
+  );
 };
 
 function getCuration(projId) {
