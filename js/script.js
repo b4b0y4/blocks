@@ -76,52 +76,34 @@ async function fetchBlocks(array) {
     const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const results = [];
+    const promises = [];
 
-    const projectCount = end - start;
-    let batchSize;
-
-    if (projectCount <= 50) {
-      batchSize = projectCount;
-    } else {
-      batchSize = 25;
+    for (let i = start; i < end; i++) {
+      promises.push(
+        (async (id) => {
+          try {
+            const [detail, token] = await Promise.all([
+              instance[n].projectDetails(id.toString()),
+              is.v2.includes(contractName)
+                ? instance[n].projectTokenInfo(id)
+                : instance[n].projectStateData(id),
+            ]);
+            const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
+              Number(token.invocations) === 1 ? "item" : "items"
+            }`;
+            const isLastProject = id === end - 1;
+            return !list.includes(newItem) &&
+              (Number(token.invocations) !== 0 || isLastProject)
+              ? `"${newItem}",`
+              : null;
+          } catch (err) {
+            return null;
+          }
+        })(i),
+      );
     }
 
-    for (let batchStart = start; batchStart < end; batchStart += batchSize) {
-      const batchEnd = Math.min(batchStart + batchSize, end);
-      const batchPromises = [];
-
-      for (let i = batchStart; i < batchEnd; i++) {
-        batchPromises.push(
-          (async (id) => {
-            try {
-              const [detail, token] = await Promise.all([
-                instance[n].projectDetails(id.toString()),
-                is.v2.includes(contractName)
-                  ? instance[n].projectTokenInfo(id)
-                  : instance[n].projectStateData(id),
-              ]);
-
-              const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
-                Number(token.invocations) === 1 ? "item" : "items"
-              }`;
-              const isLastProject = id === end - 1;
-              return !list.includes(newItem) &&
-                (Number(token.invocations) !== 0 || isLastProject)
-                ? `"${newItem}",`
-                : null;
-            } catch (err) {
-              return null;
-            }
-          })(i),
-        );
-      }
-
-      results.push(...(await Promise.all(batchPromises)).filter(Boolean));
-      if (batchStart + batchSize < end && projectCount > 50) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-      }
-    }
-
+    results.push(...(await Promise.all(promises)).filter(Boolean));
     if (results.length > 0) console.log(results.join("\n"));
   }
 
@@ -134,9 +116,7 @@ function checkForNewContracts() {
     (key) => !existingContracts.has(key),
   );
 
-  if (newContract.length > 0) {
-    fetchBlocks(newContract);
-  }
+  if (newContract.length > 0) fetchBlocks(newContract);
 }
 
 /**********************************************************
