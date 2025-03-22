@@ -69,7 +69,7 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
  *********************************************************/
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log("%cLOOKING FOR BLOCKS...", "color: crimson;");
+  console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
 
   for (const contractName of array) {
     const n = indexMap[contractName];
@@ -104,9 +104,7 @@ async function fetchBlocks(array) {
               const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
                 Number(token.invocations) === 1 ? "item" : "items"
               }`;
-
               const isLastProject = id === end - 1;
-
               return !list.includes(newItem) &&
                 (Number(token.invocations) !== 0 || isLastProject)
                 ? `"${newItem}",`
@@ -119,18 +117,15 @@ async function fetchBlocks(array) {
       }
 
       results.push(...(await Promise.all(batchPromises)).filter(Boolean));
-
       if (batchStart + batchSize < end && projectCount > 50) {
         await new Promise((resolve) => setTimeout(resolve, 300));
       }
     }
 
-    if (results.length > 0) {
-      console.log(results.join("\n"));
-    }
+    if (results.length > 0) console.log(results.join("\n"));
   }
 
-  console.log("%cDONE!!!", "color: lime;");
+  console.log("%cNO MORE BLOCKS!!!", "color: lime;");
 }
 
 function checkForNewContracts() {
