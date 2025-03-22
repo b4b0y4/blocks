@@ -417,12 +417,15 @@ export const is = {
 };
 
 (function updateIs() {
+  const v2Abis = [abi.v1, abi.v2, abi.v2Flex, abi.bm];
+  const flexAbis = [abi.v2Flex, abi.v3Flex];
+
   Object.keys(contractRegistry).forEach((key) => {
     const a = contractRegistry[key].abi;
 
-    if (![abi.v3, abi.v3Flex].includes(a)) is.v2.push(key);
+    if ([...v2Abis].includes(a)) is.v2.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
-    if ([abi.v2Flex, abi.v3Flex].includes(a)) is.flex.push(key);
+    if ([...flexAbis].includes(a)) is.flex.push(key);
     if (!key.startsWith("AB")) is.engine.push(key);
   });
 })();
