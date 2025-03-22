@@ -421,11 +421,11 @@ export const is = {
   const flexAbis = [abi.v2Flex, abi.v3Flex];
 
   Object.keys(contractRegistry).forEach((key) => {
-    const a = contractRegistry[key].abi;
+    const abi = contractRegistry[key].abi;
 
-    if ([...v2Abis].includes(a)) is.v2.push(key);
+    if ([...v2Abis].includes(abi)) is.v2.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
-    if ([...flexAbis].includes(a)) is.flex.push(key);
+    if ([...flexAbis].includes(abi)) is.flex.push(key);
     if (!key.startsWith("AB")) is.engine.push(key);
   });
 })();
