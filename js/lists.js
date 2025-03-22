@@ -493,7 +493,7 @@ export const list = [
   "ABSVII0 - Deco Echo / Harvey Rayner - 300 items",
   "ABSIX0 - On-Chain Memory Token / Jeff Davis - 100 items",
   "ABSIX2 - Framework / Jeff Davis - 13 items",
-  "ABSIX3 - Progression / Jeff Davis - 434 items",
+  "ABSIX3 - Progression / Jeff Davis - 439 items",
   "ABSX0 - Cosmicodes / Insigħt × Leonardo Petrucci - 19 items",
   "ABSXI0 - Alchimie / RVig - 80 items",
   "ABSXII0 - tied up, tied down, let loose, unwound / Ben Snell - 101 items",
