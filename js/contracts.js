@@ -413,20 +413,16 @@ export const is = {
   v2: [],
   studio: [],
   flex: [],
+  engine: [],
 };
 
 (function updateIs() {
-  for (const key in contractRegistry) {
-    if (
-      [abi.v1, abi.v2, abi.v2Flex, abi.bm].includes(contractRegistry[key].abi)
-    ) {
-      is.v2.push(key);
-    }
-    if (key.startsWith("ABS")) {
-      is.studio.push(key);
-    }
-    if ([abi.v2Flex, abi.v3Flex].includes(contractRegistry[key].abi)) {
-      is.flex.push(key);
-    }
-  }
+  Object.keys(contractRegistry).forEach((key) => {
+    const a = contractRegistry[key].abi;
+
+    if (![abi.v3, abi.v3Flex].includes(a)) is.v2.push(key);
+    if (key.startsWith("ABS")) is.studio.push(key);
+    if ([abi.v2Flex, abi.v3Flex].includes(a)) is.flex.push(key);
+    if (!key.startsWith("AB")) is.engine.push(key);
+  });
 })();

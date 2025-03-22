@@ -2,7 +2,7 @@ import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
-// fetchBlocks(["ABC", ...is.studio, "STBYS", "PLOTII"]);
+// fetchBlocks(["ABC", ...is.studio]);
 
 const dom = {
   root: document.documentElement,
@@ -105,7 +105,12 @@ async function fetchBlocks(array) {
                 Number(token.invocations) === 1 ? "item" : "items"
               }`;
 
-              return !list.includes(newItem) ? `"${newItem}",` : null;
+              const isLastProject = id === end - 1;
+
+              return !list.includes(newItem) &&
+                (Number(token.invocations) !== 0 || isLastProject)
+                ? `"${newItem}",`
+                : null;
             } catch (err) {
               return null;
             }
