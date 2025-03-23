@@ -830,9 +830,7 @@ function handleKeyboardNavigation(event) {
       getToken(filteredList[selectedIndex], "");
     } else {
       const query = dom.search.value.trim();
-      query === ""
-        ? getRandom(filteredList)
-        : getToken(filteredList.join("\n"), query);
+      query === "" ? getRandom(list) : getToken(filteredList.join("\n"), query);
     }
     dom.search.value = "";
   }
@@ -848,7 +846,7 @@ function handleKeyboardNavigation(event) {
 
 dom.search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim();
-  applyFilter(filteredList, query);
+  applyFilter(list, query);
 });
 
 dom.search.addEventListener("keydown", handleKeyboardNavigation);
@@ -879,7 +877,7 @@ function getRandomKey(favorite) {
 }
 
 dom.randomButton.addEventListener("click", () => {
-  getRandom(filteredList);
+  getRandom(list);
 });
 
 /**********************************************************
