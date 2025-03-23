@@ -120,7 +120,7 @@ async function fetchBlocks(array) {
 
     blocks.length > 0
       ? console.log(blocks.join("\n"))
-      : console.log(`No new project in ${contractName}`);
+      : console.log(`No new blocks in ${contractName}`);
   }
 }
 
