@@ -867,7 +867,8 @@ dom.listPanel.addEventListener("click", handleItemClick);
  *              RANDOMNESS FUNCTIONS
  *********************************************************/
 function getRandom(lines) {
-  const randomLine = lines[Math.floor(Math.random() * lines.length)];
+  const filteredLines = lines.filter((line) => !line.trim().endsWith("!"));
+  const randomLine = filteredLines[Math.floor(Math.random() * lines.length)];
   console.log("Randomly selected line:", randomLine);
   getToken(randomLine, "");
 }
