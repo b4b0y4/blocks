@@ -511,7 +511,7 @@ export const list = [
   "ABSIX0 - On-Chain Memory Token / Jeff Davis - 100 items",
   "ABSIX1 - Untitled / Jeff Davis - 1 item!",
   "ABSIX2 - Framework / Jeff Davis - 13 items",
-  "ABSIX3 - Progression / Jeff Davis - 452 items",
+  "ABSIX3 - Progression / Jeff Davis - 454 items",
   "ABSX0 - Cosmicodes / Insigħt × Leonardo Petrucci - 19 items",
   "ABSXI0 - Alchimie / RVig - 80 items",
   "ABSXII0 - tied up, tied down, let loose, unwound / Ben Snell - 101 items",
