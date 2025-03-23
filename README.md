@@ -62,10 +62,11 @@ contractRegistry = {
 
 2. The new contract will be automatically detected by `checkForNewContracts()`. Check the console for new contracts:
    - Copy these entries and add them manually to the `list` array in `lists.js`
+   - Add '!' after items to ignore that line in the UI
    - Example output format:
    ```js
    "YOURCONTRACT0 - Project Name / Artist Name - X items",
-   "YOURCONTRACT1 - Another Project / Another Artist - Y items",
+   "YOURCONTRACT1 - Another Project / Another Artist - Y items!",
    ```
 
 3. Alternatively, you can directly use the fetch functionality:

@@ -99,9 +99,9 @@ async function fetchBlocks(array) {
                 Number(token.invocations) === 1 ? "item" : "items"
               }`;
 
-              const isLastProject = id === end - 1;
-              return !list.includes(newItem) &&
-                (Number(token.invocations) !== 0 || isLastProject)
+              return !list
+                .map((item) => item.replace(/!$/, ""))
+                .includes(newItem)
                 ? `"${newItem}",`
                 : null;
             } catch (err) {
@@ -779,7 +779,8 @@ function handleOtherQuery(line, searchQuery) {
  *        LIST DISPLAY/NAVIGATION FUNCTIONS
  *********************************************************/
 function displayList(lines) {
-  const panel = lines
+  const filteredLines = lines.filter((line) => !line.trim().endsWith("!"));
+  const panel = filteredLines
     .map((line, index) => {
       const parts = line.split(" - ");
       const displayText = parts.slice(1, parts.length - 1).join(" - ");
