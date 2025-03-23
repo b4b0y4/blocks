@@ -53,7 +53,16 @@ Object.keys(contractRegistry).forEach((key, index) => {
   indexMap[key] = index;
 });
 
-let filteredList = list;
+const curated = [
+  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
+  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
+  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
+  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
+  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
+  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
+];
+
+let filteredList = list.filter((line) => !line.trim().endsWith("!"));
 let selectedIndex = -1;
 let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
@@ -455,8 +464,13 @@ const replaceIPFSGateways = (scriptContent) => {
 };
 
 function getCuration(projId) {
-  const curated = getCurated();
-  const playground = getPlayground();
+  const playground = [
+    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
+    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
+    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
+    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
+    373,
+  ];
 
   return curated.includes(projId)
     ? "Art Blocks Curated"
@@ -465,27 +479,6 @@ function getCuration(projId) {
       : projId < 374
         ? "Art Blocks Factory"
         : "Art Blocks Presents";
-}
-
-function getCurated() {
-  return [
-    0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-    41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-    159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-    284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-    379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-    456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
-  ];
-}
-
-function getPlayground() {
-  return [
-    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
-    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
-    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
-    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
-    373,
-  ];
 }
 
 function getPlatform(contract, projId) {
@@ -779,10 +772,7 @@ function handleOtherQuery(line, searchQuery) {
  *        LIST DISPLAY/NAVIGATION FUNCTIONS
  *********************************************************/
 function displayList(lines) {
-  const filteredLines = lines.filter((line) => !line.trim().endsWith("!"));
-  filteredList = filteredLines;
-
-  const panel = filteredLines
+  const panel = lines
     .map((line, index) => {
       const parts = line.split(" - ");
       const displayText = parts.slice(1, parts.length - 1).join(" - ");
@@ -795,20 +785,20 @@ function displayList(lines) {
 displayList(filteredList);
 
 function applyFilter(lines, query) {
-  if (query.toLowerCase() === "curated") {
-    filteredList = lines.filter((line) => {
-      const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
-      if (idMatch) {
-        const id = parseInt(idMatch[1]);
-        const curated = getCurated();
-        return curated.includes(id) || line.startsWith("ABC");
-      }
-    });
-  } else {
-    filteredList = lines.filter((line) =>
-      line.toLowerCase().includes(query.toLowerCase()),
-    );
-  }
+  const queryLower = query.toLowerCase();
+
+  filteredList =
+    queryLower === "curated"
+      ? lines.filter((line) => {
+          const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
+          return (
+            idMatch &&
+            (curated.includes(parseInt(idMatch[1])) || line.startsWith("ABC"))
+          );
+        })
+      : lines.filter((line) => line.toLowerCase().includes(queryLower));
+
+  filteredList = filteredList.filter((line) => !line.trim().endsWith("!"));
 
   displayList(filteredList);
   selectedIndex = -1;
@@ -867,8 +857,7 @@ dom.listPanel.addEventListener("click", handleItemClick);
  *              RANDOMNESS FUNCTIONS
  *********************************************************/
 function getRandom(lines) {
-  const filteredLines = lines.filter((line) => !line.trim().endsWith("!"));
-  const randomLine = filteredLines[Math.floor(Math.random() * lines.length)];
+  const randomLine = filteredList[Math.floor(Math.random() * lines.length)];
   console.log("Randomly selected line:", randomLine);
   getToken(randomLine, "");
 }
@@ -917,16 +906,16 @@ function loopRandom(interval, action) {
 }
 
 function performAction(action, favorite) {
-  if (action === "loopAll") getRandom(list);
+  if (action === "loopAll") getRandom(filteredList);
   else if (action === "favLoop") getRandomKey(favorite);
   else if (action === "curatedLoop") {
-    applyFilter(list, "curated");
+    applyFilter(filteredList, "curated");
     getRandom(filteredList);
   } else if (action === "selectedLoop") {
     let random = Math.floor(
       Math.random() * (contractData.edition + 1),
     ).toString();
-    getToken(list, random);
+    getToken(filteredList, random);
   }
 }
 
