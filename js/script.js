@@ -118,10 +118,10 @@ async function fetchBlocks(array) {
       }
     }
 
-    if (blocks.length > 0) console.log(blocks.join("\n"));
+    blocks.length > 0
+      ? console.log(blocks.join("\n"))
+      : console.log(`No new prroject in ${contractName}`);
   }
-
-  console.log("%cNO MORE BLOCKS!!!", "color: lime;");
 }
 
 function checkForNewContracts() {
