@@ -780,6 +780,8 @@ function handleOtherQuery(line, searchQuery) {
  *********************************************************/
 function displayList(lines) {
   const filteredLines = lines.filter((line) => !line.trim().endsWith("!"));
+  filteredList = filteredLines;
+
   const panel = filteredLines
     .map((line, index) => {
       const parts = line.split(" - ");
