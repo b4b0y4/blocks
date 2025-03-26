@@ -131,6 +131,7 @@ async function fetchBlocks(array) {
       ? console.log(blocks.join("\n"))
       : console.log(`No new blocks in ${contractName}`);
   }
+  console.log("%cDONE!!!", "color: lime;");
 }
 
 function checkForNewContracts() {
