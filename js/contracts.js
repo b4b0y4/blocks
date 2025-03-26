@@ -21,7 +21,7 @@ export const contractRegistry = {
     platform: "Art Blocks Curated",
     startProjId: 494,
   },
-  EXP: {
+  ABEXP: {
     abi: abi.v3,
     address: "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a",
     platform: "Art Blocks Explorations",
