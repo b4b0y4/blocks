@@ -1,4 +1,6 @@
-const CACHE_NAME = "blocks-cache-v1";
+const CACHE_VERSION = "v1";
+const CACHE_NAME = `blocks-cache-${CACHE_VERSION}`;
+
 const urlsToCache = [
   "./",
   "./index.html",
@@ -16,7 +18,35 @@ const urlsToCache = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)),
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(urlsToCache))
+      .then(() => self.skipWaiting()),
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames
+            .filter(
+              (cacheName) =>
+                cacheName.startsWith("blocks-cache-") &&
+                cacheName !== CACHE_NAME,
+            )
+            .map((cacheName) => caches.delete(cacheName)),
+        );
+      })
+      .then(() => {
+        self.clients.matchAll().then((clients) => {
+          clients.forEach((client) =>
+            client.postMessage({ type: "UPDATE_AVAILABLE" }),
+          );
+        });
+      }),
   );
 });
 

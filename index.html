@@ -38,6 +38,7 @@
         </button>
         <button id="fullscreen">
           <i class="fa-solid fa-expand"></i>
+          <i class="fa-regular fa-lightbulb"></i>
         </button>
         <button id="loop">
           <i class="fa-solid fa-repeat"></i>
@@ -146,10 +147,27 @@
             .register("./sw.js")
             .then((registration) => {
               console.log("ServiceWorker registration successful");
+
+              registration.addEventListener("updatefound", () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener("statechange", () => {
+                  if (newWorker.state === "installed") {
+                    if (navigator.serviceWorker.controller) {
+                      console.log("New content is available; please refresh.");
+                    }
+                  }
+                });
+              });
             })
             .catch((err) => {
               console.log("ServiceWorker registration failed: ", err);
             });
+        });
+
+        navigator.serviceWorker.addEventListener("message", (event) => {
+          if (event.data.type === "UPDATE_AVAILABLE") {
+            console.log("New version available! Refresh to update.");
+          }
         });
       }
     </script>
