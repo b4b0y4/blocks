@@ -16,6 +16,7 @@ const dom = {
   favLoop: document.getElementById("favLoop"),
   curatedLoop: document.getElementById("curatedLoop"),
   selectedLoop: document.getElementById("selectedLoop"),
+  oobLoop: document.getElementById("oobLoop"),
   stopLoop: document.querySelector(".fa-circle-stop"),
   loopInput: document.getElementById("loopInput"),
   frame: document.getElementById("frame"),
@@ -921,6 +922,8 @@ function performAction(action, favorite) {
       Math.random() * (contractData.edition + 1),
     ).toString();
     getToken(filteredList, random);
+  } else if (action === "oobLoop") {
+    exploreAlgo();
   }
 }
 
@@ -1057,7 +1060,13 @@ function generateRandomHashAndToken() {
     Math.floor(Math.random() * 16).toString(16),
   ).join("");
 
-  const randomToken = Math.floor(Math.random() * 1000000).toString();
+  const base = contractData.projId * 1000000;
+  const minToken = base + contractData.minted;
+  const maxToken = base + 999999;
+
+  const randomToken = Math.floor(
+    Math.random() * (maxToken - minToken + 1) + minToken,
+  );
 
   return { hash: randomHash, tokenId: randomToken };
 }
@@ -1297,6 +1306,9 @@ dom.curatedLoop.addEventListener("click", () => {
 });
 dom.selectedLoop.addEventListener("click", () => {
   handleLoopClick("selectedLoop");
+});
+dom.oobLoop.addEventListener("click", () => {
+  handleLoopClick("oobLoop");
 });
 dom.stopLoop.addEventListener("click", stopLoop);
 
