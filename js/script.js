@@ -77,7 +77,7 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
  *                UPDATE LIST FUNCTION
  *********************************************************/
 async function fetchBlocks(array) {
-  await new Promise((resolve) => setTimeout(resolve, 200));
+  await new Promise((resolve) => setTimeout(resolve, 100));
   console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
 
   for (const contractName of array) {
