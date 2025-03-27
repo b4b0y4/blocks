@@ -1,5 +1,5 @@
 {
-  "name": "Blocks",
+  "name": "blocks",
   "description": "A web-based viewer for generative art collections on Ethereum, focusing on Art Blocks and associated Engine collections.",
   "start_url": "./",
   "display": "standalone",
