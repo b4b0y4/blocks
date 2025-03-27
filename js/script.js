@@ -1310,6 +1310,12 @@ document.addEventListener("click", () => {
 function setDarkMode(isDarkMode) {
   dom.root.classList.toggle("dark-mode", isDarkMode);
   localStorage.setItem("darkMode", isDarkMode);
+
+  const themeColor = isDarkMode ? "#212122" : "#ececef";
+  document
+    .querySelector('meta[name="theme-color"]')
+    .setAttribute("content", themeColor);
+
   updateButtons("theme");
 }
 
