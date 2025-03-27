@@ -12,6 +12,7 @@ const urlsToCache = [
   "./img/favicon-32x32.png",
   "./img/icon-192x192.png",
   "./img/icon-512x512.png",
+  "./img/apple-touch-icon.png",
   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css",
 ];
 
