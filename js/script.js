@@ -7,6 +7,7 @@ import { contractRegistry, is } from "./contracts.js";
 const dom = {
   root: document.documentElement,
   theme: document.getElementById("theme"),
+  explore: document.getElementById("explore"),
   instruction: document.querySelector(".instruction"),
   rpcUrlInput: document.getElementById("rpcUrl"),
   loopInput: document.getElementById("loopInput"),
@@ -77,7 +78,7 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
  *                UPDATE LIST FUNCTION
  *********************************************************/
 async function fetchBlocks(array) {
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 200));
   console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
 
   for (const contractName of array) {
@@ -531,15 +532,19 @@ function updateInfo(
       <p>${detail[2]}</p>
       <div class="column-box">
         <div class="column">
-          ${createSection(
-            "OWNER",
-            `<a href="https://zapper.xyz/account/${owner}" target="_blank">
+          ${
+            owner
+              ? createSection(
+                  "OWNER",
+                  `<a href="https://zapper.xyz/account/${owner}" target="_blank">
               ${ensName || shortAddr(owner)}
             </a>
             <span class="copy-txt" data-text="${owner}">
               <i class="fa-regular fa-copy"></i>
             </span>`,
-          )}
+                )
+              : ""
+          }
           ${createSection(
             "CONTRACT",
             `<a href="https://etherscan.io/address/${
@@ -720,6 +725,45 @@ async function injectFrame() {
     console.error("injectFrame:", error);
   }
 }
+
+/**********************************************************
+ *              EXPLORE ALGO FUNCTIONS
+ *********************************************************/
+function generateRandomHashAndToken() {
+  const randomHash = Array.from({ length: 64 }, () =>
+    Math.floor(Math.random() * 16).toString(16),
+  ).join("");
+
+  const randomToken = Math.floor(Math.random() * 1000000).toString();
+
+  return { hash: randomHash, tokenId: randomToken };
+}
+
+function exploreAlgo() {
+  if (!contractData) return;
+
+  const { hash, tokenId } = generateRandomHashAndToken();
+
+  contractData.hash = hash;
+  contractData.tokenId = tokenId;
+  contractData.owner = "";
+  contractData.ensName = "";
+
+  localStorage.setItem("contractData", JSON.stringify(contractData));
+
+  const scriptData = JSON.parse(localStorage.getItem("scriptData"));
+  if (scriptData) {
+    if (nameMap[contractData.contract] === "AB") {
+      scriptData.tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
+    } else {
+      scriptData.tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
+    }
+    localStorage.setItem("scriptData", JSON.stringify(scriptData));
+  }
+  location.reload();
+}
+
+dom.explore.addEventListener("click", exploreAlgo);
 
 /**********************************************************
  *              GET TOKEN FUNCTIONS

@@ -116,6 +116,7 @@ body {
 
 #theme,
 #git,
+#explore,
 #fullscreen,
 #loop {
   border: none;
@@ -128,12 +129,9 @@ body {
   transition: background-color 0.1s ease-in-out;
 }
 
-#theme {
-  margin: 0;
-}
-
 #theme:hover,
 #git:hover,
+#explore:hover,
 #fullscreen:hover,
 #loop:hover {
   background-color: var(--color-hvr);
