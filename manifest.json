@@ -3,8 +3,8 @@
   "description": "A viewer for Art Blocks collections direct from Ethereum",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#212122",
-  "theme_color": "#212122",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "./img/icon-192x192.png",
