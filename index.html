@@ -6,8 +6,16 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1"
     />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="blocks" />
     <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./img/apple-touch-icon.png"
+    />
     <link rel="manifest" href="./manifest.json" />
     <link
       rel="icon"
@@ -142,31 +150,7 @@
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("./sw.js")
-            .then((registration) => {
-              console.log("ServiceWorker registration successful");
-
-              registration.addEventListener("updatefound", () => {
-                const newWorker = registration.installing;
-                newWorker.addEventListener("statechange", () => {
-                  if (newWorker.state === "installed") {
-                    if (navigator.serviceWorker.controller) {
-                      console.log("New content is available; please refresh.");
-                    }
-                  }
-                });
-              });
-            })
-            .catch((err) => {
-              console.log("ServiceWorker registration failed: ", err);
-            });
-        });
-
-        navigator.serviceWorker.addEventListener("message", (event) => {
-          if (event.data.type === "UPDATE_AVAILABLE") {
-            console.log("New version available! Refresh to update.");
-          }
+          navigator.serviceWorker.register("./sw.js");
         });
       }
     </script>

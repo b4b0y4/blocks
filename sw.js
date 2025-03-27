@@ -1,5 +1,4 @@
-const CACHE_VERSION = "v1";
-const CACHE_NAME = `blocks-cache-${CACHE_VERSION}`;
+const CACHE_NAME = "blocks-cache-v1";
 
 const urlsToCache = [
   "./",
@@ -27,26 +26,16 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames
-            .filter(
-              (cacheName) =>
-                cacheName.startsWith("blocks-cache-") &&
-                cacheName !== CACHE_NAME,
-            )
-            .map((cacheName) => caches.delete(cacheName)),
-        );
-      })
-      .then(() => {
-        self.clients.matchAll().then((clients) => {
-          clients.forEach((client) =>
-            client.postMessage({ type: "UPDATE_AVAILABLE" }),
-          );
-        });
-      }),
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter(
+            (cacheName) =>
+              cacheName.startsWith("blocks-cache-") && cacheName !== CACHE_NAME,
+          )
+          .map((cacheName) => caches.delete(cacheName)),
+      );
+    }),
   );
 });
 
