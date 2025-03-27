@@ -117,7 +117,6 @@ body {
 #theme,
 #git,
 #explore,
-#fullscreen,
 #loop {
   border: none;
   color: var(--color-btn);
@@ -132,7 +131,6 @@ body {
 #theme:hover,
 #git:hover,
 #explore:hover,
-#fullscreen:hover,
 #loop:hover {
   background-color: var(--color-hvr);
 }

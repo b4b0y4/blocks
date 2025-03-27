@@ -33,7 +33,6 @@ const dom = {
   curatedLoop: document.getElementById("curatedLoop"),
   selectedLoop: document.getElementById("selectedLoop"),
   stopLoop: document.querySelector(".fa-circle-stop"),
-  fullscreen: document.getElementById("fullscreen"),
   searchIcon: document.querySelector(".search-icon"),
   repeatIcon: document.querySelector(".fa-repeat"),
 };
@@ -727,46 +726,7 @@ async function injectFrame() {
 }
 
 /**********************************************************
- *              EXPLORE ALGO FUNCTIONS
- *********************************************************/
-function generateRandomHashAndToken() {
-  const randomHash = Array.from({ length: 64 }, () =>
-    Math.floor(Math.random() * 16).toString(16),
-  ).join("");
-
-  const randomToken = Math.floor(Math.random() * 1000000).toString();
-
-  return { hash: randomHash, tokenId: randomToken };
-}
-
-function exploreAlgo() {
-  if (!contractData) return;
-
-  const { hash, tokenId } = generateRandomHashAndToken();
-
-  contractData.hash = hash;
-  contractData.tokenId = tokenId;
-  contractData.owner = "";
-  contractData.ensName = "";
-
-  localStorage.setItem("contractData", JSON.stringify(contractData));
-
-  const scriptData = JSON.parse(localStorage.getItem("scriptData"));
-  if (scriptData) {
-    if (nameMap[contractData.contract] === "AB") {
-      scriptData.tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
-    } else {
-      scriptData.tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
-    }
-    localStorage.setItem("scriptData", JSON.stringify(scriptData));
-  }
-  location.reload();
-}
-
-dom.explore.addEventListener("click", exploreAlgo);
-
-/**********************************************************
- *              GET TOKEN FUNCTIONS
+ *                 GET TOKEN FUNCTIONS
  *********************************************************/
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
@@ -1090,6 +1050,45 @@ function displayFavoriteList() {
 }
 
 /**********************************************************
+ *              EXPLORE ALGO FUNCTIONS
+ *********************************************************/
+function generateRandomHashAndToken() {
+  const randomHash = Array.from({ length: 64 }, () =>
+    Math.floor(Math.random() * 16).toString(16),
+  ).join("");
+
+  const randomToken = Math.floor(Math.random() * 1000000).toString();
+
+  return { hash: randomHash, tokenId: randomToken };
+}
+
+function exploreAlgo() {
+  if (!contractData) return;
+
+  const { hash, tokenId } = generateRandomHashAndToken();
+
+  contractData.hash = hash;
+  contractData.tokenId = tokenId;
+  contractData.owner = "";
+  contractData.ensName = "";
+
+  localStorage.setItem("contractData", JSON.stringify(contractData));
+
+  const scriptData = JSON.parse(localStorage.getItem("scriptData"));
+  if (scriptData) {
+    if (nameMap[contractData.contract] === "AB") {
+      scriptData.tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
+    } else {
+      scriptData.tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
+    }
+    localStorage.setItem("scriptData", JSON.stringify(scriptData));
+  }
+  location.reload();
+}
+
+dom.explore.addEventListener("click", exploreAlgo);
+
+/**********************************************************
  *       GET PREVIOUS/NEXT ID FUNCTIONS
  *********************************************************/
 function getId(tokenId) {
@@ -1300,14 +1299,6 @@ dom.selectedLoop.addEventListener("click", () => {
   handleLoopClick("selectedLoop");
 });
 dom.stopLoop.addEventListener("click", stopLoop);
-
-dom.fullscreen.addEventListener("click", () => {
-  if (dom.frame.requestFullscreen) dom.frame.requestFullscreen();
-  else if (dom.frame.mozRequestFullScreen) dom.frame.mozRequestFullScreen();
-  else if (dom.frame.webkitRequestFullscreen)
-    dom.frame.webkitRequestFullscreen();
-  else if (dom.frame.msRequestFullscreen) dom.frame.msRequestFullscreen();
-});
 
 document.addEventListener("click", () => {
   clearPanels();
