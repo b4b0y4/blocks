@@ -18,7 +18,6 @@
 
 html {
   height: 100%;
-  background-color: var(--color-bg);
 }
 
 body {
@@ -35,7 +34,6 @@ body {
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  background-color: inherit;
 }
 
 .hidden-box {
@@ -139,14 +137,12 @@ body {
 
 .frame-container {
   height: 100%;
-  background-color: var(--color-bg);
 }
 
 iframe {
   width: 100%;
   height: 100%;
   border: none;
-  background-color: var(--color-bg);
 }
 
 ::placeholder {
