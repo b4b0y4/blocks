@@ -892,7 +892,7 @@ function handleKeyboardNavigation(event) {
 
 dom.search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim();
-  applyFilter(filteredList, query);
+  applyFilter(list, query);
 });
 
 dom.search.addEventListener("keydown", handleKeyboardNavigation);
