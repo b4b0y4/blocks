@@ -212,7 +212,7 @@ async function grabData(tokenId, contract) {
       arweave,
     };
     localStorage.setItem("contractData", JSON.stringify(data));
-    location.reload();
+    update(...Object.values(data));
   } catch (error) {
     console.error("grabData:", error);
     dom.search.placeholder = "error";
@@ -333,7 +333,7 @@ async function updateContractData(tokenId, contract) {
 
     localStorage.setItem("contractData", JSON.stringify(contractData));
 
-    location.reload();
+    update(...Object.values(contractData));
   } catch (error) {
     console.error("updateContractData:", error);
     dom.search.placeholder = "error";
@@ -359,6 +359,26 @@ function update(
   ipfs,
   arweave,
 ) {
+  contractData = {
+    tokenId,
+    contract,
+    projId,
+    hash,
+    script,
+    detail,
+    owner,
+    ensName,
+    extLib,
+    edition,
+    minted,
+    extDep,
+    ipfs,
+    arweave,
+  };
+
+  localStorage.setItem("contractData", JSON.stringify(contractData));
+  console.log(contractData);
+
   pushItemToLocalStorage(
     contract,
     tokenId,
@@ -382,7 +402,24 @@ function update(
     minted,
     extDep,
   );
+  const oldFrame = dom.frame;
+  const frameContainer = oldFrame.parentNode;
+
+  const newFrame = document.createElement("iframe");
+  newFrame.id = "frame";
+  newFrame.src = "about:blank";
+
+  frameContainer.replaceChild(newFrame, oldFrame);
+  dom.frame = newFrame;
+
+  dom.infobar.style.opacity = "";
+  setDisplay(
+    [dom.inc, dom.dec, dom.save, dom.info],
+    contractData ? "block" : "none",
+  );
+
   injectFrame();
+  toggleSpin(false);
 }
 
 function pushItemToLocalStorage(
@@ -837,7 +874,9 @@ function handleKeyboardNavigation(event) {
       getToken(filteredList[selectedIndex], "");
     } else {
       const query = dom.search.value.trim();
-      query === "" ? getRandom(list) : getToken(filteredList.join("\n"), query);
+      query === ""
+        ? getRandom(filteredList)
+        : getToken(filteredList.join("\n"), query);
     }
     dom.search.value = "";
   }
@@ -853,7 +892,7 @@ function handleKeyboardNavigation(event) {
 
 dom.search.addEventListener("input", (event) => {
   const query = event.target.value.trim().split("#")[0].trim();
-  applyFilter(list, query);
+  applyFilter(filteredList, query);
 });
 
 dom.search.addEventListener("keydown", handleKeyboardNavigation);
@@ -864,7 +903,7 @@ dom.listPanel.addEventListener("click", handleItemClick);
  *              RANDOMNESS FUNCTIONS
  *********************************************************/
 function getRandom(lines) {
-  const randomLine = filteredList[Math.floor(Math.random() * lines.length)];
+  const randomLine = lines[Math.floor(Math.random() * lines.length)];
   console.log("Randomly selected line:", randomLine);
   getToken(randomLine, "");
 }
@@ -879,12 +918,12 @@ function getRandomKey(favorite) {
 
     contractData = favorite[randomKey];
     localStorage.setItem("contractData", JSON.stringify(contractData));
-    location.reload();
+    update(...Object.values(contractData));
   }
 }
 
 dom.randomButton.addEventListener("click", () => {
-  getRandom(list);
+  getRandom(filteredList);
 });
 
 /**********************************************************
@@ -910,6 +949,7 @@ function loopRandom(interval, action) {
     intervalId: loopState.intervalId,
   };
   localStorage.setItem("loopState", JSON.stringify(loopState));
+  console.log(loopState);
 }
 
 function performAction(action, favorite) {
@@ -965,6 +1005,7 @@ function handleLoopClick(action) {
     loopState = { isLooping: "false", interval: interval, action: action };
     localStorage.setItem("loopState", JSON.stringify(loopState));
   }
+  updateButtons("loop");
 }
 
 function stopLoop() {
@@ -999,7 +1040,7 @@ async function saveOutput() {
 dom.save.addEventListener("click", saveOutput);
 
 /**********************************************************
- *   MANIPULATE SAVED OUTPUT IN STORAGE FUNCTIONS
+ *      MANIPULATE SAVED OUTPUT IN STORAGE FUNCTIONS
  *********************************************************/
 function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
@@ -1018,7 +1059,7 @@ function displayFavorite(key) {
   clearDataStorage();
   contractData = favorite[key];
   localStorage.setItem("contractData", JSON.stringify(contractData));
-  location.reload();
+  update(...Object.values(contractData));
 }
 
 function displayFavoriteList() {
@@ -1093,7 +1134,7 @@ function exploreAlgo() {
     }
     localStorage.setItem("scriptData", JSON.stringify(scriptData));
   }
-  location.reload();
+  update(...Object.values(contractData));
 }
 
 dom.explore.addEventListener("click", exploreAlgo);
@@ -1157,9 +1198,9 @@ const togglePanel = (panelElement) => {
   );
 };
 
-const toggleSpin = () => {
-  dom.spinner.style.display = "block";
-  dom.keyShort.style.display = "none";
+const toggleSpin = (show = true) => {
+  dom.spinner.style.display = show ? "block" : "none";
+  dom.keyShort.style.display = show ? "none" : "block";
 };
 
 const toggleKeyShort = (event) => {
@@ -1226,9 +1267,11 @@ document.addEventListener("DOMContentLoaded", () => {
   checkLocalStorage();
   checkForNewContracts();
 
-  contractData
-    ? update(...Object.values(contractData))
-    : (dom.infobar.style.opacity = "0.98");
+  if (!contractData) {
+    dom.infobar.style.opacity = "0.98";
+  } else {
+    update(...Object.values(contractData));
+  }
 
   if (!rpcUrl) dom.infobar.style.display = "none";
 
@@ -1240,7 +1283,6 @@ document.addEventListener("DOMContentLoaded", () => {
   updateFavIcon();
 
   dom.root.classList.remove("no-flash");
-  console.log(contractData);
 });
 
 dom.rpcUrlInput.addEventListener("keypress", (event) => {
