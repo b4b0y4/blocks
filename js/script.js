@@ -12,7 +12,7 @@ const dom = {
   explore: document.getElementById("explore"),
   repeatIcon: document.querySelector(".fa-repeat"),
   dropMenu: document.getElementById("dropMenu"),
-  loopAll: document.getElementById("loopAll"),
+  allLoop: document.getElementById("loopAll"),
   favLoop: document.getElementById("favLoop"),
   curatedLoop: document.getElementById("curatedLoop"),
   selectedLoop: document.getElementById("selectedLoop"),
@@ -913,7 +913,7 @@ function loopRandom(interval, action) {
 }
 
 function performAction(action, favorite) {
-  if (action === "loopAll") getRandom(filteredList);
+  if (action === "allLoop") getRandom(filteredList);
   else if (action === "favLoop") getRandomKey(favorite);
   else if (action === "curatedLoop") {
     applyFilter(filteredList, "curated");
