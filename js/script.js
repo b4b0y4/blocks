@@ -31,7 +31,6 @@ const dom = {
   searchIcon: document.querySelector(".search-icon"),
   favIcon: document.querySelector(".fav-icon"),
   spinner: document.querySelector(".spinner"),
-  keyShort: document.querySelector(".key-short"),
   panel: document.querySelector(".panel"),
   listPanel: document.querySelector(".list-panel"),
   favPanel: document.querySelector(".fav-panel"),
@@ -1200,11 +1199,6 @@ const togglePanel = (panelElement) => {
 
 const toggleSpin = (show = true) => {
   dom.spinner.style.display = show ? "block" : "none";
-  dom.keyShort.style.display = show ? "none" : "block";
-};
-
-const toggleKeyShort = (event) => {
-  dom.keyShort.style.display = event.type === "focusin" ? "none" : "block";
 };
 
 const updateButtons = (mode) => {
@@ -1296,10 +1290,6 @@ document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     clearDataStorage();
     location.reload();
-  } else if (event.key === "/") {
-    event.preventDefault();
-    dom.search.focus();
-    togglePanel(dom.listPanel);
   }
 });
 
@@ -1334,9 +1324,6 @@ dom.search.addEventListener("input", () => {
     clearPanels();
   }
 });
-
-dom.search.addEventListener("focusin", toggleKeyShort);
-dom.search.addEventListener("focusout", toggleKeyShort);
 
 loopTypes.forEach((type) => {
   dom[`${type}Loop`].addEventListener("click", () =>

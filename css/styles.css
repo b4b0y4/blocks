@@ -261,7 +261,7 @@ a:hover {
   background-color: var(--color-hvr);
   color: var(--color-txt);
   font-size: 1em;
-  width: 90px;
+  width: 80px;
   text-align: start;
   border-radius: 5px;
   padding: 4px 15px 4px 26px;
@@ -305,20 +305,6 @@ a:hover {
   color: var(--color-txt);
 }
 
-.key-short {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-  font-size: 0.6em;
-  color: var(--color-btn);
-  background-color: var(--color-hvr);
-  filter: brightness(90%);
-  padding: 2.5px 7px;
-  border-radius: 5px;
-  cursor: default;
-}
-
 .spinner {
   display: none;
   position: absolute;
@@ -331,7 +317,6 @@ a:hover {
   animation: spin 1s linear infinite;
 }
 
-.search-box.nofav .key-short,
 .search-box.nofav .spinner {
   right: 5px;
 }
@@ -576,10 +561,6 @@ a:hover {
 
   .fav-icon {
     right: 4px;
-  }
-
-  .key-short {
-    visibility: hidden;
   }
 
   .spinner {
