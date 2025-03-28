@@ -39,6 +39,7 @@ const dom = {
 };
 
 const panels = [dom.panel, dom.listPanel, dom.favPanel];
+const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
@@ -1295,21 +1296,12 @@ dom.search.addEventListener("input", () => {
 dom.search.addEventListener("focusin", toggleKeyShort);
 dom.search.addEventListener("focusout", toggleKeyShort);
 
-dom.loopAll.addEventListener("click", () => {
-  handleLoopClick("loopAll");
+loopTypes.forEach((type) => {
+  dom[`${type}Loop`].addEventListener("click", () =>
+    handleLoopClick(`${type}Loop`),
+  );
 });
-dom.favLoop.addEventListener("click", () => {
-  handleLoopClick("favLoop");
-});
-dom.curatedLoop.addEventListener("click", () => {
-  handleLoopClick("curatedLoop");
-});
-dom.selectedLoop.addEventListener("click", () => {
-  handleLoopClick("selectedLoop");
-});
-dom.oobLoop.addEventListener("click", () => {
-  handleLoopClick("oobLoop");
-});
+
 dom.stopLoop.addEventListener("click", stopLoop);
 
 document.addEventListener("click", () => {
