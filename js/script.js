@@ -212,7 +212,7 @@ async function grabData(tokenId, contract) {
     update(...Object.values(data));
   } catch (error) {
     console.error("grabData:", error);
-    dom.search.placeholder = "error";
+    toggleSpin(false);
   }
 }
 
@@ -333,7 +333,7 @@ async function updateContractData(tokenId, contract) {
     update(...Object.values(contractData));
   } catch (error) {
     console.error("updateContractData:", error);
-    dom.search.placeholder = "error";
+    toggleSpin(false);
   }
 }
 
