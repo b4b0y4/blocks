@@ -1,4 +1,4 @@
-export const list = [
+export const l = [
   "AB0 - Chromie Squiggle / Snowfro - 10000 items",
   "AB1 - Genesis / DCA - 512 items",
   "AB2 - Construction Token / Jeff Davis - 500 items",
@@ -521,14 +521,14 @@ export const list = [
   "ABSXVI1 - Art from code / Jos Vromans - 37 items",
   "ABSXVIII0 - Origin / Monokai - 37 items",
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 items",
-  "ABSXX1 - Isoplanet / Joshua Bagley - 31 items",
+  "ABSXX1 - Isoplanet / Joshua Bagley - 33 items",
   "ABSXXI0 - Carattere / michelangelo (encapsuled) - 48 items",
   "ABSXXI1 - Linea / michelangelo (encapsuled) - 20 items",
   "ABSXXII0 - Pax / Eric De Giuli - 100 items",
   "ABSXXIII0 - piñata3 / Fahad Karim - 86 items",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 item",
   "ABSXXV1 - Ink / mpkoz - 1 item",
-  "ABSXXVI0 - Roots / Fernando Jerez - 58 items",
+  "ABSXXVI0 - Roots / Fernando Jerez - 59 items",
   "ABSXXVII0 - Roll Some Bones / rahul iyer - 101 items",
   "ABSXXVIII0 - Defrag Me / Jorge Ledezma - 20 items",
   "ABSXXX0 - Heartbeat / AnaPet - 13 items",
@@ -887,6 +887,7 @@ export const list = [
   "ITERATION0 - 9dcc ITERATION-02 / Snowfro - 1183 items",
   "NUMBER0 - Number / Wang - 165 items",
 ];
+export const list = l.filter((line) => !line.trim().endsWith("!"));
 export const libs = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",

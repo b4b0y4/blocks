@@ -1,5 +1,5 @@
 import { ethers } from "./ethers.min.js";
-import { list, libs } from "./lists.js";
+import { l, list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
 // fetchBlocks(["ABC", ...is.studio]);
@@ -63,7 +63,7 @@ const curated = [
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ];
 
-let filteredList = list.filter((line) => !line.trim().endsWith("!"));
+let filteredList = list;
 let selectedIndex = -1;
 let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
@@ -109,9 +109,7 @@ async function fetchBlocks(array) {
                 Number(token.invocations) === 1 ? "item" : "items"
               }`;
 
-              return !list
-                .map((item) => item.replace(/!$/, ""))
-                .includes(newItem)
+              return !l.map((item) => item.replace(/!$/, "")).includes(newItem)
                 ? `"${newItem}",`
                 : null;
             } catch (err) {
@@ -768,7 +766,7 @@ async function injectFrame() {
  *********************************************************/
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
-    getRandom(filteredList);
+    getRandom(list);
   } else if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery);
   } else {
@@ -825,7 +823,7 @@ function displayList(lines) {
     .join("");
   dom.listPanel.innerHTML = `<div>${panel}</div>`;
 }
-displayList(filteredList);
+displayList(list);
 
 function applyFilter(lines, query) {
   const queryLower = query.toLowerCase();
@@ -840,8 +838,6 @@ function applyFilter(lines, query) {
           );
         })
       : lines.filter((line) => line.toLowerCase().includes(queryLower));
-
-  filteredList = filteredList.filter((line) => !line.trim().endsWith("!"));
 
   displayList(filteredList);
   selectedIndex = -1;
@@ -873,9 +869,7 @@ function handleKeyboardNavigation(event) {
       getToken(filteredList[selectedIndex], "");
     } else {
       const query = dom.search.value.trim();
-      query === ""
-        ? getRandom(filteredList)
-        : getToken(filteredList.join("\n"), query);
+      query === "" ? getRandom(list) : getToken(filteredList.join("\n"), query);
     }
     dom.search.value = "";
   }
@@ -922,7 +916,7 @@ function getRandomKey(favorite) {
 }
 
 dom.randomButton.addEventListener("click", () => {
-  getRandom(filteredList);
+  getRandom(list);
 });
 
 /**********************************************************
@@ -952,10 +946,10 @@ function loopRandom(interval, action) {
 }
 
 function performAction(action, favorite) {
-  if (action === "allLoop") getRandom(filteredList);
+  if (action === "allLoop") getRandom(list);
   else if (action === "favLoop") getRandomKey(favorite);
   else if (action === "curatedLoop") {
-    applyFilter(filteredList, "curated");
+    applyFilter(list, "curated");
     getRandom(filteredList);
   } else if (action === "selectedLoop") {
     let random = Math.floor(
