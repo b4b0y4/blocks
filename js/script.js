@@ -872,6 +872,7 @@ function handleKeyboardNavigation(event) {
       query === "" ? getRandom(list) : getToken(filteredList.join("\n"), query);
     }
     dom.search.value = "";
+    selectedIndex = -1;
   }
 
   const items = document.querySelectorAll(".list-item");
