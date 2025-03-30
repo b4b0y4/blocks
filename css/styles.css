@@ -230,14 +230,13 @@ iframe {
 }
 
 #loopInput {
-  box-sizing: border-box;
   padding: 4px;
   border-radius: 5px;
   font-size: 1em;
   border: none;
   background-color: var(--color-hvr);
   color: var(--color-btn);
-  width: 100%;
+  max-width: 120px;
   margin-bottom: 5px;
   text-align: center;
 }
