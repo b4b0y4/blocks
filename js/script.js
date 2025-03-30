@@ -9,7 +9,14 @@ const dom = {
   instruction: document.querySelector(".instruction"),
   rpcUrlInput: document.getElementById("rpcUrl"),
   theme: document.getElementById("theme"),
+  frame: document.getElementById("frame"),
+  infobar: document.querySelector(".infobar"),
+  info: document.getElementById("info"),
+  save: document.getElementById("saveBtn"),
+  dec: document.getElementById("decrementBtn"),
+  inc: document.getElementById("incrementBtn"),
   explore: document.getElementById("explore"),
+  loop: document.getElementById("loop"),
   repeatIcon: document.querySelector(".fa-repeat"),
   dropMenu: document.getElementById("dropMenu"),
   allLoop: document.getElementById("loopAll"),
@@ -19,12 +26,6 @@ const dom = {
   oobLoop: document.getElementById("oobLoop"),
   stopLoop: document.querySelector(".fa-circle-stop"),
   loopInput: document.getElementById("loopInput"),
-  frame: document.getElementById("frame"),
-  infobar: document.querySelector(".infobar"),
-  info: document.getElementById("info"),
-  save: document.getElementById("saveBtn"),
-  dec: document.getElementById("decrementBtn"),
-  inc: document.getElementById("incrementBtn"),
   randomButton: document.getElementById("randomButton"),
   searchBox: document.querySelector(".search-box"),
   search: document.getElementById("searchInput"),
@@ -37,7 +38,7 @@ const dom = {
   overlay: document.querySelector(".overlay"),
 };
 
-const panels = [dom.panel, dom.listPanel, dom.favPanel];
+const panels = [dom.panel, dom.listPanel, dom.favPanel, dom.dropMenu];
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
 const rpcUrl = localStorage.getItem("rpcUrl");
@@ -409,12 +410,7 @@ function update(
   frameContainer.replaceChild(newFrame, oldFrame);
   dom.frame = newFrame;
 
-  dom.infobar.style.opacity = "";
-  setDisplay(
-    [dom.inc, dom.dec, dom.save, dom.info],
-    contractData ? "block" : "none",
-  );
-
+  setDisplay();
   injectFrame();
   toggleSpin(false);
 }
@@ -971,14 +967,14 @@ function stopRandomLoop() {
 }
 
 function checkLocalStorage() {
-  dom.loopInput.placeholder = `${loopState.interval / 60000}m`;
+  dom.loopInput.placeholder = `${loopState.interval / 60000} min`;
 
   if (loopState.isLooping === "true" && loopState.action !== null)
     loopRandom(loopState.interval, loopState.action);
 }
 
 function handleLoopClick(action) {
-  dom.dropMenu.classList.remove("active");
+  clearPanels();
 
   let inputValue = dom.loopInput.value.trim();
   const inputVal = parseInt(inputValue, 10);
@@ -1040,13 +1036,13 @@ function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
   favorite[key] = contractData;
   localStorage.setItem("favorite", JSON.stringify(favorite));
-  updateFavIcon();
+  setDisplay();
 }
 
 function deleteContractDataFromStorage(key) {
   if (favorite.hasOwnProperty(key)) delete favorite[key];
   localStorage.setItem("favorite", JSON.stringify(favorite));
-  updateFavIcon();
+  setDisplay();
 }
 
 function displayFavorite(key) {
@@ -1214,39 +1210,27 @@ const updateButtons = (mode) => {
   });
 };
 
-const setDisplay = (elements, value) => {
-  elements.forEach((el) => (el.style.display = value));
-};
-
-function updateFavIcon() {
+const setDisplay = () => {
+  const hasContract = !!contractData;
+  const hasRPC = !!rpcUrl;
   const hasFavorites = Object.keys(favorite).length > 0;
 
-  setDisplay([dom.favIcon], hasFavorites ? "block" : "none");
+  dom.infobar.style.display = hasRPC ? "block" : "none";
+  dom.infobar.style.opacity = hasContract || !hasRPC ? "" : "0.98";
+
+  [dom.inc, dom.dec, dom.save, dom.info, dom.explore, dom.loop].forEach(
+    (el) => (el.style.display = hasContract ? "block" : "none"),
+  );
+
+  [dom.rpcUrlInput, dom.instruction].forEach(
+    (el) => (el.style.display = hasRPC ? "none" : "block"),
+  );
+
+  dom.favIcon.style.display = hasFavorites ? "block" : "none";
   dom.searchBox.classList.toggle("nofav", !hasFavorites);
+
   if (!hasFavorites) clearPanels();
-}
-
-function addHoverEffect(button, menu) {
-  let timer;
-
-  function showMenu() {
-    clearTimeout(timer);
-    menu.classList.add("active");
-  }
-
-  function hideMenu() {
-    timer = setTimeout(() => {
-      menu.classList.remove("active");
-    }, 300);
-  }
-
-  button.addEventListener("mouseover", showMenu);
-  button.addEventListener("mouseout", hideMenu);
-  menu.addEventListener("mouseover", showMenu);
-  menu.addEventListener("mouseout", hideMenu);
-}
-
-addHoverEffect(dom.repeatIcon, dropMenu);
+};
 
 /**********************************************************
  *                     EVENTS
@@ -1256,21 +1240,11 @@ document.addEventListener("DOMContentLoaded", () => {
   checkLocalStorage();
   checkForNewContracts();
 
-  if (!contractData) {
-    dom.infobar.style.opacity = "0.98";
-  } else {
+  if (contractData) {
     update(...Object.values(contractData));
   }
 
-  if (!rpcUrl) dom.infobar.style.display = "none";
-
-  setDisplay(
-    [dom.inc, dom.dec, dom.save, dom.info],
-    contractData ? "block" : "none",
-  );
-  setDisplay([dom.rpcUrlInput, dom.instruction], rpcUrl ? "none" : "block");
-  updateFavIcon();
-
+  setDisplay();
   dom.root.classList.remove("no-flash");
 });
 
@@ -1302,6 +1276,11 @@ dom.favIcon.addEventListener("click", (event) => {
   event.stopPropagation();
   displayFavoriteList();
   togglePanel(dom.favPanel);
+});
+
+dom.repeatIcon.addEventListener("click", (event) => {
+  event.stopPropagation();
+  togglePanel(dom.dropMenu);
 });
 
 panels.forEach((panel) => {

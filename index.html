@@ -44,21 +44,6 @@
           <i class="fa-regular fa-moon"></i>
           <i class="fa-regular fa-sun"></i>
         </button>
-        <button id="explore">
-          <i class="fa-regular fa-compass"></i>
-        </button>
-        <button id="loop">
-          <i class="fa-solid fa-repeat"></i>
-          <i class="fa-regular fa-circle-stop"></i>
-        </button>
-        <input type="text" id="loopInput" placeholder="" autocomplete="off" />
-        <div class="drop-menu" id="dropMenu">
-          <button id="loopAll" data-action="loop">Everything</button>
-          <button id="favLoop" data-action="favLoop">Favorites</button>
-          <button id="curatedLoop" data-action="curated">Curated</button>
-          <button id="selectedLoop" data-action="selected">Selected</button>
-          <button id="oobLoop" data-action="selected">OOB</button>
-        </div>
       </div>
 
       <div class="frame-container">
@@ -72,7 +57,10 @@
             <button id="saveBtn" class="save">
               <i class="fa-regular fa-floppy-disk"></i>
             </button>
-            <button id="decrementBtn" class="previous">
+            <button id="explore">
+              <i class="fa-regular fa-compass"></i>
+            </button>
+            <button id="decrementBtn" class="dec">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
             <div class="search-box">
@@ -88,9 +76,26 @@
                 <i class="fa-solid fa-ellipsis-vertical"></i>
               </button>
             </div>
-            <button id="incrementBtn" class="next">
+            <button id="incrementBtn" class="inc">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
+            <button id="loop">
+              <i class="fa-solid fa-repeat"></i>
+              <i class="fa-regular fa-circle-stop"></i>
+            </button>
+            <div class="drop-menu" id="dropMenu">
+              <input
+                type="text"
+                id="loopInput"
+                placeholder=""
+                autocomplete="off"
+              />
+              <button id="loopAll">Everything</button>
+              <button id="favLoop">Favorites</button>
+              <button id="curatedLoop">Curated</button>
+              <button id="selectedLoop">Selected</button>
+              <button id="oobLoop">OOB</button>
+            </div>
             <button id="randomButton" class="random">
               <i class="fa-solid fa-shuffle"></i>
             </button>
@@ -121,7 +126,7 @@
             <li>(id) get the exact token id on a displayed collection.</li>
           </ul>
           <li>Press <span class="key">\</span> to clear the page.</li>
-          <li>There is a hidden menu on the upper right-hand corner!</li>
+          <li>There is a dark/light toggle on the upper right-hand corner.</li>
           <li>
             Pin this app to your IPFS node to help decentralisation
             <a
