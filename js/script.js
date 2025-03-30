@@ -898,7 +898,7 @@ dom.listPanel.addEventListener("click", handleItemClick);
  *********************************************************/
 function getRandom(lines) {
   const randomLine = lines[Math.floor(Math.random() * lines.length)];
-  console.log("Randomly selected line:", randomLine);
+  console.log("Random line:", randomLine);
   getToken(randomLine, "");
 }
 
