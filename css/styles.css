@@ -12,7 +12,6 @@
   --color-hvr: #2d2e2e;
 }
 
-/* Base Styles */
 html {
   height: 100%;
 }
@@ -26,7 +25,6 @@ body {
   overflow: hidden;
 }
 
-/* Typography */
 p {
   line-height: 1.5em;
   margin: 0;
@@ -53,7 +51,6 @@ a:hover {
   color: var(--color-txt);
 }
 
-/* Layout */
 .container {
   display: flex;
   flex-direction: column;
@@ -71,7 +68,6 @@ iframe {
   border: none;
 }
 
-/* Hidden Box */
 .hidden-box {
   position: absolute;
   top: 10px;
@@ -91,7 +87,6 @@ iframe {
   opacity: 0.98;
 }
 
-/* Info Bar */
 .infobar {
   position: absolute;
   bottom: 0;
@@ -127,7 +122,6 @@ iframe {
   align-items: center;
 }
 
-/* Buttons and Controls */
 #git,
 #theme,
 .save,
@@ -176,7 +170,6 @@ iframe {
   background-color: var(--color-hvr);
 }
 
-/* Search Box */
 .search-box {
   display: flex;
   justify-content: center;
@@ -197,7 +190,6 @@ iframe {
   transition: outline-color 0.1s ease-in-out;
 }
 
-/* Forms and Inputs */
 .rpc-url,
 .search-input,
 #loopInput {
@@ -236,12 +228,11 @@ iframe {
   border: none;
   background-color: var(--color-hvr);
   color: var(--color-btn);
-  max-width: 120px;
+  max-width: 100%;
   margin-bottom: 5px;
   text-align: center;
 }
 
-/* Icons and Visual Elements */
 .search-icon,
 .fav-icon {
   position: absolute;
@@ -287,7 +278,6 @@ iframe {
   right: 5px;
 }
 
-/* Panels and Menus */
 .instruction,
 .panel,
 .list-panel,
@@ -303,7 +293,7 @@ iframe {
   color: var(--color-txt);
   border-radius: 10px;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
-  z-index: 99;
+  z-index: 90;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease-in-out;
@@ -319,6 +309,10 @@ iframe {
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
+}
+
+.drop-menu {
+  max-width: 120px;
 }
 
 .instruction {
@@ -337,7 +331,6 @@ iframe {
   pointer-events: auto;
 }
 
-/* Panel Content Styles */
 .info {
   display: flex;
   align-items: center;
@@ -390,7 +383,6 @@ iframe {
   background-color: var(--color-hvr);
 }
 
-/* Content Sections */
 .work {
   font-size: 1.4em;
   margin-bottom: 8px;
@@ -428,7 +420,6 @@ iframe {
   margin-top: 8px;
 }
 
-/* Utility Classes */
 .no-flash {
   visibility: hidden;
 }
@@ -466,7 +457,6 @@ iframe {
   background-color: var(--color-hvr);
 }
 
-/* Overlay */
 .overlay {
   visibility: hidden;
   position: fixed;
@@ -493,14 +483,12 @@ iframe {
     visibility 0s;
 }
 
-/* Animations */
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* Media Queries */
 @media (max-width: 600px) {
   .container {
     position: fixed;
@@ -511,8 +499,9 @@ iframe {
   }
 
   .infobar {
-    position: static;
-    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    /* justify-content: center; */
     left: 0;
     border-radius: 0;
     height: 80px;
@@ -572,14 +561,6 @@ iframe {
   #explore:hover,
   #loop:hover {
     background-color: var(--color-bg);
-  }
-
-  .inc {
-    margin-right: 10px;
-  }
-
-  .dec {
-    margin-left: 10px;
   }
 
   .instruction,
