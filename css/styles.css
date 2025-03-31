@@ -88,7 +88,7 @@ iframe {
 }
 
 .infobar {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
   height: 30px;
@@ -499,8 +499,6 @@ iframe {
   }
 
   .infobar {
-    position: fixed;
-    bottom: 0;
     left: 0;
     border-radius: 0;
     height: 80px;
