@@ -987,6 +987,8 @@ function handleLoopClick(action) {
 
   if (!isNaN(interval) && interval > 0) {
     loopRandom(interval, action);
+    dom.loopInput.value = "";
+    dom.loopInput.placeholder = `${interval / 60000} min`;
   } else {
     alert("Please enter a time in minutes.");
   }
@@ -1269,6 +1271,7 @@ dom.info.addEventListener("click", (event) => {
 
 dom.searchIcon.addEventListener("click", (event) => {
   event.stopPropagation();
+  displayList(list);
   togglePanel(dom.listPanel);
 });
 
