@@ -241,98 +241,90 @@ function checkForNewContracts() {
   if (newContract.length > 0) fetchBlocks(newContract);
 }
 
-async function grabData(tokenId, contract) {
+async function grabData(tokenId, contract, updateOnly = false) {
   try {
     toggleSpin();
     clearPanels();
-    clearDataStorage();
     console.log("Contract:", contract, "\nToken Id:", tokenId);
 
-    const isContractV2 = is.v2.includes(nameMap[contract]);
+    if (updateOnly) {
+      const [hash, { owner, ensName }] = await Promise.all([
+        fetchHash(tokenId, contract),
+        fetchOwner(tokenId, contract),
+      ]);
 
-    const [projectId, hash, { owner, ensName }] = await Promise.all([
-      fetchProjectId(tokenId, contract),
-      fetchHash(tokenId, contract),
-      fetchOwner(tokenId, contract),
-    ]);
+      const data = JSON.parse(localStorage.getItem("contractData"));
+      data.tokenId = tokenId;
+      data.contract = contract;
+      data.hash = hash;
+      data.owner = owner;
+      data.ensName = ensName;
 
-    const projId = Number(projectId);
+      localStorage.setItem("contractData", JSON.stringify(data));
+      update(...Object.values(data));
+    } else {
+      clearDataStorage();
 
-    const [projectInfo, detail, { edition, minted }] = await Promise.all([
-      fetchProjectInfo(projId, contract, isContractV2),
-      fetchProjectDetails(projId, contract),
-      fetchEditionInfo(projId, contract, isContractV2),
-    ]);
+      const isContractV2 = is.v2.includes(nameMap[contract]);
+      const [projectId, hash, { owner, ensName }] = await Promise.all([
+        fetchProjectId(tokenId, contract),
+        fetchHash(tokenId, contract),
+        fetchOwner(tokenId, contract),
+      ]);
 
-    const [script, extLib] = await Promise.all([
-      constructScript(projId, projectInfo, contract),
-      extractLibraryName(projectInfo),
-    ]);
+      const projId = Number(projectId);
+      const [projectInfo, detail, { edition, minted }] = await Promise.all([
+        fetchProjectInfo(projId, contract, isContractV2),
+        fetchProjectDetails(projId, contract),
+        fetchEditionInfo(projId, contract, isContractV2),
+      ]);
 
-    let extDep = [];
-    let ipfs = null;
-    let arweave = null;
+      const [script, extLib] = await Promise.all([
+        constructScript(projId, projectInfo, contract),
+        extractLibraryName(projectInfo),
+      ]);
 
-    if (is.flex.includes(nameMap[contract])) {
-      const extDepCount = await fetchExtDepCount(projId, contract);
-      if (extDepCount) {
-        if (nameMap[contract] === "BMFLEX") {
-          extDep = await fetchCIDs(projId, extDepCount, contract);
-          ipfs = "https://ipfs.io/ipfs";
-        } else {
-          [extDep, { ipfs, arweave }] = await Promise.all([
-            fetchCIDs(projId, extDepCount, contract),
-            fetchGateway(contract),
-          ]);
+      let extDep = [];
+      let ipfs = null;
+      let arweave = null;
+
+      if (is.flex.includes(nameMap[contract])) {
+        const extDepCount = await fetchExtDepCount(projId, contract);
+        if (extDepCount) {
+          if (nameMap[contract] === "BMFLEX") {
+            extDep = await fetchCIDs(projId, extDepCount, contract);
+            ipfs = "https://ipfs.io/ipfs";
+          } else {
+            [extDep, { ipfs, arweave }] = await Promise.all([
+              fetchCIDs(projId, extDepCount, contract),
+              fetchGateway(contract),
+            ]);
+          }
         }
       }
+
+      const data = {
+        tokenId,
+        contract,
+        projId,
+        hash,
+        script,
+        detail,
+        owner,
+        ensName,
+        extLib,
+        edition,
+        minted,
+        extDep,
+        ipfs,
+        arweave,
+      };
+
+      localStorage.setItem("contractData", JSON.stringify(data));
+      update(...Object.values(data));
     }
-
-    const data = {
-      tokenId,
-      contract,
-      projId,
-      hash,
-      script,
-      detail,
-      owner,
-      ensName,
-      extLib,
-      edition,
-      minted,
-      extDep,
-      ipfs,
-      arweave,
-    };
-    localStorage.setItem("contractData", JSON.stringify(data));
-    update(...Object.values(data));
   } catch (error) {
-    console.error("grabData:", error);
-    toggleSpin(false);
-  }
-}
-
-async function updateContractData(tokenId, contract) {
-  try {
-    toggleSpin();
-    clearPanels();
-    console.log("Contract:", contract, "\nToken Id:", tokenId);
-
-    const [hash, { owner, ensName }] = await Promise.all([
-      fetchHash(tokenId, contract),
-      fetchOwner(tokenId, contract),
-    ]);
-
-    contractData.tokenId = tokenId;
-    contractData.hash = hash;
-    contractData.owner = owner;
-    contractData.ensName = ensName;
-
-    localStorage.setItem("contractData", JSON.stringify(contractData));
-
-    update(...Object.values(contractData));
-  } catch (error) {
-    console.error("updateContractData:", error);
+    console.error(`grabData (${updateOnly ? "update" : "full"})`, error);
     toggleSpin(false);
   }
 }
@@ -879,7 +871,7 @@ function handleNumericQuery(searchQuery) {
       ? id
       : Number((projId * 1000000 + id).toString().padStart(6, "0"));
 
-  updateContractData(tokenId, contract);
+  grabData(tokenId, contract, true);
 }
 
 function handleOtherQuery(line, searchQuery) {
@@ -974,7 +966,7 @@ function incrementTokenId() {
 
   contractData.tokenId = contractData.projId * 1000000 + numericId;
 
-  updateContractData(contractData.tokenId, contractData.contract);
+  grabData(contractData.tokenId, contractData.contract, true);
 }
 
 function decrementTokenId() {
@@ -988,7 +980,7 @@ function decrementTokenId() {
 
   contractData.tokenId = contractData.projId * 1000000 + numericId;
 
-  updateContractData(contractData.tokenId, contractData.contract);
+  grabData(contractData.tokenId, contractData.contract, true);
 }
 
 function getId(tokenId) {
