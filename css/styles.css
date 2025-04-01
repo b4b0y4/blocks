@@ -499,6 +499,7 @@ iframe {
   }
 
   .infobar {
+    position: static;
     left: 0;
     border-radius: 0;
     height: 80px;
