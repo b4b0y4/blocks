@@ -1,3 +1,6 @@
+/*---------------------------------------------------------
+ *                    CORE IMPORTS & DOM
+ *------------------------------------------------------*/
 import { ethers } from "./ethers.min.js";
 import { l, list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
@@ -41,6 +44,9 @@ const dom = {
 const panels = [dom.panel, dom.listPanel, dom.favPanel, dom.dropMenu];
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
+/*---------------------------------------------------------
+ *                    ETHEREUM SETUP
+ *-------------------------------------------------------*/
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 
@@ -55,17 +61,9 @@ Object.keys(contractRegistry).forEach((key, index) => {
   indexMap[key] = index;
 });
 
-const curated = [
-  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
-];
-
-let filteredList = list;
-let selectedIndex = -1;
+/*---------------------------------------------------------
+ *                   STATE MANAGEMENT
+ *-------------------------------------------------------*/
 let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
 let loopState = JSON.parse(localStorage.getItem("loopState")) || {
@@ -75,9 +73,109 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   intervalId: null,
 };
 
-/**********************************************************
- *                UPDATE LIST FUNCTION
- *********************************************************/
+/*---------------------------------------------------------
+ *                LIST MANAGEMENT SYSTEM
+ *-------------------------------------------------------*/
+class ListManager {
+  constructor(listData) {
+    this.originalList = listData;
+    this.filteredList = listData;
+    this.selectedIndex = -1;
+  }
+
+  filterByQuery(query) {
+    query = query.toLowerCase().trim();
+    this.filteredList =
+      query === "curated"
+        ? this.originalList.filter((line) => {
+            const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
+            return (
+              idMatch &&
+              (curated.includes(parseInt(idMatch[1])) || line.startsWith("ABC"))
+            );
+          })
+        : this.originalList.filter((line) =>
+            line.toLowerCase().includes(query),
+          );
+
+    this.selectedIndex = -1;
+    return this.filteredList;
+  }
+
+  navigate(direction) {
+    const maxIndex = this.filteredList.length - 1;
+    this.selectedIndex =
+      direction === "up"
+        ? this.selectedIndex <= 0
+          ? maxIndex
+          : this.selectedIndex - 1
+        : this.selectedIndex >= maxIndex
+          ? 0
+          : this.selectedIndex + 1;
+    return this.selectedIndex;
+  }
+
+  getSelected() {
+    return this.selectedIndex >= 0
+      ? this.filteredList[this.selectedIndex]
+      : null;
+  }
+
+  reset() {
+    this.filteredList = this.originalList;
+    this.selectedIndex = -1;
+  }
+}
+
+const listManager = new ListManager(list);
+
+function displayList(items) {
+  const listItems = items
+    .map((line, index) => {
+      const parts = line.split(" - ");
+      const displayText = parts.slice(1, parts.length - 1).join(" - ");
+      const mintedInfo = parts[parts.length - 1];
+
+      return `<p class="list-item ${index === listManager.selectedIndex ? "selected" : ""}"
+               data-index="${index}">
+               ${displayText}<span>${mintedInfo}</span>
+            </p>`;
+    })
+    .join("");
+
+  dom.listPanel.innerHTML = `<div>${listItems}</div>`;
+}
+
+function handleKeyboardNavigation(event) {
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    event.preventDefault();
+    const newIndex = listManager.navigate(
+      event.key === "ArrowUp" ? "up" : "down",
+    );
+    displayList(listManager.filteredList);
+
+    const selectedItem = dom.listPanel.querySelector(
+      `[data-index="${newIndex}"]`,
+    );
+    selectedItem?.scrollIntoView({ block: "nearest" });
+  } else if (event.key === "Enter") {
+    const selectedItem = listManager.getSelected();
+    if (selectedItem) {
+      getToken(selectedItem, "");
+    } else {
+      const query = dom.search.value.trim();
+      query === ""
+        ? getRandom(list)
+        : getToken(listManager.filteredList[0], query);
+    }
+    dom.search.value = "";
+    listManager.reset();
+  }
+}
+
+/*---------------------------------------------------------
+ *                 ETHEREUM FUNCTIONS
+ *-------------------------------------------------------*/
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
   console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
@@ -143,9 +241,6 @@ function checkForNewContracts() {
   if (newContract.length > 0) fetchBlocks(newContract);
 }
 
-/**********************************************************
- *             GET DATA FROM ETHEREUM FUNCTIONS
- *********************************************************/
 async function grabData(tokenId, contract) {
   try {
     toggleSpin();
@@ -213,6 +308,31 @@ async function grabData(tokenId, contract) {
     update(...Object.values(data));
   } catch (error) {
     console.error("grabData:", error);
+    toggleSpin(false);
+  }
+}
+
+async function updateContractData(tokenId, contract) {
+  try {
+    toggleSpin();
+    clearPanels();
+    console.log("Contract:", contract, "\nToken Id:", tokenId);
+
+    const [hash, { owner, ensName }] = await Promise.all([
+      fetchHash(tokenId, contract),
+      fetchOwner(tokenId, contract),
+    ]);
+
+    contractData.tokenId = tokenId;
+    contractData.hash = hash;
+    contractData.owner = owner;
+    contractData.ensName = ensName;
+
+    localStorage.setItem("contractData", JSON.stringify(contractData));
+
+    update(...Object.values(contractData));
+  } catch (error) {
+    console.error("updateContractData:", error);
     toggleSpin(false);
   }
 }
@@ -313,34 +433,9 @@ async function fetchGateway(contract) {
   return { ipfs, arweave };
 }
 
-async function updateContractData(tokenId, contract) {
-  try {
-    toggleSpin();
-    clearPanels();
-    console.log("Contract:", contract, "\nToken Id:", tokenId);
-
-    const [hash, { owner, ensName }] = await Promise.all([
-      fetchHash(tokenId, contract),
-      fetchOwner(tokenId, contract),
-    ]);
-
-    contractData.tokenId = tokenId;
-    contractData.hash = hash;
-    contractData.owner = owner;
-    contractData.ensName = ensName;
-
-    localStorage.setItem("contractData", JSON.stringify(contractData));
-
-    update(...Object.values(contractData));
-  } catch (error) {
-    console.error("updateContractData:", error);
-    toggleSpin(false);
-  }
-}
-
-/**********************************************************
- *              UPDATE UI FUNCTIONS
- *********************************************************/
+/*---------------------------------------------------------
+ *                  UI UPDATE FUNCTIONS
+ *-------------------------------------------------------*/
 function update(
   tokenId,
   contract,
@@ -463,20 +558,20 @@ function pushItemToLocalStorage(
               : "ART_BLOCKS_DEPENDENCY_REGISTRY";
 
         return `{
-          "cid": "${cid}",
-          "dependency_type": "${dependencyType}",
-          "data": null
-        }`;
+           "cid": "${cid}",
+           "dependency_type": "${dependencyType}",
+           "data": null
+         }`;
       })
       .join(",");
 
     tokenIdHash = `let tokenData = {
-      "tokenId": "${tokenId}",
-      "externalAssetDependencies": [${cids}],
-      "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
-      "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
-      "hash": "${hash}"
-    }`;
+       "tokenId": "${tokenId}",
+       "externalAssetDependencies": [${cids}],
+       "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
+       "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
+       "hash": "${hash}"
+     }`;
   } else if (nameMap[contract] === "AB") {
     tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
   } else {
@@ -495,6 +590,15 @@ const replaceIPFSGateways = (scriptContent) => {
     "https://ipfs.io",
   );
 };
+
+const curated = [
+  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
+  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
+  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
+  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
+  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
+  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
+];
 
 function getCuration(projId) {
   const playground = [
@@ -553,99 +657,99 @@ function updateInfo(
   const update = () => {
     dom.info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`;
     dom.panel.innerHTML = `
-      <div class="work">${detail[0]}</div>
-      <p>
-        <span class="artist">${artist}${
-          platform ? ` ● ${platform}` : ""
-        }</span><br>
-        <span class="edition">${editionTxt(edition, minted)}</span>
-      </p><br>
-      <p>${detail[2]}</p>
-      <div class="column-box">
-        <div class="column">
-          ${
-            owner
-              ? createSection(
-                  "OWNER",
-                  `<a href="https://zapper.xyz/account/${owner}" target="_blank">
-              ${ensName || shortAddr(owner)}
-            </a>
-            <span class="copy-txt" data-text="${owner}">
-              <i class="fa-regular fa-copy"></i>
-            </span>`,
-                )
-              : ""
-          }
-          ${createSection(
-            "CONTRACT",
-            `<a href="https://etherscan.io/address/${
-              instance[contract].target
-            }" target="_blank">
-              ${shortAddr(instance[contract].target)}
-            </a>
-            <span class="copy-txt" data-text="${instance[contract].target}">
-              <i class="fa-regular fa-copy"></i>
-            </span>`,
-          )}
-          ${createSection(
-            "TOKEN ID",
-            `<span class="copy-txt" data-text="${tokenId}">
-              ${tokenId} <i class="fa-regular fa-copy"></i>
-            </span>`,
-          )}
-        </div>
-        <div class="column">
-          ${
-            detail[3]
-              ? createSection(
-                  "ARTIST WEBSITE",
-                  `<a href="${detail[3]}" target="_blank">
-                  ${extractDomain(detail[3])}
-                </a>`,
-                )
-              : ""
-          }
-          ${
-            extLib &&
-            !extLib.startsWith("js") &&
-            !extLib.startsWith("svg") &&
-            !extLib.startsWith("custom")
-              ? createSection(
-                  "LIBRARY",
-                  `<span class="no-copy-txt">
-                  ${getLibVersion(extLib)} <br>
-                  ${extDep.length > 0 && extDep[0].length < 10 ? extDep[0] : ""}
-                </span>`,
-                )
-              : ""
-          }
-          ${
-            extDep.length > 0 || nameMap[contract] === "BMFLEX"
-              ? createSection(
-                  "EXTERNAL DEPENDENCY",
-                  `<span class="no-copy-txt">
-                  ${
-                    nameMap[contract] === "BMFLEX" ||
-                    extDep[0].startsWith("Qm") ||
-                    extDep[0].startsWith("baf")
-                      ? "ipfs"
-                      : "arweave"
-                  }
-                </span>`,
-                )
-              : ""
-          }
-          ${
-            detail[4]
-              ? createSection(
-                  "LICENSE",
-                  `<span class="no-copy-txt">${detail[4]}</span>`,
-                )
-              : ""
-          }
-        </div>
-      </div>
-    `;
+       <div class="work">${detail[0]}</div>
+       <p>
+         <span class="artist">${artist}${
+           platform ? ` ● ${platform}` : ""
+         }</span><br>
+         <span class="edition">${editionTxt(edition, minted)}</span>
+       </p><br>
+       <p>${detail[2]}</p>
+       <div class="column-box">
+         <div class="column">
+           ${
+             owner
+               ? createSection(
+                   "OWNER",
+                   `<a href="https://zapper.xyz/account/${owner}" target="_blank">
+               ${ensName || shortAddr(owner)}
+             </a>
+             <span class="copy-txt" data-text="${owner}">
+               <i class="fa-regular fa-copy"></i>
+             </span>`,
+                 )
+               : ""
+           }
+           ${createSection(
+             "CONTRACT",
+             `<a href="https://etherscan.io/address/${
+               instance[contract].target
+             }" target="_blank">
+               ${shortAddr(instance[contract].target)}
+             </a>
+             <span class="copy-txt" data-text="${instance[contract].target}">
+               <i class="fa-regular fa-copy"></i>
+             </span>`,
+           )}
+           ${createSection(
+             "TOKEN ID",
+             `<span class="copy-txt" data-text="${tokenId}">
+               ${tokenId} <i class="fa-regular fa-copy"></i>
+             </span>`,
+           )}
+         </div>
+         <div class="column">
+           ${
+             detail[3]
+               ? createSection(
+                   "ARTIST WEBSITE",
+                   `<a href="${detail[3]}" target="_blank">
+                   ${extractDomain(detail[3])}
+                 </a>`,
+                 )
+               : ""
+           }
+           ${
+             extLib &&
+             !extLib.startsWith("js") &&
+             !extLib.startsWith("svg") &&
+             !extLib.startsWith("custom")
+               ? createSection(
+                   "LIBRARY",
+                   `<span class="no-copy-txt">
+                   ${getLibVersion(extLib)} <br>
+                   ${extDep.length > 0 && extDep[0].length < 10 ? extDep[0] : ""}
+                 </span>`,
+                 )
+               : ""
+           }
+           ${
+             extDep.length > 0 || nameMap[contract] === "BMFLEX"
+               ? createSection(
+                   "EXTERNAL DEPENDENCY",
+                   `<span class="no-copy-txt">
+                   ${
+                     nameMap[contract] === "BMFLEX" ||
+                     extDep[0].startsWith("Qm") ||
+                     extDep[0].startsWith("baf")
+                       ? "ipfs"
+                       : "arweave"
+                   }
+                 </span>`,
+                 )
+               : ""
+           }
+           ${
+             detail[4]
+               ? createSection(
+                   "LICENSE",
+                   `<span class="no-copy-txt">${detail[4]}</span>`,
+                 )
+               : ""
+           }
+         </div>
+       </div>
+     `;
     dom.panel.addEventListener("click", (e) => {
       const copyBtn = e.target.closest(".copy-txt");
       if (copyBtn) {
@@ -687,11 +791,11 @@ function editionTxt(edition, minted) {
 function createSection(title, content) {
   return content
     ? `<div class="section">
-        <p class="more">
-          ${title} <br>
-          ${content}
-        </p>
-      </div>`
+         <p class="more">
+           ${title} <br>
+           ${content}
+         </p>
+       </div>`
     : "";
 }
 
@@ -712,9 +816,6 @@ function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
 }
 
-/**********************************************************
- *           INJECT IFRAME FUNCTION
- *********************************************************/
 async function injectFrame() {
   try {
     const iframe = dom.frame.contentDocument;
@@ -735,19 +836,19 @@ async function injectFrame() {
     const dynamicContent = contractData.extLib.startsWith("custom")
       ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
       : `<!DOCTYPE html>
-           <html>
-             <head>
-               <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-               ${srcScripts}
-               <script>${scriptData.tokenIdHash};</script>
-               <style type="text/css">
-                 html { height: 100%; }
-                 body { min-height: 100%; margin: 0; padding: 0; background-color: transparent; }
-                 canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
-               </style>
-             </head>
-             ${frameBody}
-           </html>`;
+            <html>
+              <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                ${srcScripts}
+                <script>${scriptData.tokenIdHash};</script>
+                <style type="text/css">
+                  html { height: 100%; }
+                  body { min-height: 100%; margin: 0; padding: 0; background-color: transparent; }
+                  canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+                </style>
+              </head>
+              ${frameBody}
+            </html>`;
 
     iframe.open();
     iframe.write(dynamicContent);
@@ -757,9 +858,9 @@ async function injectFrame() {
   }
 }
 
-/**********************************************************
- *                 GET TOKEN FUNCTIONS
- *********************************************************/
+/*---------------------------------------------------------
+ *                  TOKEN FUNCTIONS
+ *-------------------------------------------------------*/
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
     getRandom(list);
@@ -805,120 +906,98 @@ function handleOtherQuery(line, searchQuery) {
 
   grabData(tokenId, contract);
 }
-/**********************************************************
- *        LIST DISPLAY/NAVIGATION FUNCTIONS
- *********************************************************/
-function displayList(lines) {
-  const panel = lines
-    .map((line, index) => {
-      const parts = line.split(" - ");
-      const displayText = parts.slice(1, parts.length - 1).join(" - ");
-      const mintedInfo = parts[parts.length - 1];
-      return `<p class="list-item" data-index="${index}">${displayText}<span>${mintedInfo}</span></p>`;
-    })
-    .join("");
-  dom.listPanel.innerHTML = `<div>${panel}</div>`;
-}
-displayList(list);
 
-function applyFilter(lines, query) {
-  const queryLower = query.toLowerCase();
-
-  filteredList =
-    queryLower === "curated"
-      ? lines.filter((line) => {
-          const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
-          return (
-            idMatch &&
-            (curated.includes(parseInt(idMatch[1])) || line.startsWith("ABC"))
-          );
-        })
-      : lines.filter((line) => line.toLowerCase().includes(queryLower));
-
-  displayList(filteredList);
-  selectedIndex = -1;
-}
-
-function handleItemClick(event) {
-  const listItem = event.target.closest(".list-item");
-  if (listItem) {
-    const clickIndex = listItem.getAttribute("data-index");
-    console.log("Item clicked:", filteredList[clickIndex]);
-    getToken(filteredList[clickIndex], "");
-    dom.search.value = "";
-  }
-}
-
-function handleKeyboardNavigation(event) {
-  if (event.key === "ArrowDown") {
-    selectedIndex = (selectedIndex + 1) % filteredList.length;
-  } else if (event.key === "ArrowUp") {
-    if (selectedIndex === -1) {
-      selectedIndex = filteredList.length - 1;
-    } else {
-      selectedIndex =
-        (selectedIndex - 1 + filteredList.length) % filteredList.length;
-    }
-  } else if (event.key === "Enter") {
-    if (selectedIndex !== -1) {
-      console.log("Item clicked:", filteredList[selectedIndex]);
-      getToken(filteredList[selectedIndex], "");
-    } else {
-      const query = dom.search.value.trim();
-      query === "" ? getRandom(list) : getToken(filteredList.join("\n"), query);
-    }
-    dom.search.value = "";
-    selectedIndex = -1;
-  }
-
-  const items = document.querySelectorAll(".list-item");
-  items.forEach((item, index) => {
-    item.classList.toggle("selected", index === selectedIndex);
-  });
-
-  if (selectedIndex !== -1)
-    items[selectedIndex].scrollIntoView({ block: "nearest" });
-}
-
-dom.search.addEventListener("input", (event) => {
-  const query = event.target.value.trim().split("#")[0].trim();
-  applyFilter(list, query);
-});
-
-dom.search.addEventListener("keydown", handleKeyboardNavigation);
-
-dom.listPanel.addEventListener("click", handleItemClick);
-
-/**********************************************************
- *              RANDOMNESS FUNCTIONS
- *********************************************************/
-function getRandom(lines) {
-  const randomLine = lines[Math.floor(Math.random() * lines.length)];
-  console.log("Random line:", randomLine);
-  getToken(randomLine, "");
-}
-
-function getRandomKey(favorite) {
-  const keys = Object.keys(favorite);
-
-  if (keys.length > 0) {
-    const randomKey = keys[Math.floor(Math.random() * keys.length)];
-
+function getRandom(source) {
+  if (Array.isArray(source)) {
+    const randomLine = source[Math.floor(Math.random() * source.length)];
+    getToken(randomLine, "");
+  } else if (typeof source === "object" && Object.keys(source).length > 0) {
+    const randomKey =
+      Object.keys(source)[
+        Math.floor(Math.random() * Object.keys(source).length)
+      ];
     clearDataStorage();
-
-    contractData = favorite[randomKey];
+    contractData = source[randomKey];
     localStorage.setItem("contractData", JSON.stringify(contractData));
     update(...Object.values(contractData));
   }
 }
 
-dom.randomButton.addEventListener("click", () => {
-  getRandom(list);
-});
+function generateRandomHashAndToken() {
+  const randomHash = Array.from({ length: 64 }, () =>
+    Math.floor(Math.random() * 16).toString(16),
+  ).join("");
 
-/**********************************************************
- *                  LOOP FUNCTIONS
- *********************************************************/
+  const base = contractData.projId * 1000000;
+  const minToken = base + contractData.minted;
+  const maxToken = base + 999999;
+
+  const randomToken = Math.floor(
+    Math.random() * (maxToken - minToken + 1) + minToken,
+  );
+
+  return { hash: randomHash, tokenId: randomToken };
+}
+
+function exploreAlgo() {
+  if (!contractData) return;
+
+  const { hash, tokenId } = generateRandomHashAndToken();
+
+  contractData.hash = hash;
+  contractData.tokenId = tokenId;
+  contractData.owner = "";
+  contractData.ensName = "";
+
+  localStorage.setItem("contractData", JSON.stringify(contractData));
+
+  const scriptData = JSON.parse(localStorage.getItem("scriptData"));
+  if (scriptData) {
+    if (nameMap[contractData.contract] === "AB") {
+      scriptData.tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
+    } else {
+      scriptData.tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
+    }
+    localStorage.setItem("scriptData", JSON.stringify(scriptData));
+  }
+  update(...Object.values(contractData));
+}
+
+function incrementTokenId() {
+  let numericId = getId(contractData.tokenId);
+
+  if (numericId === contractData.minted - 1) {
+    numericId = 0;
+  } else {
+    numericId += 1;
+  }
+
+  contractData.tokenId = contractData.projId * 1000000 + numericId;
+
+  updateContractData(contractData.tokenId, contractData.contract);
+}
+
+function decrementTokenId() {
+  let numericId = getId(contractData.tokenId);
+
+  if (numericId === 0) {
+    numericId = contractData.minted - 1;
+  } else {
+    numericId -= 1;
+  }
+
+  contractData.tokenId = contractData.projId * 1000000 + numericId;
+
+  updateContractData(contractData.tokenId, contractData.contract);
+}
+
+function getId(tokenId) {
+  return tokenId % 1000000;
+}
+
+/*---------------------------------------------------------
+ *                   LOOP FUNCTIONS
+ *-------------------------------------------------------*/
 function loopRandom(interval, action) {
   if (loopState.intervalId) {
     clearInterval(loopState.intervalId);
@@ -944,15 +1023,15 @@ function loopRandom(interval, action) {
 
 function performAction(action, favorite) {
   if (action === "allLoop") getRandom(list);
-  else if (action === "favLoop") getRandomKey(favorite);
+  else if (action === "favLoop") getRandom(favorite);
   else if (action === "curatedLoop") {
-    applyFilter(list, "curated");
-    getRandom(filteredList);
+    listManager.filterByQuery("curated");
+    getRandom(listManager.filteredList);
   } else if (action === "selectedLoop") {
     let random = Math.floor(
       Math.random() * (contractData.edition + 1),
     ).toString();
-    getToken(filteredList, random);
+    getToken(listManager.filteredList[0], random);
   } else if (action === "oobLoop") {
     exploreAlgo();
   }
@@ -966,14 +1045,14 @@ function stopRandomLoop() {
   localStorage.setItem("loopState", JSON.stringify(loopState));
 }
 
-function checkLocalStorage() {
+function checkLoop() {
   dom.loopInput.placeholder = `${loopState.interval / 60000} min`;
 
   if (loopState.isLooping === "true" && loopState.action !== null)
     loopRandom(loopState.interval, loopState.action);
 }
 
-function handleLoopClick(action) {
+function handleLoop(action) {
   clearPanels();
 
   let inputValue = dom.loopInput.value.trim();
@@ -1005,9 +1084,9 @@ function stopLoop() {
   updateButtons("loop");
 }
 
-/**********************************************************
- *                SAVE OUTPUT FUNCTION
- *********************************************************/
+/*---------------------------------------------------------
+ *             FAVORITE & SAVE FUNCTIONS
+ *-------------------------------------------------------*/
 async function saveOutput() {
   const content = dom.frame.contentDocument.documentElement.outerHTML;
   let id = shortId(contractData.tokenId);
@@ -1029,11 +1108,6 @@ async function saveOutput() {
   pushContractDataToStorage(id);
 }
 
-dom.save.addEventListener("click", saveOutput);
-
-/**********************************************************
- *      MANIPULATE SAVED OUTPUT IN STORAGE FUNCTIONS
- *********************************************************/
 function pushContractDataToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
   favorite[key] = contractData;
@@ -1086,92 +1160,9 @@ function displayFavoriteList() {
   }
 }
 
-/**********************************************************
- *              EXPLORE ALGO FUNCTIONS
- *********************************************************/
-function generateRandomHashAndToken() {
-  const randomHash = Array.from({ length: 64 }, () =>
-    Math.floor(Math.random() * 16).toString(16),
-  ).join("");
-
-  const base = contractData.projId * 1000000;
-  const minToken = base + contractData.minted;
-  const maxToken = base + 999999;
-
-  const randomToken = Math.floor(
-    Math.random() * (maxToken - minToken + 1) + minToken,
-  );
-
-  return { hash: randomHash, tokenId: randomToken };
-}
-
-function exploreAlgo() {
-  if (!contractData) return;
-
-  const { hash, tokenId } = generateRandomHashAndToken();
-
-  contractData.hash = hash;
-  contractData.tokenId = tokenId;
-  contractData.owner = "";
-  contractData.ensName = "";
-
-  localStorage.setItem("contractData", JSON.stringify(contractData));
-
-  const scriptData = JSON.parse(localStorage.getItem("scriptData"));
-  if (scriptData) {
-    if (nameMap[contractData.contract] === "AB") {
-      scriptData.tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
-    } else {
-      scriptData.tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
-    }
-    localStorage.setItem("scriptData", JSON.stringify(scriptData));
-  }
-  update(...Object.values(contractData));
-}
-
-dom.explore.addEventListener("click", exploreAlgo);
-
-/**********************************************************
- *       GET PREVIOUS/NEXT ID FUNCTIONS
- *********************************************************/
-function getId(tokenId) {
-  return tokenId % 1000000;
-}
-
-function incrementTokenId() {
-  let numericId = getId(contractData.tokenId);
-
-  if (numericId === contractData.minted - 1) {
-    numericId = 0;
-  } else {
-    numericId += 1;
-  }
-
-  contractData.tokenId = contractData.projId * 1000000 + numericId;
-
-  updateContractData(contractData.tokenId, contractData.contract);
-}
-
-function decrementTokenId() {
-  let numericId = getId(contractData.tokenId);
-
-  if (numericId === 0) {
-    numericId = contractData.minted - 1;
-  } else {
-    numericId -= 1;
-  }
-
-  contractData.tokenId = contractData.projId * 1000000 + numericId;
-
-  updateContractData(contractData.tokenId, contractData.contract);
-}
-
-dom.inc.addEventListener("click", incrementTokenId);
-dom.dec.addEventListener("click", decrementTokenId);
-
-/**********************************************************
- *               HELPER FUNCTIONS
- *********************************************************/
+/*---------------------------------------------------------
+ *                  UTILITY FUNCTIONS
+ *-------------------------------------------------------*/
 const clearDataStorage = () => {
   ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
 };
@@ -1234,89 +1225,9 @@ const setDisplay = () => {
   if (!hasFavorites) clearPanels();
 };
 
-/**********************************************************
- *                     EVENTS
- *********************************************************/
-document.addEventListener("DOMContentLoaded", () => {
-  updateButtons("loop");
-  checkLocalStorage();
-  checkForNewContracts();
-
-  if (contractData) {
-    update(...Object.values(contractData));
-  }
-
-  setDisplay();
-  dom.root.classList.remove("no-flash");
-});
-
-dom.rpcUrlInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    localStorage.setItem("rpcUrl", dom.rpcUrlInput.value);
-    location.reload();
-  }
-});
-
-document.addEventListener("keypress", (event) => {
-  if (event.key === "\\") {
-    clearDataStorage();
-    location.reload();
-  }
-});
-
-dom.info.addEventListener("click", (event) => {
-  event.stopPropagation();
-  togglePanel(dom.panel);
-});
-
-dom.searchIcon.addEventListener("click", (event) => {
-  event.stopPropagation();
-  displayList(list);
-  togglePanel(dom.listPanel);
-});
-
-dom.favIcon.addEventListener("click", (event) => {
-  event.stopPropagation();
-  displayFavoriteList();
-  togglePanel(dom.favPanel);
-});
-
-dom.repeatIcon.addEventListener("click", (event) => {
-  event.stopPropagation();
-  togglePanel(dom.dropMenu);
-});
-
-panels.forEach((panel) => {
-  panel.addEventListener("click", (event) => {
-    event.stopPropagation();
-  });
-});
-
-dom.search.addEventListener("input", () => {
-  if (dom.search.value.trim() !== "") {
-    if (!dom.listPanel.classList.contains("active")) {
-      togglePanel(dom.listPanel);
-    }
-  } else {
-    clearPanels();
-  }
-});
-
-loopTypes.forEach((type) => {
-  dom[`${type}Loop`].addEventListener("click", () =>
-    handleLoopClick(`${type}Loop`),
-  );
-});
-
-dom.stopLoop.addEventListener("click", stopLoop);
-
-document.addEventListener("click", () => {
-  clearPanels();
-});
-
-/**********************************************************
- *              DARK/LIGHT MODE TOGGLE
- *********************************************************/
+/*---------------------------------------------------------
+ *                 THEME MANAGEMENT
+ *-------------------------------------------------------*/
 function setDarkMode(isDarkMode) {
   dom.root.classList.toggle("dark-mode", isDarkMode);
   localStorage.setItem("darkMode", isDarkMode);
@@ -1334,9 +1245,101 @@ function toggleDarkMode() {
   setDarkMode(isDarkMode);
 }
 
+/*---------------------------------------------------------
+ *                 EVENT LISTENERS
+ *-------------------------------------------------------*/
+document.addEventListener("keypress", (event) => {
+  if (event.key === "\\") {
+    clearDataStorage();
+    location.reload();
+  }
+});
+
+dom.rpcUrlInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    localStorage.setItem("rpcUrl", dom.rpcUrlInput.value);
+    location.reload();
+  }
+});
+
+dom.search.addEventListener("input", () => {
+  const query = dom.search.value.trim();
+  if (query !== "") {
+    displayList(listManager.filterByQuery(query));
+    if (!dom.listPanel.classList.contains("active")) {
+      togglePanel(dom.listPanel);
+    }
+  } else {
+    clearPanels();
+  }
+});
+dom.search.addEventListener("keydown", handleKeyboardNavigation);
+dom.listPanel.addEventListener("click", (event) => {
+  const listItem = event.target.closest(".list-item");
+  if (listItem) {
+    const index = parseInt(listItem.dataset.index);
+    listManager.selectedIndex = index;
+    const selectedItem = listManager.getSelected();
+    if (selectedItem) {
+      getToken(selectedItem, "");
+      dom.search.value = "";
+      listManager.selectedIndex = -1;
+      displayList(listManager.filteredList);
+    }
+  }
+});
+
+dom.info.addEventListener("click", (event) => {
+  event.stopPropagation();
+  togglePanel(dom.panel);
+});
+dom.searchIcon.addEventListener("click", (event) => {
+  event.stopPropagation();
+  displayList(list);
+  togglePanel(dom.listPanel);
+});
+dom.favIcon.addEventListener("click", (event) => {
+  event.stopPropagation();
+  displayFavoriteList();
+  togglePanel(dom.favPanel);
+});
+
+dom.repeatIcon.addEventListener("click", (event) => {
+  event.stopPropagation();
+  togglePanel(dom.dropMenu);
+});
+loopTypes.forEach((type) => {
+  dom[`${type}Loop`].addEventListener("click", () => handleLoop(`${type}Loop`));
+});
+dom.stopLoop.addEventListener("click", stopLoop);
+
+dom.inc.addEventListener("click", incrementTokenId);
+dom.dec.addEventListener("click", decrementTokenId);
+dom.randomButton.addEventListener("click", () => {
+  getRandom(list);
+});
+dom.explore.addEventListener("click", exploreAlgo);
+
+dom.save.addEventListener("click", saveOutput);
 dom.theme.addEventListener("click", (event) => {
   event.stopPropagation();
   toggleDarkMode();
 });
 
+panels.forEach((panel) => {
+  panel.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+});
+document.addEventListener("click", clearPanels);
+
+/*---------------------------------------------------------
+ *                  INITIALIZATION
+ *-------------------------------------------------------*/
+updateButtons("loop");
+checkLoop();
+checkForNewContracts();
+setDisplay();
 setDarkMode(JSON.parse(localStorage.getItem("darkMode")));
+if (contractData) update(...Object.values(contractData));
+dom.root.classList.remove("no-flash");
