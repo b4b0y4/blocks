@@ -1,4 +1,4 @@
-export const l = [
+export const list = [
   "AB0 - Chromie Squiggle / Snowfro - 10000 items",
   "AB1 - Genesis / DCA - 512 items",
   "AB2 - Construction Token / Jeff Davis - 500 items",
@@ -887,7 +887,7 @@ export const l = [
   "ITERATION0 - 9dcc ITERATION-02 / Snowfro - 1183 items",
   "NUMBER0 - Number / Wang - 165 items",
 ];
-export const list = l.filter((line) => !line.trim().endsWith("!"));
+
 export const libs = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",

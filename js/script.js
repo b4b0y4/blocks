@@ -2,7 +2,7 @@
  *                    CORE IMPORTS & DOM
  *------------------------------------------------------*/
 import { ethers } from "./ethers.min.js";
-import { l, list, libs } from "./lists.js";
+import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
 // fetchBlocks(["ABC", ...is.studio]);
@@ -78,7 +78,7 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
  *-------------------------------------------------------*/
 class ListManager {
   constructor(listData) {
-    this.originalList = listData;
+    this.originalList = listData.filter((line) => !line.trim().endsWith("!"));
     this.filteredList = listData;
     this.selectedIndex = -1;
   }
@@ -165,7 +165,7 @@ function handleKeyboardNavigation(event) {
     } else {
       const query = dom.search.value.trim();
       query === ""
-        ? getRandom(list)
+        ? getRandom(listManager.originalList)
         : getToken(listManager.filteredList[0], query);
     }
     dom.search.value = "";
@@ -208,7 +208,9 @@ async function fetchBlocks(array) {
                 Number(token.invocations) === 1 ? "item" : "items"
               }`;
 
-              return !l.map((item) => item.replace(/!$/, "")).includes(newItem)
+              return !list
+                .map((item) => item.replace(/!$/, ""))
+                .includes(newItem)
                 ? `"${newItem}",`
                 : null;
             } catch (err) {
@@ -1014,7 +1016,7 @@ function loopRandom(interval, action) {
 }
 
 function performAction(action, favorite) {
-  if (action === "allLoop") getRandom(list);
+  if (action === "allLoop") getRandom(listManager.originalList);
   else if (action === "favLoop") getRandom(favorite);
   else if (action === "curatedLoop") {
     listManager.filterByQuery("curated");
@@ -1097,23 +1099,23 @@ async function saveOutput() {
 
   URL.revokeObjectURL(url);
   link.remove();
-  pushContractDataToStorage(id);
+  pushFavoriteToStorage(id);
 }
 
-function pushContractDataToStorage(id) {
+function pushFavoriteToStorage(id) {
   const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
   favorite[key] = contractData;
   localStorage.setItem("favorite", JSON.stringify(favorite));
   setDisplay();
 }
 
-function deleteContractDataFromStorage(key) {
+function deleteFavoriteFromStorage(key) {
   if (favorite.hasOwnProperty(key)) delete favorite[key];
   localStorage.setItem("favorite", JSON.stringify(favorite));
   setDisplay();
 }
 
-function displayFavorite(key) {
+function frameFavorite(key) {
   clearDataStorage();
   contractData = favorite[key];
   localStorage.setItem("contractData", JSON.stringify(contractData));
@@ -1136,13 +1138,13 @@ function displayFavoriteList() {
 
       delSpan.addEventListener("click", (event) => {
         event.stopPropagation();
-        deleteContractDataFromStorage(key);
+        deleteFavoriteFromStorage(key);
         displayFavoriteList();
       });
 
       keyElement.addEventListener("click", () => {
         toggleSpin();
-        displayFavorite(key);
+        frameFavorite(key);
         clearPanels();
       });
 
@@ -1287,7 +1289,7 @@ dom.info.addEventListener("click", (event) => {
 });
 dom.searchIcon.addEventListener("click", (event) => {
   event.stopPropagation();
-  displayList(list);
+  displayList(listManager.originalList);
   togglePanel(dom.listPanel);
 });
 dom.favIcon.addEventListener("click", (event) => {
@@ -1308,7 +1310,7 @@ dom.stopLoop.addEventListener("click", stopLoop);
 dom.inc.addEventListener("click", incrementTokenId);
 dom.dec.addEventListener("click", decrementTokenId);
 dom.randomButton.addEventListener("click", () => {
-  getRandom(list);
+  getRandom(listManager.originalList);
 });
 dom.explore.addEventListener("click", exploreAlgo);
 
