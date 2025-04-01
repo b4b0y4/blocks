@@ -855,7 +855,7 @@ async function injectFrame() {
  *-------------------------------------------------------*/
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
-    getRandom(list);
+    getRandom(listManager.filteredList);
   } else if (/^\d+$/.test(searchQuery)) {
     handleNumericQuery(searchQuery);
   } else {
@@ -1254,8 +1254,8 @@ dom.rpcUrlInput.addEventListener("keypress", (event) => {
   }
 });
 
-dom.search.addEventListener("input", () => {
-  const query = dom.search.value.trim();
+dom.search.addEventListener("input", (event) => {
+  const query = event.target.value.trim().split("#")[0].trim();
   if (query !== "") {
     displayList(listManager.filterByQuery(query));
     if (!dom.listPanel.classList.contains("active")) {
