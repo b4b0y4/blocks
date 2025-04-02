@@ -935,7 +935,11 @@ function generateRandomHashAndToken() {
 
 function exploreAlgo() {
   if (!contractData) return;
-
+  const EXPLORE_BLOCKED = ["Unigrids", "phase"];
+  if (EXPLORE_BLOCKED.includes(contractData.detail[0])) {
+    console.log(`Explore algorithm is disabled for ${contractData.detail[0]}`);
+    return;
+  }
   const { hash, tokenId } = generateRandomHashAndToken();
 
   contractData.hash = hash;
