@@ -287,7 +287,6 @@ iframe {
   display: flex;
   flex-direction: column;
   bottom: 45px;
-  right: 8px;
   padding: 10px;
   background-color: var(--color-bg);
   color: var(--color-txt);
@@ -306,6 +305,7 @@ iframe {
   min-width: 320px;
   max-width: 450px;
   max-height: 500px;
+  right: 8px;
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
@@ -313,6 +313,7 @@ iframe {
 
 .drop-menu {
   max-width: 120px;
+  right: 160px;
 }
 
 .instruction {
