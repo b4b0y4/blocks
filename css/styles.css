@@ -505,6 +505,7 @@ iframe {
     border-radius: 0;
     height: 80px;
     opacity: 1;
+    box-shadow: none;
   }
 
   .info-box {
