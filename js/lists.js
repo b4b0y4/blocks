@@ -537,6 +537,7 @@ export const list = [
   "ABSXXXII0 - And Yet We Dance / Ryan Bell - 100 items",
   "ABSXXXV0 - Songs of Utopia / KALA - 8 items",
   "ABSXXXVIII0 - 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt - 49 items",
+  "ABSLIII0 - E-PASTEL II / Holger Lippmann - 1 item",
   "ABSLIV0 - Lightweight Reconstruction / itsgalo x office ca - 115 items",
   "ABSLVI0 - I. / ryley-o.eth - 240 items",
   "ABSLXIII0 - Motion Pictures / Neel Shivdasani - 100 items",
