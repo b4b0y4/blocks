@@ -307,6 +307,11 @@ export const contractRegistry = {
     address: "0x6DdefE5DB20D79EC718A8960177bEB388f7EbB8d",
     platform: "Tender",
   },
+  TENDERFLEX: {
+    abi: abi.v3Flex,
+    address: "0x959d2F3cAF19d20BDBb4e0A4f21cA8A815EDDF65",
+    platform: "Tender",
+  },
   PROOF: {
     abi: abi.v3Flex,
     address: "0x1353fd9d3dC70d1a18149C8FB2ADB4FB906DE4E8",
