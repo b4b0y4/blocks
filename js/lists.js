@@ -500,7 +500,7 @@ export const list = [
   "ABC500 - INK (fragrances) / Iskra Velitchkova - 6 items",
   "ABC501 - while true (fabric) / Lars Wander - 1 item",
   "ABC502 - Box Light Studies (sculpture) / Zach Lieberman - 1 item",
-  "ABC503 - BUSIEST / James Merrill - 0 items!",
+  "ABC503 - BUSIEST / James Merrill - 5 items",
   "ABC504 - BUSY / James Merrill - 1 item",
   "ABS0 - Misbah / Melissa Wiederrecht - 55 items",
   "ABSI0 - One More Day / Aaron Penne - 50 items",
