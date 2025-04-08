@@ -1135,6 +1135,15 @@ function displayFavoriteList() {
 
       const delSpan = document.createElement("span");
       delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+      delSpan.style.transition = "color 0.1s ease-in-out";
+
+      delSpan.addEventListener("mouseenter", () => {
+        delSpan.style.color = "indianred";
+      });
+
+      delSpan.addEventListener("mouseleave", () => {
+        delSpan.style.color = "";
+      });
 
       delSpan.addEventListener("click", (event) => {
         event.stopPropagation();
