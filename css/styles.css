@@ -102,7 +102,10 @@ iframe {
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
   z-index: 100;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    width 0.3s ease-in-out;
+  white-space: nowrap;
 }
 
 .infobar.active,
@@ -115,6 +118,8 @@ iframe {
   justify-content: end;
   align-items: center;
   height: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .button-box {
@@ -342,6 +347,9 @@ iframe {
   margin: 0 10px;
   user-select: none;
   -webkit-user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info:hover {
@@ -511,15 +519,20 @@ iframe {
     height: 80px;
     opacity: 1;
     box-shadow: none;
+    width: 100%;
   }
 
   .info-box {
     flex-direction: column;
     justify-content: space-around;
     padding: 0;
+    width: 100%;
   }
 
   .info {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
     margin: 0;
   }
 
