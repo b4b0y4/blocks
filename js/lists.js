@@ -854,6 +854,7 @@ export const list = [
   "NEWRAFAEL29 - Push / Rafaël Rozendaal - 24 items",
   "NEWRAFAEL30 - Home / Rafaël Rozendaal - 18 items",
   "NEWRAFAEL31 - Circulate / Rafaël Rozendaal - 11 items",
+  "NEWRAFAEL32 - Zoom / Rafaël Rozendaal - 1 item",
   "XCORE0 - ICXN / XCOPY - 500 items",
   "WRLD1 - ComplexCity (2000/2023) / John F. Simon, Jr. - 256 items",
   "OONA2026 - Moo, Milk, Marfa - Moo / OONA - 25 items",
