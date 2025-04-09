@@ -302,7 +302,7 @@ iframe {
 .panel,
 .list-panel,
 .fav-panel {
-  min-width: 320px;
+  min-width: 350px;
   max-width: 400px;
   max-height: 500px;
   right: 8px;
