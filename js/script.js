@@ -815,6 +815,10 @@ async function injectFrame() {
     const iframe = dom.frame.contentDocument;
     const scriptData = JSON.parse(localStorage.getItem("scriptData"));
 
+    const srcScripts = (scriptData.src || [])
+      .map((src) => `<script src="${src}"></script>`)
+      .join("");
+
     const frameBody = scriptData.process
       ? `<body><script type="${scriptData.process}">${scriptData.script}</script><canvas></canvas></body>`
       : `<body><canvas${
@@ -822,10 +826,6 @@ async function injectFrame() {
             ? ' id="babylon-canvas"'
             : ""
         }></canvas><script>${scriptData.script}</script></body>`;
-
-    const srcScripts = (scriptData.src || [])
-      .map((src) => `<script src="${src}"></script>`)
-      .join("");
 
     const dynamicContent = contractData.extLib.startsWith("custom")
       ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
