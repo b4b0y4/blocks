@@ -303,7 +303,7 @@ iframe {
 .list-panel,
 .fav-panel {
   min-width: 320px;
-  max-width: 450px;
+  max-width: 400px;
   max-height: 500px;
   right: 8px;
   overflow-y: auto;
@@ -350,8 +350,14 @@ iframe {
 
 .list-item,
 .fav-panel p {
-  padding: 2px 5px;
+  padding: 2.5px 5px;
   border-radius: 5px;
+}
+
+.list-item {
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
 }
 
 .list-item:hover,
@@ -364,7 +370,6 @@ iframe {
 .list-item span {
   font-size: 0.85em;
   color: var(--color-btn);
-  margin-left: 10px;
 }
 
 .drop-menu button {
@@ -580,6 +585,10 @@ iframe {
     box-shadow: none;
     max-height: 100%;
     bottom: 50px;
+  }
+
+  .more {
+    font-size: 0.8em;
   }
 }
 
