@@ -522,6 +522,8 @@ iframe {
     opacity: 1;
     box-shadow: none;
     width: 100%;
+    padding: 5px 0;
+    justify-content: center;
   }
 
   .info-box {
@@ -529,6 +531,7 @@ iframe {
     justify-content: space-around;
     padding: 0;
     width: 100%;
+    align-items: center;
   }
 
   .info {
@@ -536,6 +539,11 @@ iframe {
     text-align: center;
     justify-content: center;
     margin: 0;
+  }
+
+  .button-box {
+    justify-content: space-evenly;
+    width: 100%;
   }
 
   .info:hover {
