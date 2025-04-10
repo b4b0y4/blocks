@@ -124,6 +124,7 @@ class ListManager {
   reset() {
     this.filteredList = this.originalList;
     this.selectedIndex = -1;
+    return this.filteredList;
   }
 }
 
@@ -1281,6 +1282,7 @@ dom.search.addEventListener("input", (event) => {
       togglePanel(dom.listPanel);
     }
   } else {
+    listManager.reset();
     clearPanels();
   }
 });
@@ -1294,8 +1296,7 @@ dom.listPanel.addEventListener("click", (event) => {
     if (selectedItem) {
       getToken(selectedItem, "");
       dom.search.value = "";
-      listManager.selectedIndex = -1;
-      displayList(listManager.filteredList);
+      listManager.reset();
     }
   }
 });
@@ -1306,6 +1307,7 @@ dom.info.addEventListener("click", (event) => {
 });
 dom.searchIcon.addEventListener("click", (event) => {
   event.stopPropagation();
+  listManager.reset();
   displayList(listManager.originalList);
   togglePanel(dom.listPanel);
 });
