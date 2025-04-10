@@ -5,7 +5,7 @@ import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
-// fetchBlocks(["ABC", ...is.studio, ...is.engine]);
+// fetchBlocks(["ABC", ...is.studio]);
 
 const dom = {
   root: document.documentElement,
@@ -133,12 +133,15 @@ function displayList(items) {
   const listItems = items
     .map((line, index) => {
       const parts = line.split(" - ");
-      const displayText = parts.slice(1, parts.length - 1).join(" - ");
-      const mintedInfo = parts[parts.length - 1];
+      const collectionAndArtist = parts[1].split(" / ");
+      const collection = collectionAndArtist[0];
+      const artist = collectionAndArtist[1];
+      const workCount = parts[parts.length - 1];
 
       return `<p class="list-item ${index === listManager.selectedIndex ? "selected" : ""}"
                data-index="${index}">
-               ${displayText}<span>${mintedInfo}</span>
+               ${collection}
+               <span>${artist} - ${workCount}</span>
             </p>`;
     })
     .join("");
@@ -1103,7 +1106,11 @@ async function saveOutput() {
 }
 
 function pushFavoriteToStorage(id) {
-  const key = `${contractData.detail[0]} #${id} by ${contractData.detail[1]}`;
+  const key = `
+    <div class="fav-item">
+      ${contractData.detail[0]} #${id}
+      <span>${contractData.detail[1]}</span>
+    </div>`;
   favorite[key] = contractData;
   localStorage.setItem("favorite", JSON.stringify(favorite));
   setDisplay();
@@ -1128,7 +1135,6 @@ function displayFavoriteList() {
   for (let key in favorite) {
     if (favorite.hasOwnProperty(key)) {
       const keyElement = document.createElement("p");
-      keyElement.textContent = key;
       keyElement.style.display = "flex";
       keyElement.style.justifyContent = "space-between";
       keyElement.style.alignItems = "center";
@@ -1157,6 +1163,8 @@ function displayFavoriteList() {
         clearPanels();
       });
 
+      // Insert the formatted HTML
+      keyElement.insertAdjacentHTML("afterbegin", key);
       keyElement.appendChild(delSpan);
       dom.favPanel.appendChild(keyElement);
     }
