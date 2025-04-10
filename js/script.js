@@ -172,8 +172,6 @@ function handleKeyboardNavigation(event) {
         ? getRandom(listManager.originalList)
         : getToken(listManager.filteredList[0], query);
     }
-    dom.search.value = "";
-    listManager.reset();
   }
 }
 
@@ -867,6 +865,10 @@ function getToken(line, searchQuery) {
   } else {
     handleOtherQuery(line, searchQuery);
   }
+  dom.search.value = "";
+  listManager.reset();
+  displayList(listManager.originalList);
+  clearPanels();
 }
 
 function handleNumericQuery(searchQuery) {
@@ -1186,7 +1188,10 @@ const clearPanels = () => {
 };
 
 const togglePanel = (panelElement) => {
-  panels.forEach((p) => p !== panelElement && p.classList.remove("active"));
+  panels.forEach((p) =>
+    p !== panelElement ? p.classList.remove("active") : (p.scrollTop = 0),
+  );
+
   const isActive = panelElement.classList.toggle("active");
   [dom.overlay, dom.infobar].forEach((el) =>
     el.classList.toggle("active", isActive),
@@ -1282,11 +1287,12 @@ dom.search.addEventListener("input", (event) => {
       togglePanel(dom.listPanel);
     }
   } else {
-    listManager.reset();
     clearPanels();
   }
 });
+
 dom.search.addEventListener("keydown", handleKeyboardNavigation);
+
 dom.listPanel.addEventListener("click", (event) => {
   const listItem = event.target.closest(".list-item");
   if (listItem) {
@@ -1295,8 +1301,6 @@ dom.listPanel.addEventListener("click", (event) => {
     const selectedItem = listManager.getSelected();
     if (selectedItem) {
       getToken(selectedItem, "");
-      dom.search.value = "";
-      listManager.reset();
     }
   }
 });
@@ -1305,12 +1309,13 @@ dom.info.addEventListener("click", (event) => {
   event.stopPropagation();
   togglePanel(dom.panel);
 });
+
 dom.searchIcon.addEventListener("click", (event) => {
   event.stopPropagation();
-  listManager.reset();
   displayList(listManager.originalList);
   togglePanel(dom.listPanel);
 });
+
 dom.favIcon.addEventListener("click", (event) => {
   event.stopPropagation();
   displayFavoriteList();
@@ -1321,19 +1326,25 @@ dom.repeatIcon.addEventListener("click", (event) => {
   event.stopPropagation();
   togglePanel(dom.dropMenu);
 });
+
 loopTypes.forEach((type) => {
   dom[`${type}Loop`].addEventListener("click", () => handleLoop(`${type}Loop`));
 });
+
 dom.stopLoop.addEventListener("click", stopLoop);
 
 dom.inc.addEventListener("click", incrementTokenId);
+
 dom.dec.addEventListener("click", decrementTokenId);
+
 dom.randomButton.addEventListener("click", () => {
   getRandom(listManager.originalList);
 });
+
 dom.explore.addEventListener("click", exploreAlgo);
 
 dom.save.addEventListener("click", saveOutput);
+
 dom.theme.addEventListener("click", (event) => {
   event.stopPropagation();
   toggleDarkMode();
@@ -1344,6 +1355,7 @@ panels.forEach((panel) => {
     event.stopPropagation();
   });
 });
+
 document.addEventListener("click", clearPanels);
 
 /*---------------------------------------------------------
