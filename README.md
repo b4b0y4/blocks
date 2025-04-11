@@ -43,31 +43,6 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 - Responsive design for mobile devices
 - System/Light/Dark theme options
 
-### State Management
-The application maintains several types of persistent storage:
-- RPC URL configuration
-- Theme preferences
-- Loop state and intervals
-- Favorite artworks
-- Current artwork data and script
-
-### Technical Details
-- Built with vanilla JavaScript (ES6+)
-- Uses ethers.js for Ethereum interaction
-- PWA (Progressive Web App) capable
-- Implements iframe sandboxing for secure artwork rendering
-- Supports various JavaScript libraries including:
-  - p5.js
-  - three.js
-  - processing.js
-  - babylon.js
-
-### Browser Support
-- Modern browsers with ES6+ support
-- WebGL capability for 3D renderings
-- Local storage for saving preferences
-- Service Worker support for PWA functionality
-
 ## Development
 
 ### Code Structure
