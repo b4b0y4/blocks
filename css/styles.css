@@ -115,7 +115,6 @@ iframe {
 .theme-container {
   display: flex;
   justify-content: space-between;
-  gap: 4px;
   margin-bottom: 5px;
 }
 
@@ -141,10 +140,7 @@ iframe {
 }
 
 .git,
-.theme-button {
-  padding: 3.5px 5px;
-}
-
+.theme-button,
 .save,
 .loop,
 .dec,
@@ -152,8 +148,7 @@ iframe {
 .explore,
 .random,
 .settings {
-  padding: 3.75px 6.5px 2.75px;
-  margin: 0 2px;
+  padding: 3.5px 6px;
 }
 
 .random {
@@ -181,6 +176,7 @@ iframe {
   justify-content: center;
   align-items: center;
   position: relative;
+  margin: 0 3px;
 }
 
 .search-input {
@@ -574,7 +570,6 @@ iframe {
   .random,
   .settings {
     font-size: 1.2em;
-    margin: 0;
   }
 
   .save:hover,
