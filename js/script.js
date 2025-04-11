@@ -11,7 +11,8 @@ const dom = {
   root: document.documentElement,
   instruction: document.querySelector(".instruction"),
   rpcUrlInput: document.getElementById("rpcUrl"),
-  theme: document.getElementById("theme"),
+  themeBtns: document.querySelectorAll(".theme-button"),
+  settings: document.getElementById("settings"),
   frame: document.getElementById("frame"),
   infobar: document.querySelector(".infobar"),
   info: document.getElementById("info"),
@@ -41,7 +42,13 @@ const dom = {
   overlay: document.querySelector(".overlay"),
 };
 
-const panels = [dom.panel, dom.listPanel, dom.favPanel, dom.dropMenu];
+const panels = [
+  dom.instruction,
+  dom.panel,
+  dom.listPanel,
+  dom.favPanel,
+  dom.dropMenu,
+];
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
 /*---------------------------------------------------------
@@ -49,6 +56,10 @@ const loopTypes = ["all", "fav", "curated", "selected", "oob"];
  *-------------------------------------------------------*/
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
+
+rpcUrl
+  ? (dom.rpcUrlInput.placeholder = rpcUrl)
+  : (dom.rpcUrlInput.placeholder = "enter rpc url");
 
 const instance = [];
 const nameMap = {};
@@ -1076,12 +1087,12 @@ function handleLoop(action) {
     loopState = { isLooping: "false", interval: interval, action: action };
     localStorage.setItem("loopState", JSON.stringify(loopState));
   }
-  updateButtons("loop");
+  updateLoopButton();
 }
 
 function stopLoop() {
   stopRandomLoop();
-  updateButtons("loop");
+  updateLoopButton();
 }
 
 /*---------------------------------------------------------
@@ -1202,22 +1213,12 @@ const toggleSpin = (show = true) => {
   dom.spinner.style.display = show ? "block" : "none";
 };
 
-const updateButtons = (mode) => {
-  const buttonConfig = {
-    loop: {
-      ".fa-repeat": loopState.isLooping !== "true",
-      ".fa-circle-stop": loopState.isLooping === "true",
-    },
-    theme: {
-      ".fa-sun": dom.root.classList.contains("dark-mode"),
-      ".fa-moon": !dom.root.classList.contains("dark-mode"),
-    },
-  };
-  Object.entries(buttonConfig[mode]).forEach(([selector, shouldDisplay]) => {
-    document.querySelector(selector).style.display = shouldDisplay
-      ? "inline-block"
-      : "none";
-  });
+const updateLoopButton = () => {
+  document.querySelector(".fa-repeat").style.display =
+    loopState.isLooping !== "true" ? "inline-block" : "none";
+
+  document.querySelector(".fa-circle-stop").style.display =
+    loopState.isLooping === "true" ? "inline-block" : "none";
 };
 
 const setDisplay = () => {
@@ -1225,41 +1226,43 @@ const setDisplay = () => {
   const hasRPC = !!rpcUrl;
   const hasFavorites = Object.keys(favorite).length > 0;
 
-  dom.infobar.style.display = hasRPC ? "block" : "none";
-  dom.infobar.style.opacity = hasContract || !hasRPC ? "" : "0.98";
+  dom.infobar.style.opacity = !hasRPC || !hasContract ? "0.98" : "";
 
   [dom.inc, dom.dec, dom.save, dom.info, dom.explore, dom.loop].forEach(
-    (el) => (el.style.display = hasContract ? "block" : "none"),
+    (button) => (button.style.display = hasContract ? "block" : "none"),
   );
 
-  [dom.rpcUrlInput, dom.instruction].forEach(
-    (el) => (el.style.display = hasRPC ? "none" : "block"),
-  );
+  const showInstruction = !hasRPC;
+  dom.instruction.classList.toggle("active", showInstruction);
+  dom.overlay.classList.toggle("active", showInstruction);
 
   dom.favIcon.style.display = hasFavorites ? "block" : "none";
   dom.searchBox.classList.toggle("nofav", !hasFavorites);
-
   if (!hasFavorites) clearPanels();
 };
 
 /*---------------------------------------------------------
  *                 THEME MANAGEMENT
  *-------------------------------------------------------*/
-function setDarkMode(isDarkMode) {
-  dom.root.classList.toggle("dark-mode", isDarkMode);
-  localStorage.setItem("darkMode", isDarkMode);
+function setTheme(themeName) {
+  dom.themeBtns.forEach((btn) =>
+    btn.setAttribute("data-active", btn.dataset.theme === themeName),
+  );
 
-  const themeColor = isDarkMode ? "#212122" : "#ececef";
-  document
-    .querySelector('meta[name="theme-color"]')
-    .setAttribute("content", themeColor);
+  if (themeName === "system") {
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+    dom.root.classList.toggle("dark-mode", prefersDark);
+  } else {
+    dom.root.classList.toggle("dark-mode", themeName === "dark");
+  }
 
-  updateButtons("theme");
+  localStorage.setItem("themePreference", themeName);
 }
 
-function toggleDarkMode() {
-  const isDarkMode = !dom.root.classList.contains("dark-mode");
-  setDarkMode(isDarkMode);
+function initTheme() {
+  setTheme(localStorage.getItem("themePreference") || "system");
 }
 
 /*---------------------------------------------------------
@@ -1274,7 +1277,12 @@ document.addEventListener("keypress", (event) => {
 
 dom.rpcUrlInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
-    localStorage.setItem("rpcUrl", dom.rpcUrlInput.value);
+    const value = dom.rpcUrlInput.value.trim();
+
+    value === ""
+      ? localStorage.removeItem("rpcUrl")
+      : localStorage.setItem("rpcUrl", value);
+
     location.reload();
   }
 });
@@ -1303,6 +1311,11 @@ dom.listPanel.addEventListener("click", (event) => {
       getToken(selectedItem, "");
     }
   }
+});
+
+dom.settings.addEventListener("click", (event) => {
+  event.stopPropagation();
+  togglePanel(dom.instruction);
 });
 
 dom.info.addEventListener("click", (event) => {
@@ -1345,11 +1358,6 @@ dom.explore.addEventListener("click", exploreAlgo);
 
 dom.save.addEventListener("click", saveOutput);
 
-dom.theme.addEventListener("click", (event) => {
-  event.stopPropagation();
-  toggleDarkMode();
-});
-
 panels.forEach((panel) => {
   panel.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -1358,13 +1366,25 @@ panels.forEach((panel) => {
 
 document.addEventListener("click", clearPanels);
 
+dom.themeBtns.forEach((button) => {
+  button.addEventListener("click", () => setTheme(button.dataset.theme));
+});
+
+window
+  .matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", (e) => {
+    if (localStorage.getItem("themePreference") === "system") {
+      dom.root.classList.toggle("dark-mode", e.matches);
+    }
+  });
+
 /*---------------------------------------------------------
  *                  INITIALIZATION
  *-------------------------------------------------------*/
-updateButtons("loop");
+updateLoopButton();
 checkLoop();
 checkForNewContracts();
 setDisplay();
-setDarkMode(JSON.parse(localStorage.getItem("darkMode")));
+initTheme();
 if (contractData) update(...Object.values(contractData));
 dom.root.classList.remove("no-flash");

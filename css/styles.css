@@ -68,25 +68,6 @@ iframe {
   border: none;
 }
 
-.hidden-box {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  background-color: var(--color-bg);
-  border-radius: 5px;
-  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  z-index: 100;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.hidden-box:hover {
-  opacity: 0.98;
-}
-
 .infobar {
   position: fixed;
   bottom: 0;
@@ -127,35 +108,46 @@ iframe {
   align-items: center;
 }
 
-#git,
-#theme,
+.theme-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.git,
+.theme-button,
+.settings,
 .save,
 .random,
 .dec,
 .inc,
-#explore,
-#loop {
+.explore,
+.loop {
   background-color: transparent;
   color: var(--color-btn);
   font-size: 1.1em;
   border: none;
   border-radius: 5px;
   cursor: default;
-  transition: background-color 0.1s ease-in-out;
+  transition:
+    color 0.1s ease-in-out,
+    background-color 0.1s ease-in-out;
   outline: none;
 }
 
-#git,
-#theme {
-  padding: 3.5px 5px 2.5px;
+.git,
+.theme-button {
+  padding: 3.5px 5px;
 }
 
 .save,
-.random,
+.loop,
 .dec,
 .inc,
-#explore,
-#loop {
+.explore,
+.random,
+.settings {
   padding: 3.75px 6.5px 2.75px;
   margin: 0 3px;
 }
@@ -164,14 +156,19 @@ iframe {
   padding: 4px 6.5px 2.5px;
 }
 
-#git:hover,
-#theme:hover,
+.theme-button[data-active="true"] {
+  color: teal;
+}
+
+.git:hover,
+.theme-button:hover,
+.settings:hover,
 .save:hover,
 .random:hover,
 .dec:hover,
 .inc:hover,
-#explore:hover,
-#loop:hover {
+.explore:hover,
+.loop:hover {
   background-color: var(--color-hvr);
 }
 
@@ -197,7 +194,7 @@ iframe {
 
 .rpc-url,
 .search-input,
-#loopInput {
+.loopInput {
   outline: 1.5px solid transparent;
   transition: outline-color 0.1s ease-in-out;
 }
@@ -206,13 +203,12 @@ iframe {
 .rpc-url:hover,
 .search-input:hover,
 .search-input:focus,
-#loopInput:hover,
-#loopInput:focus {
+.loopInput:hover,
+.loopInput:focus {
   outline-color: var(--color-btn);
 }
 
 .rpc-url {
-  display: none;
   width: 100%;
   margin-top: 10px;
   border: none;
@@ -226,7 +222,7 @@ iframe {
   box-sizing: border-box;
 }
 
-#loopInput {
+.loopInput {
   padding: 4px;
   border-radius: 5px;
   font-size: 1em;
@@ -321,14 +317,7 @@ iframe {
   right: 160px;
 }
 
-.instruction {
-  display: none;
-  bottom: 8px;
-  opacity: 0.98;
-  z-index: 100;
-  pointer-events: auto;
-}
-
+.instruction.active,
 .panel.active,
 .list-panel.active,
 .fav-panel.active,
@@ -344,7 +333,7 @@ iframe {
   font-size: 1.1em;
   cursor: default;
   transition: color 0.1s ease-in-out;
-  margin: 0 10px;
+  padding: 0 10px;
   user-select: none;
   -webkit-user-select: none;
   white-space: nowrap;
@@ -539,8 +528,6 @@ iframe {
     width: calc(100% - 20px);
     text-align: center;
     justify-content: center;
-    margin: 0;
-    padding: 0 10px;
   }
 
   .button-box {
@@ -553,7 +540,7 @@ iframe {
   }
 
   .search-input {
-    padding: 5px 18px 5px 32px;
+    padding: 5px 18px 5px 30px;
     font-size: 1.1em;
   }
 
@@ -576,20 +563,23 @@ iframe {
   }
 
   .save,
-  .random,
+  .loop,
   .dec,
   .inc,
-  #explore,
-  #loop {
-    font-size: 1.3em;
+  .explore,
+  .random,
+  .settings {
+    font-size: 1.2em;
+    margin: 0;
   }
 
   .save:hover,
   .random:hover,
   .dec:hover,
   .inc:hover,
-  #explore:hover,
-  #loop:hover {
+  .explore:hover,
+  .loop:hover,
+  .settings:hover {
     background-color: var(--color-bg);
   }
 
@@ -600,16 +590,10 @@ iframe {
   .drop-menu {
     position: fixed;
     max-width: 100%;
-    max-height: 60%;
+    max-height: 75%;
     right: 0;
     left: 0;
     bottom: 90px;
-  }
-
-  .instruction {
-    box-shadow: none;
-    max-height: 100%;
-    bottom: 50px;
   }
 
   .drop-menu button {

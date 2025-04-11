@@ -36,16 +36,6 @@
 
   <body>
     <div class="container">
-      <div class="hidden-box">
-        <a href="https://github.com/b4b0y4/blocks" target="_blank" id="git">
-          <i class="fa-brands fa-github"></i>
-        </a>
-        <button id="theme">
-          <i class="fa-regular fa-moon"></i>
-          <i class="fa-regular fa-sun"></i>
-        </button>
-      </div>
-
       <div class="frame-container">
         <iframe id="frame" src="about:blank"></iframe>
       </div>
@@ -54,10 +44,13 @@
         <div id="infoBox" class="info-box">
           <div id="info" class="info"></div>
           <div class="button-box">
+            <button id="settings" class="settings">
+              <i class="fa-solid fa-bars"></i>
+            </button>
             <button id="saveBtn" class="save">
               <i class="fa-regular fa-floppy-disk"></i>
             </button>
-            <button id="loop">
+            <button id="loop" class="loop">
               <i class="fa-solid fa-repeat"></i>
               <i class="fa-regular fa-circle-stop"></i>
             </button>
@@ -82,7 +75,7 @@
             <button id="incrementBtn" class="inc">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
-            <button id="explore">
+            <button id="explore" class="explore">
               <i class="fa-regular fa-compass"></i>
             </button>
             <button id="randomButton" class="random">
@@ -93,17 +86,37 @@
       </div>
 
       <div class="instruction">
+        <div class="theme-container">
+          <div>
+            <button class="theme-button" data-theme="light">
+              <i class="fa-solid fa-sun"></i>
+            </button>
+            <button class="theme-button" data-theme="dark">
+              <i class="fa-solid fa-moon"></i>
+            </button>
+            <button class="theme-button" data-theme="system">
+              <i class="fa-solid fa-desktop"></i>
+            </button>
+          </div>
+          <a
+            href="https://github.com/b4b0y4/blocks"
+            target="_blank"
+            id="git"
+            class="git"
+          >
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
         <p>
           This little tool allows you to generate all Art Blocks collections
-          (Curated, Presents, Collaborations, Explorations, Studio) as well as
-          some Engine collections (Bright Moments, Plottables...) directly from
-          Ethereum.
+          (Curated, Presents, Collaborations...) as well as some Engine
+          collections (Bright Moments, Plottables...) directly from Ethereum.
         </p>
         <ul>
           <li>
-            Add a RPC URL
+            Add a
             <a href="https://alchemy.com" target="_blank"
-              ><i class="fa-solid fa-up-right-from-square"></i
+              >RPC URL <i class="fa-solid fa-up-right-from-square"></i
             ></a>
             and you're good to go!
           </li>
@@ -115,7 +128,6 @@
             <li>(id) get the exact token id on a displayed collection.</li>
           </ul>
           <li>Press <span class="key">\</span> to clear the page.</li>
-          <li>There is a dark/light toggle on the upper right-hand corner.</li>
           <li>
             Pin this app to your IPFS node to help decentralisation
             <a
@@ -138,7 +150,13 @@
       <div class="list-panel"></div>
       <div class="fav-panel"></div>
       <div class="drop-menu" id="dropMenu">
-        <input type="text" id="loopInput" placeholder="" autocomplete="off" />
+        <input
+          type="text"
+          id="loopInput"
+          class="loopInput"
+          placeholder=""
+          autocomplete="off"
+        />
         <button id="loopAll">Everything</button>
         <button id="favLoop">Favorites</button>
         <button id="curatedLoop">Curated</button>
