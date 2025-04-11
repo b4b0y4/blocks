@@ -44,11 +44,15 @@
         <div id="infoBox" class="info-box">
           <div id="info" class="info"></div>
           <div class="button-box">
-            <button id="randomButton" class="random">
-              <i class="fa-solid fa-shuffle"></i>
+            <button id="settings" class="settings">
+              <i class="fa-solid fa-bars"></i>
             </button>
-            <button id="explore" class="explore">
-              <i class="fa-regular fa-compass"></i>
+            <button id="saveBtn" class="save">
+              <i class="fa-regular fa-floppy-disk"></i>
+            </button>
+            <button id="loop" class="loop">
+              <i class="fa-solid fa-repeat"></i>
+              <i class="fa-regular fa-circle-stop"></i>
             </button>
             <button id="decrementBtn" class="dec">
               <i class="fa-solid fa-chevron-left"></i>
@@ -71,15 +75,11 @@
             <button id="incrementBtn" class="inc">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
-            <button id="loop" class="loop">
-              <i class="fa-solid fa-repeat"></i>
-              <i class="fa-regular fa-circle-stop"></i>
+            <button id="explore" class="explore">
+              <i class="fa-regular fa-compass"></i>
             </button>
-            <button id="saveBtn" class="save">
-              <i class="fa-regular fa-floppy-disk"></i>
-            </button>
-            <button id="settings" class="settings">
-              <i class="fa-solid fa-bars"></i>
+            <button id="randomButton" class="random">
+              <i class="fa-solid fa-shuffle"></i>
             </button>
           </div>
         </div>
@@ -117,13 +117,11 @@
         <h3>Getting Started</h3>
         <ul>
           <li>
-            You'll need an Ethereum RPC endpoint - get one from
+            Paste your Ethereum RPC URL below and press
+            <span class="key">enter</span> - get one from
             <a href="https://alchemy.com" target="_blank">
               Alchemy <i class="fa-solid fa-up-right-from-square"></i>
             </a>
-          </li>
-          <li>
-            Paste your RPC URL below and press <span class="key">enter</span>
           </li>
         </ul>
 
@@ -151,29 +149,6 @@
             </ul>
           </li>
           <li>Use <span class="key">\</span> to reset the page</li>
-          <li>Click artwork info to see details</li>
-          <li>
-            Use <i class="fa-solid fa-shuffle"></i> to get a random artwork from
-            any collection
-          </li>
-          <li>
-            Use <i class="fa-regular fa-compass"></i> to explore different
-            outputs of the algorithm
-          </li>
-          <li>
-            Save your favorites with <i class="fa-regular fa-floppy-disk"></i>
-          </li>
-          <li>
-            Auto-Exploration with <i class="fa-solid fa-repeat"></i>:
-            <ul>
-              <li>Enter time in minutes</li>
-              <li>Everything: Random artwork from all collections</li>
-              <li>Favorites: Cycle through your saved pieces</li>
-              <li>Curated: Art Blocks Curated collections only</li>
-              <li>Selected: Random pieces from current collection</li>
-              <li>OOB: Out of bounds exploration</li>
-            </ul>
-          </li>
         </ul>
 
         <h3>Support Decentralization</h3>
