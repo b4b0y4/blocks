@@ -12,15 +12,15 @@
   --color-hvr: #2d2e2e;
 }
 
-html {
-  height: 100%;
+html,
+body {
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-family: Helvetica, sans-serif;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
   background-color: var(--color-bg);
   overflow: hidden;
 }
@@ -512,7 +512,7 @@ iframe {
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    /* height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom)); */
   }
 
   .infobar {
