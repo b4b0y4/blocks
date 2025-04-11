@@ -25,6 +25,10 @@ body {
   overflow: hidden;
 }
 
+h3 {
+  margin: 15px 0 8px;
+}
+
 p {
   line-height: 1.5em;
   margin: 0;
