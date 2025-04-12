@@ -356,7 +356,7 @@ iframe {
   display: flex;
   border-top: 1px solid var(--color-btn);
   margin-top: 10px;
-  padding-top: 10px;
+  padding-top: 7.5px;
 }
 
 .column {
@@ -367,7 +367,7 @@ iframe {
 }
 
 .section {
-  margin-top: 5px;
+  margin-top: 7.5px;
 }
 
 .section p {
