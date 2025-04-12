@@ -109,21 +109,28 @@
         </div>
 
         <p>
-          Welcome to Blocks! This tool lets you explore and interact with
-          generative artworks from Art Blocks and other Engine collections
-          directly from Ethereum.
+          This little tool lets you explore and interact with generative
+          artworks from Art Blocks and other Engine collections directly from
+          Ethereum.
         </p>
 
         <h3>Getting Started</h3>
         <ul>
           <li>
             Paste your Ethereum RPC URL below and press
-            <span class="key">enter</span> - get one from
+            <span class="key">enter</span> (e.g., from
             <a href="https://alchemy.com" target="_blank">
-              Alchemy <i class="fa-solid fa-up-right-from-square"></i>
-            </a>
+              Alchemy <i class="fa-solid fa-up-right-from-square"></i> </a
+            >)
           </li>
         </ul>
+        <label for="rpcUrl"></label>
+        <input
+          id="rpcUrl"
+          class="rpc-url"
+          placeholder="enter rpc url"
+          autocomplete="off"
+        />
 
         <h3>How to Use</h3>
         <ul>
@@ -161,14 +168,6 @@
             <i class="fa-solid fa-up-right-from-square"></i>
           </a>
         </p>
-
-        <label for="rpcUrl"></label>
-        <input
-          id="rpcUrl"
-          class="rpc-url"
-          placeholder="enter rpc url"
-          autocomplete="off"
-        />
       </div>
 
       <div class="panel"></div>
