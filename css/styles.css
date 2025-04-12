@@ -370,10 +370,13 @@ iframe {
   margin-top: 5px;
 }
 
+.section p {
+  margin: 0;
+}
+
 .more {
   font-size: 0.85em;
   color: var(--color-btn);
-  margin: 0;
 }
 
 .more a,
