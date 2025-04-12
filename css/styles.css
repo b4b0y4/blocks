@@ -407,7 +407,7 @@ iframe {
   display: flex;
   border-top: 1px solid var(--color-btn);
   margin-top: 10px;
-  padding-top: 5px;
+  padding-top: 10px;
 }
 
 .column {
@@ -418,7 +418,7 @@ iframe {
 }
 
 .section {
-  margin-top: 8px;
+  margin-top: 5px;
 }
 
 .no-flash {
