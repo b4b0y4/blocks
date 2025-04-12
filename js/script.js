@@ -670,7 +670,7 @@ function updateInfo(
            platform ? ` ● ${platform}` : ""
          }</span><br>
          <span class="edition">${editionTxt(edition, minted)}</span>
-       </p><br>
+       </p>
        <p>${detail[2]}</p>
        <div class="column-box">
          <div class="column">
