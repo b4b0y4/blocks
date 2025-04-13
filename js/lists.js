@@ -545,6 +545,7 @@ export const list = [
   "ABSLXVII1 - Coral Colors / Sputniko! - 19 Works",
   "ABSLXXI0 - Thread / Anna Lucia - 60 Works",
   "ABSLXXIII0 - MazeFlipper / Beervangeer x SuperGood - 1 Work",
+  "ABSLXXIV0 - Pacific Spirit / Emily Nicoll & 747 - 0 Works",
   "ABSLXXV0 - SINE / Shaunaq - 1 Work",
   "ABEXP0 - Friendship Bracelets / Alexis André - 38758 Works",
   "ABEXP1 - Marfa Yucca / Daniel Calderon Arenas - 390 Works",
