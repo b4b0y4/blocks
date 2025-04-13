@@ -103,7 +103,7 @@ iframe {
   font-size: 1.1em;
   cursor: default;
   transition: color 0.1s ease-in-out;
-  padding: 0 10px;
+  padding: 0 5px;
   user-select: none;
   -webkit-user-select: none;
   white-space: nowrap;
