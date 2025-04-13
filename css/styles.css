@@ -88,20 +88,12 @@ iframe {
     width 0.3s ease-in-out;
   white-space: nowrap;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .infobar.active,
 .infobar:hover {
   opacity: 0.98;
-}
-
-.info-box {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  height: 100%;
-  max-width: 100%;
-  overflow: hidden;
 }
 
 .info {
@@ -522,14 +514,8 @@ iframe {
     box-shadow: none;
     width: 100%;
     padding: 5px 0;
-    justify-content: center;
-  }
-
-  .info-box {
     flex-direction: column;
     justify-content: space-around;
-    padding: 0;
-    width: 100%;
     align-items: center;
   }
 
