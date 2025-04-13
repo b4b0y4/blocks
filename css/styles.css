@@ -72,7 +72,7 @@ iframe {
   position: fixed;
   bottom: 0;
   right: 0;
-  height: 30px;
+  height: 40px;
   max-width: 100%;
   display: flex;
   justify-content: end;
@@ -87,6 +87,7 @@ iframe {
     opacity 0.3s ease-in-out,
     width 0.3s ease-in-out;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .infobar.active,
@@ -265,7 +266,7 @@ iframe {
   position: absolute;
   display: flex;
   flex-direction: column;
-  bottom: 45px;
+  bottom: 50px;
   padding: 10px;
   background-color: var(--color-bg);
   color: var(--color-txt);
@@ -284,7 +285,7 @@ iframe {
   min-width: 350px;
   max-width: 400px;
   max-height: 500px;
-  right: 8px;
+  right: 10px;
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
@@ -516,7 +517,7 @@ iframe {
     position: static;
     left: 0;
     border-radius: 0;
-    height: 80px;
+    height: 90px;
     opacity: 1;
     box-shadow: none;
     width: 100%;
