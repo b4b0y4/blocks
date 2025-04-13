@@ -189,8 +189,7 @@ iframe {
   width: 80px;
   text-align: start;
   border-radius: 5px;
-  padding: 4px 15px 4px 26px;
-  outline: 1.5px solid transparent;
+  padding: 3.5px 15px 3.5px 26px;
   transition: outline-color 0.1s ease-in-out;
 }
 
@@ -258,7 +257,7 @@ iframe {
   position: absolute;
   display: flex;
   flex-direction: column;
-  bottom: 50px;
+  bottom: 45px;
   padding: 10px;
   background-color: var(--color-bg);
   color: var(--color-txt);
@@ -277,7 +276,7 @@ iframe {
   min-width: 350px;
   max-width: 400px;
   max-height: 500px;
-  right: 10px;
+  right: 5px;
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
