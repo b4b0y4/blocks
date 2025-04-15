@@ -828,6 +828,19 @@ async function injectFrame() {
     const iframe = dom.frame.contentDocument;
     const scriptData = JSON.parse(localStorage.getItem("scriptData"));
 
+    const fade = `
+          <style>
+            body {
+              opacity: 0;
+              animation: fadeIn 0.5s ease-in-out forwards;
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+          </style>
+        `;
+
     const srcScripts = (scriptData.src || [])
       .map((src) => `<script src="${src}"></script>`)
       .join("");
@@ -846,6 +859,7 @@ async function injectFrame() {
             <html>
               <head>
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                ${fade}
                 ${srcScripts}
                 <script>${scriptData.tokenIdHash};</script>
                 <style type="text/css">
