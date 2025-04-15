@@ -828,51 +828,75 @@ async function injectFrame() {
     const iframe = dom.frame.contentDocument;
     const scriptData = JSON.parse(localStorage.getItem("scriptData"));
 
-    const fade = `
-          <style>
-            body {
-              opacity: 0;
-              animation: fadeIn 0.5s ease-in-out forwards;
-            }
-            @keyframes fadeIn {
-              from { opacity: 0; }
-              to { opacity: 1; }
-            }
-          </style>
-        `;
+    const getStyles = () => `
+      body {
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        animation: fadeIn 0.5s ease-in-out forwards;
+        ${!contractData.extLib.startsWith("custom") ? "min-height: 100%; background-color: transparent;" : ""}
+      }
+      ${
+        !contractData.extLib.startsWith("custom")
+          ? `
+        html { height: 100%; }
+        canvas {
+          padding: 0;
+          margin: auto;
+          display: block;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+      `
+          : ""
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    `;
 
-    const srcScripts = (scriptData.src || [])
-      .map((src) => `<script src="${src}"></script>`)
-      .join("");
-
-    const frameBody = scriptData.process
-      ? `<body><script type="${scriptData.process}">${scriptData.script}</script><canvas></canvas></body>`
-      : `<body><canvas${
-          contractData.extLib.startsWith("babylon")
-            ? ' id="babylon-canvas"'
+    const getHead = () => `
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        ${
+          !contractData.extLib.startsWith("custom")
+            ? (scriptData.src || [])
+                .map((src) => `<script src="${src}"></script>`)
+                .join("")
             : ""
-        }></canvas><script>${scriptData.script}</script></body>`;
+        }
+        <script>${scriptData.tokenIdHash}${!contractData.extLib.startsWith("custom") ? ";" : ""}</script>
+        <style type="text/css">${getStyles()}</style>
+      </head>
+    `;
 
-    const dynamicContent = contractData.extLib.startsWith("custom")
-      ? `<script>${scriptData.tokenIdHash}</script>${scriptData.script}`
-      : `<!DOCTYPE html>
-            <html>
-              <head>
-                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-                ${fade}
-                ${srcScripts}
-                <script>${scriptData.tokenIdHash};</script>
-                <style type="text/css">
-                  html { height: 100%; }
-                  body { min-height: 100%; margin: 0; padding: 0; background-color: transparent; }
-                  canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
-                </style>
-              </head>
-              ${frameBody}
-            </html>`;
+    const getBody = () => {
+      if (contractData.extLib.startsWith("custom")) {
+        return `<body>${scriptData.script}</body>`;
+      }
+
+      const canvasAttr = contractData.extLib.startsWith("babylon")
+        ? ' id="babylon-canvas"'
+        : "";
+      return scriptData.process
+        ? `<body><script type="${scriptData.process}">${scriptData.script}</script><canvas></canvas></body>`
+        : `<body><canvas${canvasAttr}></canvas><script>${scriptData.script}</script></body>`;
+    };
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        ${getHead()}
+        ${getBody()}
+      </html>
+    `;
 
     iframe.open();
-    iframe.write(dynamicContent);
+    iframe.write(html);
     iframe.close();
   } catch (error) {
     console.error("injectFrame:", error);
