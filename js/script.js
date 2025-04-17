@@ -825,76 +825,59 @@ function copyToClipboard(text) {
 
 async function injectFrame() {
   try {
-    const iframe = dom.frame.contentDocument;
-    const scriptData = JSON.parse(localStorage.getItem("scriptData"));
+    const {
+      src = [],
+      tokenIdHash,
+      process,
+      script,
+    } = JSON.parse(localStorage.getItem("scriptData"));
+    const isCustom = contractData.extLib.startsWith("custom");
 
-    const getStyles = () => `
+    const styles = `
       body {
         margin: 0;
         padding: 0;
         opacity: 0;
-        animation: fadeIn 0.5s ease-in-out forwards;
-        ${!contractData.extLib.startsWith("custom") ? "min-height: 100%; background-color: transparent;" : ""}
+        animation: fade 0.5s linear forwards;
+        ${!isCustom ? "min-height: 100%; background-color: transparent;" : ""}
       }
       ${
-        !contractData.extLib.startsWith("custom")
+        !isCustom
           ? `
         html { height: 100%; }
         canvas {
-          padding: 0;
           margin: auto;
           display: block;
           position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-        }
-      `
+          inset: 0;
+        }`
           : ""
       }
-      @keyframes fadeIn {
+      @keyframes fade {
         from { opacity: 0; }
         to { opacity: 1; }
-      }
-    `;
+      }`;
 
-    const getHead = () => `
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        ${
-          !contractData.extLib.startsWith("custom")
-            ? (scriptData.src || [])
-                .map((src) => `<script src="${src}"></script>`)
-                .join("")
-            : ""
-        }
-        <script>${scriptData.tokenIdHash}${!contractData.extLib.startsWith("custom") ? ";" : ""}</script>
-        <style type="text/css">${getStyles()}</style>
-      </head>
-    `;
+    const html = isCustom
+      ? `<script>${tokenIdHash}</script>${script}`
+      : `<!DOCTYPE html>
+        <html>
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+            ${src.map((s) => `<script src="${s}"></script>`).join("")}
+            <script>${tokenIdHash};</script>
+            <style>${styles}</style>
+          </head>
+          <body>
+            ${
+              process
+                ? `<script type="${process}">${script}</script><canvas></canvas>`
+                : `<canvas${contractData.extLib.startsWith("babylon") ? ' id="babylon-canvas"' : ""}></canvas><script>${script}</script>`
+            }
+          </body>
+        </html>`;
 
-    const getBody = () => {
-      if (contractData.extLib.startsWith("custom")) {
-        return `<body>${scriptData.script}</body>`;
-      }
-
-      const canvasAttr = contractData.extLib.startsWith("babylon")
-        ? ' id="babylon-canvas"'
-        : "";
-      return scriptData.process
-        ? `<body><script type="${scriptData.process}">${scriptData.script}</script><canvas></canvas></body>`
-        : `<body><canvas${canvasAttr}></canvas><script>${scriptData.script}</script></body>`;
-    };
-
-    const html = `
-      <!DOCTYPE html>
-      <html>
-        ${getHead()}
-        ${getBody()}
-      </html>
-    `;
-
+    const iframe = dom.frame.contentDocument;
     iframe.open();
     iframe.write(html);
     iframe.close();
