@@ -1,6 +1,6 @@
 /*---------------------------------------------------------
  *                    CORE IMPORTS & DOM
- *------------------------------------------------------*/
+ *-------------------------------------------------------*/
 import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
