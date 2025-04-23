@@ -1198,7 +1198,6 @@ function displayFavoriteList() {
         clearPanels();
       });
 
-      // Insert the formatted HTML
       keyElement.insertAdjacentHTML("afterbegin", key);
       keyElement.appendChild(delSpan);
       dom.favPanel.appendChild(keyElement);
