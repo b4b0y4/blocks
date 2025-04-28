@@ -524,7 +524,7 @@ export const list = [
   "ABSXX0 - Mister Shifty and the Drifty Dudes / Joshua Bagley - 250 Works",
   "ABSXX1 - Isoplanet / Joshua Bagley - 50 Works",
   "ABSXXI0 - Carattere / michelangelo (encapsuled) - 48 Works",
-  "ABSXXI1 - Linea / michelangelo (encapsuled) - 23 Works",
+  "ABSXXI1 - Linea / michelangelo (encapsuled) - 24 Works",
   "ABSXXII0 - Pax / Eric De Giuli - 100 Works",
   "ABSXXIII0 - piñata3 / Fahad Karim - 88 Works",
   "ABSXXV0 - Precursor (Chimera) / mpkoz - 1 Work",
