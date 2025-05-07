@@ -199,44 +199,24 @@ async function fetchBlocks(array) {
     const end = Number(await instance[n].nextProjectId());
     const blocks = [];
 
-    const projectCount = end - start;
-    const batchSize = projectCount > 30 ? 25 : projectCount;
+    for (let id = start; id < end; id++) {
+      try {
+        const [detail, token] = await Promise.all([
+          instance[n].projectDetails(id.toString()),
+          is.v2.includes(contractName)
+            ? instance[n].projectTokenInfo(id)
+            : instance[n].projectStateData(id),
+        ]);
 
-    for (let i = start; i < end; i += batchSize) {
-      const batchPromises = [];
-      const batchEnd = Math.min(i + batchSize, end);
+        const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
+          Number(token.invocations) === 1 ? "Work" : "Works"
+        }`;
 
-      for (let j = i; j < batchEnd; j++) {
-        batchPromises.push(
-          (async (id) => {
-            try {
-              const [detail, token] = await Promise.all([
-                instance[n].projectDetails(id.toString()),
-                is.v2.includes(contractName)
-                  ? instance[n].projectTokenInfo(id)
-                  : instance[n].projectStateData(id),
-              ]);
-
-              const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
-                Number(token.invocations) === 1 ? "Work" : "Works"
-              }`;
-
-              return !list
-                .map((item) => item.replace(/!$/, ""))
-                .includes(newItem)
-                ? `"${newItem}",`
-                : null;
-            } catch (err) {
-              return null;
-            }
-          })(j),
-        );
-      }
-
-      blocks.push(...(await Promise.all(batchPromises)).filter(Boolean));
-
-      if (i + batchSize < end) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
+        if (!list.map((item) => item.replace(/!$/, "")).includes(newItem)) {
+          blocks.push(`"${newItem}",`);
+        }
+      } catch (err) {
+        continue;
       }
     }
 
