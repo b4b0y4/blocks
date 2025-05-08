@@ -427,7 +427,7 @@ iframe {
 }
 
 .drop-menu {
-  max-width: 120px;
+  max-width: 160px;
   right: 160px;
 }
 
@@ -440,7 +440,7 @@ iframe {
   background-color: transparent;
   border: none;
   border-radius: 5px;
-  text-align: left;
+  text-align: center;
   transition: background-color 0.1s ease-in-out;
 }
 
@@ -583,10 +583,6 @@ iframe {
     left: 5px;
     right: 5px;
     bottom: 85px;
-  }
-
-  .drop-menu button {
-    text-align: center;
   }
 }
 
