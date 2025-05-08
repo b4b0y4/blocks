@@ -839,34 +839,13 @@ async function injectFrame() {
       process,
       script,
     } = JSON.parse(localStorage.getItem("scriptData"));
-    const isCustom = contractData.extLib.startsWith("custom");
 
     const styles = `
-      body {
-        margin: 0;
-        padding: 0;
-        opacity: 0;
-        animation: fade 0.5s linear forwards;
-        ${!isCustom ? "min-height: 100%; background-color: transparent;" : ""}
-      }
-      ${
-        !isCustom
-          ? `
-        html { height: 100%; }
-        canvas {
-          margin: auto;
-          display: block;
-          position: absolute;
-          inset: 0;
-        }`
-          : ""
-      }
-      @keyframes fade {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }`;
+      html { height: 100%; }
+      body { min-height: 100%; margin: 0; padding: 0; background-color: transparent; }
+      canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }`;
 
-    const html = isCustom
+    const html = contractData.extLib.startsWith("custom")
       ? `<script>${tokenIdHash}</script>${script}`
       : `<!DOCTYPE html>
         <html>
