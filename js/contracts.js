@@ -432,21 +432,18 @@ export const contractRegistry = {
 
 export const is = {
   v2: [],
-  studio: [],
   flex: [],
+  studio: [],
   engine: [],
 };
 
 (function updateIs() {
-  const v2Abi = [abi.v1, abi.v2, abi.v2Flex, abi.bm];
-  const flexAbi = [abi.v2Flex, abi.v3Flex];
-
   Object.keys(contractRegistry).forEach((key) => {
     const a = contractRegistry[key].abi;
 
-    if ([...v2Abi].includes(a)) is.v2.push(key);
+    if ([abi.v1, abi.v2, abi.v2Flex, abi.bm].includes(a)) is.v2.push(key);
+    if ([abi.v2Flex, abi.v3Flex].includes(a)) is.flex.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
-    if ([...flexAbi].includes(a)) is.flex.push(key);
     if (!key.startsWith("AB")) is.engine.push(key);
   });
 })();
