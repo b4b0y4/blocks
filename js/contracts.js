@@ -434,7 +434,6 @@ export const is = {
   v2: [],
   studio: [],
   flex: [],
-  core: [],
   engine: [],
 };
 
@@ -448,6 +447,6 @@ export const is = {
     if ([...v2Abi].includes(a)) is.v2.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
     if ([...flexAbi].includes(a)) is.flex.push(key);
-    key.startsWith("AB") ? is.core.push(key) : is.engine.push(key);
+    if (!key.startsWith("AB")) is.engine.push(key);
   });
 })();
