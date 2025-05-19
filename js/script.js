@@ -189,72 +189,6 @@ function handleKeyboardNavigation(event) {
 /*---------------------------------------------------------
  *                 ETHEREUM FUNCTIONS
  *-------------------------------------------------------*/
-// async function fetchBlocks(array) {
-//   await new Promise((resolve) => setTimeout(resolve, 100));
-//   console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
-
-//   const existingProjects = new Set(list.map((item) => item.replace(/!$/, "")));
-
-//   const BATCH_SIZE = 20;
-//   const BATCH_DELAY = 200;
-
-//   for (const contractName of array) {
-//     const n = indexMap[contractName];
-//     const start = contractRegistry[contractName].startProjId || 0;
-//     const end = Number(await instance[n].nextProjectId());
-//     const blocks = [];
-
-//     const allProjectIds = Array.from(
-//       { length: end - start },
-//       (_, i) => start + i,
-//     );
-
-//     const batches = [];
-//     for (let i = 0; i < allProjectIds.length; i += BATCH_SIZE) {
-//       batches.push(allProjectIds.slice(i, i + BATCH_SIZE));
-//     }
-
-//     for (const batch of batches) {
-//       const batchPromises = batch.map(async (id) => {
-//         try {
-//           const dummyCheck = `${contractName}${id}`;
-//           if ([...existingProjects].some((p) => p.startsWith(dummyCheck))) {
-//             return null;
-//           }
-
-//           const [detail, token] = await Promise.all([
-//             instance[n].projectDetails(id.toString()),
-//             is.v2.includes(contractName)
-//               ? instance[n].projectTokenInfo(id)
-//               : instance[n].projectStateData(id),
-//           ]);
-
-//           const newItem = `${contractName}${id} - ${detail[0]} / ${detail[1]} - ${
-//             token.invocations
-//           } ${Number(token.invocations) === 1 ? "Work" : "Works"}`;
-
-//           return newItem;
-//         } catch (err) {
-//           return null;
-//         }
-//       });
-
-//       const batchResults = await Promise.all(batchPromises);
-
-//       const validResults = batchResults.filter(Boolean);
-//       blocks.push(...validResults.map((item) => `"${item}",`));
-
-//       await new Promise((resolve) => setTimeout(resolve, BATCH_DELAY));
-//     }
-
-//     blocks.length > 0
-//       ? console.log(blocks.join("\n"))
-//       : console.log(`${contractName} ✅`);
-//   }
-
-//   console.log("%cDONE!!!", "color: lime;");
-// }
-
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
   console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
@@ -265,11 +199,9 @@ async function fetchBlocks(array) {
     const end = Number(await instance[n].nextProjectId());
     const blocks = [];
 
-    // Process in batches of 20
     for (let id = start; id < end; id += 20) {
       const batchPromises = [];
 
-      // Create batch of up to 20 promises
       for (let batchId = id; batchId < Math.min(id + 20, end); batchId++) {
         batchPromises.push(
           Promise.all([
@@ -277,14 +209,12 @@ async function fetchBlocks(array) {
             is.v2.includes(contractName)
               ? instance[n].projectTokenInfo(batchId)
               : instance[n].projectStateData(batchId),
-          ]).catch(() => null), // Handle errors individually
+          ]).catch(() => null),
         );
       }
 
-      // Wait for batch to complete
       const results = await Promise.all(batchPromises);
 
-      // Process results
       results.forEach((result, idx) => {
         if (result) {
           const [detail, token] = result;
