@@ -825,7 +825,7 @@ export const list = [
   "TENDERFLEX2 - PRIMAL / David Seven - 199 Works",
   "LOM0 - Sacred Trees / hideo - 267 Works",
   "CPG0 - jazz / fingacode - 333 Works",
-  "CPG1 - trameDrucker / Aranda\\Lasch - 1 Work",
+  "CPG1 - Enlace by Trame / Aranda\\Lasch - 1 Work",
   "DE0 - Old Grove / Nat Sarkissian - 11 Works",
   "DE1 - Undertows /  - 0 Works!",
   "NEWRAFAEL0 - Sinking / Rafaël Rozendaal - 16 Works",
