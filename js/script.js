@@ -5,7 +5,7 @@ import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
-// fetchBlocks(["ABC", ...is.studio]);
+// fetchBlocks(["ABC", ...is.studio, "TDG", "NEWRAFAEL"]);
 
 const dom = {
   root: document.documentElement,
@@ -198,11 +198,12 @@ async function fetchBlocks(array) {
     const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const blocks = [];
+    const BATCH = 20;
 
-    for (let id = start; id < end; id += 20) {
+    for (let id = start; id < end; id += BATCH) {
       const batchPromises = [];
 
-      for (let batchId = id; batchId < Math.min(id + 20, end); batchId++) {
+      for (let batchId = id; batchId < Math.min(id + BATCH, end); batchId++) {
         batchPromises.push(
           Promise.all([
             instance[n].projectDetails(batchId.toString()),
