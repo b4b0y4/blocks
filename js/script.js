@@ -1121,9 +1121,11 @@ function pushFavoriteToStorage(id) {
 }
 
 function deleteFavoriteFromStorage(key) {
-  if (favorite.hasOwnProperty(key)) delete favorite[key];
-  localStorage.setItem("favorite", JSON.stringify(favorite));
-  setDisplay();
+  if (favorite.hasOwnProperty(key)) {
+    delete favorite[key];
+    localStorage.setItem("favorite", JSON.stringify(favorite));
+    setDisplay(true);
+  }
 }
 
 function frameFavorite(key) {
@@ -1210,7 +1212,7 @@ const updateLoopButton = () => {
     loopState.isLooping === "true" ? "inline-block" : "none";
 };
 
-const setDisplay = () => {
+const setDisplay = (skipOverlay = false) => {
   const hasContract = !!contractData;
   const hasRPC = !!rpcUrl;
   const hasFavorites = Object.keys(favorite).length > 0;
@@ -1223,7 +1225,7 @@ const setDisplay = () => {
 
   const showInstruction = !hasRPC;
   dom.instruction.classList.toggle("active", showInstruction);
-  dom.overlay.classList.toggle("active", showInstruction);
+  if (!skipOverlay) dom.overlay.classList.toggle("active", showInstruction);
 
   dom.favIcon.style.display = hasFavorites ? "block" : "none";
   dom.searchBox.classList.toggle("nofav", !hasFavorites);
