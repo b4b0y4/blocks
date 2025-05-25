@@ -144,7 +144,7 @@ const listManager = new ListManager(list);
 function displayList(items) {
   const listItems = items
     .map((line, index) => {
-      const parts = line.split(" - ");
+      const parts = line.split(" # ");
       const collectionAndArtist = parts[1].split(" / ");
       const collection = collectionAndArtist[0];
       const artist = collectionAndArtist[1];
@@ -219,7 +219,7 @@ async function fetchBlocks(array) {
       results.forEach((result, idx) => {
         if (result) {
           const [detail, token] = result;
-          const newItem = `${contractName}${id + idx} - ${detail[0]} / ${detail[1]} - ${token.invocations} ${
+          const newItem = `${contractName}${id + idx} # ${detail[0]} / ${detail[1]} # ${token.invocations} ${
             Number(token.invocations) === 1 ? "Work" : "Works"
           }`;
 
