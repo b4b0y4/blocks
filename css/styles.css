@@ -277,7 +277,7 @@ iframe {
   min-width: 350px;
   max-width: 400px;
   max-height: 500px;
-  right: 8px;
+  right: 10px;
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
