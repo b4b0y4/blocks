@@ -787,7 +787,7 @@ export const list = [
   "TDG4 # Keepsakes - Curated / Per Kristian Stoveland # 16 Works",
   "TDG5 # Keepsakes - Long Form / Per Kristian Stoveland # 400 Works",
   "TDG6 # Moments - Curated Edition / Florian Zumbrunn # 0 Works!",
-  "TDG7 # Moments - Digital Edition / Florian Zumbrunn # 0 Works!",
+  "TDG7 # Moments - Digital Edition / Florian Zumbrunn # 1 Work",
   "TDG8 # Materialistic - Curated Edition /  # 0 Works!",
   "TDG9 # Materialistic - Digital Edition /  # 0 Works!",
   "VFA0 # Fenestra / Rob Scalera # 42 Works",
