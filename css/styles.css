@@ -1,5 +1,5 @@
 :root {
-  --color-bg: #ececef;
+  --color-bg: #f7f7f7;
   --color-txt: #5c5c5c;
   --color-btn: #969697;
   --color-hvr: #e0e0e0;
@@ -80,7 +80,7 @@ iframe {
   background-color: var(--color-bg);
   padding: 5px;
   border-top-left-radius: 10px;
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px var(--color-btn);
   z-index: 100;
   opacity: 0;
   transition:
@@ -257,12 +257,12 @@ iframe {
   position: fixed;
   display: flex;
   flex-direction: column;
-  bottom: 45px;
+  bottom: 50px;
   padding: 10px;
   background-color: var(--color-bg);
   color: var(--color-txt);
   border-radius: 10px;
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px var(--color-btn);
   z-index: 90;
   opacity: 0;
   pointer-events: none;
@@ -277,7 +277,7 @@ iframe {
   min-width: 350px;
   max-width: 400px;
   max-height: 500px;
-  right: 5px;
+  right: 10px;
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
