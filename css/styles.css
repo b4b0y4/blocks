@@ -158,7 +158,7 @@ iframe {
 }
 
 .theme-button[data-active="true"] {
-  color: teal;
+  color: var(--color-txt);
 }
 
 .git:hover,
