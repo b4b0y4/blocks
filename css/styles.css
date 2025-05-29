@@ -42,7 +42,7 @@ li {
 a {
   text-decoration: none;
   color: var(--color-btn);
-  transition: color 0.1s ease-in-out;
+  transition: color 0.1s ease;
   outline: none;
   cursor: default;
 }
@@ -83,9 +83,7 @@ iframe {
   box-shadow: 0 0 1px var(--color-btn);
   z-index: 100;
   opacity: 0;
-  transition:
-    opacity 0.3s ease-in-out,
-    width 0.3s ease-in-out;
+  transition: opacity 0.3s ease;
   white-space: nowrap;
   box-sizing: border-box;
   overflow: hidden;
@@ -102,7 +100,7 @@ iframe {
   color: var(--color-txt);
   font-size: 1.1em;
   cursor: default;
-  transition: color 0.1s ease-in-out;
+  transition: color 0.1s ease;
   padding: 0 5px;
   user-select: none;
   -webkit-user-select: none;
@@ -136,8 +134,8 @@ iframe {
   border-radius: 5px;
   cursor: default;
   transition:
-    color 0.1s ease-in-out,
-    background-color 0.1s ease-in-out;
+    color 0.1s ease,
+    background-color 0.1s ease;
   outline: none;
 }
 
@@ -190,7 +188,7 @@ iframe {
   text-align: start;
   border-radius: 5px;
   padding: 3.5px 15px 3.5px 26px;
-  transition: outline-color 0.1s ease-in-out;
+  transition: outline-color 0.1s ease;
 }
 
 .search-icon,
@@ -205,7 +203,7 @@ iframe {
   border: none;
   outline: none;
   cursor: default;
-  transition: color 0.1s ease-in-out;
+  transition: color 0.1s ease;
 }
 
 .search-icon {
@@ -266,7 +264,7 @@ iframe {
   z-index: 90;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease;
   box-sizing: border-box;
 }
 
@@ -302,7 +300,7 @@ iframe {
 .search-input,
 .loopInput {
   outline: 1px solid transparent;
-  transition: outline-color 0.1s ease-in-out;
+  transition: outline-color 0.1s ease;
 }
 
 .rpc-url:focus,
@@ -391,7 +389,7 @@ iframe {
   color: var(--color-btn);
   padding: 5px;
   border-radius: 5px;
-  transition: background-color 0.1s ease-in-out;
+  transition: background-color 0.1s ease;
   cursor: default;
 }
 
@@ -441,7 +439,7 @@ iframe {
   border: none;
   border-radius: 5px;
   text-align: center;
-  transition: background-color 0.1s ease-in-out;
+  transition: background-color 0.1s ease;
 }
 
 .drop-menu button:hover {
@@ -477,7 +475,7 @@ iframe {
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 0.3s ease-in-out,
+    opacity 0.3s ease,
     visibility 0s linear 0.3s;
 }
 
@@ -486,7 +484,7 @@ iframe {
   pointer-events: auto;
   opacity: 1;
   transition:
-    opacity 0.3s ease-in-out,
+    opacity 0.3s ease,
     visibility 0s;
 }
 
