@@ -79,7 +79,7 @@ iframe {
   align-items: center;
   background-color: var(--color-bg);
   padding: 5px;
-  border-top-left-radius: 10px;
+  border-radius: 10px;
   box-shadow: 0 0 1px var(--color-btn);
   z-index: 100;
   opacity: 0;
