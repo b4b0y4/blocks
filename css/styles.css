@@ -301,7 +301,7 @@ iframe {
 .rpc-url,
 .search-input,
 .loopInput {
-  outline: 1.5px solid transparent;
+  outline: 1px solid transparent;
   transition: outline-color 0.1s ease-in-out;
 }
 
