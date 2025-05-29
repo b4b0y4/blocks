@@ -257,7 +257,7 @@ iframe {
   position: fixed;
   display: flex;
   flex-direction: column;
-  bottom: 48px;
+  bottom: 45px;
   padding: 10px;
   background-color: var(--color-bg);
   color: var(--color-txt);
@@ -277,7 +277,7 @@ iframe {
   min-width: 350px;
   max-width: 400px;
   max-height: 500px;
-  right: 8px;
+  right: 5px;
   overflow-y: auto;
   overflow-x: hidden;
   word-wrap: break-word;
