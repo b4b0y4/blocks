@@ -479,6 +479,16 @@ function update(
     ipfs,
     arweave,
   );
+  const oldFrame = dom.frame;
+  const frameContainer = oldFrame.parentNode;
+
+  const newFrame = document.createElement("iframe");
+  newFrame.id = "frame";
+  newFrame.src = "about:blank";
+
+  frameContainer.replaceChild(newFrame, oldFrame);
+  dom.frame = newFrame;
+
   const platform = getPlatform(contract, projId);
   updateInfo(
     contract,
@@ -492,15 +502,6 @@ function update(
     minted,
     extDep,
   );
-  const oldFrame = dom.frame;
-  const frameContainer = oldFrame.parentNode;
-
-  const newFrame = document.createElement("iframe");
-  newFrame.id = "frame";
-  newFrame.src = "about:blank";
-
-  frameContainer.replaceChild(newFrame, oldFrame);
-  dom.frame = newFrame;
 
   setDisplay();
   injectFrame();
