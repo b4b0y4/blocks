@@ -548,7 +548,7 @@ export const list = [
   "ABSLXVII0 # Coral Colors 2024 / Sputniko! # 1 Work!",
   "ABSLXVII1 # Coral Colors / Sputniko! # 19 Works",
   "ABSLXXI0 # Thread / Anna Lucia # 71 Works",
-  "ABSLXXIII0 # MazeFlipper / Beervangeer x SuperGood # 37 Works",
+  "ABSLXXIII0 # MazeFlipper / Beervangeer x SuperGood # 38 Works",
   "ABSLXXIV0 # Pacific Spirit / Emily Nicoll & 747 # 300 Works",
   "ABSLXXV0 # SINE / Shaunaq # 44 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38758 Works",
@@ -917,6 +917,8 @@ export const libs = {
     "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   "three@0.160.0":
     "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js",
+  "three@0.167.0":
+    "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.min.js",
   tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   "tone@14.8.15": "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
   paperjs:
