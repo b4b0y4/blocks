@@ -828,13 +828,25 @@ async function injectFrame() {
       body { min-height: 100%; margin: 0; padding: 0; background-color: transparent; }
       canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }`;
 
+    const hasThree167 = src.some((s) => s && s.includes("three.js/0.167.0"));
+
+    const scriptTags = hasThree167
+      ? `<script type="importmap">
+          {
+            "imports": {
+              "three":  "${src}"
+            }
+          }
+        </script>`
+      : src.map((s) => `<script src="${s}"></script>`).join("");
+
     const html = contractData.extLib.startsWith("custom")
       ? `<script>${tokenIdHash}</script>${script}`
       : `<!DOCTYPE html>
         <html>
           <head>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-            ${src.map((s) => `<script src="${s}"></script>`).join("")}
+            ${scriptTags}
             <script>${tokenIdHash};</script>
             <style>${styles}</style>
           </head>
@@ -842,7 +854,7 @@ async function injectFrame() {
             ${
               process
                 ? `<script type="${process}">${script}</script><canvas></canvas>`
-                : `<canvas${contractData.extLib.startsWith("babylon") ? ' id="babylon-canvas"' : ""}></canvas><script>${script}</script>`
+                : `<canvas${contractData.extLib.startsWith("babylon") ? ' id="babylon-canvas"' : ""}></canvas><script${hasThree167 ? ' type="module"' : ""}>${script}</script>`
             }
           </body>
         </html>`;
