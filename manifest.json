@@ -3,8 +3,8 @@
   "description": "A web-based viewer for generative art collections on Ethereum, focusing on Art Blocks and associated Engine collections.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ececef",
-  "theme_color": "#ececef",
+  "background_color": "#f7f7f7",
+  "theme_color": "#f7f7f7",
   "icons": [
     {
       "src": "./img/icon-192x192.png",
