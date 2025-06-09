@@ -548,7 +548,7 @@ export const list = [
   "ABSLXIII0 # Motion Pictures / Neel Shivdasani # 100 Works",
   "ABSLXVII0 # Coral Colors 2024 / Sputniko! # 1 Work!",
   "ABSLXVII1 # Coral Colors / Sputniko! # 19 Works",
-  "ABSLXXI0 # Thread / Anna Lucia # 71 Works",
+  "ABSLXXI0 # Thread / Anna Lucia # 72 Works",
   "ABSLXXIII0 # MazeFlipper / Beervangeer x SuperGood # 38 Works",
   "ABSLXXIV0 # Pacific Spirit / Emily Nicoll & 747 # 300 Works",
   "ABSLXXV0 # SINE / Shaunaq # 44 Works",
