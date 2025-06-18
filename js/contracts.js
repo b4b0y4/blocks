@@ -443,10 +443,12 @@ export const is = {
 
 (function updateIs() {
   Object.keys(contractRegistry).forEach((key) => {
-    const a = contractRegistry[key].abi;
+    const abiName = Object.fromEntries(
+      Object.entries(abi).map(([name, value]) => [value, name]),
+    )[contractRegistry[key].abi];
 
-    if ([abi.v1, abi.v2, abi.v2Flex, abi.bm].includes(a)) is.v2.push(key);
-    if ([abi.v2Flex, abi.v3Flex].includes(a)) is.flex.push(key);
+    if (!abiName.includes("3")) is.v2.push(key);
+    if (abiName.includes("Flex")) is.flex.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
     if (!key.startsWith("AB")) is.engine.push(key);
   });
