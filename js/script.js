@@ -207,9 +207,9 @@ async function fetchBlocks(array) {
         batchPromises.push(
           Promise.all([
             instance[n].projectDetails(batchId.toString()),
-            is.v2.includes(contractName)
-              ? instance[n].projectTokenInfo(batchId)
-              : instance[n].projectStateData(batchId),
+            is.v3.includes(contractName)
+              ? instance[n].projectStateData(batchId)
+              : instance[n].projectTokenInfo(batchId),
           ]).catch(() => null),
         );
       }
@@ -270,7 +270,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
     } else {
       clearDataStorage();
 
-      const isContractV2 = is.v2.includes(nameMap[contract]);
+      const isContractV3 = is.v3.includes(nameMap[contract]);
       const [projectId, hash, { owner, ensName }] = await Promise.all([
         fetchProjectId(tokenId, contract),
         fetchHash(tokenId, contract),
@@ -279,9 +279,9 @@ async function grabData(tokenId, contract, updateOnly = false) {
 
       const projId = Number(projectId);
       const [projectInfo, detail, { edition, minted }] = await Promise.all([
-        fetchProjectInfo(projId, contract, isContractV2),
+        fetchProjectInfo(projId, contract, isContractV3),
         fetchProjectDetails(projId, contract),
-        fetchEditionInfo(projId, contract, isContractV2),
+        fetchEditionInfo(projId, contract, isContractV3),
       ]);
 
       const [script, extLib] = await Promise.all([
@@ -344,10 +344,10 @@ async function fetchProjectId(tokenId, contract) {
   return instance[contract].tokenIdToProjectId(tokenId);
 }
 
-async function fetchProjectInfo(projId, contract, isContractV2) {
-  return isContractV2
-    ? instance[contract].projectScriptInfo(projId)
-    : instance[contract].projectScriptDetails(projId);
+async function fetchProjectInfo(projId, contract, isContractV3) {
+  return isContractV3
+    ? instance[contract].projectScriptDetails(projId)
+    : instance[contract].projectScriptInfo(projId);
 }
 
 async function constructScript(projId, projectInfo, contract) {
@@ -393,10 +393,10 @@ function extractLibraryName(projectInfo) {
   }
 }
 
-async function fetchEditionInfo(projId, contract, isContractV2) {
+async function fetchEditionInfo(projId, contract, isContractV3) {
   const invo =
     await instance[contract][
-      isContractV2 ? "projectTokenInfo" : "projectStateData"
+      isContractV3 ? "projectStateData" : "projectTokenInfo"
     ](projId);
 
   return {

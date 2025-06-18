@@ -435,7 +435,7 @@ export const contractRegistry = {
 };
 
 export const is = {
-  v2: [],
+  v3: [],
   flex: [],
   studio: [],
   engine: [],
@@ -447,7 +447,7 @@ export const is = {
       Object.entries(abi).map(([name, value]) => [value, name]),
     )[contractRegistry[key].abi];
 
-    if (!abiName.includes("3")) is.v2.push(key);
+    if (abiName.includes("3")) is.v3.push(key);
     if (abiName.includes("Flex")) is.flex.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
     if (!key.startsWith("AB")) is.engine.push(key);
