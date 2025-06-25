@@ -187,7 +187,7 @@ iframe {
   width: 80px;
   text-align: start;
   border-radius: 5px;
-  padding: 3.5px 15px 3.5px 26px;
+  padding: 3.5px 15px 3.5px 28px;
   transition: outline-color 0.1s ease;
 }
 
@@ -204,10 +204,11 @@ iframe {
   outline: none;
   cursor: default;
   transition: color 0.1s ease;
+  display: flex;
 }
 
 .search-icon {
-  left: 5px;
+  left: 7px;
 }
 
 .fav-icon {
@@ -533,7 +534,7 @@ iframe {
   }
 
   .search-input {
-    padding: 5px 18px 5px 30px;
+    padding: 5px 18px 5px 32px;
     font-size: 1.2em;
   }
 
