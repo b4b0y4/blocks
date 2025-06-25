@@ -509,7 +509,7 @@ export const list = [
   "ABSI1 # Three More Days / Aaron Penne # 1 Work",
   "ABSII0 # variaciones del yo / Marcelo Soria-Rodríguez # 54 Works",
   "ABSIII0 # Fragmented Perception / Motus Art # 25 Works",
-  "ABSIII1 # Contours / Motus Art # 1 Work",
+  "ABSIII1 # Contours / Motus Art # 5 Works",
   "ABSIV0 # Monochronos / Heeey # 40 Works",
   "ABSVII0 # Deco Echo / Harvey Rayner # 300 Works",
   "ABSIX0 # On-Chain Memory Token / Jeff Davis # 100 Works",
