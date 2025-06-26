@@ -419,7 +419,51 @@ async function fetchCIDs(projId, extDepCount, contract) {
     );
   }
   const cidTuples = await Promise.all(cidPromises);
-  return cidTuples.map((tuple) => tuple[0]);
+
+  const dependencies = [];
+  for (const tuple of cidTuples) {
+    const cid = tuple[0];
+    const dependencyType = Number(tuple[1]);
+    const bytecodeAddress = tuple[2];
+    const data = tuple[3];
+
+    if (dependencyType === 2) {
+      let parsedData = {};
+      try {
+        if (data.startsWith("{")) {
+          parsedData = JSON.parse(data);
+        } else {
+          parsedData = { raw: data };
+        }
+      } catch (error) {
+        console.log("ONCHAIN data parsing error:", error);
+        console.log("Raw ONCHAIN data:", data);
+        parsedData = { raw: data };
+      }
+
+      dependencies.push({
+        cid: cid,
+        dependency_type: "ONCHAIN",
+        data: parsedData,
+        bytecode_address: bytecodeAddress,
+        isOnchain: true,
+      });
+    } else {
+      dependencies.push({
+        cid: cid,
+        dependency_type:
+          dependencyType === 0
+            ? "IPFS"
+            : dependencyType === 1
+              ? "ARWEAVE"
+              : "ART_BLOCKS_DEPENDENCY_REGISTRY",
+        data: null,
+        isOnchain: false,
+      });
+    }
+  }
+
+  return dependencies;
 }
 
 async function fetchGateway(contract) {
@@ -530,15 +574,25 @@ function pushItemToLocalStorage(
     : "";
   const src = [libs[extLib]];
 
-  if (extDep.length > 0 && extDep[0].includes("@")) {
-    src.push(libs[extDep[0]]);
+  if (extDep.length > 0 && extDep[0].cid?.includes("@")) {
+    src.push(libs[extDep[0].cid]);
   }
 
   let tokenIdHash = "";
 
   if (extDep.length > 0) {
     const cids = extDep
-      .map((cid) => {
+      .map((dep) => {
+        if (dep.isOnchain) {
+          return `{
+             "cid": "${dep.cid}",
+             "dependency_type": "${dep.dependency_type}",
+             "data": ${JSON.stringify(dep.data)},
+             "bytecode_address": "${dep.bytecode_address}"
+           }`;
+        }
+
+        let cid = dep.cid;
         if (
           nameMap[contract] === "BMFLEX" &&
           tokenId.toString().startsWith("16")
@@ -629,6 +683,29 @@ function getPlatform(contract, projId) {
   return contractRegistry[contractName].platform || "";
 }
 
+function showExtDep(dependency) {
+  if (!dependency) return false;
+
+  const isOnchain = dependency.dependency_type === "ONCHAIN";
+  const isArtBlocksRegistry =
+    dependency.dependency_type === "ART_BLOCKS_DEPENDENCY_REGISTRY";
+
+  return !isOnchain && !isArtBlocksRegistry;
+}
+
+function getExtDepType(dependency, contract) {
+  if (nameMap[contract] === "BMFLEX") {
+    return "ipfs";
+  }
+
+  const isIPFS =
+    dependency.dependency_type === "IPFS" ||
+    (dependency.cid &&
+      (dependency.cid.startsWith("Qm") || dependency.cid.startsWith("baf")));
+
+  return isIPFS ? "ipfs" : "arweave";
+}
+
 function updateInfo(
   contract,
   owner,
@@ -716,24 +793,19 @@ function updateInfo(
                    "LIBRARY",
                    `<span class="no-copy-txt">
                    ${getLibVersion(extLib)} <br>
-                   ${extDep.length > 0 && extDep[0].length < 10 ? extDep[0] : ""}
+                   ${extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10 ? extDep[0].cid : ""}
                  </span>`,
                  )
                : ""
            }
            ${
-             extDep.length > 0 || nameMap[contract] === "BMFLEX"
+             (extDep.length > 0 && showExtDep(extDep[0])) ||
+             nameMap[contract] === "BMFLEX"
                ? createSection(
                    "EXTERNAL DEPENDENCY",
                    `<span class="no-copy-txt">
-                   ${
-                     nameMap[contract] === "BMFLEX" ||
-                     extDep[0].startsWith("Qm") ||
-                     extDep[0].startsWith("baf")
-                       ? "ipfs"
-                       : "arweave"
-                   }
-                 </span>`,
+                     ${getExtDepType(extDep[0], contract)}
+                   </span>`,
                  )
                : ""
            }
