@@ -415,55 +415,64 @@ async function fetchCIDs(projId, extDepCount, contract) {
   const cidPromises = [];
   for (let i = 0; i < extDepCount; i++) {
     cidPromises.push(
-      instance[contract].projectExternalAssetDependencyByIndex(projId, i),
+      instance[contract]
+        .projectExternalAssetDependencyByIndex(projId, i)
+        .then((tuple) => {
+          try {
+            const cid = tuple.cid || tuple[0];
+            const dependencyType = Number(
+              tuple.dependencyType || tuple[1] || 0,
+            );
+            const bytecodeAddress = tuple.bytecodeAddress || tuple[2] || "";
+            const data = tuple.data || tuple[3] || "";
+
+            if (dependencyType === 2) {
+              let parsedData = {};
+              try {
+                if (data.startsWith("{")) {
+                  parsedData = JSON.parse(data);
+                } else {
+                  parsedData = { raw: data };
+                }
+              } catch (error) {
+                console.log("ONCHAIN data parsing error:", error);
+                console.log("Raw ONCHAIN data:", data);
+                parsedData = { raw: data };
+              }
+
+              return {
+                cid: cid,
+                dependency_type: "ONCHAIN",
+                data: parsedData,
+                bytecode_address: bytecodeAddress,
+                isOnchain: true,
+              };
+            } else {
+              return {
+                cid: cid,
+                dependency_type:
+                  dependencyType === 0
+                    ? "IPFS"
+                    : dependencyType === 1
+                      ? "ARWEAVE"
+                      : "ART_BLOCKS_DEPENDENCY_REGISTRY",
+                data: null,
+                isOnchain: false,
+              };
+            }
+          } catch (e) {
+            return {
+              cid: tuple[0],
+              dependency_type: "IPFS",
+              data: null,
+              isOnchain: false,
+            };
+          }
+        }),
     );
   }
-  const cidTuples = await Promise.all(cidPromises);
 
-  const dependencies = [];
-  for (const tuple of cidTuples) {
-    const cid = tuple[0];
-    const dependencyType = Number(tuple[1]);
-    const bytecodeAddress = tuple[2];
-    const data = tuple[3];
-
-    if (dependencyType === 2) {
-      let parsedData = {};
-      try {
-        if (data.startsWith("{")) {
-          parsedData = JSON.parse(data);
-        } else {
-          parsedData = { raw: data };
-        }
-      } catch (error) {
-        console.log("ONCHAIN data parsing error:", error);
-        console.log("Raw ONCHAIN data:", data);
-        parsedData = { raw: data };
-      }
-
-      dependencies.push({
-        cid: cid,
-        dependency_type: "ONCHAIN",
-        data: parsedData,
-        bytecode_address: bytecodeAddress,
-        isOnchain: true,
-      });
-    } else {
-      dependencies.push({
-        cid: cid,
-        dependency_type:
-          dependencyType === 0
-            ? "IPFS"
-            : dependencyType === 1
-              ? "ARWEAVE"
-              : "ART_BLOCKS_DEPENDENCY_REGISTRY",
-        data: null,
-        isOnchain: false,
-      });
-    }
-  }
-
-  return dependencies;
+  return Promise.all(cidPromises);
 }
 
 async function fetchGateway(contract) {
