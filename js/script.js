@@ -1407,34 +1407,30 @@ function hideTooltip() {
 }
 
 function initTooltips() {
-  Object.keys(tooltipTexts).forEach((key) => {
+  [dom.loop, dom.repeatIcon, dom.stopLoop].forEach((el) => {
+    el.addEventListener("mouseenter", () => {
+      showTooltip(
+        dom.loop,
+        dom.stopLoop.style.display !== "none"
+          ? "Stop Loop"
+          : "Loop Through Artworks",
+      );
+    });
+    el.addEventListener("mouseleave", hideTooltip);
+    el.addEventListener("click", hideTooltip);
+  });
+
+  Object.entries(tooltipTexts).forEach(([key, text]) => {
     const element =
       key === "searchIcon"
         ? dom.searchIcon
         : key === "favIcon"
           ? dom.favIcon
           : dom[key];
-
     if (element) {
-      if (key === "loop") {
-        const handleLoopEnter = (el) => {
-          const isStopVisible = dom.stopLoop.style.display !== "none";
-          const tooltipText = isStopVisible
-            ? "Stop Loop"
-            : "Loop Through Artworks";
-          showTooltip(dom.loop, tooltipText);
-        };
-        [element, dom.repeatIcon, dom.stopLoop].forEach((el) => {
-          el.addEventListener("mouseenter", () => handleLoopEnter(el));
-          el.addEventListener("mouseleave", hideTooltip);
-          el.addEventListener("click", hideTooltip);
-        });
-      } else {
-        const handleEnter = () => showTooltip(element, tooltipTexts[key]);
-        element.addEventListener("mouseenter", handleEnter);
-        element.addEventListener("mouseleave", hideTooltip);
-        element.addEventListener("click", hideTooltip);
-      }
+      element.addEventListener("mouseenter", () => showTooltip(element, text));
+      element.addEventListener("mouseleave", hideTooltip);
+      element.addEventListener("click", hideTooltip);
     }
   });
 }
