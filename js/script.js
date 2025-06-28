@@ -5,7 +5,8 @@ import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
-// fetchBlocks(["ABC", ...is.studio, "TDG", "NEWRAFAEL"]);
+// fetchBlocks(["ABC", ...is.studio]);
+// fetchBlocks(is.engine);
 
 const dom = {
   root: document.documentElement,
