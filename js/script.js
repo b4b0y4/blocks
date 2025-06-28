@@ -270,7 +270,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
     } else {
       clearDataStorage();
 
-      const isContractV3 = is.v3.includes(nameMap[contract]);
+      const isV3 = is.v3.includes(nameMap[contract]);
       const [projectId, hash, { owner, ensName }] = await Promise.all([
         fetchProjectId(tokenId, contract),
         fetchHash(tokenId, contract),
@@ -279,9 +279,9 @@ async function grabData(tokenId, contract, updateOnly = false) {
 
       const projId = Number(projectId);
       const [projectInfo, detail, { edition, minted }] = await Promise.all([
-        fetchProjectInfo(projId, contract, isContractV3),
+        fetchProjectInfo(projId, contract, isV3),
         fetchProjectDetails(projId, contract),
-        fetchEditionInfo(projId, contract, isContractV3),
+        fetchEditionInfo(projId, contract, isV3),
       ]);
 
       const [script, extLib] = await Promise.all([
@@ -296,7 +296,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
       if (is.flex.includes(nameMap[contract])) {
         const extDepCount = await fetchExtDepCount(projId, contract);
         if (extDepCount) {
-          const fetchCIDsFn = isContractV3 ? fetchV3CIDs : fetchV2CIDs;
+          const fetchCIDsFn = isV3 ? fetchV3CIDs : fetchV2CIDs;
           [extDep, { ipfs, arweave }] = await Promise.all([
             fetchCIDsFn(projId, extDepCount, contract),
             fetchGateway(contract),
@@ -343,8 +343,8 @@ async function fetchProjectId(tokenId, contract) {
   return instance[contract].tokenIdToProjectId(tokenId);
 }
 
-async function fetchProjectInfo(projId, contract, isContractV3) {
-  return isContractV3
+async function fetchProjectInfo(projId, contract, isV3) {
+  return isV3
     ? instance[contract].projectScriptDetails(projId)
     : instance[contract].projectScriptInfo(projId);
 }
@@ -392,11 +392,11 @@ function extractLibraryName(projectInfo) {
   }
 }
 
-async function fetchEditionInfo(projId, contract, isContractV3) {
+async function fetchEditionInfo(projId, contract, isV3) {
   const invo =
-    await instance[contract][
-      isContractV3 ? "projectStateData" : "projectTokenInfo"
-    ](projId);
+    await instance[contract][isV3 ? "projectStateData" : "projectTokenInfo"](
+      projId,
+    );
 
   return {
     edition: Number(invo.maxInvocations),
