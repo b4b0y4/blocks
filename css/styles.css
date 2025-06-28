@@ -252,7 +252,8 @@ iframe {
 .panel,
 .list-panel,
 .fav-panel,
-.drop-menu {
+.drop-menu,
+.tooltip {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -282,11 +283,18 @@ iframe {
   word-wrap: break-word;
 }
 
+.tooltip {
+  font-size: 0.9em;
+  z-index: 110;
+  white-space: nowrap;
+}
+
 .instruction.active,
 .panel.active,
 .list-panel.active,
 .fav-panel.active,
-.drop-menu.active {
+.drop-menu.active,
+.tooltip.active {
   opacity: 0.98;
   pointer-events: auto;
 }
@@ -584,6 +592,10 @@ iframe {
     bottom: 80px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+  }
+
+  .tooltip {
+    display: none;
   }
 }
 

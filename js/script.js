@@ -41,6 +41,7 @@ const dom = {
   listPanel: document.querySelector(".list-panel"),
   favPanel: document.querySelector(".fav-panel"),
   overlay: document.querySelector(".overlay"),
+  tooltip: document.querySelector(".tooltip"),
 };
 
 const panels = [
@@ -1350,6 +1351,94 @@ function initTheme() {
   setTheme(localStorage.getItem("themePreference") || "system");
 }
 
+const tooltipTexts = {
+  info: "More Info",
+  settings: "Help & Instructions",
+  save: "Save Current Artwork",
+  loop: "Loop Through Artworks",
+  dec: "Previous",
+  inc: "Next",
+  explore: "Explore Algo",
+  randomButton: "Random Artwork",
+  searchIcon: "Search Collections",
+  favIcon: "Favorites",
+};
+
+let tooltipTimeout = null;
+
+function showTooltip(element, text) {
+  if (tooltipTimeout) {
+    clearTimeout(tooltipTimeout);
+  }
+
+  tooltipTimeout = setTimeout(() => {
+    const rect = element.getBoundingClientRect();
+    const infobarRect = dom.infobar.getBoundingClientRect();
+
+    dom.tooltip.textContent = text;
+
+    let leftPos = rect.left + rect.width / 2;
+
+    dom.tooltip.style.visibility = "hidden";
+    dom.tooltip.classList.add("active");
+
+    const tooltipRect = dom.tooltip.getBoundingClientRect();
+    const tooltipWidth = tooltipRect.width;
+
+    const minLeft = 10 + tooltipWidth / 2;
+    const maxLeft = window.innerWidth - 10 - tooltipWidth / 2;
+    leftPos = Math.max(minLeft, Math.min(maxLeft, leftPos));
+
+    dom.tooltip.style.left = `${leftPos}px`;
+    dom.tooltip.style.bottom = `${window.innerHeight - infobarRect.top + 10}px`;
+    dom.tooltip.style.transform = "translateX(-50%)";
+    dom.tooltip.style.visibility = "visible";
+  }, 500);
+}
+
+function hideTooltip() {
+  if (tooltipTimeout) {
+    clearTimeout(tooltipTimeout);
+    tooltipTimeout = null;
+  }
+  dom.tooltip.classList.remove("active");
+  dom.tooltip.style.visibility = "";
+  dom.tooltip.style.opacity = "";
+}
+
+function initTooltips() {
+  Object.keys(tooltipTexts).forEach((key) => {
+    const element =
+      key === "searchIcon"
+        ? dom.searchIcon
+        : key === "favIcon"
+          ? dom.favIcon
+          : dom[key];
+
+    if (element) {
+      if (key === "loop") {
+        const handleLoopEnter = (el) => {
+          const isStopVisible = dom.stopLoop.style.display !== "none";
+          const tooltipText = isStopVisible
+            ? "Stop Loop"
+            : "Loop Through Artworks";
+          showTooltip(dom.loop, tooltipText);
+        };
+        [element, dom.repeatIcon, dom.stopLoop].forEach((el) => {
+          el.addEventListener("mouseenter", () => handleLoopEnter(el));
+          el.addEventListener("mouseleave", hideTooltip);
+          el.addEventListener("click", hideTooltip);
+        });
+      } else {
+        const handleEnter = () => showTooltip(element, tooltipTexts[key]);
+        element.addEventListener("mouseenter", handleEnter);
+        element.addEventListener("mouseleave", hideTooltip);
+        element.addEventListener("click", hideTooltip);
+      }
+    }
+  });
+}
+
 /*---------------------------------------------------------
  *                 EVENT LISTENERS
  *-------------------------------------------------------*/
@@ -1470,6 +1559,7 @@ updateLoopButton();
 checkLoop();
 checkForNewContracts();
 setDisplay();
+initTooltips();
 initTheme();
 if (contractData) update(...Object.values(contractData));
 dom.root.classList.remove("no-flash");
