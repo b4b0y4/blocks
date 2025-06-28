@@ -70,15 +70,15 @@ iframe {
 
 .infobar {
   position: fixed;
-  bottom: 0;
-  right: 0;
+  bottom: 10px;
+  right: 10px;
   height: 40px;
-  max-width: 100%;
+  max-width: calc(100% - 20px);
   display: flex;
   justify-content: end;
   align-items: center;
   background-color: var(--color-bg);
-  padding: 5px;
+  padding: 7px;
   border-radius: 10px;
   box-shadow: 0 0 1px var(--color-btn);
   z-index: 100;
@@ -91,7 +91,7 @@ iframe {
 
 .infobar.active,
 .infobar:hover {
-  opacity: 0.98;
+  opacity: 0.9;
 }
 
 .info {
@@ -257,7 +257,7 @@ iframe {
   position: fixed;
   display: flex;
   flex-direction: column;
-  bottom: 50px;
+  bottom: 60px;
   padding: 10px;
   background-color: var(--color-bg);
   color: var(--color-txt);
@@ -295,7 +295,7 @@ iframe {
 .fav-panel.active,
 .drop-menu.active,
 .tooltip.active {
-  opacity: 0.98;
+  opacity: 0.9;
   pointer-events: auto;
 }
 
