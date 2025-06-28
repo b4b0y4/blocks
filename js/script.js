@@ -1327,30 +1327,6 @@ const setDisplay = (skipOverlay = false) => {
   if (!hasFavorites) clearPanels();
 };
 
-/*---------------------------------------------------------
- *                 THEME MANAGEMENT
- *-------------------------------------------------------*/
-function setTheme(themeName) {
-  dom.themeBtns.forEach((btn) =>
-    btn.setAttribute("data-active", btn.dataset.theme === themeName),
-  );
-
-  if (themeName === "system") {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    dom.root.classList.toggle("dark-mode", prefersDark);
-  } else {
-    dom.root.classList.toggle("dark-mode", themeName === "dark");
-  }
-
-  localStorage.setItem("themePreference", themeName);
-}
-
-function initTheme() {
-  setTheme(localStorage.getItem("themePreference") || "system");
-}
-
 const tooltipTexts = {
   info: "More Info",
   settings: "Help & Instructions",
@@ -1433,6 +1409,30 @@ function initTooltips() {
       element.addEventListener("click", hideTooltip);
     }
   });
+}
+
+/*---------------------------------------------------------
+ *                 THEME MANAGEMENT
+ *-------------------------------------------------------*/
+function setTheme(themeName) {
+  dom.themeBtns.forEach((btn) =>
+    btn.setAttribute("data-active", btn.dataset.theme === themeName),
+  );
+
+  if (themeName === "system") {
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+    dom.root.classList.toggle("dark-mode", prefersDark);
+  } else {
+    dom.root.classList.toggle("dark-mode", themeName === "dark");
+  }
+
+  localStorage.setItem("themePreference", themeName);
+}
+
+function initTheme() {
+  setTheme(localStorage.getItem("themePreference") || "system");
 }
 
 /*---------------------------------------------------------
