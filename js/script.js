@@ -296,16 +296,13 @@ async function grabData(tokenId, contract, updateOnly = false) {
       if (is.flex.includes(nameMap[contract])) {
         const extDepCount = await fetchExtDepCount(projId, contract);
         if (extDepCount) {
+          const fetchCIDsFn = isContractV3 ? fetchV3CIDs : fetchV2CIDs;
+          [extDep, { ipfs, arweave }] = await Promise.all([
+            fetchCIDsFn(projId, extDepCount, contract),
+            fetchGateway(contract),
+          ]);
           if (nameMap[contract] === "BMFLEX") {
-            extDep = await fetchV2CIDs(projId, extDepCount, contract);
             ipfs = "https://ipfs.io/ipfs";
-          } else {
-            [extDep, { ipfs, arweave }] = await Promise.all([
-              isContractV3
-                ? fetchV3CIDs(projId, extDepCount, contract)
-                : fetchV2CIDs(projId, extDepCount, contract),
-              fetchGateway(contract),
-            ]);
           }
         }
       }
