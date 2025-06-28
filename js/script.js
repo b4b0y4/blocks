@@ -1367,6 +1367,7 @@ function showTooltip(element, text) {
 
     dom.tooltip.style.left = `${leftPos}px`;
     dom.tooltip.style.bottom = `${window.innerHeight - infobarRect.top + 10}px`;
+    dom.tooltip.style.color = "var(--color-btn)";
     dom.tooltip.style.transform = "translateX(-50%)";
     dom.tooltip.style.visibility = "visible";
   }, 500);
