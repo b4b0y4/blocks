@@ -1337,7 +1337,7 @@ const tooltipTexts = {
   explore: "Explore Algo",
   randomButton: "Random Artwork",
   searchIcon: "Search Collections",
-  favIcon: "Favorites",
+  favIcon: "Favorites List",
 };
 
 let tooltipTimeout = null;
