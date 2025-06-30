@@ -519,7 +519,7 @@ iframe {
     height: 90px;
     opacity: 1;
     box-shadow: none;
-    width: 100%;
+    max-width: 100%;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
