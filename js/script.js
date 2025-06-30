@@ -1329,7 +1329,7 @@ const setDisplay = (skipOverlay = false) => {
 
 const tooltipTexts = {
   info: "More Info",
-  settings: "Help & Instructions",
+  settings: "Instructions",
   save: "Save Current Artwork",
   loop: "Loop Through Artworks",
   dec: "Previous Artwork",
@@ -1337,7 +1337,7 @@ const tooltipTexts = {
   explore: "Explore Algo",
   randomButton: "Random Artwork",
   searchIcon: "Search Collections",
-  favIcon: "Favorites List",
+  favIcon: "Favorites",
 };
 
 let tooltipTimeout = null;
