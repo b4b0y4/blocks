@@ -515,6 +515,8 @@ iframe {
   .infobar {
     position: static;
     left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: 0;
     height: 90px;
     opacity: 1;
