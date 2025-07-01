@@ -490,7 +490,7 @@ export const list = [
   "ABIII488 # Växt / Tengil # 150 Works",
   "ABIII489 # Balance / Kelly Milligan x Amber Vittoria # 250 Works",
   "ABIII490 # Twist / Rafaël Rozendaal # 250 Works",
-  "ABIII491 # Edge of Space / Robert Baker # 0 Works!",
+  "ABIII491 # Untitled / Robert Baker # 0 Works!",
   "ABIII492 # Utopia / kusakari # 0 Works!",
   "ABIII493 # Melancholic Magical Maiden / Emi Kusano # 300 Works",
   "ABC494 # Bokeh (murals) /  # 0 Works!",
