@@ -22,20 +22,20 @@ const dom = {
   inc: document.getElementById("incrementBtn"),
   explore: document.getElementById("explore"),
   loop: document.getElementById("loop"),
-  repeatIcon: document.querySelector(".fa-repeat"),
+  repeatIcon: document.getElementById("repeatIcon"),
   dropMenu: document.getElementById("dropMenu"),
   allLoop: document.getElementById("loopAll"),
   favLoop: document.getElementById("favLoop"),
   curatedLoop: document.getElementById("curatedLoop"),
   selectedLoop: document.getElementById("selectedLoop"),
   oobLoop: document.getElementById("oobLoop"),
-  stopLoop: document.querySelector(".fa-circle-stop"),
+  stopLoop: document.getElementById("stopLoop"),
   loopInput: document.getElementById("loopInput"),
   randomButton: document.getElementById("randomButton"),
   searchBox: document.querySelector(".search-box"),
   search: document.getElementById("searchInput"),
-  searchIcon: document.querySelector(".search-icon"),
-  favIcon: document.querySelector(".fav-icon"),
+  searchIcon: document.getElementById("searchIcon"),
+  favIcon: document.getElementById("favIcon"),
   spinner: document.querySelector(".spinner"),
   panel: document.querySelector(".panel"),
   listPanel: document.querySelector(".list-panel"),
@@ -1331,7 +1331,8 @@ const tooltipTexts = {
   info: "More Info",
   settings: "Instructions",
   save: "Save Current Artwork",
-  loop: "Loop Through Artworks",
+  repeatIcon: "Loop Through Artworks",
+  stopLoop: "Stop Loop",
   dec: "Previous Artwork",
   inc: "Next Artwork",
   explore: "Explore Algo",
@@ -1384,26 +1385,8 @@ function hideTooltip() {
 }
 
 function initTooltips() {
-  [dom.loop, dom.repeatIcon, dom.stopLoop].forEach((el) => {
-    el.addEventListener("mouseenter", () => {
-      showTooltip(
-        dom.loop,
-        dom.stopLoop.style.display !== "none"
-          ? "Stop Loop"
-          : "Loop Through Artworks",
-      );
-    });
-    el.addEventListener("mouseleave", hideTooltip);
-    el.addEventListener("click", hideTooltip);
-  });
-
   Object.entries(tooltipTexts).forEach(([key, text]) => {
-    const element =
-      key === "searchIcon"
-        ? dom.searchIcon
-        : key === "favIcon"
-          ? dom.favIcon
-          : dom[key];
+    const element = dom[key];
     if (element) {
       element.addEventListener("mouseenter", () => showTooltip(element, text));
       element.addEventListener("mouseleave", hideTooltip);
