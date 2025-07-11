@@ -873,7 +873,7 @@ export const list = [
   "NEWRAFAEL34 # Ripple / Rafaël Rozendaal # 30 Works",
   "NEWRAFAEL35 # House / Rafaël Rozendaal # 22 Works",
   "NEWRAFAEL36 # Pulse / Rafaël Rozendaal # 21 Works",
-  "NEWRAFAEL37 # Grit / Rafaël Rozendaal # 1 Work",
+  "NEWRAFAEL37 # Grit / Rafaël Rozendaal # 12 Works",
   "XCORE0 # ICXN / XCOPY # 500 Works",
   "WRLD1 # ComplexCity (2000/2023) / John F. Simon, Jr. # 256 Works",
   "OONA2026 # Moo, Milk, Marfa - Moo / OONA # 25 Works",
