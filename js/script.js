@@ -6,7 +6,6 @@ import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
 // fetchBlocks(["ABC", ...is.studio]);
-// fetchBlocks(is.engine);
 
 const dom = {
   root: document.documentElement,
