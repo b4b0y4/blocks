@@ -512,6 +512,7 @@ export const list = [
   "ABSIII1 # Contours / Motus Art # 18 Works",
   "ABSIV0 # Monochronos / Heeey # 40 Works",
   "ABSVII0 # Deco Echo / Harvey Rayner # 300 Works",
+  "ABSVIII0 # Edge of Space / Robert Baker # 1 Work",
   "ABSIX0 # On-Chain Memory Token / Jeff Davis # 100 Works",
   "ABSIX1 # Untitled / Jeff Davis # 1 Work!",
   "ABSIX2 # Framework / Jeff Davis # 13 Works",
