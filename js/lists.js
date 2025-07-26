@@ -527,7 +527,7 @@ export const list = [
   "ABSXVI1 # Art from code / Jos Vromans # 39 Works",
   "ABSXVIII0 # Origin / Monokai # 38 Works",
   "ABSXX0 # Mister Shifty and the Drifty Dudes / Joshua Bagley # 250 Works",
-  "ABSXX1 # Isoplanet / Joshua Bagley # 57 Works",
+  "ABSXX1 # Isoplanet / Joshua Bagley # 58 Works",
   "ABSXXI0 # Carattere / michelangelo (encapsuled) # 48 Works",
   "ABSXXI1 # Linea / michelangelo (encapsuled) # 25 Works",
   "ABSXXI2 # Testo / michelangelo (encapsuled) # 23 Works",
