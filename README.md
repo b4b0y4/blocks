@@ -1,6 +1,6 @@
 # Blocks
 
-A web-based viewer for generative art collections on Ethereum, focusing on Art Blocks and associated Engine collections.
+A web-based viewer for generative art collections on Ethereum, focusing on Art Blocks and Engine collections.
 
 ## Features
 
