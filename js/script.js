@@ -1541,4 +1541,3 @@ setDisplay();
 initTooltips();
 initTheme();
 if (contractData) update(...Object.values(contractData));
-dom.root.classList.remove("no-flash");

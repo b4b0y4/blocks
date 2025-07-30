@@ -467,10 +467,6 @@ iframe {
   text-align: center;
 }
 
-.no-flash {
-  visibility: hidden;
-}
-
 .overlay {
   visibility: hidden;
   position: fixed;
