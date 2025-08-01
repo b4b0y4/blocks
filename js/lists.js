@@ -513,7 +513,7 @@ export const list = [
   "ABSIV0 # Monochronos / Heeey # 40 Works",
   "ABSVII0 # Deco Echo / Harvey Rayner # 300 Works",
   "ABSVIII0 # Edge of Space / Robert Baker # 100 Works",
-  "ABSIX0 # On-Chain Memory Token / Jeff Davis # 191 Works",
+  "ABSIX0 # On-Chain Memory Token / Jeff Davis # 192 Works",
   "ABSIX1 # Untitled / Jeff Davis # 1 Work!",
   "ABSIX2 # Framework / Jeff Davis # 13 Works",
   "ABSIX3 # Progression / Jeff Davis # 777 Works",
