@@ -836,6 +836,7 @@ export const list = [
   "LOM0 # Sacred Trees / hideo # 267 Works",
   "CPG0 # jazz / fingacode # 333 Works",
   "CPG1 # Enlace by Trame / Aranda\\Lasch # 2 Works",
+  "CPG2 # coralCaladan++ / IX Shells # 1 Work",
   "DE0 # Old Grove / Nat Sarkissian # 11 Works",
   "DE1 # Undertows /  # 0 Works!",
   "NEWRAFAEL0 # Sinking / Rafaël Rozendaal # 16 Works",
