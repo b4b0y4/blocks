@@ -60,7 +60,7 @@ const provider = new ethers.JsonRpcProvider(rpcUrl);
 
 rpcUrl
   ? (dom.rpcUrlInput.placeholder = rpcUrl)
-  : (dom.rpcUrlInput.placeholder = "enter rpc url");
+  : (dom.rpcUrlInput.placeholder = "Enter RPC URL");
 
 const instance = [];
 const nameMap = {};
