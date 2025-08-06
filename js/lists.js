@@ -532,7 +532,7 @@ export const list = [
   "ABSXXI1 # Linea / michelangelo (encapsuled) # 27 Works",
   "ABSXXI2 # Testo / michelangelo (encapsuled) # 25 Works",
   "ABSXXII0 # Pax / Eric De Giuli # 100 Works",
-  "ABSXXIII0 # piñata3 / Fahad Karim # 92 Works",
+  "ABSXXIII0 # piñata3 / Fahad Karim # 96 Works",
   "ABSXXV0 # Precursor (Chimera) / mpkoz # 1 Work",
   "ABSXXV1 # Ink / mpkoz # 1 Work",
   "ABSXXVI0 # Roots / Fernando Jerez # 65 Works",
