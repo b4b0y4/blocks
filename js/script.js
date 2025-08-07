@@ -1,6 +1,3 @@
-/*---------------------------------------------------------
- *                    CORE IMPORTS & DOM
- *-------------------------------------------------------*/
 import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
@@ -59,9 +56,6 @@ const panels = [
 // Supported loop modes for artwork cycling.
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
-/*---------------------------------------------------------
- *                    ETHEREUM SETUP
- *-------------------------------------------------------*/
 const rpcUrl = localStorage.getItem("rpcUrl");
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 
@@ -83,9 +77,6 @@ Object.keys(contractRegistry).forEach((key, index) => {
   indexMap[key] = index;
 });
 
-/*---------------------------------------------------------
- *                   STATE MANAGEMENT
- *-------------------------------------------------------*/
 let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
 
@@ -97,9 +88,6 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   intervalId: null,
 };
 
-/*---------------------------------------------------------
- *                LIST MANAGEMENT SYSTEM
- *-------------------------------------------------------*/
 /**
  * Encapsulates filtering, navigation, and selection logic for project lists.
  * Keeps UI logic simple and DRY.
@@ -205,9 +193,6 @@ function handleKeyboardNavigation(event) {
   }
 }
 
-/*---------------------------------------------------------
- *                 ETHEREUM FUNCTIONS
- *-------------------------------------------------------*/
 /**
  * Batch fetches block/project data for given contracts.
  * Used for initial population and contract updates.
@@ -551,9 +536,6 @@ async function fetchGateway(contract) {
   return { ipfs, arweave };
 }
 
-/*---------------------------------------------------------
- *                  UI UPDATE FUNCTIONS
- *-------------------------------------------------------*/
 /**
  * Updates contractData and UI after fetching new token/project info.
  * Triggers info panel, frame, and localStorage updates.
@@ -1049,9 +1031,6 @@ async function injectFrame() {
   }
 }
 
-/*---------------------------------------------------------
- *                  TOKEN FUNCTIONS
- *-------------------------------------------------------*/
 /**
  * Handles token selection logic based on search query.
  * Delegates to numeric, curated, or other query handlers.
@@ -1219,9 +1198,6 @@ function getId(tokenId) {
   return tokenId % 1000000;
 }
 
-/*---------------------------------------------------------
- *                   LOOP FUNCTIONS
- *-------------------------------------------------------*/
 /**
  * Starts a random artwork loop with the given interval and action.
  */
@@ -1326,9 +1302,6 @@ function stopLoop() {
   updateLoopButton();
 }
 
-/*---------------------------------------------------------
- *             FAVORITE & SAVE FUNCTIONS
- *-------------------------------------------------------*/
 /**
  * Saves the current artwork preview as an HTML file and favorites it.
  */
@@ -1433,9 +1406,6 @@ function displayFavoriteList() {
   }
 }
 
-/*---------------------------------------------------------
- *                  UTILITY FUNCTIONS
- *-------------------------------------------------------*/
 /**
  * Utility: Clears contract and script data from localStorage.
  * Used when switching projects or resetting state.
@@ -1598,9 +1568,6 @@ function initTooltips() {
   });
 }
 
-/*---------------------------------------------------------
- *                 THEME MANAGEMENT
- *-------------------------------------------------------*/
 /**
  * Sets the UI theme (light, dark, or system).
  * Persists preference and updates DOM.
@@ -1629,9 +1596,6 @@ function initTheme() {
   setTheme(localStorage.getItem("themePreference") || "system");
 }
 
-/*---------------------------------------------------------
- *                 EVENT LISTENERS
- *-------------------------------------------------------*/
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
     clearDataStorage();
@@ -1742,9 +1706,6 @@ window
     }
   });
 
-/*---------------------------------------------------------
- *                  INITIALIZATION
- *-------------------------------------------------------*/
 updateLoopButton();
 checkLoop();
 checkForNewContracts();

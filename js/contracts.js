@@ -5,7 +5,6 @@ import { abi } from "./abis.js";
  *  Each entry includes ABI, address, and optional platform/startProjId.
  * This centralizes contract config for maintainability and lookup.
  */
-
 export const contractRegistry = {
   AB: {
     abi: abi.v1,
