@@ -1,5 +1,11 @@
 import { abi } from "./abis.js";
 
+/**
+ * Registry of all supported contracts, keyed by short name.
+ *  Each entry includes ABI, address, and optional platform/startProjId.
+ * This centralizes contract config for maintainability and lookup.
+ */
+
 export const contractRegistry = {
   AB: {
     abi: abi.v1,
@@ -453,12 +459,18 @@ export const is = {
   engine: [],
 };
 
+/**
+ * Populate 'is' categories based on registry and ABI naming conventions.
+ * This enables dynamic grouping without manual updates.
+ */
 (function updateIs() {
   Object.keys(contractRegistry).forEach((key) => {
+    // Reverse lookup: get ABI name from ABI object value.
     const abiName = Object.fromEntries(
       Object.entries(abi).map(([name, value]) => [value, name]),
     )[contractRegistry[key].abi];
 
+    // Categorize by ABI name and contract key prefix.
     if (abiName.includes("3")) is.v3.push(key);
     if (abiName.includes("Flex")) is.flex.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);

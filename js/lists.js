@@ -1,3 +1,8 @@
+/**
+ * Main project and contract list.
+ * Used for search, filtering, and display throughout the app.
+ * Structure: array of strings with metadata for each entry.
+ */
 export const list = [
   "AB0 # Chromie Squiggle / Snowfro # 10000 Works",
   "AB1 # Genesis / DCA # 512 Works",
@@ -918,6 +923,11 @@ export const list = [
   "NUMBER0 # Number / Wang # 165 Works",
 ];
 
+/**
+ * Library metadata for external dependencies.
+ * Used for dependency resolution and display.
+ * Keys are library names or versioned names, values are CDN URLs.
+ */
 export const libs = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
