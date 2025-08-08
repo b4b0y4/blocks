@@ -4,10 +4,8 @@ import { contractRegistry, is } from "./contracts.js";
 
 // fetchBlocks(["ABC", ...is.studio]);
 
-/**
- * DOM references for all interactive and display elements.
- * Centralized for maintainability and clarity.
- * */
+// DOM references for all interactive and display elements.
+// Centralized for maintainability and clarity.
 const dom = {
   root: document.documentElement,
   instruction: document.querySelector(".instruction"),
@@ -64,12 +62,12 @@ rpcUrl
   ? (dom.rpcUrlInput.placeholder = rpcUrl)
   : (dom.rpcUrlInput.placeholder = "Enter RPC URL");
 
+// Build contract instances and lookup maps for fast access.
+// nameMap: index -> contract key, indexMap: contract key -> index.
 const instance = [];
 const nameMap = {};
 const indexMap = {};
 
-// Build contract instances and lookup maps for fast access.
-// nameMap: index -> contract key, indexMap: contract key -> index.
 Object.keys(contractRegistry).forEach((key, index) => {
   const { abi, address } = contractRegistry[key];
   instance.push(new ethers.Contract(address, abi, provider));
@@ -77,10 +75,9 @@ Object.keys(contractRegistry).forEach((key, index) => {
   indexMap[key] = index;
 });
 
+// Persistent state for contracts, favorites, and loop settings.
 let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
-
-// Persistent state for contracts, favorites, and loop settings.
 let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   isLooping: "false",
   interval: 60000,
@@ -88,10 +85,8 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   intervalId: null,
 };
 
-/**
- * Encapsulates filtering, navigation, and selection logic for project lists.
- * Keeps UI logic simple and DRY.
- */
+// Encapsulates filtering, navigation, and selection logic for project lists.
+// Keeps UI logic simple and DRY.
 class ListManager {
   constructor(listData) {
     this.originalList = listData.filter((line) => !line.trim().endsWith("!"));
@@ -255,10 +250,8 @@ function checkForNewContracts() {
   if (newContract.length > 0) fetchBlocks(newContract);
 }
 
-/**
- * Aggregates all contract/project data for a given token.
- * Used for both full loads and partial updates.
- */
+// Aggregates all contract/project data for a given token.
+// Used for both full loads and partial updates.
 async function grabData(tokenId, contract, updateOnly = false) {
   try {
     toggleSpin();
@@ -346,36 +339,28 @@ async function grabData(tokenId, contract, updateOnly = false) {
   }
 }
 
-/**
- * Returns the hash for a given tokenId and contract.
- * Handles AB legacy contract logic.
- */
+// Returns the hash for a given tokenId and contract.
+// Handles AB legacy contract logic.
 async function fetchHash(tokenId, contract) {
   return nameMap[contract] == "AB"
     ? instance[contract].showTokenHashes(tokenId)
     : instance[contract].tokenIdToHash(tokenId);
 }
 
-/**
- * Resolves the projectId for a given tokenId and contract.
- */
+// Resolves the projectId for a given tokenId and contract.
 async function fetchProjectId(tokenId, contract) {
   return instance[contract].tokenIdToProjectId(tokenId);
 }
 
-/**
- * Fetches project script info/details depending on contract version.
- */
+// Fetches project script info/details depending on contract version.
 async function fetchProjectInfo(projId, contract, isV3) {
   return isV3
     ? instance[contract].projectScriptDetails(projId)
     : instance[contract].projectScriptInfo(projId);
 }
 
-/**
- * Aggregates all script segments for a project into a single string.
- * Uses batching for performance on large scripts.
- */
+// Aggregates all script segments for a project into a single string.
+// Uses batching for performance on large scripts.
 async function constructScript(projId, projectInfo, contract) {
   const scriptCount = Number(projectInfo.scriptCount);
   let fullScript = "";
@@ -401,25 +386,19 @@ async function constructScript(projId, projectInfo, contract) {
   return fullScript;
 }
 
-/**
- * Fetches project details for a given projectId and contract.
- */
+// Fetches project details for a given projectId and contract.
 async function fetchProjectDetails(projId, contract) {
   return instance[contract].projectDetails(projId);
 }
 
-/**
- * Returns the owner address and ENS name for a token.
- */
+// Returns the owner address and ENS name for a token.
 async function fetchOwner(tokenId, contract) {
   const owner = await instance[contract].ownerOf(tokenId);
   const ensName = await provider.lookupAddress(owner).catch(() => null);
   return { owner, ensName };
 }
 
-/**
- * Extracts the external library name from project metadata.
- */
+// Extracts the external library name from project metadata.
 function extractLibraryName(projectInfo) {
   if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
     return projectInfo[0].trim();
@@ -428,9 +407,7 @@ function extractLibraryName(projectInfo) {
   }
 }
 
-/**
- * Fetches edition and minted count for a project.
- */
+// Fetches edition and minted count for a project.
 async function fetchEditionInfo(projId, contract, isV3) {
   const invo =
     await instance[contract][isV3 ? "projectStateData" : "projectTokenInfo"](
@@ -443,18 +420,14 @@ async function fetchEditionInfo(projId, contract, isV3) {
   };
 }
 
-/**
- * Returns the count of external asset dependencies for a project.
- */
+// Returns the count of external asset dependencies for a project.
 async function fetchExtDepCount(projId, contract) {
   const count =
     await instance[contract].projectExternalAssetDependencyCount(projId);
   return count == 0 ? null : count;
 }
 
-/**
- * Fetches all external asset dependency CIDs for a project.
- */
+// Fetches all external asset dependency CIDs for a project.
 async function fetchDependencies(projId, extDepCount, contract) {
   const cidPromises = Array.from({ length: Number(extDepCount) }, (_, i) =>
     instance[contract].projectExternalAssetDependencyByIndex(projId, i),
@@ -462,9 +435,7 @@ async function fetchDependencies(projId, extDepCount, contract) {
   return Promise.all(cidPromises);
 }
 
-/**
- * Returns formatted external dependency objects for v2 contracts.
- */
+// Returns formatted external dependency objects for v2 contracts.
 async function fetchV2CIDs(projId, extDepCount, contract) {
   const cidTuples = await fetchDependencies(projId, extDepCount, contract);
   return cidTuples.map((tuple) => ({
@@ -475,10 +446,8 @@ async function fetchV2CIDs(projId, extDepCount, contract) {
   }));
 }
 
-/**
- * Returns formatted external dependency objects for v3 contracts.
- * Handles on-chain and off-chain dependency types.
- */
+// Returns formatted external dependency objects for v3 contracts.
+// Handles on-chain and off-chain dependency types.
 async function fetchV3CIDs(projId, extDepCount, contract) {
   const cidTuples = await fetchDependencies(projId, extDepCount, contract);
 
@@ -525,9 +494,7 @@ async function fetchV3CIDs(projId, extDepCount, contract) {
   });
 }
 
-/**
- * Returns preferred IPFS and Arweave gateways for a contract.
- */
+// Returns preferred IPFS and Arweave gateways for a contract.
 async function fetchGateway(contract) {
   const [ipfs, arweave] = await Promise.all([
     instance[contract].preferredIPFSGateway(),
@@ -536,10 +503,8 @@ async function fetchGateway(contract) {
   return { ipfs, arweave };
 }
 
-/**
- * Updates contractData and UI after fetching new token/project info.
- * Triggers info panel, frame, and localStorage updates.
- */
+// Updates contractData and UI after fetching new token/project info.
+// Triggers info panel, frame, and localStorage updates.
 function update(
   tokenId,
   contract,
@@ -615,10 +580,8 @@ function update(
   toggleSpin(false);
 }
 
-/**
- * Stores script and token metadata in localStorage for rendering.
- * Handles special cases for dependencies and gateway replacement.
- */
+// Stores script and token metadata in localStorage for rendering.
+// Handles special cases for dependencies and gateway replacement.
 function pushItemToLocalStorage(
   contract,
   tokenId,
@@ -703,9 +666,7 @@ function pushItemToLocalStorage(
   );
 }
 
-/**
- *   Rewrites unreliable IPFS gateway URLs to a default for reliability.
- */
+// Rewrites unreliable IPFS gateway URLs to a default for reliability.
 const replaceIPFSGateways = (scriptContent) => {
   return scriptContent.replace(
     /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud)/g,
@@ -767,9 +728,7 @@ function showExtDep(dependency) {
   return !isOnchain && !isArtBlocksRegistry;
 }
 
-/**
- * Returns external dependency type for display.
- */
+// Returns external dependency type for display.
 function getExtDepType(dependency, contract) {
   if (nameMap[contract] === "BMFLEX") {
     return "ipfs";
@@ -917,27 +876,21 @@ function updateInfo(
   update();
 }
 
-/**
- * Returns a shortened tokenId for display.
- */
+// Returns a shortened tokenId for display.
 function shortId(tokenId) {
   return tokenId < 1000000
     ? tokenId
     : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0;
 }
 
-/**
- * Returns a shortened Ethereum address for display.
- */
+// Returns a shortened Ethereum address for display.
 function shortAddr(address) {
   return `${address.substring(0, 6)}...${address.substring(
     address.length - 4,
   )}`;
 }
 
-/**
- * Returns edition/minted string for UI.
- */
+// Returns edition/minted string for UI.
 function editionTxt(edition, minted) {
   return edition - minted > 0
     ? `${minted} / ${edition} Minted`
@@ -1031,10 +984,8 @@ async function injectFrame() {
   }
 }
 
-/**
- * Handles token selection logic based on search query.
- * Delegates to numeric, curated, or other query handlers.
- */
+// Handles token selection logic based on search query.
+// Delegates to numeric, curated, or other query handlers.
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
     getRandom(listManager.filteredList);
@@ -1049,9 +1000,7 @@ function getToken(line, searchQuery) {
   clearPanels();
 }
 
-/**
- * Handles numeric search queries for token selection.
- */
+// Handles numeric search queries for token selection.
 function handleNumericQuery(searchQuery) {
   const { contract, projId } = contractData;
   const id = parseInt(searchQuery.match(/\s*(\d+)/)[1]);
@@ -1063,10 +1012,8 @@ function handleNumericQuery(searchQuery) {
   grabData(tokenId, contract, true);
 }
 
-/**
- * Handles non-numeric search queries for token selection.
- * Supports direct token id or random selection.
- */
+// Handles non-numeric search queries for token selection.
+// Supports direct token id or random selection.
 function handleOtherQuery(line, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*Work/;
   const [_, listContract, projIdStr, tokenStr] = line.match(regex);
@@ -1092,9 +1039,7 @@ function handleOtherQuery(line, searchQuery) {
   grabData(tokenId, contract);
 }
 
-/**
- * Selects a random item from a list or object and loads it.
- */
+// Selects a random item from a list or object and loads it.
 function getRandom(source) {
   if (Array.isArray(source)) {
     const randomLine = source[Math.floor(Math.random() * source.length)];
@@ -1111,9 +1056,7 @@ function getRandom(source) {
   }
 }
 
-/**
- * Generates a random hash and tokenId for algorithmic exploration.
- */
+// Generates a random hash and tokenId for algorithmic exploration.
 function generateRandomHashAndToken() {
   const randomHash = Array.from({ length: 64 }, () =>
     Math.floor(Math.random() * 16).toString(16),
@@ -1130,9 +1073,7 @@ function generateRandomHashAndToken() {
   return { hash: randomHash, tokenId: randomToken };
 }
 
-/**
- * Loads a random hash and tokenId for generative algorithm exploration.
- */
+// Loads a random hash and tokenId for generative algorithm exploration.
 function exploreAlgo() {
   if (contractData.detail[0] === "Unigrids") return;
 
@@ -1157,9 +1098,7 @@ function exploreAlgo() {
   update(...Object.values(contractData));
 }
 
-/**
- * Increments tokenId for navigation, wraps to zero if at max.
- */
+// Increments tokenId for navigation, wraps to zero if at max.
 function incrementTokenId() {
   let numericId = getId(contractData.tokenId);
 
@@ -1174,9 +1113,7 @@ function incrementTokenId() {
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
-/**
- * Decrements tokenId for navigation, wraps to max if at zero.
- */
+// Decrements tokenId for navigation, wraps to max if at zero.
 function decrementTokenId() {
   let numericId = getId(contractData.tokenId);
 
@@ -1191,16 +1128,12 @@ function decrementTokenId() {
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
-/**
- * Returns the numeric portion of a tokenId (last 6 digits).
- */
+// Returns the numeric portion of a tokenId (last 6 digits).
 function getId(tokenId) {
   return tokenId % 1000000;
 }
 
-/**
- * Starts a random artwork loop with the given interval and action.
- */
+// Starts a random artwork loop with the given interval and action.
 function loopRandom(interval, action) {
   if (loopState.intervalId) {
     clearInterval(loopState.intervalId);
@@ -1224,9 +1157,7 @@ function loopRandom(interval, action) {
   console.log(loopState);
 }
 
-/**
- * Executes the specified loop action (all, favorites, curated, etc).
- */
+// Executes the specified loop action (all, favorites, curated, etc).
 function performAction(action, favorite) {
   if (action === "allLoop") getRandom(listManager.originalList);
   else if (action === "favLoop") getRandom(favorite);
@@ -1243,9 +1174,7 @@ function performAction(action, favorite) {
   }
 }
 
-/**
- * Stops the random artwork loop.
- */
+// Stops the random artwork loop.
 function stopRandomLoop() {
   if (loopState.intervalId) {
     clearInterval(loopState.intervalId);
@@ -1254,9 +1183,7 @@ function stopRandomLoop() {
   localStorage.setItem("loopState", JSON.stringify(loopState));
 }
 
-/**
- * Checks loop state and resumes loop if needed.
- */
+// Checks loop state and resumes loop if needed.
 function checkLoop() {
   dom.loopInput.placeholder = `${loopState.interval / 60000} min`;
 
@@ -1264,9 +1191,7 @@ function checkLoop() {
     loopRandom(loopState.interval, loopState.action);
 }
 
-/**
- * Handles loop start/stop and interval input from UI.
- */
+// Handles loop start/stop and interval input from UI.
 function handleLoop(action) {
   clearPanels();
 
@@ -1294,17 +1219,13 @@ function handleLoop(action) {
   updateLoopButton();
 }
 
-/**
- * Stops the loop and updates UI controls.
- */
+// Stops the loop and updates UI controls.
 function stopLoop() {
   stopRandomLoop();
   updateLoopButton();
 }
 
-/**
- * Saves the current artwork preview as an HTML file and favorites it.
- */
+// Saves the current artwork preview as an HTML file and favorites it.
 async function saveOutput() {
   const content = dom.frame.contentDocument.documentElement.outerHTML;
   let id = shortId(contractData.tokenId);
@@ -1326,9 +1247,7 @@ async function saveOutput() {
   pushFavoriteToStorage(id);
 }
 
-/**
- * Adds the current artwork to favorites in localStorage.
- */
+// Adds the current artwork to favorites in localStorage.
 function pushFavoriteToStorage(id) {
   const key = `
     <div class="fav-item">
@@ -1340,9 +1259,7 @@ function pushFavoriteToStorage(id) {
   setDisplay();
 }
 
-/**
- * Removes a favorite artwork from localStorage.
- */
+// Removes a favorite artwork from localStorage.
 function deleteFavoriteFromStorage(key) {
   if (favorite.hasOwnProperty(key)) {
     delete favorite[key];
@@ -1351,9 +1268,7 @@ function deleteFavoriteFromStorage(key) {
   }
 }
 
-/**
- * Loads a favorite artwork into the preview frame.
- */
+// Loads a favorite artwork into the preview frame.
 function frameFavorite(key) {
   clearDataStorage();
   contractData = favorite[key];
@@ -1361,9 +1276,7 @@ function frameFavorite(key) {
   update(...Object.values(contractData));
 }
 
-/**
- * Renders the list of favorite artworks in the UI.
- */
+// Renders the list of favorite artworks in the UI.
 function displayFavoriteList() {
   dom.favPanel.innerHTML = "";
 
@@ -1406,28 +1319,22 @@ function displayFavoriteList() {
   }
 }
 
-/**
- * Utility: Clears contract and script data from localStorage.
- * Used when switching projects or resetting state.
- */
+// Utility: Clears contract and script data from localStorage.
+// Used when switching projects or resetting state.
 const clearDataStorage = () => {
   ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
 };
 
-/**
- * Utility: Hides all UI panels and overlays.
- * Keeps UI state consistent when navigating or resetting.
- */
+// Utility: Hides all UI panels and overlays.
+// Keeps UI state consistent when navigating or resetting.
 const clearPanels = () => {
   [dom.overlay, dom.infobar, ...panels].forEach((el) =>
     el.classList.remove("active"),
   );
 };
 
-/**
- * Utility: Shows/hides a specific panel and manages overlay state.
- * Ensures only one panel is active at a time.
- */
+// Utility: Shows/hides a specific panel and manages overlay state.
+// Ensures only one panel is active at a time.
 const togglePanel = (panelElement) => {
   panels.forEach((p) =>
     p !== panelElement ? p.classList.remove("active") : (p.scrollTop = 0),
@@ -1439,18 +1346,14 @@ const togglePanel = (panelElement) => {
   );
 };
 
-/**
- * Utility: Shows or hides the loading spinner.
- * Used for async operations and feedback.
- */
+// Utility: Shows or hides the loading spinner.
+// Used for async operations and feedback.
 const toggleSpin = (show = true) => {
   dom.spinner.style.display = show ? "block" : "none";
 };
 
-/**
- * Utility: Updates loop control button visibility based on loop state.
- * Keeps UI feedback clear for looping actions.
- */
+// Utility: Updates loop control button visibility based on loop state.
+// Keeps UI feedback clear for looping actions.
 const updateLoopButton = () => {
   document.querySelector(".fa-repeat").style.display =
     loopState.isLooping !== "true" ? "inline-block" : "none";
@@ -1459,10 +1362,8 @@ const updateLoopButton = () => {
     loopState.isLooping === "true" ? "inline-block" : "none";
 };
 
-/**
- * Utility: Sets visibility and state for main UI controls.
- * Ensures controls are only shown when relevant data is present.
- */
+// Utility: Sets visibility and state for main UI controls.
+// Ensures controls are only shown when relevant data is present.
 const setDisplay = (skipOverlay = false) => {
   const hasContract = !!contractData;
   const hasRPC = !!rpcUrl;
@@ -1483,10 +1384,8 @@ const setDisplay = (skipOverlay = false) => {
   if (!hasFavorites) clearPanels();
 };
 
-/**
- * Tooltip text mapping for UI controls.
- * Used for contextual help and improved UX.
- */
+// Tooltip text mapping for UI controls.
+// Used for contextual help and improved UX.
 const tooltipTexts = {
   info: "More Info",
   settings: "Instructions",
@@ -1501,15 +1400,11 @@ const tooltipTexts = {
   favIcon: "Favorites",
 };
 
-/**
- * Tooltip display timer for delayed show/hide.
- */
+// Tooltip display timer for delayed show/hide.
 let tooltipTimeout = null;
 
-/**
- * Shows a tooltip for a given element after a delay.
- * Used for contextual UI hints.
- */
+// Shows a tooltip for a given element after a delay.
+// Used for contextual UI hints.
 function showTooltip(element, text) {
   if (tooltipTimeout) {
     clearTimeout(tooltipTimeout);
@@ -1541,9 +1436,7 @@ function showTooltip(element, text) {
   }, 500);
 }
 
-/**
- * Hides the tooltip and clears timer.
- */
+// Hides the tooltip and clears timer.
 function hideTooltip() {
   if (tooltipTimeout) {
     clearTimeout(tooltipTimeout);
@@ -1554,9 +1447,7 @@ function hideTooltip() {
   dom.tooltip.style.opacity = "";
 }
 
-/**
- * Initializes tooltip event listeners for all mapped UI controls.
- */
+// Initializes tooltip event listeners for all mapped UI controls.
 function initTooltips() {
   Object.entries(tooltipTexts).forEach(([key, text]) => {
     const element = dom[key];
@@ -1568,10 +1459,8 @@ function initTooltips() {
   });
 }
 
-/**
- * Sets the UI theme (light, dark, or system).
- * Persists preference and updates DOM.
- */
+// Sets the UI theme (light, dark, or system).
+// Persists preference and updates DOM.
 function setTheme(themeName) {
   dom.themeBtns.forEach((btn) =>
     btn.setAttribute("data-active", btn.dataset.theme === themeName),
@@ -1589,9 +1478,7 @@ function setTheme(themeName) {
   localStorage.setItem("themePreference", themeName);
 }
 
-/**
- * Initializes theme on page load.
- */
+// Initializes theme on page load.
 function initTheme() {
   setTheme(localStorage.getItem("themePreference") || "system");
 }
