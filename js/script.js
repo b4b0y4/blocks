@@ -188,10 +188,8 @@ function handleKeyboardNavigation(event) {
   }
 }
 
-/**
- * Batch fetches block/project data for given contracts.
- * Used for initial population and contract updates.
- */
+// Batch fetches block/project data for given contracts.
+// Used for initial population and contract updates.
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
   console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
