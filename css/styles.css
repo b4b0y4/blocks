@@ -546,6 +546,11 @@ iframe {
   .search-input {
     padding: 5px 18px 5px 32px;
     font-size: 1.2em;
+    width: 82px;
+  }
+
+  .spinner {
+    right: 18px;
   }
 
   .fav-icon {
