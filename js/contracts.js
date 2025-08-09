@@ -7,16 +7,19 @@ export const contractRegistry = {
   AB: {
     abi: abi.v1,
     address: "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a",
+    closed: true,
   },
   ABII: {
     abi: abi.v2,
     address: "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270",
     startProjId: 3,
+    closed: true,
   },
   ABIII: {
     abi: abi.v3,
     address: "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069",
     startProjId: 374,
+    closed: true,
   },
   ABC: {
     abi: abi.v3,
@@ -33,17 +36,20 @@ export const contractRegistry = {
     abi: abi.v2,
     address: "0x64780CE53f6e966E18a22Af13a2F97369580Ec11",
     platform: "Art Blocks &times; Pace",
+    closed: true,
   },
   ABXPACEII: {
     abi: abi.v3,
     address: "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36",
     platform: "Art Blocks &times; Pace",
     startProjId: 5,
+    closed: true,
   },
   ABXBM: {
     abi: abi.v3,
     address: "0x145789247973C5D612bF121e9E4Eef84b63Eb707",
     platform: "Art Blocks &times; Bright Moments",
+    closed: true,
   },
   ABS: {
     abi: abi.v3Flex,
@@ -209,21 +215,25 @@ export const contractRegistry = {
     abi: abi.bm,
     address: "0x0A1BBD57033F57E7B6743621b79fCB9Eb2CE3676",
     platform: "Bright Moments",
+    closed: true,
   },
   BMF: {
     abi: abi.v3,
     address: "0x381233D5584fDb42e46b4D9ba91876479AAb7AcD",
     platform: "Bright Moments",
+    closed: true,
   },
   BMFLEX: {
     abi: abi.v2Flex,
     address: "0x7c3Ea2b7B3beFA1115aB51c09F0C9f245C500B18",
     platform: "Bright Moments",
+    closed: true,
   },
   CITIZEN: {
     abi: abi.v2,
     address: "0xbDdE08BD57e5C9fD563eE7aC61618CB2ECdc0ce0",
     platform: "Bright Moments",
+    closed: true,
   },
   PLOT: {
     abi: abi.v2,
@@ -454,6 +464,7 @@ export const is = {
   flex: [],
   studio: [],
   engine: [],
+  open: [],
 };
 
 // Populate 'is' categories based on registry and ABI naming conventions.
@@ -470,5 +481,6 @@ export const is = {
     if (abiName.includes("Flex")) is.flex.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
     if (!key.startsWith("AB")) is.engine.push(key);
+    if (!contractRegistry[key].closed) is.open.push(key);
   });
 })();

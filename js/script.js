@@ -2,7 +2,7 @@ import { ethers } from "./ethers.min.js";
 import { list, libs } from "./lists.js";
 import { contractRegistry, is } from "./contracts.js";
 
-// fetchBlocks([...is.studio]);
+// fetchBlocks([...is.open]);
 
 // DOM references for all interactive and display elements.
 // Centralized for maintainability and clarity.
