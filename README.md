@@ -66,17 +66,14 @@ contractRegistry = {
 }
 ```
 
-2. The new contract will be automatically detected by `checkForNewContracts()`. Check the console for new contracts:
+2. Use `fetchBlocks(["YOURCONTRACT"])` and check the console for new contracts:
    - Copy these entries and add them manually to the `list` array in `lists.js`
    - Add '!' to the end of any line to ignore it in the UI
    - Example output format:
    ```js
-   "YOURCONTRACT0 - Project Name / Artist Name - X items",
-   "YOURCONTRACT1 - Another Project / Another Artist - Y items!", // '!' ignore this line in the UI
+   "YOURCONTRACT0 # Project Name / Artist Name # X Works",
+   "YOURCONTRACT1 # Another Project / Another Artist # Y Works!", // '!' ignore this line in the UI
    ```
-
-3. Alternatively, you can directly use the fetch functionality:
-   - `fetchBlocks(["YOURCONTRACT"])` - fetch collections from a specific contract
 
 ### Required Contract Functions
 

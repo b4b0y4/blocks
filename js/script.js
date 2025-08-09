@@ -238,16 +238,6 @@ async function fetchBlocks(array) {
   console.log("%cDONE!!!", "color: lime;");
 }
 
-// Checks for contracts in registry not present in list and fetches them.
-function checkForNewContracts() {
-  const existingContracts = new Set(list.map((item) => item.split(/[0-9]/)[0]));
-  const newContract = Object.keys(contractRegistry).filter(
-    (key) => !existingContracts.has(key),
-  );
-
-  if (newContract.length > 0) fetchBlocks(newContract);
-}
-
 // Aggregates all contract/project data for a given token.
 // Used for both full loads and partial updates.
 async function grabData(tokenId, contract, updateOnly = false) {
@@ -1593,7 +1583,6 @@ window
 
 updateLoopButton();
 checkLoop();
-checkForNewContracts();
 setDisplay();
 initTooltips();
 initTheme();
