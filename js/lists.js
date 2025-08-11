@@ -557,7 +557,7 @@ export const list = [
   "ABSLXXII0 # Cities / Efdot x Diid # 293 Works",
   "ABSLXXIII0 # MazeFlipper / Beervangeer x SuperGood # 43 Works",
   "ABSLXXIV0 # Pacific Spirit / Emily Nicoll & 747 # 300 Works",
-  "ABSLXXV0 # SINE / Shaunaq # 48 Works",
+  "ABSLXXV0 # SINE / Shaunaq # 51 Works",
   "ABSLXXVIII0 # DDUST / jiwa # 500 Works",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38758 Works",
