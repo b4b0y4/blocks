@@ -574,6 +574,7 @@ export const list = [
   "ABXBM0 # Metropolis / mpkoz # 940 Works",
   "ABXBM1 # 923 EMPTY ROOMS / Casey REAS # 924 Works",
   "GLITCH1 # nameless dread / diewiththemostlikes # 669 Works",
+  "GLITCHII2 # LIFT (a self portrait) / Snowfro # 1 Work",
   "BM0 # MOMENTS /  # 0 Works!",
   "BM1 # Stellaraum / Alida Sun # 66 Works",
   "BM2 # Parnassus / mpkoz # 100 Works",

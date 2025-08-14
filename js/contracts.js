@@ -432,6 +432,13 @@ export const contractRegistry = {
     address: "0xE18F2247FE4A69c0E2210331B0604F6D10FecE9E",
     platform: "Glitch Gallery",
     startProjId: 1,
+    closed: true,
+  },
+  GLITCHII: {
+    abi: abi.v3Flex,
+    address: "0x0000000222D40f1aE80791fdC42fa6eb5dA6f80B",
+    platform: "Glitch Gallery",
+    startProjId: 2,
   },
   STITCH: {
     abi: abi.v3Flex,
