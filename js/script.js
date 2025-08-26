@@ -192,7 +192,7 @@ function handleKeyboardNavigation(event) {
 // Used for initial population and contract updates.
 async function fetchBlocks(array) {
   await new Promise((resolve) => setTimeout(resolve, 100));
-  console.log("%cLOOKING FOR BLOCKS...", "color: lime;");
+  console.log("%cLOOKING FOR BLOCKS...", "color: red;");
 
   for (const contractName of array) {
     const n = indexMap[contractName];
@@ -232,8 +232,8 @@ async function fetchBlocks(array) {
     }
 
     blocks.length > 0
-      ? console.log(blocks.join("\n"))
-      : console.log(`${contractName} ✅`);
+      ? console.log(`%c${blocks.join("\n")}`, "color: violet")
+      : console.log(`[${contractName}]`);
   }
   console.log("%cDONE!!!", "color: lime;");
 }
