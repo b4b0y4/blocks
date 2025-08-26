@@ -745,7 +745,7 @@ export const list = [
   "PROOF4 # Lycorises / Xin Liu and Nan Zhao # 99 Works",
   "PROOF5 # Impossible Distance / ippsketch # 600 Works",
   "PROOF6 # cathedral study / Eric De Giuli # 600 Works",
-  "PROOF7 # Deja Vu / Melissa Wiederrecht # 515 Works",
+  "PROOF7 # Deja Vu / Melissa Wiederrecht # 516 Works",
   "PROOF8 # WaveShapes / Owen Moore # 235 Works",
   "PROOF9 # Ephemeral Tides / Ryan Bell # 309 Works",
   "PROOF10 # StackSlash / Kelly Milligan # 195 Works",
