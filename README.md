@@ -46,34 +46,34 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 ## Development
 
 ### Code Structure
-- `contracts.js` - Contract definitions and classification
-- `abis.js` - abi references
-- `lists.js` - Collection data and library references
-- `script.js` - Main application logic and UI interactions
+- `js/script.js`: Main entry point. Initializes all modules and wires up event listeners, connecting the UI to the application logic.
+- `js/state.js`: Manages the application's state, including the current artwork, user's favorites, and loop settings. It also handles persistence to `localStorage`.
+- `js/actions.js`: The application's "controller." It contains all the logic for handling user interactions, such as selecting a token, starting a loop, or saving an artwork.
+- `js/ui.js`: The "view" layer. It is responsible for all DOM manipulation, rendering data, and managing UI components. It does not contain any application logic.
+- `js/ethereum.js`: Handles all interactions with the Ethereum blockchain, such as fetching token data and contract details.
+- `js/block-fetcher.js`: A developer utility used to fetch new collection data from contracts.
+- `js/contracts.js`: Contains contract definitions, addresses, and classifications.
+- `js/abis.js`: Stores ABI (Application Binary Interface) references for the contracts.
+- `js/lists.js`: Contains curated collection data and references to JavaScript libraries used by the artworks.
+- `js/theme.js`: Manages the application's visual theme (light/dark/system).
+- `js/tooltips.js`: Handles the display of tooltips for UI elements.
 
 ### Adding New Contracts
 
-1. In `contracts.js`, add your contract data to `contractRegistry`:
-```js
-contractRegistry = {
-  // ... existing contracts
-  YOURCONTRACT: {
-    abi: abi.v3, // Choose/add abi from abis.js
-    address: "0x...", // Contract address
-    platform: "Your Platform", // Optional
-    startProjId: 1, // Optional, default is 0
-  }
-}
-```
-
-2. Use `fetchBlocks(["YOURCONTRACT"])` and check the console for new contracts:
-   - Copy these entries and add them manually to the `list` array in `lists.js`
-   - Add '!' to the end of any line to ignore it in the UI
-   - Example output format:
-   ```js
-   "YOURCONTRACT0 # Project Name / Artist Name # X Works",
-   "YOURCONTRACT1 # Another Project / Another Artist # Y Works!", // '!' ignore this line in the UI
-   ```
+1. In `js/contracts.js`, add your contract data to `contractRegistry`.
+2. Open the application in your browser and open the developer console.
+3. In the console, you can now fetch blocks in several convenient ways:
+    - **By variable (recommended):** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
+    - **By string:** `fetchBlocks('YOURCONTRACT')` (case-insensitive)
+    - **Multiple contracts:** `fetchBlocks([yourcontract, anothercontract])`
+    - **Using predefined lists:** `fetchBlocks(is.studio)`
+4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `js/lists.js`.
+    - Add a `!` to the end of any line to ignore it in the UI.
+    - Example output format:
+      ```js
+      "YOURCONTRACT0 # Project Name / Artist Name # X Works",
+      "YOURCONTRACT1 # Another Project / Another Artist # Y Works!", // '!' ignores this line
+      ```
 
 ### Required Contract Functions
 
