@@ -1,3 +1,8 @@
+// This file serves as a central registry for all smart contracts used in the application.
+// It maps a short, human-readable name (e.g., "AB") to its configuration,
+// including the contract address, ABI, and other platform-specific metadata.
+// It also categorizes contracts by features (e.g., V3, Flex) for easier handling elsewhere.
+
 import { abi } from "./abis.js";
 
 // Registry of all supported contracts, keyed by short name.

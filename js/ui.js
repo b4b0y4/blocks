@@ -1,0 +1,709 @@
+// This module acts as the "view" layer of the application.
+// It is responsible for all DOM manipulation, rendering data to the screen,
+// and managing the visual state of UI components. It does not contain business logic.
+
+import { libs } from "./lists.js";
+import { contractRegistry, is } from "./contracts.js";
+import * as theme from "./theme.js";
+import * as tooltips from "./tooltips.js";
+import * as listViews from "./list-views.js";
+
+// Modules are injected from the main script.js to avoid circular dependencies.
+let state, eth;
+export function init(stateModule, ethModule) {
+  state = stateModule;
+  eth = ethModule;
+}
+
+// A centralized object for all DOM element references for easy access.
+export const dom = {
+  root: document.documentElement,
+  instruction: document.querySelector(".instruction"),
+  rpcUrlInput: document.getElementById("rpcUrl"),
+  themeBtns: document.querySelectorAll(".theme-button"),
+  settings: document.getElementById("settings"),
+  frame: document.getElementById("frame"),
+  infobar: document.querySelector(".infobar"),
+  info: document.getElementById("info"),
+  save: document.getElementById("saveBtn"),
+  dec: document.getElementById("decrementBtn"),
+  inc: document.getElementById("incrementBtn"),
+  explore: document.getElementById("explore"),
+  loop: document.getElementById("loop"),
+  repeatIcon: document.getElementById("repeatIcon"),
+  dropMenu: document.getElementById("dropMenu"),
+  allLoop: document.getElementById("loopAll"),
+  favLoop: document.getElementById("favLoop"),
+  curatedLoop: document.getElementById("curatedLoop"),
+  selectedLoop: document.getElementById("selectedLoop"),
+  oobLoop: document.getElementById("oobLoop"),
+  stopLoop: document.getElementById("stopLoop"),
+  loopInput: document.getElementById("loopInput"),
+  randomButton: document.getElementById("randomButton"),
+  searchBox: document.querySelector(".search-box"),
+  search: document.getElementById("searchInput"),
+  searchIcon: document.getElementById("searchIcon"),
+  favIcon: document.getElementById("favIcon"),
+  spinner: document.querySelector(".spinner"),
+  panel: document.querySelector(".panel"),
+  listPanel: document.querySelector(".list-panel"),
+  favPanel: document.querySelector(".fav-panel"),
+  overlay: document.querySelector(".overlay"),
+  tooltip: document.querySelector(".tooltip"),
+};
+
+// A list of all panels that can be toggled, used for easy state management.
+const panels = [
+  dom.instruction,
+  dom.panel,
+  dom.listPanel,
+  dom.favPanel,
+  dom.dropMenu,
+];
+
+// This is the main update function, called after all data for an artwork has been fetched.
+// It orchestrates the entire UI update process.
+export function update(
+  tokenId,
+  contract,
+  projId,
+  hash,
+  script,
+  detail,
+  owner,
+  ensName,
+  extLib,
+  edition,
+  minted,
+  extDep,
+  ipfs,
+  arweave,
+) {
+  // Create a consolidated data object and save it to the state.
+  const contractData = {
+    tokenId,
+    contract,
+    projId,
+    hash,
+    script,
+    detail,
+    owner,
+    ensName,
+    extLib,
+    edition,
+    minted,
+    extDep,
+    ipfs,
+    arweave,
+  };
+  state.setContractData(contractData);
+  console.log(contractData);
+
+  // Prepare and store the data needed for rendering the artwork in the iframe.
+  pushItemToLocalStorage(
+    contract,
+    tokenId,
+    hash,
+    script,
+    extLib,
+    extDep,
+    ipfs,
+    arweave,
+  );
+
+  // To ensure a clean slate for the new artwork, we replace the old iframe with a new one.
+  const oldFrame = dom.frame;
+  const frameContainer = oldFrame.parentNode;
+  const newFrame = document.createElement("iframe");
+  newFrame.id = "frame";
+  newFrame.src = "about:blank";
+  frameContainer.replaceChild(newFrame, oldFrame);
+  dom.frame = newFrame;
+
+  // Update the various UI components with the new data.
+  const platform = getPlatform(contract, projId);
+  updateInfo(
+    contract,
+    owner,
+    ensName,
+    extLib,
+    detail,
+    tokenId,
+    platform,
+    edition,
+    minted,
+    extDep,
+  );
+
+  setDisplay();
+  injectFrame();
+  toggleSpin(false);
+}
+
+// Prepares and stores the necessary data for the artwork's script in localStorage.
+// This data is then read by the sandboxed iframe to render the artwork.
+function pushItemToLocalStorage(
+  contract,
+  tokenId,
+  hash,
+  script,
+  extLib,
+  extDep,
+  ipfs,
+  arweave,
+) {
+  // Some older contracts use unreliable IPFS gateways; this replaces them.
+  if (
+    (eth.nameMap[contract] === "BMFLEX" &&
+      !tokenId.toString().startsWith("16")) ||
+    (eth.nameMap[contract] === "HODL" && tokenId.toString().startsWith("13"))
+  ) {
+    script = replaceIPFSGateways(script);
+  }
+
+  const process = extLib.startsWith("processing")
+    ? "application/processing"
+    : "";
+  const src = [libs[extLib]];
+
+  // Handle dependencies that are also libraries.
+  if (extDep.length > 0 && extDep[0].cid?.includes("@")) {
+    src.push(libs[extDep[0].cid]);
+  }
+
+  let tokenIdHash = "";
+
+  // The tokenData object is constructed differently depending on contract features.
+  if (extDep.length > 0) {
+    const cids = extDep
+      .map((dep) => {
+        if (dep.isOnchain) {
+          return `{
+             "cid": "${dep.cid}",
+             "dependency_type": "${dep.dependency_type}",
+             "data": ${JSON.stringify(dep.data)},
+             "bytecode_address": "${dep.bytecode_address}"
+           }`;
+        }
+
+        let cid = dep.cid;
+        if (
+          eth.nameMap[contract] === "BMFLEX" &&
+          tokenId.toString().startsWith("16")
+        ) {
+          cid = replaceIPFSGateways(cid);
+        }
+
+        const dependencyType =
+          cid.startsWith("Qm") ||
+          cid.startsWith("baf") ||
+          cid.includes("/ipfs/")
+            ? "IPFS"
+            : /^[a-zA-Z0-9_-]{43}$/.test(cid)
+              ? "ARWEAVE"
+              : "ART_BLOCKS_DEPENDENCY_REGISTRY";
+
+        return `{
+           "cid": "${cid}",
+           "dependency_type": "${dependencyType}",
+           "data": null
+         }`;
+      })
+      .join(",");
+
+    tokenIdHash = `let tokenData = {
+       "tokenId": "${tokenId}",
+       "externalAssetDependencies": [${cids}],
+       "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
+       "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
+       "hash": "${hash}"
+     }`;
+  } else if (eth.nameMap[contract] === "AB") {
+    tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
+  } else {
+    tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
+  }
+
+  localStorage.setItem(
+    "scriptData",
+    JSON.stringify({ src, tokenIdHash, process, script }),
+  );
+}
+
+// Rewrites unreliable IPFS gateway URLs to a more stable default.
+const replaceIPFSGateways = (scriptContent) => {
+  return scriptContent.replace(
+    /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud)/g,
+    "https://ipfs.io",
+  );
+};
+
+// Determines the curation status for display based on project ID for legacy Art Blocks contracts.
+function getCuration(projId) {
+  const playground = [
+    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
+    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
+    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
+    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
+    373,
+  ];
+
+  return state.curated.includes(projId)
+    ? "Art Blocks Curated"
+    : playground.includes(projId)
+      ? "Art Blocks Playground"
+      : projId < 374
+        ? "Art Blocks Factory"
+        : "Art Blocks Presents";
+}
+
+// Determines the platform name for display (e.g., "Art Blocks Studio").
+function getPlatform(contract, projId) {
+  const contractName = eth.nameMap[contract];
+
+  if (["AB", "ABII", "ABIII"].includes(contractName)) {
+    return getCuration(projId);
+  }
+  if (is.studio.includes(contractName)) {
+    return "Art Blocks Studio";
+  }
+
+  return contractRegistry[contractName].platform || "";
+}
+
+// Determines if an external dependency should be shown in the UI.
+function showExtDep(dependency) {
+  if (!dependency) return false;
+
+  const isOnchain = dependency.dependency_type === "ONCHAIN";
+  const isArtBlocksRegistry =
+    dependency.dependency_type === "ART_BLOCKS_DEPENDENCY_REGISTRY";
+
+  return !isOnchain && !isArtBlocksRegistry;
+}
+
+// Determines the type of an external dependency for display.
+function getExtDepType(dependency, contract) {
+  if (eth.nameMap[contract] === "BMFLEX") {
+    return "ipfs";
+  }
+
+  const isIPFS =
+    dependency.dependency_type === "IPFS" ||
+    (dependency.cid &&
+      (dependency.cid.startsWith("Qm") || dependency.cid.startsWith("baf")));
+
+  return isIPFS ? "ipfs" : "arweave";
+}
+
+// Populates the main info panel with all the artwork details.
+function updateInfo(
+  contract,
+  owner,
+  ensName,
+  extLib,
+  detail,
+  tokenId,
+  platform,
+  edition,
+  minted,
+  extDep,
+) {
+  let artist = detail[1] || "Snowfro";
+  const logs = [];
+
+  // This inner function is used to update the display if the artist name is found asynchronously.
+  const updateDisplay = () => {
+    dom.info.innerHTML = `${detail[0]} #${shortId(tokenId)} / ${artist}`;
+    dom.panel.innerHTML = `
+       <div class="work">${detail[0]}</div>
+       <p>
+         <span class="artist">${artist}${platform ? ` ● ${platform}` : ""}</span><br>
+         <span class="edition">${editionTxt(edition, minted)}</span>
+       </p>
+       <p>${detail[2]}</p>
+       <div class="column-box">
+         <div class="column">
+           ${
+             owner
+               ? createSection(
+                   "OWNER",
+                   `<a href="https://zapper.xyz/account/${owner}" target="_blank">
+               ${ensName || shortAddr(owner)}
+             </a>
+             <span class="copy-txt" data-text="${owner}">
+               <i class="fa-regular fa-copy"></i>
+             </span>`,
+                 )
+               : ""
+           }
+           ${createSection(
+             "CONTRACT",
+             `<a href="https://etherscan.io/address/${
+               eth.instance[contract].target
+             }" target="_blank">
+               ${shortAddr(eth.instance[contract].target)}
+             </a>
+             <span class="copy-txt" data-text="${eth.instance[contract].target}">
+               <i class="fa-regular fa-copy"></i>
+             </span>`,
+           )}
+           ${createSection(
+             "TOKEN ID",
+             `<span class="copy-txt" data-text="${tokenId}">
+               ${tokenId} <i class="fa-regular fa-copy"></i>
+             </span>`,
+           )}
+         </div>
+         <div class="column">
+           ${
+             detail[3]
+               ? createSection(
+                   "ARTIST WEBSITE",
+                   `<a href="${detail[3]}" target="_blank">
+                   ${extractDomain(detail[3])}
+                 </a>`,
+                 )
+               : ""
+           }
+           ${
+             extLib &&
+             !extLib.startsWith("js") &&
+             !extLib.startsWith("svg") &&
+             !extLib.startsWith("custom")
+               ? createSection(
+                   "LIBRARY",
+                   `<span class="no-copy-txt">
+                   ${getLibVersion(extLib)} <br>
+                   ${extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10 ? extDep[0].cid : ""}
+                 </span>`,
+                 )
+               : ""
+           }
+           ${
+             (extDep.length > 0 && showExtDep(extDep[0])) ||
+             eth.nameMap[contract] === "BMFLEX"
+               ? createSection(
+                   "EXTERNAL DEPENDENCY",
+                   `<span class="no-copy-txt">
+                     ${getExtDepType(extDep[0], contract)}
+                   </span>`,
+                 )
+               : ""
+           }
+           ${
+             detail[4]
+               ? createSection(
+                   "LICENSE",
+                   `<span class="no-copy-txt">${detail[4]}</span>`,
+                 )
+               : ""
+           }
+         </div>
+       </div>
+     `;
+    // Adds click-to-copy functionality to the relevant fields.
+    dom.panel.addEventListener("click", (e) => {
+      const copyBtn = e.target.closest(".copy-txt");
+      if (copyBtn) {
+        const textToCopy = copyBtn.getAttribute("data-text");
+        copyToClipboard(textToCopy);
+
+        const icon = copyBtn.querySelector("i");
+        icon.classList.replace("fa-regular", "fa-solid");
+        icon.classList.replace("fa-copy", "fa-check");
+
+        setTimeout(() => {
+          icon.classList.replace("fa-solid", "fa-regular");
+          icon.classList.replace("fa-check", "fa-copy");
+        }, 1000);
+      }
+    });
+  };
+
+  // Some contracts log the artist name to the console; this captures it.
+  dom.frame.contentWindow.console.log = (message) => {
+    if (eth.nameMap[contract] === "BMF" && !logs.length) {
+      artist = message
+        .replace(/Artist\\s*\\d+\\.\\s*/, "")
+        .replace(/\\s*--.*/, "");
+      logs.push(artist);
+      updateDisplay();
+    }
+  };
+
+  updateDisplay();
+}
+
+// --- UI Helper Functions ---
+
+// Shortens a long token ID for cleaner display.
+export function shortId(tokenId) {
+  return tokenId < 1000000
+    ? tokenId
+    : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0;
+}
+
+// Shortens an Ethereum address for cleaner display (e.g., 0x123...456).
+function shortAddr(address) {
+  return `${address.substring(0, 6)}...${address.substring(
+    address.length - 4,
+  )}`;
+}
+
+// Creates the "X / Y Minted" text for the info panel.
+function editionTxt(edition, minted) {
+  return edition - minted > 0
+    ? `${minted} / ${edition} Minted`
+    : `${edition} Work${edition > 1 ? "s" : ""}`;
+}
+
+// A utility to create a labeled section in the info panel.
+function createSection(title, content) {
+  return content
+    ? `<div class="section">
+         <p class="more">
+           ${title} <br>
+           ${content}
+         </p>
+       </div>`
+    : "";
+}
+
+// Extracts the domain name from a URL for display.
+function extractDomain(url) {
+  const match = url.match(/https?:\/\/(?:www\\.)?([^\/]+)(\/.*)?/);
+  return match ? `${match[1]}${match[2] || ""}` : `${url}`;
+}
+
+// Gets the full library version string (e.g., "p5@1.4.0").
+function getLibVersion(extLib) {
+  return (
+    Object.keys(libs).find((key) =>
+      key.startsWith(extLib.replace(/js$/, "") + "@"),
+    ) || extLib
+  );
+}
+
+// Copies the given text to the user's clipboard.
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text);
+}
+
+// Injects the complete HTML and script into the iframe to render the artwork.
+async function injectFrame() {
+  try {
+    const {
+      src = [],
+      tokenIdHash,
+      process,
+      script,
+    } = JSON.parse(localStorage.getItem("scriptData"));
+    const contractData = state.getContractData();
+
+    const styles = `
+      html { height: 100%; }
+      body { min-height: 100%; margin: 0; padding: 0; background-color: transparent; }
+      canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }`;
+
+    // Handle modern three.js which requires an importmap.
+    const hasThree167 = src.some((s) => s && s.includes("three.js/0.167.0"));
+
+    const scriptTags = hasThree167
+      ? `<script type="importmap">
+          {
+            "imports": {
+              "three":  "${src}"
+            }
+          }
+        </script>`
+      : src.map((s) => `<script src="${s}"></script>`).join("");
+
+    const html = contractData.extLib.startsWith("custom")
+      ? `<script>${tokenIdHash}</script>${script}`
+      : `<!DOCTYPE html>
+        <html>
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+            ${scriptTags}
+            <script>${tokenIdHash};</script>
+            <style>${styles}</style>
+          </head>
+          <body>
+            ${
+              process
+                ? `<script type="${process}">${script}</script><canvas></canvas>`
+                : `<canvas${contractData.extLib.startsWith("babylon") ? ' id="babylon-canvas"' : ""}></canvas><script${hasThree167 ? ' type="module"' : ""}>${script}</script>`
+            }
+          </body>
+        </html>`;
+
+    const iframe = dom.frame.contentDocument;
+    iframe.open();
+    iframe.write(html);
+    iframe.close();
+  } catch (error) {
+    console.error("injectFrame:", error);
+  }
+}
+
+// --- UI Actions (to be called from actions.js) ---
+export function getLoopInputValue() {
+  return dom.loopInput.value;
+}
+
+export function setLoopInputValue(value) {
+  dom.loopInput.value = value;
+}
+
+export function updateLoopInputPlaceholder(text) {
+  dom.loopInput.placeholder = text;
+}
+
+export function setSearchValue(value) {
+  dom.search.value = value;
+}
+
+export function getFrameContent() {
+  return dom.frame.contentDocument.documentElement.outerHTML;
+}
+
+// --- UI State Management ---
+
+// Hides all panels and the overlay.
+export const clearPanels = () => {
+  [dom.overlay, dom.infobar, ...panels].forEach((el) =>
+    el.classList.remove("active"),
+  );
+};
+
+// Toggles the visibility of a specific panel.
+const togglePanel = (panelElement) => {
+  panels.forEach((p) =>
+    p !== panelElement ? p.classList.remove("active") : (p.scrollTop = 0),
+  );
+
+  const isActive = panelElement.classList.toggle("active");
+  [dom.overlay, dom.infobar].forEach((el) =>
+    el.classList.toggle("active", isActive),
+  );
+};
+
+// Shows or hides the main loading spinner.
+export const toggleSpin = (show = true) => {
+  dom.spinner.style.display = show ? "block" : "none";
+};
+
+// Updates the loop button icon to show play or stop.
+export const updateLoopButton = () => {
+  const loopState = state.getLoopState();
+  document.querySelector(".fa-repeat").style.display =
+    loopState.isLooping !== "true" ? "inline-block" : "none";
+
+  document.querySelector(".fa-circle-stop").style.display =
+    loopState.isLooping === "true" ? "inline-block" : "none";
+};
+
+// Sets the visibility of all major UI controls based on the current application state.
+const setDisplay = (skipOverlay = false) => {
+  const hasContract = !!state.getContractData();
+  const hasRPC = !!state.getRpcUrl();
+  const hasFavorites = Object.keys(state.getFavorite()).length > 0;
+
+  dom.infobar.style.opacity = !hasRPC || !hasContract ? "0.98" : "";
+
+  [dom.inc, dom.dec, dom.save, dom.info, dom.explore, dom.loop].forEach(
+    (button) => (button.style.display = hasContract ? "block" : "none"),
+  );
+
+  const showInstruction = !hasRPC;
+  dom.instruction.classList.toggle("active", showInstruction);
+  if (!skipOverlay) dom.overlay.classList.toggle("active", showInstruction);
+
+  dom.favIcon.style.display = hasFavorites ? "block" : "none";
+  dom.searchBox.classList.toggle("nofav", !hasFavorites);
+  if (!hasFavorites) clearPanels();
+};
+
+// --- Initialization ---
+
+// Main entry point for the UI, sets up all event listeners and initial states.
+export function initPage(actionCallbacks) {
+  const rpcUrl = state.getRpcUrl();
+  rpcUrl
+    ? (dom.rpcUrlInput.placeholder = rpcUrl)
+    : (dom.rpcUrlInput.placeholder = "Enter RPC URL");
+
+  // Initialize all the sub-modules.
+  theme.init(dom.root, dom.themeBtns);
+  tooltips.init(dom);
+  listViews.init(
+    state,
+    { setDisplay, toggleSpin, clearPanels, update, ...actionCallbacks },
+    dom,
+  );
+
+  // --- Event Listeners ---
+
+  dom.rpcUrlInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+      const value = dom.rpcUrlInput.value.trim();
+      state.setRpcUrl(value === "" ? null : value);
+      location.reload();
+    }
+  });
+
+  dom.search.addEventListener("input", (event) => {
+    const query = event.target.value.trim().split("#")[0].trim();
+    if (query !== "") {
+      listViews.displayList(state.listManager.filterByQuery(query));
+      if (!dom.listPanel.classList.contains("active")) {
+        togglePanel(dom.listPanel);
+      }
+    } else {
+      clearPanels();
+    }
+  });
+
+  dom.search.addEventListener("keydown", listViews.handleKeyboardNavigation);
+
+  dom.settings.addEventListener("click", (event) => {
+    event.stopPropagation();
+    togglePanel(dom.instruction);
+  });
+
+  dom.info.addEventListener("click", (event) => {
+    event.stopPropagation();
+    togglePanel(dom.panel);
+  });
+
+  dom.searchIcon.addEventListener("click", (event) => {
+    event.stopPropagation();
+    listViews.displayList(state.listManager.originalList);
+    togglePanel(dom.listPanel);
+  });
+
+  dom.favIcon.addEventListener("click", (event) => {
+    event.stopPropagation();
+    listViews.displayFavoriteList();
+    togglePanel(dom.favPanel);
+  });
+
+  dom.repeatIcon.addEventListener("click", (event) => {
+    event.stopPropagation();
+    togglePanel(dom.dropMenu);
+  });
+
+  panels.forEach((panel) => {
+    panel.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+  });
+
+  document.addEventListener("click", clearPanels);
+
+  // Set initial UI state on page load.
+  updateLoopButton();
+  setDisplay();
+  dom.root.classList.remove("no-flash");
+}
