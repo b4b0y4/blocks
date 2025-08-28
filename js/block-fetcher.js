@@ -45,7 +45,6 @@ async function blocks(array) {
       console.log(`%cNo new items for ${contractName}.`, "color: seagreen;");
     }
   }
-  console.log("%cDONE!!!", "color: lime;");
 }
 
 // Expose 'is' and contract names for convenience in the console
@@ -54,7 +53,7 @@ Object.keys(contractRegistry).forEach((contractName) => {
   window[contractName.toLowerCase()] = contractName;
 });
 
-window.fetchBlocks = (contracts) => {
+window.fetchBlocks = async (contracts) => {
   let contractArray;
 
   if (typeof contracts === "string") {
@@ -75,8 +74,14 @@ window.fetchBlocks = (contracts) => {
     return;
   }
 
-  console.log(`Fetching blocks for: ${contractArray.join(", ")}`);
-  blocks(contractArray);
+  console.log(
+    `%cFetching blocks for:%c ${contractArray.join(", ")}`,
+    "color: indianred;",
+    "color: initial;",
+  );
+
+  await blocks(contractArray);
+  console.log("%cDONE!!!", "color: lime;");
 };
 
 console.log("Block-fetcher module loaded.");
