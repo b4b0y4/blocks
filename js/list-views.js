@@ -84,17 +84,6 @@ export function displayFavoriteList() {
       const delSpan = document.createElement("span");
       delSpan.className = "delete-btn";
       delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
-      delSpan.style.marginRight = "5px";
-      delSpan.style.color = "var(--color-btn)";
-      delSpan.style.transition = "color 0.1s ease-in-out";
-
-      delSpan.addEventListener("mouseenter", () => {
-        delSpan.style.color = "indianred";
-      });
-
-      delSpan.addEventListener("mouseleave", () => {
-        delSpan.style.color = "var(--color-btn)";
-      });
 
       delSpan.addEventListener("click", (event) => {
         event.stopPropagation();

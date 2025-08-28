@@ -435,11 +435,21 @@ iframe {
 
 .fav-panel p .delete-btn {
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.1s ease;
 }
 
 .fav-panel p:hover .delete-btn {
   opacity: 1;
+}
+
+.delete-btn {
+  margin-right: 5px;
+  color: var(--color-btn);
+  transition: color 0.1s ease;
+}
+
+.delete-btn:hover {
+  color: indianred;
 }
 
 .drop-menu {
