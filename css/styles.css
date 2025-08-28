@@ -433,6 +433,15 @@ iframe {
   color: var(--color-btn);
 }
 
+.fav-panel p .delete-btn {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.fav-panel p:hover .delete-btn {
+  opacity: 1;
+}
+
 .drop-menu {
   max-width: 140px;
   right: 180px;

@@ -82,7 +82,9 @@ export function displayFavoriteList() {
       keyElement.style.alignItems = "center";
 
       const delSpan = document.createElement("span");
+      delSpan.className = "delete-btn";
       delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+      delSpan.style.marginRight = "5px";
       delSpan.style.color = "var(--color-btn)";
       delSpan.style.transition = "color 0.1s ease-in-out";
 
