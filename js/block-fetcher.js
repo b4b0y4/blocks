@@ -7,8 +7,14 @@ import { contractRegistry, is } from "./contracts.js";
 import { list } from "./lists.js";
 
 // Fetches new blocks for specified contracts and displays them
-async function blocks(array) {
-  for (const contractName of array) {
+async function blocks(...contracts) {
+  // Handle both array and multiple arguments
+  const contractArray =
+    Array.isArray(contracts[0]) && contracts.length === 1
+      ? contracts[0]
+      : contracts;
+
+  for (const contractName of contractArray) {
     const n = indexMap[contractName];
     const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
@@ -65,25 +71,25 @@ Object.keys(contractRegistry).forEach((contractName) => {
 });
 
 // Main public function for fetching blocks
-window.fetchBlocks = async (contracts) => {
-  let contractArray;
-
+window.fetchBlocks = async (...contracts) => {
   // Handle both string and array inputs
-  if (typeof contracts === "string") {
-    contractArray = [contracts.toUpperCase()];
-  } else if (Array.isArray(contracts)) {
+  let contractArray;
+  if (contracts.length === 1 && typeof contracts[0] === "string") {
+    contractArray = [contracts[0].toUpperCase()];
+  } else if (contracts.length === 1 && Array.isArray(contracts[0])) {
+    contractArray = contracts[0];
+  } else if (contracts.length > 1) {
     contractArray = contracts;
   } else {
-    console.error(
-      "Please provide a contract name (string) or an array of contract names.",
+    console.error("Please provide contract name(s) as arguments.");
+    console.log(
+      "Example: fetchBlocks(newrafael) or fetchBlocks(newrafael, ...is.studio) ...",
     );
-    console.log("Example: fetchBlocks('newrafael') or fetchBlocks(newrafael)");
-    console.log("Or for multiple: fetchBlocks(['NEWRAFAEL', 'ABC'])");
     return;
   }
 
   if (contractArray.length === 0) {
-    console.error("The contract array is empty.");
+    console.error("No contracts specified.");
     return;
   }
 
@@ -93,12 +99,12 @@ window.fetchBlocks = async (contracts) => {
     "color: #666666;",
   );
 
-  await blocks(contractArray);
+  await blocks(...contractArray);
   console.log("%cDone fetching!", "color: #DF7543;");
 };
 
 // Module initialization messages
 console.log("Block-fetcher module loaded. Usage:");
-console.log("  fetchBlocks('CONTRACT_NAME') - string literal");
-console.log("  fetchBlocks(contract_variable) - variable name");
-console.log("  fetchBlocks(is.studio) - predefined array");
+console.log("  fetchBlocks(contract) - contract name in contractRegistry");
+console.log("  fetchBlocks(is.array) - predefined array in is");
+console.log("  fetchBlocks(contract, ...is.array) - multiple arguments");
