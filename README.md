@@ -48,39 +48,39 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 ### Code Structure
 
 #### Core Modules
-- `js/core/script.js`: Main entry point. Initializes all modules and wires up event listeners, connecting the UI to the application logic.
-- `js/core/state.js`: Manages the application's state, including the current artwork, user's favorites, and loop settings. It also handles persistence to `localStorage`.
-- `js/core/actions.js`: The application's "controller." It contains all the logic for handling user interactions, such as selecting a token, starting a loop, or saving an artwork.
-- `js/core/ethereum.js`: Handles all interactions with the Ethereum blockchain, such as fetching token data and contract details.
+- `/src/core/script.js`: Main entry point. Initializes all modules and wires up event listeners, connecting the UI to the application logic.
+- `/src/core/state.js`: Manages the application's state, including the current artwork, user's favorites, and loop settings. It also handles persistence to `localStorage`.
+- `/src/core/actions.js`: The application's "controller." It contains all the logic for handling user interactions, such as selecting a token, starting a loop, or saving an artwork.
+- `/src/core/ethereum.js`: Handles all interactions with the Ethereum blockchain, such as fetching token data and contract details.
 
 #### UI Modules
-- `js/ui/ui.js`: Main UI orchestration module. Coordinates all UI operations by delegating to specialized modules.
-- `js/ui/dom-events.js`: DOM element references and event listener registrations. Centralizes all DOM queries and UI event handling.
-- `js/ui/panel.js`: Panel state management. Handles visibility, toggling, and state management for all UI panels.
-- `js/ui/info-panel.js`: Info panel rendering. Creates and updates the main artwork information display.
-- `js/ui/ui-utils.js`: Utility functions for UI operations. Pure helper functions that can be reused across different UI components.
-- `js/ui/frame.js`: Handles the creation and injection of content into a sandboxed iframe where the generative artwork is rendered.
-- `js/ui/list-views.js`: Renders list-based views (collection lists and favorites) with keyboard navigation support.
-- `js/ui/theme.js`: Manages the application's visual theme (light/dark/system).
-- `js/ui/tooltips.js`: Handles the display of tooltips for UI elements.
+- `/src/ui/ui.js`: Main UI orchestration module. Coordinates all UI operations by delegating to specialized modules.
+- `/src/ui/dom-events.js`: DOM element references and event listener registrations. Centralizes all DOM queries and UI event handling.
+- `/src/ui/panel.js`: Panel state management. Handles visibility, toggling, and state management for all UI panels.
+- `/src/ui/info-panel.js`: Info panel rendering. Creates and updates the main artwork information display.
+- `/src/ui/ui-utils.js`: Utility functions for UI operations. Pure helper functions that can be reused across different UI components.
+- `/src/ui/frame.js`: Handles the creation and injection of content into a sandboxed iframe where the generative artwork is rendered.
+- `/src/ui/list-views.js`: Renders list-based views (collection lists and favorites) with keyboard navigation support.
+- `/src/ui/theme.js`: Manages the application's visual theme (light/dark/system).
+- `/src/ui/tooltips.js`: Handles the display of tooltips for UI elements.
 
 
 #### Config Modules
-- `js/config/block-fetcher.js`: A developer utility used to fetch new collection data from contracts.
-- `js/config/contracts.js`: Contains contract definitions, addresses, and classifications.
-- `js/config/abis.js`: Stores ABI (Application Binary Interface) references for the contracts.
-- `js/config/lists.js`: Contains curated collection data and references to JavaScript libraries used by the artworks.
+- `/src/config/block-fetcher.js`: A developer utility used to fetch new collection data from contracts.
+- `/src/config/contracts.js`: Contains contract definitions, addresses, and classifications.
+- `/src/config/abis.js`: Stores ABI (Application Binary Interface) references for the contracts.
+- `/src/config/lists.js`: Contains curated collection data and references to JavaScript libraries used by the artworks.
 
 ### Adding New Contracts
 
-1. In `js/contracts.js`, add your contract data to `contractRegistry`.
+1. In `/src/contracts.js`, add your contract data to `contractRegistry`.
 2. Open the application in your browser and open the developer console.
 3. In the console, you can now fetch blocks in several convenient ways:
     - **By variable (recommended):** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
     - **By string:** `fetchBlocks('YOURCONTRACT')` (case-insensitive)
     - **Multiple contracts:** `fetchBlocks([yourcontract, anothercontract])`
     - **Using predefined lists:** `fetchBlocks(is.studio)`
-4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `js/lists.js`.
+4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `/src/lists.js`.
     - Add a `!` to the end of any line to ignore it in the UI.
     - Example output format:
       ```js
