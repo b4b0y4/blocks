@@ -43,7 +43,7 @@ export async function grabData(tokenId, contract, updateOnly = false) {
   try {
     toggleSpin();
     clearPanels();
-    console.log("Contract:", contract, "\nToken Id:", tokenId);
+    console.log("Contract:", contract, "Token Id:", tokenId);
 
     // "Update only" mode is a performance optimization for navigating within a collection.
     if (updateOnly) {
