@@ -30,10 +30,10 @@ export const toggleSpin = (show = true) => {
 // Updates the loop button icon to show play or stop.
 export const updateLoopButton = (state) => {
   const loopState = state.getLoopState();
-  document.querySelector(".fa-repeat").style.display =
+  document.querySelector("#repeatIcon").style.display =
     loopState.isLooping !== "true" ? "inline-block" : "none";
 
-  document.querySelector(".fa-circle-stop").style.display =
+  document.querySelector("#stopLoop").style.display =
     loopState.isLooping === "true" ? "inline-block" : "none";
 };
 

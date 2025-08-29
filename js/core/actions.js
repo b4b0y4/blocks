@@ -108,13 +108,6 @@ export function handleLoop(action) {
     alert("Please enter a time in minutes.");
   }
 
-  if (inputValue !== "" && interval !== loopState.interval) {
-    state.setLoopState({
-      isLooping: "false",
-      interval: interval,
-      action: action,
-    });
-  }
   updateLoopButton(state);
 }
 
