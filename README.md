@@ -54,13 +54,10 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 - `/src/core/ethereum.js`: Handles all interactions with the Ethereum blockchain, such as fetching token data and contract details.
 
 #### UI Modules
-- `/src/ui/ui.js`: Main UI orchestration module. Coordinates all UI operations by delegating to specialized modules.
-- `/src/ui/dom-events.js`: DOM element references and event listener registrations. Centralizes all DOM queries and UI event handling.
-- `/src/ui/panel.js`: Panel state management. Handles visibility, toggling, and state management for all UI panels.
-- `/src/ui/info-panel.js`: Info panel rendering. Creates and updates the main artwork information display.
-- `/src/ui/ui-utils.js`: Utility functions for UI operations. Pure helper functions that can be reused across different UI components.
+- `/src/ui/ui.js`: Main orchestration for all UI behavior — it now contains panel state management, info-panel rendering logic, and utility helpers.
+- `/src/ui/dom.js`: DOM element references and event listener registrations. Centralizes all DOM queries and UI event handling.
 - `/src/ui/frame.js`: Handles the creation and injection of content into a sandboxed iframe where the generative artwork is rendered.
-- `/src/ui/list-views.js`: Renders list-based views (collection lists and favorites) with keyboard navigation support.
+- `/src/ui/lists-viewer.js`: Renders list-based views (collection lists and favorites) with keyboard navigation support.
 - `/src/ui/theme.js`: Manages the application's visual theme (light/dark/system).
 - `/src/ui/tooltips.js`: Handles the display of tooltips for UI elements.
 
@@ -69,7 +66,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 - `/src/config/block-fetcher.js`: A developer utility used to fetch new collection data from contracts.
 - `/src/config/contracts.js`: Contains contract definitions, addresses, and classifications.
 - `/src/config/abis.js`: Stores ABI (Application Binary Interface) references for the contracts.
-- `/src/config/lists.js`: Contains curated collection data and references to JavaScript libraries used by the artworks.
+- `/src/config/genArtRef.js`: Contains curated collection data and references to JavaScript libraries used by the artworks.
 
 ### Adding New Contracts
 
@@ -80,7 +77,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
     - **By string:** `fetchBlocks('YOURCONTRACT')` (case-insensitive)
     - **Multiple contracts:** `fetchBlocks([yourcontract, anothercontract])`
     - **Using predefined lists:** `fetchBlocks(is.studio)`
-4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `/src/lists.js`.
+4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `/src/genArtRef.js`.
     - Add a `!` to the end of any line to ignore it in the UI.
     - Example output format:
       ```js
