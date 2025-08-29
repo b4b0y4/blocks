@@ -1,7 +1,7 @@
 // Info panel rendering module.
 // Handles the creation and updating of the main artwork information display.
 
-import { contractRegistry, is } from "./contracts.js";
+import { contractRegistry, is } from "../config/contracts.js";
 import {
   shortId,
   shortAddr,

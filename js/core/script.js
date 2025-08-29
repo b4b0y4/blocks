@@ -3,10 +3,10 @@
 
 import * as state from "./state.js";
 import * as eth from "./ethereum.js";
-import * as ui from "./ui.js";
+import * as ui from "../ui/ui.js";
 import * as actions from "./actions.js";
-import { dom } from "./dom-events.js";
-import "./block-fetcher.js";
+import { dom } from "../ui/dom-events.js";
+import "../config/block-fetcher.js";
 
 // Initialize modules with their dependencies
 eth.init(ui);

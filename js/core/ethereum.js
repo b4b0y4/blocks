@@ -2,10 +2,10 @@
 // It uses the ethers.js library to create contract instances, fetch data,
 // and handle the nuances between different contract versions (e.g., V2 vs. V3).
 
-import { ethers } from "./ethers.min.js";
-import { contractRegistry, is } from "./contracts.js";
+import { ethers } from "../vendor/ethers.min.js";
+import { contractRegistry, is } from "../config/contracts.js";
 import * as state from "./state.js";
-import { toggleSpin, clearPanels } from "./ui.js";
+import { toggleSpin, clearPanels } from "../ui/ui.js";
 
 // The UI module is injected by the main script to avoid circular dependencies.
 let ui;

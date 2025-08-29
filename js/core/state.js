@@ -1,7 +1,7 @@
 // This module manages the application's state, including data fetched from the blockchain,
 // user preferences, and UI state. It persists data to localStorage where appropriate.
 
-import { list } from "./lists.js";
+import { list } from "../config/lists.js";
 
 // --- State Initialization ---
 

@@ -1,7 +1,7 @@
 // This module handles the creation and injection of content into the sandboxed iframe
 // where the generative artwork is rendered.
 
-import { libs } from "./lists.js";
+import { libs } from "../config/lists.js";
 
 // Modules are injected to avoid circular dependencies.
 let state, eth, dom;

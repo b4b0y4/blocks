@@ -2,7 +2,7 @@
 // Compares against existing list to identify new items and displays them
 // with colored console output. Supports batch processing for performance.
 
-import { instance, indexMap } from "./ethereum.js";
+import { instance, indexMap } from "../core/ethereum.js";
 import { contractRegistry, is } from "./contracts.js";
 import { list } from "./lists.js";
 
