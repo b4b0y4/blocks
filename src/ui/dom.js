@@ -2,7 +2,7 @@
 // Centralizes all DOM queries and event listener registrations.
 
 import { clearPanels, togglePanel } from "./ui.js";
-import * as listViews from "./list-views.js";
+import * as listViews from "./lists-viewer.js";
 
 export const dom = {
   root: document.documentElement,

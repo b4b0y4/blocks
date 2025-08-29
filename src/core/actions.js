@@ -1,7 +1,7 @@
 // This file acts as the "controller" for the application, handling all user-initiated actions
 // and orchestrating the application's state changes and UI updates.
 
-import * as listViews from "../ui/list-views.js";
+import * as listViews from "../ui/lists-viewer.js";
 import { shortId, clearPanels, updateLoopButton } from "../ui/ui.js";
 
 // To avoid circular dependencies, modules are injected via the init function

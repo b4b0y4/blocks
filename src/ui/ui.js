@@ -7,7 +7,7 @@ import { libs } from "../config/genArtRef.js";
 import { dom, panels, setupEventListeners } from "./dom.js";
 import * as theme from "./theme.js";
 import * as tooltips from "./tooltips.js";
-import * as listViews from "./list-views.js";
+import * as listViews from "./lists-viewer.js";
 import * as frame from "./frame.js";
 
 // Modules are injected from the main script.js to avoid circular dependencies.
