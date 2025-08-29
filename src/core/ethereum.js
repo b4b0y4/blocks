@@ -97,8 +97,11 @@ export async function grabData(tokenId, contract, updateOnly = false) {
             fetchCIDsFn(projId, extDepCount, contract),
             fetchGateway(contract),
           ]);
-          // BMFLEX has a specific IPFS gateway override.
-          if (nameMap[contract] === "BMFLEX") {
+          // IPFS gateway override.
+          if (
+            nameMap[contract] === "BMFLEX" ||
+            nameMap[contract] === "NUMBER"
+          ) {
             ipfs = "https://ipfs.io/ipfs";
           }
         }
