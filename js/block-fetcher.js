@@ -39,10 +39,10 @@ async function blocks(array) {
     }
 
     if (newBlocks.length > 0) {
-      console.log(`%cNew items for ${contractName}:`, "color: gold;");
-      console.log(`%c${newBlocks.join("\n")}`, "color: violet");
+      console.log(`%cNew items for ${contractName}:`, "color: #4C6F6F;");
+      console.log(`%c${newBlocks.join("\n")}`, "color: #FAC085");
     } else {
-      console.log(`%cNo new items for ${contractName}.`, "color: seagreen;");
+      console.log(`%cNo new items for ${contractName}.`, "color: #666666;");
     }
   }
 }
@@ -76,12 +76,12 @@ window.fetchBlocks = async (contracts) => {
 
   console.log(
     `%cFetching blocks for:%c ${contractArray.join(", ")}`,
-    "color: indianred;",
-    "color: initial;",
+    "color: #DF7543;",
+    "color: #666666;",
   );
 
   await blocks(contractArray);
-  console.log("%cDONE!!!", "color: lime;");
+  console.log("%cDone fetching!", "color: #DF7543;");
 };
 
 console.log("Block-fetcher module loaded.");
