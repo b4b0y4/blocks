@@ -1,7 +1,7 @@
 // Utility functions for UI operations.
 // Pure helper functions that can be reused across different UI components.
 
-import { libs } from "../config/lists.js";
+import { libs } from "../config/genArtRef.js";
 
 // Shortens a long token ID for cleaner display.
 export function shortId(tokenId) {

@@ -11,7 +11,7 @@ import {
   getLibVersion,
   copyToClipboard,
 } from "./ui-utils.js";
-import { dom } from "./dom-events.js";
+import { dom } from "./dom.js";
 
 // Determines the curation status for display based on project ID for legacy Art Blocks contracts.
 function getCuration(projId, state) {

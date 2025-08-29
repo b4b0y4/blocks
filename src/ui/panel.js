@@ -1,7 +1,7 @@
 // Panel state management module.
 // Handles visibility, toggling, and state management for all UI panels.
 
-import { dom, panels } from "./dom-events.js";
+import { dom, panels } from "./dom.js";
 
 // Hides all panels and the overlay.
 export const clearPanels = () => {

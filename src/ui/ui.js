@@ -9,7 +9,7 @@ import {
   setDisplay,
 } from "./panel.js";
 import { updateInfo, getPlatform } from "./info-panel.js";
-import { dom, setupEventListeners } from "./dom-events.js";
+import { dom, setupEventListeners } from "./dom.js";
 import * as theme from "./theme.js";
 import * as tooltips from "./tooltips.js";
 import * as listViews from "./list-views.js";

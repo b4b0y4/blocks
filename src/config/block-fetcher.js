@@ -4,7 +4,7 @@
 
 import { instance, indexMap } from "../core/ethereum.js";
 import { contractRegistry, is } from "./contracts.js";
-import { list } from "./lists.js";
+import { list } from "./genArtRef.js";
 
 // Fetches new blocks for specified contracts and displays them
 async function blocks(...contracts) {

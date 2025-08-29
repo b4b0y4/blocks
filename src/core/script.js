@@ -5,7 +5,7 @@ import * as state from "./state.js";
 import * as eth from "./ethereum.js";
 import * as ui from "../ui/ui.js";
 import * as actions from "./actions.js";
-import { dom } from "../ui/dom-events.js";
+import { dom } from "../ui/dom.js";
 import "../config/block-fetcher.js";
 
 // Initialize modules with their dependencies
