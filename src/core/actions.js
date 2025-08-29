@@ -2,8 +2,7 @@
 // and orchestrating the application's state changes and UI updates.
 
 import * as listViews from "../ui/list-views.js";
-import { shortId } from "../ui/ui-utils.js";
-import { clearPanels, updateLoopButton } from "../ui/ui.js";
+import { shortId, clearPanels, updateLoopButton } from "../ui/ui.js";
 
 // To avoid circular dependencies, modules are injected via the init function
 // instead of using static imports.

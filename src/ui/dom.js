@@ -1,7 +1,7 @@
 // DOM element references and event handling module.
 // Centralizes all DOM queries and event listener registrations.
 
-import { clearPanels, togglePanel } from "./panel.js";
+import { clearPanels, togglePanel } from "./ui.js";
 import * as listViews from "./list-views.js";
 
 export const dom = {
