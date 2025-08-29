@@ -75,8 +75,8 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 3. In the console, you can now fetch blocks in several convenient ways:
     - **By variable (recommended):** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
     - **By string:** `fetchBlocks('YOURCONTRACT')` (case-insensitive)
-    - **Multiple contracts:** `fetchBlocks([yourcontract, anothercontract])`
-    - **Using predefined lists:** `fetchBlocks(is.studio)`
+    - **Multiple contracts:** `fetchBlocks(yourcontract, ...is.array)`
+    - **Using predefined lists:** `fetchBlocks(is.array)`
 4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `/src/genArtRef.js`.
     - Add a `!` to the end of any line to ignore it in the UI.
     - Example output format:
