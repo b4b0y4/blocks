@@ -3,7 +3,7 @@
 // all UI operations by delegating to specialized modules.
 
 import { contractRegistry, is } from "../config/contracts.js";
-import { libs } from "../config/genArtRef.js";
+import { libs, curated } from "../config/genArtRef.js";
 import { dom, panels, setupEventListeners } from "./dom.js";
 import * as theme from "./theme.js";
 import * as tooltips from "./tooltips.js";
@@ -138,7 +138,7 @@ function getCuration(projId, state) {
     373,
   ];
 
-  return state.curated.includes(projId)
+  return curated.includes(projId)
     ? "Art Blocks Curated"
     : playground.includes(projId)
       ? "Art Blocks Playground"

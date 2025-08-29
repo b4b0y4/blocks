@@ -1,7 +1,7 @@
 // This module manages the application's state, including data fetched from the blockchain,
 // user preferences, and UI state. It persists data to localStorage where appropriate.
 
-import { list } from "../config/genArtRef.js";
+import { list, curated } from "../config/genArtRef.js";
 
 // --- State Initialization ---
 
@@ -85,18 +85,6 @@ export function setRpcUrl(url) {
   }
   rpcUrl = url;
 }
-
-// --- Constants and Classes ---
-
-// Project IDs for official Art Blocks curated collections.
-export const curated = [
-  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
-];
 
 // Encapsulates the logic for filtering, navigating, and selecting items
 // from the main list of generative art projects.
