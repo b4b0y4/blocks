@@ -129,7 +129,7 @@ export const setDisplay = (state, skipOverlay = false) => {
 // --- INFO PANEL ---
 
 // Determines the curation status for display based on project ID for legacy Art Blocks contracts.
-function getCuration(projId, state) {
+function getCuration(projId) {
   const playground = [
     6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
     94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
@@ -148,11 +148,11 @@ function getCuration(projId, state) {
 }
 
 // Determines the platform name for display (e.g., "Art Blocks Studio").
-function getPlatform(contract, projId, eth, state) {
+function getPlatform(contract, projId, eth) {
   const contractName = eth.nameMap[contract];
 
   if (["AB", "ABII", "ABIII"].includes(contractName)) {
-    return getCuration(projId, state);
+    return getCuration(projId);
   }
   if (is.studio.includes(contractName)) {
     return "Art Blocks Studio";
