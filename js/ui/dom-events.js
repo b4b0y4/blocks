@@ -18,7 +18,7 @@ export const dom = {
   inc: document.getElementById("incrementBtn"),
   explore: document.getElementById("explore"),
   loop: document.getElementById("loop"),
-  repeatIcon: document.getElementById("repeatIcon"),
+  openLoop: document.getElementById("openLoop"),
   dropMenu: document.getElementById("dropMenu"),
   allLoop: document.getElementById("loopAll"),
   favLoop: document.getElementById("favLoop"),
@@ -103,7 +103,7 @@ export function setupEventListeners(state, actionCallbacks) {
   });
 
   // Repeat icon handler
-  dom.repeatIcon.addEventListener("click", (event) => {
+  dom.openLoop.addEventListener("click", (event) => {
     event.stopPropagation();
     togglePanel(dom.dropMenu);
   });
