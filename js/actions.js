@@ -2,6 +2,8 @@
 // and orchestrating the application's state changes and UI updates.
 
 import * as listViews from "./list-views.js";
+import { shortId } from "./ui-utils.js";
+import { clearPanels, updateLoopButton } from "./ui.js";
 
 // To avoid circular dependencies, modules are injected via the init function
 // instead of using static imports.
@@ -71,7 +73,7 @@ export function stopLoop() {
     state.setLoopIntervalId(null);
   }
   state.setLoopState({ isLooping: "false" });
-  ui.updateLoopButton();
+  updateLoopButton(state);
 }
 
 // Checks the loop state on page load and resumes the loop if it was active.
@@ -86,7 +88,7 @@ export function checkLoop() {
 // Handles the user clicking on a loop button.
 // It parses the interval from the input field and starts the loop.
 export function handleLoop(action) {
-  ui.clearPanels();
+  clearPanels();
   const loopState = state.getLoopState();
 
   let inputValue = ui.getLoopInputValue().trim();
@@ -113,7 +115,7 @@ export function handleLoop(action) {
       action: action,
     });
   }
-  ui.updateLoopButton();
+  updateLoopButton(state);
 }
 
 // --- Token Selection and Navigation ---
@@ -133,7 +135,7 @@ export function getToken(line, searchQuery) {
   ui.setSearchValue("");
   state.listManager.reset();
   listViews.displayList(state.listManager.originalList);
-  ui.clearPanels();
+  clearPanels();
 }
 
 // Handles a search query that is purely numeric, interpreted as a token ID
@@ -283,7 +285,7 @@ function getId(tokenId) {
 export async function saveOutput() {
   const contractData = state.getContractData();
   const content = ui.getFrameContent();
-  let id = ui.shortId(contractData.tokenId);
+  let id = shortId(contractData.tokenId);
   const defaultName = `${contractData.detail[0].replace(
     /\s+/g,
     "-",

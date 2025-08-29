@@ -5,6 +5,7 @@ import * as state from "./state.js";
 import * as eth from "./ethereum.js";
 import * as ui from "./ui.js";
 import * as actions from "./actions.js";
+import { dom } from "./dom-events.js";
 import "./block-fetcher.js";
 
 // Initialize modules with their dependencies
@@ -21,7 +22,7 @@ ui.initPage({
 });
 
 // --- Event Listeners ---
-ui.dom.listPanel.addEventListener("click", (event) => {
+dom.listPanel.addEventListener("click", (event) => {
   const listItem = event.target.closest(".list-item");
   if (listItem) {
     const index = parseInt(listItem.dataset.index);
@@ -34,19 +35,19 @@ ui.dom.listPanel.addEventListener("click", (event) => {
 });
 
 state.loopTypes.forEach((type) => {
-  ui.dom[`${type}Loop`].addEventListener("click", () =>
+  dom[`${type}Loop`].addEventListener("click", () =>
     actions.handleLoop(`${type}Loop`),
   );
 });
 
-ui.dom.stopLoop.addEventListener("click", actions.stopLoop);
-ui.dom.inc.addEventListener("click", actions.incrementTokenId);
-ui.dom.dec.addEventListener("click", actions.decrementTokenId);
-ui.dom.randomButton.addEventListener("click", () => {
+dom.stopLoop.addEventListener("click", actions.stopLoop);
+dom.inc.addEventListener("click", actions.incrementTokenId);
+dom.dec.addEventListener("click", actions.decrementTokenId);
+dom.randomButton.addEventListener("click", () => {
   actions.getRandom(state.listManager.originalList);
 });
-ui.dom.explore.addEventListener("click", actions.exploreAlgo);
-ui.dom.save.addEventListener("click", actions.saveOutput);
+dom.explore.addEventListener("click", actions.exploreAlgo);
+dom.save.addEventListener("click", actions.saveOutput);
 
 // Restore state from last session
 const contractData = state.getContractData();
