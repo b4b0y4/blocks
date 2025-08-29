@@ -50,6 +50,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 - `js/state.js`: Manages the application's state, including the current artwork, user's favorites, and loop settings. It also handles persistence to `localStorage`.
 - `js/actions.js`: The application's "controller." It contains all the logic for handling user interactions, such as selecting a token, starting a loop, or saving an artwork.
 - `js/ui.js`: The "view" layer. It is responsible for all DOM manipulation, rendering data, and managing UI components. It does not contain any application logic.
+- `js/frame.js`: handles the creation and injection of content into a sandboxed iframe where the generative artwork is rendered
 - `js/ethereum.js`: Handles all interactions with the Ethereum blockchain, such as fetching token data and contract details.
 - `js/block-fetcher.js`: A developer utility used to fetch new collection data from contracts.
 - `js/contracts.js`: Contains contract definitions, addresses, and classifications.
