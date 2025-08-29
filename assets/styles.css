@@ -586,6 +586,10 @@ iframe {
     color: var(--color-btn);
   }
 
+  .fav-panel p .delete-btn {
+    opacity: 1;
+  }
+
   .save,
   .loop,
   .dec,
