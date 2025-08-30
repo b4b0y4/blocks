@@ -444,6 +444,10 @@ export function initPage(actionCallbacks) {
   theme.init(dom.root, dom.themeBtns);
   tooltips.init(dom);
 
+  // Build a single callbacks object to inject into DOM/list submodules.
+  // This collects UI helper functions (owned by this module) and spreads
+  // in core action callbacks passed from `script.js` so submodules can
+  // call app logic without importing `actions` (avoids circular imports).
   const uiCallbacks = {
     setDisplay: (skipOverlay) => setDisplay(state, skipOverlay),
     toggleSpin,
@@ -452,6 +456,7 @@ export function initPage(actionCallbacks) {
     update,
     ...actionCallbacks,
   };
+
   listViews.init(state, uiCallbacks, dom);
 
   // Setup all event listeners
