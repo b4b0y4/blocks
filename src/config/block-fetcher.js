@@ -104,7 +104,7 @@ window.fetchBlocks = async (...contracts) => {
 };
 
 // Module initialization messages
-console.log("Block-fetcher module loaded. Usage:");
+console.log("block-fetcher module loaded. Usage:");
 console.log("  fetchBlocks(contract) - contract name in contractRegistry");
 console.log("  fetchBlocks(is.array) - predefined array in is");
 console.log("  fetchBlocks(contract, ...is.array) - multiple arguments");
