@@ -928,7 +928,7 @@ export const list = [
   "NUMBER0 # Number / Wang # 165 Works",
 ];
 
-// Project id of all artBlocks curated edition (first 3 contracts).
+// Project id of artBlocks curated edition (first 3 contracts).
 export const curated = [
   0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
   41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
