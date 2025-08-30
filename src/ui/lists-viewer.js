@@ -2,8 +2,6 @@
 // specifically the main collection list and the user's favorites list.
 // It also handles the logic for keyboard navigation within these lists.
 
-import { toggleSpin, clearPanels, setDisplay } from "./ui.js";
-
 let state, ui, dom;
 
 export function init(stateModule, uiModule, domElements) {
@@ -69,7 +67,7 @@ export function pushFavoriteToStorage(id) {
       <span>${contractData.detail[1]}</span>
     </div>`;
   state.addFavorite(key, contractData);
-  setDisplay(state);
+  ui.setDisplay(state);
 }
 
 export function displayFavoriteList() {
@@ -93,9 +91,9 @@ export function displayFavoriteList() {
       });
 
       keyElement.addEventListener("click", () => {
-        toggleSpin();
+        ui.toggleSpin();
         frameFavorite(key);
-        clearPanels();
+        ui.clearPanels();
       });
 
       keyElement.insertAdjacentHTML("afterbegin", key);
@@ -107,7 +105,7 @@ export function displayFavoriteList() {
 
 function deleteFavoriteFromStorage(key) {
   state.removeFavorite(key);
-  setDisplay(state, true);
+  ui.setDisplay(state, true);
   displayFavoriteList();
 }
 

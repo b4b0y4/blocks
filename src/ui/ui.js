@@ -443,6 +443,7 @@ export function initPage(actionCallbacks) {
   frame.init(state, eth, dom);
   theme.init(dom.root, dom.themeBtns);
   tooltips.init(dom);
+
   const uiCallbacks = {
     setDisplay: (skipOverlay) => setDisplay(state, skipOverlay),
     toggleSpin,
@@ -454,7 +455,7 @@ export function initPage(actionCallbacks) {
   listViews.init(state, uiCallbacks, dom);
 
   // Setup all event listeners
-  setupEventListeners(state, actionCallbacks);
+  setupEventListeners(state, uiCallbacks);
 
   // Set initial UI state on page load.
   updateLoopButton(state);

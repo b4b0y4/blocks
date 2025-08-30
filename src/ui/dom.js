@@ -49,6 +49,7 @@ export const panels = [
 ];
 
 // Sets up all event listeners for the application.
+// NOTE: accepts uiCallbacks (object) instead of importing UI helpers to avoid circular imports.
 export function setupEventListeners(state, uiCallbacks) {
   // RPC URL input handler
   dom.rpcUrlInput.addEventListener("keypress", (event) => {
@@ -68,7 +69,7 @@ export function setupEventListeners(state, uiCallbacks) {
         uiCallbacks.togglePanel(dom.listPanel);
       }
     } else {
-      clearPanels();
+      uiCallbacks.clearPanels();
     }
   });
 
