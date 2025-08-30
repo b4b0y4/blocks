@@ -5,7 +5,6 @@
 import { ethers } from "../vendor/ethers.min.js";
 import { contractRegistry, is } from "../config/contracts.js";
 import * as state from "./state.js";
-import { toggleSpin, clearPanels } from "../ui/ui.js";
 
 // The UI module is injected by the main script to avoid circular dependencies.
 let ui;
@@ -41,8 +40,8 @@ Object.keys(contractRegistry).forEach((key, index) => {
 //   between artworks within the same collection (e.g., owner, hash).
 export async function grabData(tokenId, contract, updateOnly = false) {
   try {
-    toggleSpin();
-    clearPanels();
+    ui.toggleSpin();
+    ui.clearPanels();
     console.log("Contract:", contract, "Token Id:", tokenId);
 
     // "Update only" mode is a performance optimization for navigating within a collection.
@@ -129,7 +128,7 @@ export async function grabData(tokenId, contract, updateOnly = false) {
     }
   } catch (error) {
     console.error(`grabData (${updateOnly ? "update" : "full"})`, error);
-    toggleSpin(false);
+    ui.toggleSpin(false);
   }
 }
 

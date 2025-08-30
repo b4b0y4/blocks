@@ -2,7 +2,6 @@
 // and orchestrating the application's state changes and UI updates.
 
 import * as listViews from "../ui/lists-viewer.js";
-import { shortId, clearPanels, updateLoopButton } from "../ui/ui.js";
 
 // To avoid circular dependencies, modules are injected via the init function
 // instead of using static imports.
@@ -72,7 +71,7 @@ export function stopLoop() {
     state.setLoopIntervalId(null);
   }
   state.setLoopState({ isLooping: "false" });
-  updateLoopButton(state);
+  ui.updateLoopButton(state);
 }
 
 // Checks the loop state on page load and resumes the loop if it was active.
@@ -87,7 +86,7 @@ export function checkLoop() {
 // Handles the user clicking on a loop button.
 // It parses the interval from the input field and starts the loop.
 export function handleLoop(action) {
-  clearPanels();
+  ui.clearPanels();
   const loopState = state.getLoopState();
 
   let inputValue = ui.getLoopInputValue().trim();
@@ -107,7 +106,7 @@ export function handleLoop(action) {
     alert("Please enter a time in minutes.");
   }
 
-  updateLoopButton(state);
+  ui.updateLoopButton(state);
 }
 
 // --- Token Selection and Navigation ---
@@ -127,7 +126,7 @@ export function getToken(line, searchQuery) {
   ui.setSearchValue("");
   state.listManager.reset();
   listViews.displayList(state.listManager.originalList);
-  clearPanels();
+  ui.clearPanels();
 }
 
 // Handles a search query that is purely numeric, interpreted as a token ID
@@ -277,7 +276,7 @@ function getId(tokenId) {
 export async function saveOutput() {
   const contractData = state.getContractData();
   const content = ui.getFrameContent();
-  let id = shortId(contractData.tokenId);
+  let id = ui.shortId(contractData.tokenId);
   const defaultName = `${contractData.detail[0].replace(
     /\s+/g,
     "-",
