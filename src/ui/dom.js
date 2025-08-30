@@ -1,7 +1,6 @@
 // DOM element references and event handling module.
 // Centralizes all DOM queries and event listener registrations.
 
-import { clearPanels, togglePanel } from "./ui.js";
 import * as listViews from "./lists-viewer.js";
 
 export const dom = {
@@ -50,7 +49,7 @@ export const panels = [
 ];
 
 // Sets up all event listeners for the application.
-export function setupEventListeners(state, actionCallbacks) {
+export function setupEventListeners(state, uiCallbacks) {
   // RPC URL input handler
   dom.rpcUrlInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
@@ -66,7 +65,7 @@ export function setupEventListeners(state, actionCallbacks) {
     if (query !== "") {
       listViews.displayList(state.listManager.filterByQuery(query));
       if (!dom.listPanel.classList.contains("active")) {
-        togglePanel(dom.listPanel);
+        uiCallbacks.togglePanel(dom.listPanel);
       }
     } else {
       clearPanels();
@@ -79,33 +78,33 @@ export function setupEventListeners(state, actionCallbacks) {
   // Settings button handler
   dom.settings.addEventListener("click", (event) => {
     event.stopPropagation();
-    togglePanel(dom.instruction);
+    uiCallbacks.togglePanel(dom.instruction);
   });
 
   // Info button handler
   dom.info.addEventListener("click", (event) => {
     event.stopPropagation();
-    togglePanel(dom.panel);
+    uiCallbacks.togglePanel(dom.panel);
   });
 
   // Search icon handler
   dom.searchIcon.addEventListener("click", (event) => {
     event.stopPropagation();
     listViews.displayList(state.listManager.originalList);
-    togglePanel(dom.listPanel);
+    uiCallbacks.togglePanel(dom.listPanel);
   });
 
   // Favorites icon handler
   dom.favIcon.addEventListener("click", (event) => {
     event.stopPropagation();
     listViews.displayFavoriteList();
-    togglePanel(dom.favPanel);
+    uiCallbacks.togglePanel(dom.favPanel);
   });
 
   // Repeat icon handler
   dom.openLoop.addEventListener("click", (event) => {
     event.stopPropagation();
-    togglePanel(dom.dropMenu);
+    uiCallbacks.togglePanel(dom.dropMenu);
   });
 
   // Panel click handlers (prevent event bubbling)
@@ -116,5 +115,5 @@ export function setupEventListeners(state, actionCallbacks) {
   });
 
   // Global click handler to close panels
-  document.addEventListener("click", clearPanels);
+  document.addEventListener("click", uiCallbacks.clearPanels);
 }

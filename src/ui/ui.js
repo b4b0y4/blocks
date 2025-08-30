@@ -443,17 +443,15 @@ export function initPage(actionCallbacks) {
   frame.init(state, eth, dom);
   theme.init(dom.root, dom.themeBtns);
   tooltips.init(dom);
-  listViews.init(
-    state,
-    {
-      setDisplay: (skipOverlay) => setDisplay(state, skipOverlay),
-      toggleSpin,
-      clearPanels,
-      update,
-      ...actionCallbacks,
-    },
-    dom,
-  );
+  const uiCallbacks = {
+    setDisplay: (skipOverlay) => setDisplay(state, skipOverlay),
+    toggleSpin,
+    clearPanels,
+    togglePanel,
+    update,
+    ...actionCallbacks,
+  };
+  listViews.init(state, uiCallbacks, dom);
 
   // Setup all event listeners
   setupEventListeners(state, actionCallbacks);
