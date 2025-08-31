@@ -555,13 +555,13 @@ export const list = [
   "ABSLXVII0 # Coral Colors 2024 / Sputniko! # 1 Work!",
   "ABSLXVII1 # Coral Colors / Sputniko! # 21 Works",
   "ABSLXXI0 # Thread / Anna Lucia # 82 Works",
-  "ABSLXXII0 # Cities / Efdot x Diid # 301 Works",
+  "ABSLXXII0 # Cities / Efdot x Diid # 302 Works",
   "ABSLXXIII0 # MazeFlipper / Beervangeer x SuperGood # 43 Works",
   "ABSLXXIV0 # Pacific Spirit / Emily Nicoll & 747 # 300 Works",
   "ABSLXXV0 # SINE / Shaunaq # 57 Works",
   "ABSLXXVIII0 # DDUST / jiwa # 500 Works",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
-  "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 166 Works",
+  "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 167 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38758 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
@@ -926,16 +926,6 @@ export const list = [
   "ITERATION0 # 9dcc ITERATION-02 /  # 1183 Works!",
   "ITERATION0 # 9dcc ITERATION-02 / Snowfro # 1183 Works",
   "NUMBER0 # Number / Wang # 165 Works",
-];
-
-// Project id of artBlocks curated edition (first 3 contracts).
-export const curated = [
-  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ];
 
 // Library metadata for external dependencies.
