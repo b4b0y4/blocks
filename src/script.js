@@ -1531,7 +1531,7 @@ initTheme();
 if (contractData) update(...Object.values(contractData));
 dom.root.classList.remove("no-flash");
 
-// Core block fetching function
+// Fetches project data for one or more contracts, identifies new items, and logs them to the console.
 async function blocks(...contract) {
   const contractArray =
     Array.isArray(contract[0]) && contract.length === 1
@@ -1584,7 +1584,7 @@ async function blocks(...contract) {
   }
 }
 
-// Main public function for fetching blocks
+//  Public-facing function to fetch blocks, exposed on the window object.
 window.fetchBlocks = async (...contracts) => {
   let contractArray;
 
