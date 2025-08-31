@@ -1599,12 +1599,12 @@ window.fetchBlocks = async (...contracts) => {
 
   console.log(
     `%cFetching blocks for:%c ${contractArray.join(", ")}`,
-    "color: #DF7543;",
+    "color: #F16F36;",
     "color: #666666;",
   );
 
   await blocks(contractArray);
-  console.log("%cDone fetching!", "color: #DF7543;");
+  console.log("%cDone fetching!", "color: #F16F36;");
 };
 
 // Expose is object and contract shortcuts
