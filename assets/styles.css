@@ -418,7 +418,6 @@ iframe {
 .fav-panel p {
   & .delete-btn {
     opacity: 0;
-    transition: opacity var(--transition-fast);
   }
 
   &:hover .delete-btn {
