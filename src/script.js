@@ -1576,7 +1576,7 @@ async function blocks(...contract) {
     }
 
     if (newBlocks.length > 0) {
-      console.log(`%cNew items for ${contractName}:`, "color: #4C6F6F;");
+      console.log(`%cNew items for ${contractName}:`, "color: #7BDFC1;");
       console.log(`%c${newBlocks.join("\n")}`, "color: #FAC085");
     } else {
       console.log(`%cNo new items for ${contractName}.`, "color: #666666;");
