@@ -1588,11 +1588,9 @@ async function fetchBlocks(...contract) {
 window.fetchBlocks = async (...contracts) => {
   let contractArray;
 
-  if (contracts.length === 1 && typeof contracts[0] === "string") {
-    contractArray = [contracts[0].toUpperCase()];
-  } else if (contracts.length === 1 && Array.isArray(contracts[0])) {
+  if (contracts.length === 1 && Array.isArray(contracts[0])) {
     contractArray = contracts[0];
-  } else if (contracts.length > 1) {
+  } else if (contracts.length >= 1) {
     contractArray = contracts;
   } else {
     console.error("Please provide contract name(s) as arguments.");

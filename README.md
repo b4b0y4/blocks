@@ -57,8 +57,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 1. In `src/contracts.js`, add your contract data to `contractRegistry`.
 2. Open the application in your browser and open the developer console.
 3. In the console, you can now fetch blocks in several convenient ways:
-    - **By variable (recommended):** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
-    - **By string:** `fetchBlocks('YOURCONTRACT')` (case-insensitive)
+    - **By variable:** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
     - **Multiple contracts:** `fetchBlocks(yourcontract, anothercontract)`
     - **Using predefined lists:** `fetchBlocks(is.studio)`
 4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `src/lists.js`.
