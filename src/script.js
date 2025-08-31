@@ -1532,7 +1532,7 @@ if (contractData) update(...Object.values(contractData));
 dom.root.classList.remove("no-flash");
 
 // Core block fetching function
-async function fetchBlocks(...contract) {
+async function blocks(...contract) {
   const contractArray =
     Array.isArray(contract[0]) && contract.length === 1
       ? contract[0]
@@ -1594,14 +1594,6 @@ window.fetchBlocks = async (...contracts) => {
     contractArray = contracts;
   } else {
     console.error("Please provide contract name(s) as arguments.");
-    console.log(
-      "Example: fetchBlocks(newrafael) or fetchBlocks(newrafael, ...is.studio)",
-    );
-    return;
-  }
-
-  if (contractArray.length === 0) {
-    console.error("No contracts specified.");
     return;
   }
 
@@ -1611,7 +1603,7 @@ window.fetchBlocks = async (...contracts) => {
     "color: #666666;",
   );
 
-  await fetchBlocks(contractArray);
+  await blocks(contractArray);
   console.log("%cDone fetching!", "color: #DF7543;");
 };
 
