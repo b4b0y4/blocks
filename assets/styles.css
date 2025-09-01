@@ -29,7 +29,7 @@ html {
 
 body {
   font-family: Helvetica, sans-serif;
-  min-block-size: 100%;
+  block-size: 100%;
   margin: 0;
   padding: 0;
   background-color: var(--color-bg);
@@ -493,8 +493,8 @@ iframe {
 
 @media (max-width: 600px) {
   .container {
-    position: fixed;
-    inset: 0;
+    /*position: fixed;
+    inset: 0;*/
     inline-size: 100%;
     block-size: calc(
       100% - env(safe-area-inset-top) - env(safe-area-inset-bottom)
