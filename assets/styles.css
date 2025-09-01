@@ -493,12 +493,15 @@ iframe {
 
 @media (max-width: 600px) {
   .container {
-    /*position: fixed;
-    inset: 0;*/
     inline-size: 100%;
     block-size: calc(
       100% - env(safe-area-inset-top) - env(safe-area-inset-bottom)
     );
+  }
+
+  .frame-container {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   iframe {
