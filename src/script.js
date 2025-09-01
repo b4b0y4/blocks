@@ -40,8 +40,6 @@ const dom = {
   tooltip: document.querySelector(".tooltip"),
 };
 
-dom.frame.setAttribute("scrolling", "no");
-
 // Used for toggling UI panels in a DRY way.
 const panels = [
   dom.instruction,
