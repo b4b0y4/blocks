@@ -936,7 +936,6 @@ function getToken(line, searchQuery) {
   dom.search.value = "";
   listManager.reset();
   displayList(listManager.originalList);
-  clearPanels();
 }
 
 // Handles numeric search queries for token selection.
@@ -1134,8 +1133,6 @@ function checkLoop() {
 
 // Handles loop start/stop and interval input from UI.
 function handleLoop(action) {
-  clearPanels();
-
   let inputValue = dom.loopInput.value.trim();
   const inputVal = parseInt(inputValue, 10);
 
