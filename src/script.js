@@ -1313,7 +1313,7 @@ const setDisplay = (skipOverlay = false) => {
 
   dom.favIcon.style.display = hasFavorites ? "block" : "none";
   dom.searchBox.classList.toggle("nofav", !hasFavorites);
-  if (!hasFavorites) clearPanels();
+  if (!hasFavorites && hasRPC) clearPanels();
 };
 
 // Tooltip text mapping for UI controls.
