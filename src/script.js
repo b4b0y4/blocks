@@ -879,9 +879,9 @@ async function injectFrame() {
     } = JSON.parse(localStorage.getItem("scriptData"));
 
     const styles = `
-      html { height: 100%; overflow: hidden; }
-      body { height: 100%; margin: 0; padding: 0; background-color: transparent; overflow: hidden; }
-      canvas { width: 100%; height: 100%; display: block; margin: 0; padding: 0; }`;
+      html { height: 100%; }
+      body { min-height: 100%; margin: 0; padding: 0; background-color: transparent; }
+      canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }`;
 
     const hasThree167 = src.some((s) => s && s.includes("three.js/0.167.0"));
 
