@@ -469,7 +469,7 @@ iframe {
 
 .overlay {
   visibility: hidden;
-  position: fixed;
+  position: absolute;
   inset: 0;
   backdrop-filter: blur(4px);
   z-index: 50;
