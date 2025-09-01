@@ -70,7 +70,7 @@ a {
 }
 
 .frame-container {
-  block-size: 100%;
+  flex: 1;
 }
 
 iframe {
