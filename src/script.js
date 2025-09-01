@@ -1098,6 +1098,8 @@ function loopRandom(interval, action) {
 
 // Executes the specified loop action (all, favorites, curated, etc).
 function performAction(action, favorite) {
+  clearPanels();
+
   if (action === "allLoop") getRandom(listManager.originalList);
   else if (action === "favLoop") getRandom(favorite);
   else if (action === "curatedLoop") {
