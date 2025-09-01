@@ -490,15 +490,6 @@ function update(
     ipfs,
     arweave,
   );
-  const oldFrame = dom.frame;
-  const frameContainer = oldFrame.parentNode;
-
-  const newFrame = document.createElement("iframe");
-  newFrame.id = "frame";
-  newFrame.src = "about:blank";
-
-  frameContainer.replaceChild(newFrame, oldFrame);
-  dom.frame = newFrame;
 
   const platform = getPlatform(contract, projId);
   updateInfo(
@@ -913,10 +904,8 @@ async function injectFrame() {
           </body>
         </html>`;
 
-    const iframe = dom.frame.contentDocument;
-    iframe.open();
-    iframe.write(html);
-    iframe.close();
+    const iframe = dom.frame;
+    iframe.srcdoc = html;
   } catch (error) {
     console.error("injectFrame:", error);
   }
