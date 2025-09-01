@@ -472,7 +472,7 @@ iframe {
   position: absolute;
   inset: 0;
   backdrop-filter: blur(4px);
-  z-index: 50;
+  z-index: -1;
   opacity: 0;
   pointer-events: none;
   transition:
@@ -481,6 +481,7 @@ iframe {
 
   &.active {
     visibility: visible;
+    z-index: 50;
     pointer-events: auto;
     opacity: 1;
     transition:
