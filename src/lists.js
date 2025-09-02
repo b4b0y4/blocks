@@ -1,4 +1,4 @@
-// Main project and contract list.
+// Artworks list.
 // Used for search, filtering, and display throughout the app.
 // Structure: array of strings with metadata for each entry.
 export const list = [
