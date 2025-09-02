@@ -258,7 +258,7 @@ iframe {
   position: fixed;
   display: flex;
   flex-direction: column;
-  inset-block-end: 60px;
+  inset-block-end: calc(60px + env(safe-area-inset-bottom));
   padding: var(--padding-lg);
   background-color: var(--color-bg);
   color: var(--color-txt);
@@ -560,7 +560,7 @@ iframe {
   :is(.instruction, .panel, .list-panel, .fav-panel, .drop-menu) {
     max-inline-size: 100%;
     inset-inline: 0;
-    inset-block-end: 80px;
+    inset-block-end: calc(80px + env(safe-area-inset-bottom));
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
