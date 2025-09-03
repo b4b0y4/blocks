@@ -118,12 +118,41 @@ iframe {
   transition: color var(--transition-fast);
   padding: 0 5px;
   user-select: none;
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  white-space: nowrap;
 
   &:hover {
     color: var(--color-btn);
+  }
+}
+
+.info.scrolling {
+  display: flex;
+}
+
+.info.scrolling span {
+  display: inline-block;
+  padding-right: 2em;
+  animation: scroll var(--scroll-duration) linear infinite;
+}
+
+@keyframes scroll {
+  to {
+    transform: translateX(-100%);
   }
 }
 
