@@ -116,7 +116,7 @@ iframe {
   font-size: var(--font-size-base);
   cursor: default;
   transition: color var(--transition-fast);
-  padding: 0 5px;
+  padding: 0 10px;
   user-select: none;
   overflow: hidden;
   -webkit-mask-image: linear-gradient(
