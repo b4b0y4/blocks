@@ -47,20 +47,20 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 
 ### Code Structure
 
-- `src/script.js` : Main application logic and UI interactions
-- `src/contracts.js` : Contract definitions and classification
-- `src/lists.js` : Collection data and library references
-- `src/abis.js` : abi references
+- `js/script.js` : Main application logic and UI interactions
+- `js/contracts.js` : Contract definitions and classification
+- `js/data.js` : Collection data and library references
+- `js/abis.js` : abi references
 
 ### Adding New Contracts
 
-1. In `src/contracts.js`, add your contract data to `contractRegistry`.
+1. In `js/contracts.js`, add your contract data to `contractRegistry`.
 2. Open the application in your browser and open the developer console.
 3. In the console, you can now fetch blocks in several convenient ways:
     - **By variable:** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
     - **Multiple contracts:** `fetchBlocks(yourcontract, anothercontract)`
     - **Using predefined lists:** `fetchBlocks(is.studio)`
-4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `src/lists.js`.
+4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `js/data.js`.
     - Add a `!` to the end of any line to ignore it in the UI.
     - Example output format:
       ```js
@@ -70,7 +70,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 
 ### Required Contract Functions
 
-Your contract must implement these standard functions:
+The contract must implement these standard functions:
 - `projectDetails(uint256)`
 - `tokenIdToHash(uint256)` or `showTokenHashes(uint256)`
 - `tokenIdToProjectId(uint256)`

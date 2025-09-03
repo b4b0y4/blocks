@@ -1,5 +1,5 @@
-import { ethers } from "./vendor/ethers.min.js";
-import { list, libs } from "./lists.js";
+import { ethers } from "./libs/ethers.min.js";
+import { list, libs } from "./data.js";
 import { contractRegistry, is } from "./contracts.js";
 
 // DOM references for all interactive and display elements.
