@@ -189,8 +189,17 @@ iframe {
   }
 }
 
+.save {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .random {
-  padding: 4px 6.5px 2.5px;
+  padding: 4px 6px 2.5px;
 }
 
 .theme-button[data-active="true"] {
@@ -214,7 +223,7 @@ iframe {
   background-color: var(--color-hvr);
   color: var(--color-txt);
   font-size: var(--font-size-base);
-  inline-size: 80px;
+  inline-size: 100px;
   text-align: start;
   border-radius: var(--border-radius-sm);
   padding: 3.5px 15px 3.5px 28px;
@@ -556,7 +565,6 @@ iframe {
   .search-input {
     padding: 5px 18px 5px 32px;
     font-size: var(--font-size-lg);
-    inline-size: 82px;
   }
 
   .spinner {
