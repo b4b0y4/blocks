@@ -1332,7 +1332,7 @@ const setDisplay = (skipOverlay = false) => {
 // Used for contextual help and improved UX.
 const tooltipTexts = {
   info: "More Info",
-  settings: "Instructions",
+  settings: "Settings",
   repeatIcon: "Loop Through Artworks",
   stopLoop: "Stop Loop",
   dec: "Previous Artwork",
@@ -1340,7 +1340,8 @@ const tooltipTexts = {
   explore: "Explore Algo",
   randomButton: "Random Artwork",
   searchIcon: "Search Collections",
-  favIcon: "Favorites",
+  favIcon: "Favorites List",
+  // save: "Save Current Artwork",
 };
 
 // Tooltip display timer for delayed show/hide.
