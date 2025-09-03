@@ -13,6 +13,7 @@ const dom = {
   frame: document.getElementById("frame"),
   infobar: document.querySelector(".infobar"),
   info: document.getElementById("info"),
+  save: document.getElementById("saveBtn"),
   dec: document.getElementById("decrementBtn"),
   inc: document.getElementById("incrementBtn"),
   explore: document.getElementById("explore"),
@@ -724,9 +725,6 @@ function updateInfo(
 
     dom.panel.innerHTML = `
        <div class="work">${detail[0]}</div>
-       <button class="save">
-        <i class="fa-regular fa-floppy-disk"></i>
-       </button>
        <p>
          <span class="artist">${artist}${platform ? ` ● ${platform}` : ""}</span><br>
          <span class="edition">${editionTxt(edition, minted)}</span>
@@ -1315,7 +1313,7 @@ const setDisplay = (skipOverlay = false) => {
 
   dom.infobar.style.opacity = !hasRPC || !hasContract ? "0.98" : "";
 
-  [dom.inc, dom.dec, dom.info, dom.explore, dom.loop].forEach(
+  [dom.inc, dom.dec, dom.save, dom.info, dom.explore, dom.loop].forEach(
     (button) => (button.style.display = hasContract ? "block" : "none"),
   );
 
@@ -1333,6 +1331,7 @@ const setDisplay = (skipOverlay = false) => {
 const tooltipTexts = {
   info: "More Info",
   settings: "Settings",
+  save: "Save Current Artwork",
   repeatIcon: "Loop Through Artworks",
   stopLoop: "Stop Loop",
   dec: "Previous Artwork",
@@ -1341,7 +1340,6 @@ const tooltipTexts = {
   randomButton: "Random Artwork",
   searchIcon: "Search Collections",
   favIcon: "Favorites List",
-  // save: "Save Current Artwork",
 };
 
 // Tooltip display timer for delayed show/hide.
@@ -1515,10 +1513,7 @@ dom.randomButton.addEventListener("click", () => {
 
 dom.explore.addEventListener("click", exploreAlgo);
 
-dom.panel.addEventListener("click", (e) => {
-  const saveBtn = e.target.closest(".save");
-  if (contractData) saveOutput();
-});
+dom.save.addEventListener("click", saveOutput);
 
 panels.forEach((panel) => {
   panel.addEventListener("click", (event) => {

@@ -146,7 +146,7 @@ iframe {
 
 .info.scrolling span {
   display: inline-block;
-  padding-right: 2em;
+  padding-right: 1.2em;
   animation: scroll var(--scroll-duration) linear infinite;
 }
 
@@ -189,15 +189,6 @@ iframe {
   }
 }
 
-.save {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .random {
   padding: 4px 6px 2.5px;
 }
@@ -223,7 +214,7 @@ iframe {
   background-color: var(--color-hvr);
   color: var(--color-txt);
   font-size: var(--font-size-base);
-  inline-size: 100px;
+  inline-size: 80px;
   text-align: start;
   border-radius: var(--border-radius-sm);
   padding: 3.5px 15px 3.5px 28px;
@@ -349,6 +340,7 @@ iframe {
 
 .tooltip {
   font-size: var(--font-size-sm);
+  padding: var(--padding-md);
   z-index: 110;
   white-space: nowrap;
 }
@@ -565,6 +557,7 @@ iframe {
   .search-input {
     padding: 5px 18px 5px 32px;
     font-size: var(--font-size-lg);
+    inline-size: 82px;
   }
 
   .spinner {
@@ -604,6 +597,24 @@ iframe {
     padding: var(--padding-lg)
       calc(var(--padding-lg) + env(safe-area-inset-right)) var(--padding-lg)
       calc(var(--padding-lg) + env(safe-area-inset-left));
+  }
+
+  .drop-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--padding-lg);
+    margin-inline: auto;
+
+    & button {
+      padding: 5px;
+      background-color: var(--color-hvr);
+    }
+
+    & .loopInput {
+      grid-column: 1;
+      grid-row: 1 / -1;
+      margin-block-end: 0;
+    }
   }
 
   .tooltip {
