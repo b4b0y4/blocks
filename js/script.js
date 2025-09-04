@@ -1,6 +1,6 @@
 import { ethers } from "./libs/ethers.min.js";
 import { list, libs } from "./data.js";
-import { contractRegistry, is } from "./contracts.js";
+import { contractRegistry, is } from "./constants.js";
 
 // DOM references for all interactive and display elements.
 // Centralized for maintainability and clarity.

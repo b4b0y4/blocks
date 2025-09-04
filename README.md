@@ -48,13 +48,12 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 ### Code Structure
 
 - `js/script.js` : Main application logic and UI interactions
-- `js/contracts.js` : Contract definitions and classification
+- `js/constants.js` : Contract definitions and classification
 - `js/data.js` : Collection data and library references
-- `js/abis.js` : abi references
 
 ### Adding New Contracts
 
-1. In `js/contracts.js`, add your contract data to `contractRegistry`.
+1. In `js/constants.js`, add your contract data to `contractRegistry`.
 2. Open the application in your browser and open the developer console.
 3. In the console, you can now fetch blocks in several convenient ways:
     - **By variable:** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
