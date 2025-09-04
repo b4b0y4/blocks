@@ -1311,7 +1311,7 @@ const setDisplay = (skipOverlay = false) => {
   const hasRPC = !!rpcUrl;
   const hasFavorites = Object.keys(favorite).length > 0;
 
-  dom.infobar.style.opacity = !hasRPC || !hasContract ? "0.98" : "";
+  dom.infobar.style.opacity = !hasRPC || !hasContract ? "0.9" : "";
 
   [dom.inc, dom.dec, dom.save, dom.info, dom.explore, dom.loop].forEach(
     (button) => (button.style.display = hasContract ? "block" : "none"),
