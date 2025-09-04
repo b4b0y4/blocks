@@ -561,7 +561,7 @@ export const list = [
   "ABSLXXV0 # SINE / Shaunaq # 57 Works",
   "ABSLXXVIII0 # DDUST / jiwa # 500 Works",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
-  "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 210 Works",
+  "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 222 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38758 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
