@@ -555,7 +555,7 @@ export const list = [
   "ABSLXVII0 # Coral Colors 2024 / Sputniko! # 1 Work!",
   "ABSLXVII1 # Coral Colors / Sputniko! # 21 Works",
   "ABSLXXI0 # Thread / Anna Lucia # 82 Works",
-  "ABSLXXII0 # Cities / Efdot x Diid # 306 Works",
+  "ABSLXXII0 # Cities / Efdot x Diid # 307 Works",
   "ABSLXXIII0 # MazeFlipper / Beervangeer x SuperGood # 43 Works",
   "ABSLXXIV0 # Pacific Spirit / Emily Nicoll & 747 # 300 Works",
   "ABSLXXV0 # SINE / Shaunaq # 57 Works",
