@@ -140,7 +140,27 @@ class ListManager {
 const listManager = new ListManager(list);
 
 // Renders the filtered list to the UI.
-function displayList(items) {
+// function displayList(items) {
+//   const listItems = items
+//     .map((line, index) => {
+//       const parts = line.split(" # ");
+//       const collectionAndArtist = parts[1].split(" / ");
+//       const collection = collectionAndArtist[0];
+//       const artist = collectionAndArtist[1];
+//       const workCount = parts[parts.length - 1];
+
+//       return `<p class="list-item ${index === listManager.selectedIndex ? "selected" : ""}"
+//                data-index="${index}">
+//                ${collection}
+//                <span>${artist} - ${workCount}</span>
+//             </p>`;
+//     })
+//     .join("");
+
+//   dom.listPanel.innerHTML = `<div>${listItems}</div>`;
+// }
+
+function displayList(items, numberQuery = "") {
   const listItems = items
     .map((line, index) => {
       const parts = line.split(" # ");
@@ -149,9 +169,13 @@ function displayList(items) {
       const artist = collectionAndArtist[1];
       const workCount = parts[parts.length - 1];
 
+      const displayName = numberQuery
+        ? `${collection} #${numberQuery}`
+        : collection;
+
       return `<p class="list-item ${index === listManager.selectedIndex ? "selected" : ""}"
                data-index="${index}">
-               ${collection}
+               ${displayName}
                <span>${artist} - ${workCount}</span>
             </p>`;
     })
@@ -175,13 +199,15 @@ function handleKeyboardNavigation(event) {
     selectedItem?.scrollIntoView({ block: "nearest" });
   } else if (event.key === "Enter") {
     const selectedItem = listManager.getSelected();
+    const query = dom.search.value.trim();
     if (selectedItem) {
-      getToken(selectedItem, "");
+      getToken(selectedItem, query);
     } else {
-      const query = dom.search.value.trim();
-      query === ""
-        ? getRandom(listManager.originalList)
-        : getToken(listManager.filteredList[0], query);
+      if (query === "") {
+        getRandom(listManager.originalList);
+      } else if (listManager.filteredList.length > 0) {
+        getToken(listManager.filteredList[0], query);
+      }
     }
   }
 }
@@ -941,26 +967,12 @@ async function injectFrame() {
 function getToken(line, searchQuery) {
   if (searchQuery === "curated") {
     getRandom(listManager.filteredList);
-  } else if (/^\d+$/.test(searchQuery)) {
-    handleNumericQuery(searchQuery);
   } else {
     handleOtherQuery(line, searchQuery);
   }
   dom.search.value = "";
   listManager.reset();
   displayList(listManager.originalList);
-}
-
-// Handles numeric search queries for token selection.
-function handleNumericQuery(searchQuery) {
-  const { contract, projId } = contractData;
-  const id = parseInt(searchQuery.match(/\s*(\d+)/)[1]);
-  const tokenId =
-    projId === 0
-      ? id
-      : Number((projId * 1000000 + id).toString().padStart(6, "0"));
-
-  grabData(tokenId, contract, true);
 }
 
 // Handles non-numeric search queries for token selection.
@@ -1445,14 +1457,60 @@ dom.rpcUrlInput.addEventListener("keypress", (event) => {
 });
 
 dom.search.addEventListener("input", (event) => {
-  const query = event.target.value.trim().split("#")[0].trim();
-  if (query !== "") {
-    displayList(listManager.filterByQuery(query));
-    if (!dom.listPanel.classList.contains("active")) {
-      togglePanel(dom.listPanel);
+  const query = event.target.value.trim();
+
+  // Searching for a specific # with artwork already loaded
+  if (query.startsWith("#") && contractData) {
+    const num = query.substring(1);
+
+    if (!/^\d*$/.test(num)) {
+      clearPanels();
+      return;
+    }
+
+    // Find the original list entry for the current artwork
+    const currentArtName = contractData.detail[0];
+    const originalLine = listManager.originalList.find((line) =>
+      line.includes(currentArtName),
+    );
+
+    if (originalLine) {
+      listManager.filteredList = [originalLine];
+      listManager.selectedIndex = 0;
+
+      const parts = originalLine.split(" # ");
+      const collectionAndArtist = parts[1].split(" / ");
+      const collection = collectionAndArtist[0];
+      const artist = collectionAndArtist[1];
+      const workCount = parts[parts.length - 1];
+
+      const listItemHTML = `<p class="list-item selected" data-index="0">
+         ${collection}${num ? ` #${num}` : ""}
+         <span>${artist} - ${workCount}</span>
+      </p>`;
+
+      dom.listPanel.innerHTML = `<div>${listItemHTML}</div>`;
+      if (!dom.listPanel.classList.contains("active")) {
+        togglePanel(dom.listPanel);
+      }
+    } else {
+      clearPanels();
     }
   } else {
-    clearPanels();
+    // Standard search behavior
+    const queryParts = query.split("#");
+    const searchQuery = queryParts[0].trim();
+    const numberQuery = queryParts.length > 1 ? queryParts[1].trim() : "";
+
+    if (searchQuery !== "") {
+      const filteredItems = listManager.filterByQuery(searchQuery);
+      displayList(filteredItems, numberQuery);
+      if (!dom.listPanel.classList.contains("active")) {
+        togglePanel(dom.listPanel);
+      }
+    } else {
+      clearPanels();
+    }
   }
 });
 
@@ -1465,7 +1523,8 @@ dom.listPanel.addEventListener("click", (event) => {
     listManager.selectedIndex = index;
     const selectedItem = listManager.getSelected();
     if (selectedItem) {
-      getToken(selectedItem, "");
+      const query = dom.search.value.trim();
+      getToken(selectedItem, query);
     }
   }
 });
