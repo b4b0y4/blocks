@@ -112,10 +112,17 @@ class ListManager {
         if (parts.length > 1) {
           const collectionAndArtist = parts[1].split(" / ");
           const collection = collectionAndArtist[0].trim().toLowerCase();
+          const artist =
+            collectionAndArtist.length > 1
+              ? collectionAndArtist[1].trim().toLowerCase()
+              : "";
 
           if (collection === query) {
             exactMatches.push(line);
-          } else if (collection.includes(query)) {
+          } else if (
+            collection.includes(query) ||
+            (artist && artist.includes(query))
+          ) {
             partialMatches.push(line);
           }
         }
