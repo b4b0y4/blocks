@@ -94,18 +94,35 @@ class ListManager {
 
   filterByQuery(query) {
     query = query.toLowerCase().trim();
-    this.filteredList =
-      query === "curated"
-        ? this.originalList.filter((line) => {
-            const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
-            return (
-              idMatch &&
-              (curated.includes(parseInt(idMatch[1])) || line.startsWith("ABC"))
-            );
-          })
-        : this.originalList.filter((line) =>
-            line.toLowerCase().includes(query),
-          );
+
+    if (query === "curated") {
+      this.filteredList = this.originalList.filter((line) => {
+        const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
+        return (
+          idMatch &&
+          (curated.includes(parseInt(idMatch[1])) || line.startsWith("ABC"))
+        );
+      });
+    } else {
+      const exactMatches = [];
+      const partialMatches = [];
+
+      this.originalList.forEach((line) => {
+        const parts = line.split(" # ");
+        if (parts.length > 1) {
+          const collectionAndArtist = parts[1].split(" / ");
+          const collection = collectionAndArtist[0].trim().toLowerCase();
+
+          if (collection === query) {
+            exactMatches.push(line);
+          } else if (collection.includes(query)) {
+            partialMatches.push(line);
+          }
+        }
+      });
+      this.filteredList =
+        exactMatches.length > 0 ? exactMatches : partialMatches;
+    }
 
     this.selectedIndex = -1;
     return this.filteredList;
@@ -140,26 +157,6 @@ class ListManager {
 const listManager = new ListManager(list);
 
 // Renders the filtered list to the UI.
-// function displayList(items) {
-//   const listItems = items
-//     .map((line, index) => {
-//       const parts = line.split(" # ");
-//       const collectionAndArtist = parts[1].split(" / ");
-//       const collection = collectionAndArtist[0];
-//       const artist = collectionAndArtist[1];
-//       const workCount = parts[parts.length - 1];
-
-//       return `<p class="list-item ${index === listManager.selectedIndex ? "selected" : ""}"
-//                data-index="${index}">
-//                ${collection}
-//                <span>${artist} - ${workCount}</span>
-//             </p>`;
-//     })
-//     .join("");
-
-//   dom.listPanel.innerHTML = `<div>${listItems}</div>`;
-// }
-
 function displayList(items, numberQuery = "") {
   const listItems = items
     .map((line, index) => {
@@ -191,7 +188,11 @@ function handleKeyboardNavigation(event) {
     const newIndex = listManager.navigate(
       event.key === "ArrowUp" ? "up" : "down",
     );
-    displayList(listManager.filteredList);
+
+    const query = dom.search.value.trim();
+    const queryParts = query.split("#");
+    const numberQuery = queryParts.length > 1 ? queryParts[1].trim() : "";
+    displayList(listManager.filteredList, numberQuery);
 
     const selectedItem = dom.listPanel.querySelector(
       `[data-index="${newIndex}"]`,
