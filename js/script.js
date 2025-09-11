@@ -760,7 +760,7 @@ function updateInfo(
     dom.panel.innerHTML = `
        <div class="work">${detail[0]}</div>
        <p>
-         <span class="artist">${artist}${platform ? ` ● ${platform}` : ""}</span><br>
+         <span class="artist">${artist}${platform ? ` &bull; ${platform}` : ""}</span><br>
          <span class="edition">${editionTxt(edition, minted)}</span>
        </p>
        <p>${detail[2]}</p>
