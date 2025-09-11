@@ -28,7 +28,7 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
   - Empty input: Display random artwork
   - Collection name: Random piece from that collection
   - Collection name #ID: Specific artwork
-  - ID number: Specific artwork from current collection
+  - #ID number: Specific artwork from current collection
 
 ### Interface Features
 - Search box with keyboard navigation (up/down arrows)
