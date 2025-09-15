@@ -312,7 +312,7 @@ iframe {
 
 :is(.instruction, .panel, .list-panel, .fav-panel) {
   min-inline-size: 350px;
-  max-inline-size: 400px;
+  max-inline-size: 425px;
   max-block-size: 60%;
   inset-inline-end: calc(10px + env(safe-area-inset-right));
   overflow-y: auto;
