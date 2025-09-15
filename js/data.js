@@ -562,6 +562,8 @@ export const list = [
   "ABSLXXVIII0 # DDUST / jiwa # 500 Works",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
   "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 301 Works",
+  "ABSLXXXI0 # Winterkammer TO BE DELETED / Frederik Vanhoutte x The Generative Art Museum # 0 Works!",
+  "ABSLXXXI1 # Winterkammer / Frederik Vanhoutte x The Generative Art Museum # 1 Work",
   "ABSLXXXII0 # Neural Prometheus / Paolo Curtoni x The Generative Art Museum # 1 Work",
   "ABSLXXXIII0 # Tracing Archetypes / Aleksandra Jovanić x The Generative Art Museum # 1 Work",
   "ABSLXXXIV0 # Ratio / Julian Hespenheide × The Generative Art Museum # 1 Work",
