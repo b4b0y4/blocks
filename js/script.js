@@ -293,10 +293,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
             fetchCIDsFn(projId, extDepCount, contract),
             fetchGateway(contract),
           ]);
-          if (
-            nameMap[contract] === "BMFLEX" ||
-            nameMap[contract] === "NUMBER"
-          ) {
+          if (["BMFLEX", "NUMBER"].includes(nameMap[contract])) {
             ipfs = "https://ipfs.io/ipfs";
           }
         }
