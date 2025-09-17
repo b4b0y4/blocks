@@ -97,7 +97,7 @@ class ListManager {
 
     if (query === "curated") {
       this.filteredList = this.originalList.filter((line) => {
-        const idMatch = line.match(/^AB(?:II|III|C)?(\d+)/);
+        const idMatch = line.match(/^AB(?:II|III|C|CFLEX)?(\d+)/);
         return (
           idMatch &&
           (curated.includes(parseInt(idMatch[1])) || line.startsWith("ABC"))
@@ -211,7 +211,9 @@ function handleKeyboardNavigation(event) {
     if (selectedItem) {
       getToken(selectedItem, query);
     } else {
-      if (query === "") {
+      if (query === "curated") {
+        getRandom(listManager.filteredList);
+      } else if (query === "") {
         getRandom(listManager.originalList);
       } else if (listManager.filteredList.length > 0) {
         getToken(listManager.filteredList[0], query);
@@ -277,39 +279,9 @@ async function grabData(tokenId, contract, updateOnly = false) {
         extractLibraryName(projectInfo),
       ]);
 
-      let extDep = [];
-      let ipfs = null;
-      let arweave = null;
-      let bytecodeAddress = null;
-      let claimHash = null;
-
+      let flexData = {};
       if (is.flex.includes(nameMap[contract])) {
-        const extDepCount = await fetchExtDepCount(projId, contract);
-        if (extDepCount) {
-          const fetchCIDsFn = isV3 ? fetchV3CIDs : fetchV2CIDs;
-          [extDep, { ipfs, arweave }] = await Promise.all([
-            fetchCIDsFn(projId, extDepCount, contract),
-            fetchGateway(contract),
-          ]);
-          if (
-            nameMap[contract] === "BMFLEX" ||
-            nameMap[contract] === "NUMBER"
-          ) {
-            ipfs = "https://ipfs.io/ipfs";
-          }
-        }
-
-        if (nameMap[contract] === "ABCFLEX") {
-          const abcFlexData = await handleAbcFlex(
-            instance,
-            contract,
-            projId,
-            tokenId,
-            indexMap,
-          );
-          bytecodeAddress = abcFlexData.bytecodeAddress;
-          claimHash = abcFlexData.claimHash;
-        }
+        flexData = await fetchFlexData(isV3, contract, projId, tokenId);
       }
 
       const data = {
@@ -324,11 +296,12 @@ async function grabData(tokenId, contract, updateOnly = false) {
         extLib,
         edition,
         minted,
-        extDep,
-        ipfs,
-        arweave,
-        bytecodeAddress,
-        claimHash,
+        extDep: [],
+        ipfs: null,
+        arweave: null,
+        bytecodeAddress: null,
+        claimHash: null,
+        ...flexData,
       };
 
       localStorage.setItem("contractData", JSON.stringify(data));
@@ -521,6 +494,47 @@ async function handleAbcFlex(instance, contract, projId, tokenId, indexMap) {
   return { bytecodeAddress, claimHash };
 }
 
+async function fetchFlexData(isV3, contract, projId, tokenId) {
+  let flexData = {
+    extDep: [],
+    ipfs: null,
+    arweave: null,
+    bytecodeAddress: null,
+    claimHash: null,
+  };
+
+  const extDepCount = await fetchExtDepCount(projId, contract);
+  if (extDepCount) {
+    const fetchCIDsFn = isV3 ? fetchV3CIDs : fetchV2CIDs;
+    const [extDep, gateways] = await Promise.all([
+      fetchCIDsFn(projId, extDepCount, contract),
+      fetchGateway(contract),
+    ]);
+
+    flexData.extDep = extDep;
+    flexData.ipfs = gateways.ipfs;
+    flexData.arweave = gateways.arweave;
+
+    if (nameMap[contract] === "BMFLEX" || nameMap[contract] === "NUMBER") {
+      flexData.ipfs = "https://ipfs.io/ipfs";
+    }
+  }
+
+  if (nameMap[contract] === "ABCFLEX") {
+    const { bytecodeAddress, claimHash } = await handleAbcFlex(
+      instance,
+      contract,
+      projId,
+      tokenId,
+      indexMap,
+    );
+    flexData.bytecodeAddress = bytecodeAddress;
+    flexData.claimHash = claimHash;
+  }
+
+  return flexData;
+}
+
 // Updates contractData and UI after fetching new token/project info.
 // Triggers info panel, frame, and localStorage updates.
 function update(
@@ -596,7 +610,6 @@ function update(
 }
 
 // Stores script and token metadata in localStorage for rendering.
-// Handles special cases for dependencies and gateway replacement.
 function pushItemToLocalStorage(
   contract,
   tokenId,
@@ -621,14 +634,40 @@ function pushItemToLocalStorage(
     : "";
   const src = [libs[extLib]];
 
-  if (extDep.length > 0 && extDep[0].cid?.includes("@")) {
+  if (extDep && extDep.length > 0 && extDep[0].cid?.includes("@")) {
     src.push(libs[extDep[0].cid]);
   }
 
-  let tokenIdHash = "";
+  const tokenIdHash = constructTokenData({
+    contract,
+    tokenId,
+    hash,
+    extDep,
+    ipfs,
+    arweave,
+    bytecodeAddress,
+    claimHash,
+  });
 
+  localStorage.setItem(
+    "scriptData",
+    JSON.stringify({ src, tokenIdHash, process, script }),
+  );
+}
+
+// Builds the tokenData object string for the iframe, handling contract variations.
+function constructTokenData({
+  contract,
+  tokenId,
+  hash,
+  extDep,
+  ipfs,
+  arweave,
+  bytecodeAddress,
+  claimHash,
+}) {
   if (nameMap[contract] === "ABCFLEX") {
-    tokenIdHash = `let tokenData = {
+    return `let tokenData = {
          "tokenId": "${tokenId}",
          "externalAssetDependencies": [{
              "cid": "",
@@ -642,7 +681,9 @@ function pushItemToLocalStorage(
          "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
          "hash": "${hash}"
      }`;
-  } else if (extDep.length > 0) {
+  }
+
+  if (extDep && extDep.length > 0) {
     const cids = extDep
       .map((dep) => {
         if (dep.isOnchain) {
@@ -679,23 +720,20 @@ function pushItemToLocalStorage(
       })
       .join(",");
 
-    tokenIdHash = `let tokenData = {
+    return `let tokenData = {
        "tokenId": "${tokenId}",
        "externalAssetDependencies": [${cids}],
        "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
        "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
        "hash": "${hash}"
      }`;
-  } else if (nameMap[contract] === "AB") {
-    tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
-  } else {
-    tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
   }
 
-  localStorage.setItem(
-    "scriptData",
-    JSON.stringify({ src, tokenIdHash, process, script }),
-  );
+  if (nameMap[contract] === "AB") {
+    return `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
+  }
+
+  return `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
 }
 
 // Rewrites unreliable IPFS gateway URLs to a default for reliability.
@@ -1039,21 +1077,15 @@ async function injectFrame() {
 }
 
 // Handles token selection logic based on search query.
-// Delegates to numeric, curated, or other query handlers.
 function getToken(line, searchQuery) {
-  if (searchQuery === "curated") {
-    getRandom(listManager.filteredList);
-  } else {
-    handleOtherQuery(line, searchQuery);
-  }
+  handleQuery(line, searchQuery);
   dom.search.value = "";
   listManager.reset();
   displayList(listManager.originalList);
 }
 
-// Handles non-numeric search queries for token selection.
-// Supports direct token id or random selection.
-function handleOtherQuery(line, searchQuery) {
+// Handles search queries for token selection.
+function handleQuery(line, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*Work/;
   const [_, listContract, projIdStr, tokenStr] = line.match(regex);
   const projId = parseInt(projIdStr);
