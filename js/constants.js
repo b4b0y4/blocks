@@ -5474,6 +5474,470 @@ const abi = {
     },
   ],
   bm: [],
+  PMPV0: [
+    {
+      inputs: [
+        {
+          internalType: "contract IDelegateRegistry",
+          name: "delegateRegistry_",
+          type: "address",
+        },
+      ],
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    { inputs: [], name: "ReentrancyGuardReentrantCall", type: "error" },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "delegationRegistry",
+          type: "address",
+        },
+      ],
+      name: "DelegationRegistryUpdated",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "coreContract",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "projectId",
+          type: "uint256",
+        },
+        {
+          components: [
+            { internalType: "string", name: "key", type: "string" },
+            {
+              components: [
+                {
+                  internalType: "enum IPMPV0.AuthOption",
+                  name: "authOption",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum IPMPV0.ParamType",
+                  name: "paramType",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint48",
+                  name: "pmpLockedAfterTimestamp",
+                  type: "uint48",
+                },
+                {
+                  internalType: "address",
+                  name: "authAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string[]",
+                  name: "selectOptions",
+                  type: "string[]",
+                },
+                { internalType: "bytes32", name: "minRange", type: "bytes32" },
+                { internalType: "bytes32", name: "maxRange", type: "bytes32" },
+              ],
+              internalType: "struct IPMPV0.PMPConfig",
+              name: "pmpConfig",
+              type: "tuple",
+            },
+          ],
+          indexed: false,
+          internalType: "struct IPMPV0.PMPInputConfig[]",
+          name: "pmpInputConfigs",
+          type: "tuple[]",
+        },
+        {
+          indexed: false,
+          internalType: "uint8",
+          name: "projectConfigNonce",
+          type: "uint8",
+        },
+      ],
+      name: "ProjectConfigured",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "coreContract",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "projectId",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "contract IPMPConfigureHook",
+          name: "tokenPMPPostConfigHook",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "contract IPMPAugmentHook",
+          name: "tokenPMPReadAugmentationHook",
+          type: "address",
+        },
+      ],
+      name: "ProjectHooksConfigured",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: false,
+          internalType: "address",
+          name: "coreContract",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "tokenId",
+          type: "uint256",
+        },
+        {
+          components: [
+            { internalType: "string", name: "key", type: "string" },
+            {
+              internalType: "enum IPMPV0.ParamType",
+              name: "configuredParamType",
+              type: "uint8",
+            },
+            {
+              internalType: "bytes32",
+              name: "configuredValue",
+              type: "bytes32",
+            },
+            {
+              internalType: "bool",
+              name: "configuringArtistString",
+              type: "bool",
+            },
+            {
+              internalType: "string",
+              name: "configuredValueString",
+              type: "string",
+            },
+          ],
+          indexed: false,
+          internalType: "struct IPMPV0.PMPInput[]",
+          name: "pmpInputs",
+          type: "tuple[]",
+        },
+        {
+          indexed: false,
+          internalType: "address[]",
+          name: "authAddresses",
+          type: "address[]",
+        },
+      ],
+      name: "TokenParamsConfigured",
+      type: "event",
+    },
+    {
+      inputs: [],
+      name: "DELEGATION_REGISTRY_TOKEN_OWNER_RIGHTS",
+      outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "projectId", type: "uint256" },
+        {
+          components: [
+            { internalType: "string", name: "key", type: "string" },
+            {
+              components: [
+                {
+                  internalType: "enum IPMPV0.AuthOption",
+                  name: "authOption",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum IPMPV0.ParamType",
+                  name: "paramType",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint48",
+                  name: "pmpLockedAfterTimestamp",
+                  type: "uint48",
+                },
+                {
+                  internalType: "address",
+                  name: "authAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string[]",
+                  name: "selectOptions",
+                  type: "string[]",
+                },
+                { internalType: "bytes32", name: "minRange", type: "bytes32" },
+                { internalType: "bytes32", name: "maxRange", type: "bytes32" },
+              ],
+              internalType: "struct IPMPV0.PMPConfig",
+              name: "pmpConfig",
+              type: "tuple",
+            },
+          ],
+          internalType: "struct IPMPV0.PMPInputConfig[]",
+          name: "pmpInputConfigs",
+          type: "tuple[]",
+        },
+      ],
+      name: "configureProject",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "projectId", type: "uint256" },
+        {
+          internalType: "contract IPMPConfigureHook",
+          name: "tokenPMPPostConfigHook",
+          type: "address",
+        },
+        {
+          internalType: "contract IPMPAugmentHook",
+          name: "tokenPMPReadAugmentationHook",
+          type: "address",
+        },
+      ],
+      name: "configureProjectHooks",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "tokenId", type: "uint256" },
+        {
+          components: [
+            { internalType: "string", name: "key", type: "string" },
+            {
+              internalType: "enum IPMPV0.ParamType",
+              name: "configuredParamType",
+              type: "uint8",
+            },
+            {
+              internalType: "bytes32",
+              name: "configuredValue",
+              type: "bytes32",
+            },
+            {
+              internalType: "bool",
+              name: "configuringArtistString",
+              type: "bool",
+            },
+            {
+              internalType: "string",
+              name: "configuredValueString",
+              type: "string",
+            },
+          ],
+          internalType: "struct IPMPV0.PMPInput[]",
+          name: "pmpInputs",
+          type: "tuple[]",
+        },
+      ],
+      name: "configureTokenParams",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "delegateRegistry",
+      outputs: [
+        {
+          internalType: "contract IDelegateRegistry",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "projectId", type: "uint256" },
+      ],
+      name: "getProjectConfig",
+      outputs: [
+        { internalType: "string[]", name: "pmpKeys", type: "string[]" },
+        { internalType: "uint8", name: "configNonce", type: "uint8" },
+        {
+          internalType: "contract IPMPConfigureHook",
+          name: "tokenPMPPostConfigHook",
+          type: "address",
+        },
+        {
+          internalType: "contract IPMPAugmentHook",
+          name: "tokenPMPReadAugmentationHook",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "projectId", type: "uint256" },
+        { internalType: "string", name: "pmpKey", type: "string" },
+      ],
+      name: "getProjectPMPConfig",
+      outputs: [
+        {
+          components: [
+            {
+              internalType: "uint8",
+              name: "highestConfigNonce",
+              type: "uint8",
+            },
+            {
+              internalType: "enum IPMPV0.AuthOption",
+              name: "authOption",
+              type: "uint8",
+            },
+            {
+              internalType: "enum IPMPV0.ParamType",
+              name: "paramType",
+              type: "uint8",
+            },
+            {
+              internalType: "uint48",
+              name: "pmpLockedAfterTimestamp",
+              type: "uint48",
+            },
+            { internalType: "address", name: "authAddress", type: "address" },
+            {
+              internalType: "uint8",
+              name: "selectOptionsLength",
+              type: "uint8",
+            },
+            {
+              internalType: "string[]",
+              name: "selectOptions",
+              type: "string[]",
+            },
+            { internalType: "bytes32", name: "minRange", type: "bytes32" },
+            { internalType: "bytes32", name: "maxRange", type: "bytes32" },
+          ],
+          internalType: "struct IPMPV0.PMPConfigView",
+          name: "pmpConfigView",
+          type: "tuple",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "tokenId", type: "uint256" },
+        { internalType: "string", name: "pmpKey", type: "string" },
+      ],
+      name: "getTokenPMPStorage",
+      outputs: [
+        {
+          components: [
+            {
+              internalType: "enum IPMPV0.ParamType",
+              name: "configuredParamType",
+              type: "uint8",
+            },
+            {
+              internalType: "bytes32",
+              name: "configuredValue",
+              type: "bytes32",
+            },
+            {
+              internalType: "string",
+              name: "artistConfiguredValueString",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "nonArtistConfiguredValueString",
+              type: "string",
+            },
+          ],
+          internalType: "struct IPMPV0.PMPStorage",
+          name: "pmp",
+          type: "tuple",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "tokenId", type: "uint256" },
+      ],
+      name: "getTokenParams",
+      outputs: [
+        {
+          components: [
+            { internalType: "string", name: "key", type: "string" },
+            { internalType: "string", name: "value", type: "string" },
+          ],
+          internalType: "struct IWeb3Call.TokenParam[]",
+          name: "tokenParams",
+          type: "tuple[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address", name: "wallet", type: "address" },
+        { internalType: "address", name: "coreContract", type: "address" },
+        { internalType: "uint256", name: "tokenId", type: "uint256" },
+      ],
+      name: "isTokenOwnerOrDelegate",
+      outputs: [
+        { internalType: "bool", name: "isTokenOwnerOrDelegate_", type: "bool" },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [{ internalType: "bytes4", name: "interfaceId", type: "bytes4" }],
+      name: "supportsInterface",
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
+      stateMutability: "view",
+      type: "function",
+    },
+  ],
 };
 
 // Create a modified copy of abi.v2 and store it in abi.bm
