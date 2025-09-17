@@ -601,124 +601,81 @@ function pushItemToLocalStorage(
   hash,
   script,
   extLib,
-  extDep,
+  extDep = [],
   ipfs,
   arweave,
   bytecodeAddress,
   claimHash,
 ) {
+  const contractName = nameMap[contract];
+  const tokenIdStr = tokenId.toString();
+
   if (
-    (nameMap[contract] === "BMFLEX" && !tokenId.toString().startsWith("16")) ||
-    (nameMap[contract] === "HODL" && tokenId.toString().startsWith("13"))
+    (contractName === "BMFLEX" && !tokenIdStr.startsWith("16")) ||
+    (contractName === "HODL" && tokenIdStr.startsWith("13"))
   ) {
     script = replaceIPFSGateways(script);
   }
 
-  const process = extLib.startsWith("processing")
-    ? "application/processing"
-    : "";
   const src = [libs[extLib]];
+  if (extDep[0]?.cid?.includes("@")) src.push(libs[extDep[0].cid]);
 
-  if (extDep && extDep.length > 0 && extDep[0].cid?.includes("@")) {
-    src.push(libs[extDep[0].cid]);
+  const ipfsUrl = ipfs || "https://ipfs.io/ipfs/";
+  const arweaveUrl = arweave || "https://arweave.net/";
+
+  const tokenData = { tokenId: tokenId.toString() };
+
+  if (contractName === "ABCFLEX") {
+    tokenData.externalAssetDependencies = [
+      {
+        cid: "",
+        dependency_type: "ONCHAIN",
+        data: { claimHash },
+        bytecode_address: bytecodeAddress,
+      },
+    ];
+    tokenData.preferredIPFSGateway = ipfsUrl;
+    tokenData.preferredArweaveGateway = arweaveUrl;
+    tokenData.hash = hash;
+  } else if (extDep.length) {
+    tokenData.externalAssetDependencies = extDep.map((d) => {
+      let cid = d.cid;
+      if (contractName === "BMFLEX" && tokenIdStr.startsWith("16"))
+        cid = replaceIPFSGateways(cid);
+      const type = d.isOnchain
+        ? d.dependency_type
+        : /^(Qm|baf)/.test(cid) || cid.includes("/ipfs/")
+          ? "IPFS"
+          : /^[\w-]{43}$/.test(cid)
+            ? "ARWEAVE"
+            : "ART_BLOCKS_DEPENDENCY_REGISTRY";
+      return {
+        cid,
+        dependency_type: type,
+        data: d.isOnchain ? d.data : null,
+        ...(d.bytecode_address && { bytecode_address: d.bytecode_address }),
+      };
+    });
+    tokenData.preferredIPFSGateway = ipfsUrl;
+    tokenData.preferredArweaveGateway = arweaveUrl;
+    tokenData.hash = hash;
+  } else if (contractName === "AB") {
+    tokenData.hashes = [hash];
+  } else {
+    tokenData.hash = hash;
   }
 
-  const tokenIdHash = constructTokenData({
-    contract,
-    tokenId,
-    hash,
-    extDep,
-    ipfs,
-    arweave,
-    bytecodeAddress,
-    claimHash,
-  });
+  const tokenIdHash = `let tokenData = ${JSON.stringify(tokenData)}`;
 
   localStorage.setItem(
     "scriptData",
-    JSON.stringify({ src, tokenIdHash, process, script }),
+    JSON.stringify({
+      src,
+      tokenIdHash,
+      process: extLib.startsWith("processing") ? "application/processing" : "",
+      script,
+    }),
   );
-}
-
-// Builds the tokenData object string for the iframe, handling contract variations.
-function constructTokenData({
-  contract,
-  tokenId,
-  hash,
-  extDep,
-  ipfs,
-  arweave,
-  bytecodeAddress,
-  claimHash,
-}) {
-  if (nameMap[contract] === "ABCFLEX") {
-    return `let tokenData = {
-         "tokenId": "${tokenId}",
-         "externalAssetDependencies": [{
-             "cid": "",
-             "dependency_type": "ONCHAIN",
-             "data": {
-                "claimHash": "${claimHash}"
-              },
-              "bytecode_address": "${bytecodeAddress}"
-         }],
-         "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
-         "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
-         "hash": "${hash}"
-     }`;
-  }
-
-  if (extDep && extDep.length > 0) {
-    const cids = extDep
-      .map((dep) => {
-        if (dep.isOnchain) {
-          return `{
-             "cid": "${dep.cid}",
-             "dependency_type": "${dep.dependency_type}",
-             "data": ${JSON.stringify(dep.data)},
-             "bytecode_address": "${dep.bytecode_address}"
-           }`;
-        }
-
-        let cid = dep.cid;
-        if (
-          nameMap[contract] === "BMFLEX" &&
-          tokenId.toString().startsWith("16")
-        ) {
-          cid = replaceIPFSGateways(cid);
-        }
-
-        const dependencyType =
-          cid.startsWith("Qm") ||
-          cid.startsWith("baf") ||
-          cid.includes("/ipfs/")
-            ? "IPFS"
-            : /^[a-zA-Z0-9_-]{43}$/.test(cid)
-              ? "ARWEAVE"
-              : "ART_BLOCKS_DEPENDENCY_REGISTRY";
-
-        return `{
-           "cid": "${cid}",
-           "dependency_type": "${dependencyType}",
-           "data": null
-         }`;
-      })
-      .join(",");
-
-    return `let tokenData = {
-       "tokenId": "${tokenId}",
-       "externalAssetDependencies": [${cids}],
-       "preferredIPFSGateway": "${ipfs || "https://ipfs.io/ipfs/"}",
-       "preferredArweaveGateway": "${arweave || "https://arweave.net/"}",
-       "hash": "${hash}"
-     }`;
-  }
-
-  if (nameMap[contract] === "AB") {
-    return `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
-  }
-
-  return `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
 }
 
 // Rewrites unreliable IPFS gateway URLs to a default for reliability.
