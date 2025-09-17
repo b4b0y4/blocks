@@ -1078,14 +1078,6 @@ async function injectFrame() {
 
 // Handles token selection logic based on search query.
 function getToken(line, searchQuery) {
-  handleQuery(line, searchQuery);
-  dom.search.value = "";
-  listManager.reset();
-  displayList(listManager.originalList);
-}
-
-// Handles search queries for token selection.
-function handleQuery(line, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*Work/;
   const [_, listContract, projIdStr, tokenStr] = line.match(regex);
   const projId = parseInt(projIdStr);
@@ -1108,6 +1100,9 @@ function handleQuery(line, searchQuery) {
   }
 
   grabData(tokenId, contract);
+  dom.search.value = "";
+  listManager.reset();
+  displayList(listManager.originalList);
 }
 
 // Selects a random item from a list or object and loads it.
