@@ -279,9 +279,39 @@ async function grabData(tokenId, contract, updateOnly = false) {
         extractLibraryName(projectInfo),
       ]);
 
-      let flexData = {};
+      let extDep = [];
+      let ipfs = null;
+      let arweave = null;
+      let bytecodeAddress = null;
+      let claimHash = null;
+
       if (is.flex.includes(nameMap[contract])) {
-        flexData = await fetchFlexData(isV3, contract, projId, tokenId);
+        const extDepCount = await fetchExtDepCount(projId, contract);
+        if (extDepCount) {
+          const fetchCIDsFn = isV3 ? fetchV3CIDs : fetchV2CIDs;
+          [extDep, { ipfs, arweave }] = await Promise.all([
+            fetchCIDsFn(projId, extDepCount, contract),
+            fetchGateway(contract),
+          ]);
+          if (
+            nameMap[contract] === "BMFLEX" ||
+            nameMap[contract] === "NUMBER"
+          ) {
+            ipfs = "https://ipfs.io/ipfs";
+          }
+        }
+
+        if (nameMap[contract] === "ABCFLEX") {
+          const abcFlexData = await handleAbcFlex(
+            instance,
+            contract,
+            projId,
+            tokenId,
+            indexMap,
+          );
+          bytecodeAddress = abcFlexData.bytecodeAddress;
+          claimHash = abcFlexData.claimHash;
+        }
       }
 
       const data = {
@@ -296,12 +326,11 @@ async function grabData(tokenId, contract, updateOnly = false) {
         extLib,
         edition,
         minted,
-        extDep: [],
-        ipfs: null,
-        arweave: null,
-        bytecodeAddress: null,
-        claimHash: null,
-        ...flexData,
+        extDep,
+        ipfs,
+        arweave,
+        bytecodeAddress,
+        claimHash,
       };
 
       localStorage.setItem("contractData", JSON.stringify(data));
@@ -492,47 +521,6 @@ async function handleAbcFlex(instance, contract, projId, tokenId, indexMap) {
   const claimHash = tokenParams[0][1];
 
   return { bytecodeAddress, claimHash };
-}
-
-async function fetchFlexData(isV3, contract, projId, tokenId) {
-  let flexData = {
-    extDep: [],
-    ipfs: null,
-    arweave: null,
-    bytecodeAddress: null,
-    claimHash: null,
-  };
-
-  const extDepCount = await fetchExtDepCount(projId, contract);
-  if (extDepCount) {
-    const fetchCIDsFn = isV3 ? fetchV3CIDs : fetchV2CIDs;
-    const [extDep, gateways] = await Promise.all([
-      fetchCIDsFn(projId, extDepCount, contract),
-      fetchGateway(contract),
-    ]);
-
-    flexData.extDep = extDep;
-    flexData.ipfs = gateways.ipfs;
-    flexData.arweave = gateways.arweave;
-
-    if (nameMap[contract] === "BMFLEX" || nameMap[contract] === "NUMBER") {
-      flexData.ipfs = "https://ipfs.io/ipfs";
-    }
-  }
-
-  if (nameMap[contract] === "ABCFLEX") {
-    const { bytecodeAddress, claimHash } = await handleAbcFlex(
-      instance,
-      contract,
-      projId,
-      tokenId,
-      indexMap,
-    );
-    flexData.bytecodeAddress = bytecodeAddress;
-    flexData.claimHash = claimHash;
-  }
-
-  return flexData;
 }
 
 // Updates contractData and UI after fetching new token/project info.
