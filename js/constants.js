@@ -5956,6 +5956,10 @@ abi.bm = abi.v2.map((entry) =>
 //  Each entry includes ABI, address, and optional platform/startProjId.
 // This centralizes contract config for maintainability and lookup.
 export const contractRegistry = {
+  PMPV0: {
+    abi: abi.PMPV0,
+    address: "0x00000000A78E278b2d2e2935FaeBe19ee9F1FF14",
+  },
   AB: {
     abi: abi.v1,
     address: "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a",
