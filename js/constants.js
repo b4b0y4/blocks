@@ -5512,6 +5512,12 @@ export const contractRegistry = {
     platform: "Art Blocks Curated",
     startProjId: 494,
   },
+  ABCFLEX: {
+    abi: abi.v3Flex,
+    address: "0xAB00000000002ADE39f58F9D8278a31574fFBe77",
+    platform: "Art Blocks Curated",
+    startProjId: 505,
+  },
   ABEXP: {
     abi: abi.v3,
     address: "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a",
