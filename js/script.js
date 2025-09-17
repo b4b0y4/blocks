@@ -1,5 +1,5 @@
 import { ethers } from "./libs/ethers.min.js";
-import { list, libs } from "./data.js";
+import { list, libs, curated, playground } from "./data.js";
 import { contractRegistry, is } from "./constants.js";
 
 // DOM references for all interactive and display elements.
@@ -729,72 +729,24 @@ const replaceIPFSGateways = (scriptContent) => {
   );
 };
 
-// Project IDs for curated collections.
-const curated = [
-  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
-];
-
-// Returns the curation type for a given project ID.
-function getCuration(projId) {
-  const playground = [
-    6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77,
-    94, 104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164,
-    167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264,
-    286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370,
-    373,
-  ];
-
-  return curated.includes(projId)
-    ? "Art Blocks Curated"
-    : playground.includes(projId)
-      ? "Art Blocks Playground"
-      : projId < 374
-        ? "Art Blocks Factory"
-        : "Art Blocks Presents";
-}
-
 // Returns platform name for a contract/project.
 function getPlatform(contract, projId) {
   const contractName = nameMap[contract];
 
   if (["AB", "ABII", "ABIII"].includes(contractName)) {
-    return getCuration(projId);
+    return curated.includes(projId)
+      ? "Art Blocks Curated"
+      : playground.includes(projId)
+        ? "Art Blocks Playground"
+        : projId < 374
+          ? "Art Blocks Factory"
+          : "Art Blocks Presents";
   }
   if (is.studio.includes(contractName)) {
     return "Art Blocks Studio";
   }
 
   return contractRegistry[contractName].platform || "";
-}
-
-// Determines if an external dependency should be shown in UI.
-function showExtDep(dependency) {
-  if (!dependency) return false;
-
-  const isOnchain = dependency.dependency_type === "ONCHAIN";
-  const isArtBlocksRegistry =
-    dependency.dependency_type === "ART_BLOCKS_DEPENDENCY_REGISTRY";
-
-  return !isOnchain && !isArtBlocksRegistry;
-}
-
-// Returns external dependency type for display.
-function getExtDepType(dependency, contract) {
-  if (nameMap[contract] === "BMFLEX") {
-    return "ipfs";
-  }
-
-  const isIPFS =
-    dependency.dependency_type === "IPFS" ||
-    (dependency.cid &&
-      (dependency.cid.startsWith("Qm") || dependency.cid.startsWith("baf")));
-
-  return isIPFS ? "ipfs" : "arweave";
 }
 
 // Updates the info panel with all relevant project data.
@@ -1006,6 +958,31 @@ function getLibVersion(extLib) {
 // Copies text to clipboard.
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
+}
+
+// Determines if an external dependency should be shown in UI.
+function showExtDep(dependency) {
+  if (!dependency) return false;
+
+  const isOnchain = dependency.dependency_type === "ONCHAIN";
+  const isArtBlocksRegistry =
+    dependency.dependency_type === "ART_BLOCKS_DEPENDENCY_REGISTRY";
+
+  return !isOnchain && !isArtBlocksRegistry;
+}
+
+// Returns external dependency type for display.
+function getExtDepType(dependency, contract) {
+  if (nameMap[contract] === "BMFLEX") {
+    return "ipfs";
+  }
+
+  const isIPFS =
+    dependency.dependency_type === "IPFS" ||
+    (dependency.cid &&
+      (dependency.cid.startsWith("Qm") || dependency.cid.startsWith("baf")));
+
+  return isIPFS ? "ipfs" : "arweave";
 }
 
 // Injects artwork preview into iframe for live rendering.
