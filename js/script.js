@@ -653,7 +653,6 @@ function pushItemToLocalStorage(
         cid,
         dependency_type: type,
         data: d.isOnchain ? d.data : null,
-        ...(d.bytecode_address && { bytecode_address: d.bytecode_address }),
       };
     });
     tokenData.preferredIPFSGateway = ipfsUrl;
