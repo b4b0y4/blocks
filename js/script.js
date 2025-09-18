@@ -222,7 +222,7 @@ function handleKeyboardNavigation(event) {
   }
 }
 
-// Aggregates all contract/project data for a given token.
+// Aggregates all project data for a given token.
 // Used for both full loads and partial updates.
 async function grabData(tokenId, contract, updateOnly = false) {
   try {
