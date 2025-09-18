@@ -756,10 +756,32 @@ function updateInfo(
       infoElement.classList.add("scrolling");
     }
 
+    const showLib =
+      extLib &&
+      !extLib.startsWith("js") &&
+      !extLib.startsWith("svg") &&
+      !extLib.startsWith("custom");
+    const libInfo = showLib
+      ? getLibVersion(extLib) +
+        (extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10
+          ? ` <br> ${extDep[0].cid}`
+          : "")
+      : "";
+
+    const showExt =
+      (extDep.length > 0 && showExtDep(extDep[0])) ||
+      nameMap[contract] === "BMFLEX";
+    const extInfo = showExt ? getExtDepType(extDep[0], contract) : "";
+
+    const dependencyInfo =
+      libInfo && extInfo ? `${libInfo} <br> ${extInfo}` : libInfo || extInfo;
+
     dom.panel.innerHTML = `
        <div class="work">${detail[0]}</div>
        <p>
-         <span class="artist">${artist}${platform ? ` &bull; ${platform}` : ""}</span><br>
+         <span class="artist">${artist}${
+           platform ? ` &bull; ${platform}` : ""
+         }</span><br>
          <span class="edition">${editionTxt(edition, minted)}</span>
        </p>
        <p>${detail[2]}</p>
@@ -808,27 +830,10 @@ function updateInfo(
                : ""
            }
            ${
-             extLib &&
-             !extLib.startsWith("js") &&
-             !extLib.startsWith("svg") &&
-             !extLib.startsWith("custom")
+             dependencyInfo
                ? createSection(
-                   "LIBRARY",
-                   `<span class="no-copy-txt">
-                   ${getLibVersion(extLib)} <br>
-                   ${extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10 ? extDep[0].cid : ""}
-                 </span>`,
-                 )
-               : ""
-           }
-           ${
-             (extDep.length > 0 && showExtDep(extDep[0])) ||
-             nameMap[contract] === "BMFLEX"
-               ? createSection(
-                   "EXTERNAL DEPENDENCY",
-                   `<span class="no-copy-txt">
-                     ${getExtDepType(extDep[0], contract)}
-                   </span>`,
+                   "DEPENDENCY",
+                   `<span class="no-copy-txt">${dependencyInfo}</span>`,
                  )
                : ""
            }
