@@ -659,7 +659,7 @@ function pushItemToLocalStorage(
     tokenData.preferredArweaveGateway = arweaveUrl;
     tokenData.hash = hash;
   } else if (contractName === "AB") {
-    tokenData.hashes = [hash];
+    tokenData.hashes = hash;
   } else {
     tokenData.hash = hash;
   }
