@@ -659,7 +659,7 @@ function pushItemToLocalStorage(
     tokenData.preferredArweaveGateway = arweaveUrl;
     tokenData.hash = hash;
   } else if (contractName === "AB") {
-    tokenData.hashes = hash;
+    tokenData.hashes = Array.isArray(hash) ? hash : [hash];
   } else {
     tokenData.hash = hash;
   }
@@ -1075,15 +1075,6 @@ function exploreAlgo() {
 
   localStorage.setItem("contractData", JSON.stringify(contractData));
 
-  const scriptData = JSON.parse(localStorage.getItem("scriptData"));
-  if (scriptData) {
-    if (nameMap[contractData.contract] === "AB") {
-      scriptData.tokenIdHash = `let tokenData = { tokenId: "${tokenId}", hashes: ["${hash}"] }`;
-    } else {
-      scriptData.tokenIdHash = `let tokenData = {tokenId: "${tokenId}", hash: "${hash}" }`;
-    }
-    localStorage.setItem("scriptData", JSON.stringify(scriptData));
-  }
   update(...Object.values(contractData));
 }
 
