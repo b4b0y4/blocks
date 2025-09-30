@@ -572,7 +572,7 @@ export const list = [
   "ABSLXXXV0 # The light where we meet / Amy Goodchild x The Generative Art Museum # 18 Works",
   "ABSLXXXVI0 # VIVOTECA / bustavo x The Generative Art Museum # 6 Works",
   "ABSLXXXVII0 # Transformations du Champ / HAL09999 x The Generative Art Museum # 11 Works",
-  "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 40 Works",
+  "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 43 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38758 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
