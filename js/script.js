@@ -510,6 +510,10 @@ async function handleAbcFlex(instance, contract, projId, tokenId, indexMap) {
   ].projectExternalAssetDependencyByIndex(projId, 0);
   const bytecodeAddress = dependencyTuple[2];
 
+  if (projId === 506) {
+    return { bytecodeAddress, claimHash: null };
+  }
+
   const pmpv0Contract = instance[indexMap["ABPMPV0"]];
   const tokenParams = await pmpv0Contract.getTokenParams(
     instance[contract].target,
@@ -630,7 +634,7 @@ function pushItemToLocalStorage(
       {
         cid: "",
         dependency_type: "ONCHAIN",
-        data: { claimHash },
+        data: claimHash ? { claimHash } : {},
         bytecode_address: bytecodeAddress,
       },
     ];
