@@ -508,6 +508,7 @@ export const list = [
   "ABC503 # BUSIEST / James Merrill # 5 Works",
   "ABC504 # BUSY / James Merrill # 50 Works",
   "ABCFLEX505 # Gas Wars / Jack Butcher # 500 Works",
+  "ABCFLEX506 # Quine / Larva Labs # 497 Works",
   "ABS0 # Misbah / Melissa Wiederrecht # 55 Works",
   "ABSI0 # One More Day / Aaron Penne # 50 Works",
   "ABSI1 # Three More Days / Aaron Penne # 1 Work",
