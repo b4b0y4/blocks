@@ -510,16 +510,11 @@ async function handleAbcFlex(instance, contract, projId, tokenId, indexMap) {
   ].projectExternalAssetDependencyByIndex(projId, 0);
   const bytecodeAddress = dependencyTuple[2];
 
-  if (projId === 506) {
-    return { bytecodeAddress, claimHash: null };
-  }
-
   const pmpv0Contract = instance[indexMap["ABPMPV0"]];
-  const tokenParams = await pmpv0Contract.getTokenParams(
-    instance[contract].target,
-    tokenId,
-  );
-  const claimHash = tokenParams[0][1];
+  const claimHash = await pmpv0Contract
+    .getTokenParams(instance[contract].target, tokenId)
+    .then((params) => params[0][1])
+    .catch(() => null);
 
   return { bytecodeAddress, claimHash };
 }
