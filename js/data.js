@@ -569,7 +569,7 @@ export const list = [
   "ABSLXXXI1 # Winterkammer / Frederik Vanhoutte x The Generative Art Museum # 26 Works",
   "ABSLXXXII0 # Neural Prometheus / Paolo Curtoni x The Generative Art Museum # 20 Works",
   "ABSLXXXIII0 # Tracing Archetypes / Aleksandra Jovanić x The Generative Art Museum # 10 Works",
-  "ABSLXXXIV0 # Ratio / Julian Hespenheide × The Generative Art Museum # 55 Works",
+  "ABSLXXXIV0 # Ratio / Julian Hespenheide × The Generative Art Museum # 56 Works",
   "ABSLXXXV0 # The light where we meet / Amy Goodchild x The Generative Art Museum # 19 Works",
   "ABSLXXXVI0 # VIVOTECA / bustavo x The Generative Art Museum # 6 Works",
   "ABSLXXXVII0 # Transformations du Champ / HAL09999 x The Generative Art Museum # 11 Works",
