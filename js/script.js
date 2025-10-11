@@ -243,16 +243,20 @@ async function grabData(tokenId, contract, updateOnly = false) {
       data.owner = owner;
       data.ensName = ensName;
 
-      if (nameMap[contract] === "ABCFLEX") {
-        const abcFlexData = await handleAbcFlex(
+      const pmpv0Address = contractRegistry.ABPMPV0.address.toLowerCase();
+      const onchainPmpv0Dep = data.extDep?.find(
+        (dep) =>
+          dep.dependency_type === "ONCHAIN" &&
+          dep.bytecode_address.toLowerCase() === pmpv0Address,
+      );
+
+      if (onchainPmpv0Dep) {
+        data.tokenParams = await fetchTokenParams(
           instance,
           contract,
-          data.projId,
           tokenId,
           indexMap,
         );
-        data.bytecodeAddress = abcFlexData.bytecodeAddress;
-        data.claimHash = abcFlexData.claimHash;
       }
 
       localStorage.setItem("contractData", JSON.stringify(data));
@@ -282,8 +286,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
       let extDep = [];
       let ipfs = null;
       let arweave = null;
-      let bytecodeAddress = null;
-      let claimHash = null;
+      let tokenParams = null;
 
       if (is.flex.includes(nameMap[contract])) {
         const extDepCount = await fetchExtDepCount(projId, contract);
@@ -298,16 +301,20 @@ async function grabData(tokenId, contract, updateOnly = false) {
           }
         }
 
-        if (nameMap[contract] === "ABCFLEX") {
-          const abcFlexData = await handleAbcFlex(
+        const pmpv0Address = contractRegistry.ABPMPV0.address.toLowerCase();
+        const onchainPmpv0Dep = extDep.find(
+          (dep) =>
+            dep.dependency_type === "ONCHAIN" &&
+            dep.bytecode_address.toLowerCase() === pmpv0Address,
+        );
+
+        if (onchainPmpv0Dep) {
+          tokenParams = await fetchTokenParams(
             instance,
             contract,
-            projId,
             tokenId,
             indexMap,
           );
-          bytecodeAddress = abcFlexData.bytecodeAddress;
-          claimHash = abcFlexData.claimHash;
         }
       }
 
@@ -326,8 +333,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
         extDep,
         ipfs,
         arweave,
-        bytecodeAddress,
-        claimHash,
+        tokenParams,
       };
 
       localStorage.setItem("contractData", JSON.stringify(data));
@@ -463,7 +469,7 @@ async function fetchV3CIDs(projId, extDepCount, contract) {
         if (data.startsWith("{")) {
           parsedData = JSON.parse(data);
         } else {
-          parsedData = { raw: data };
+          parsedData = {};
         }
       } catch (error) {
         console.log("ONCHAIN data parsing error:", error);
@@ -503,20 +509,19 @@ async function fetchGateway(contract) {
   return { ipfs, arweave };
 }
 
-// Handles ABCFLEX contract specific data extraction
-async function handleAbcFlex(instance, contract, projId, tokenId, indexMap) {
-  const dependencyTuple = await instance[
-    contract
-  ].projectExternalAssetDependencyByIndex(projId, 0);
-  const bytecodeAddress = dependencyTuple[2];
-
+// Fetches token parameters from the PMPV0 contract.
+async function fetchTokenParams(instance, contract, tokenId, indexMap) {
   const pmpv0Contract = instance[indexMap["ABPMPV0"]];
-  const claimHash = await pmpv0Contract
+  const tokenParamsRaw = await pmpv0Contract
     .getTokenParams(instance[contract].target, tokenId)
-    .then((params) => params[0][1])
-    .catch(() => null);
+    .catch(() => []);
 
-  return { bytecodeAddress, claimHash };
+  const tokenParams = tokenParamsRaw.reduce((acc, [key, value]) => {
+    acc[key] = typeof value === "bigint" ? value.toString() : value;
+    return acc;
+  }, {});
+
+  return tokenParams;
 }
 
 // Updates contractData and UI after fetching new token/project info.
@@ -536,8 +541,7 @@ function update(
   extDep,
   ipfs,
   arweave,
-  bytecodeAddress,
-  claimHash,
+  tokenParams,
 ) {
   contractData = {
     tokenId,
@@ -554,8 +558,7 @@ function update(
     extDep,
     ipfs,
     arweave,
-    bytecodeAddress,
-    claimHash,
+    tokenParams,
   };
 
   localStorage.setItem("contractData", JSON.stringify(contractData));
@@ -570,8 +573,7 @@ function update(
     extDep,
     ipfs,
     arweave,
-    bytecodeAddress,
-    claimHash,
+    tokenParams,
   );
 
   const platform = getPlatform(contract, projId);
@@ -603,8 +605,7 @@ function pushItemToLocalStorage(
   extDep = [],
   ipfs,
   arweave,
-  bytecodeAddress,
-  claimHash,
+  tokenParams,
 ) {
   const contractName = nameMap[contract];
   const tokenIdStr = tokenId.toString();
@@ -624,23 +625,13 @@ function pushItemToLocalStorage(
 
   const tokenData = { tokenId: tokenId.toString() };
 
-  if (contractName === "ABCFLEX") {
-    tokenData.externalAssetDependencies = [
-      {
-        cid: "",
-        dependency_type: "ONCHAIN",
-        data: claimHash ? { claimHash } : {},
-        bytecode_address: bytecodeAddress,
-      },
-    ];
-    tokenData.preferredIPFSGateway = ipfsUrl;
-    tokenData.preferredArweaveGateway = arweaveUrl;
-    tokenData.hash = hash;
-  } else if (extDep.length) {
+  if (extDep.length) {
+    const pmpv0Address = contractRegistry.ABPMPV0.address.toLowerCase();
     tokenData.externalAssetDependencies = extDep.map((d) => {
       let cid = d.cid;
-      if (contractName === "BMFLEX" && tokenIdStr.startsWith("16"))
+      if (contractName === "BMFLEX" && tokenIdStr.startsWith("16")) {
         cid = replaceIPFSGateways(cid);
+      }
       const type = d.isOnchain
         ? d.dependency_type
         : /^(Qm|baf)/.test(cid) || cid.includes("/ipfs/")
@@ -648,11 +639,28 @@ function pushItemToLocalStorage(
           : /^[\w-]{43}$/.test(cid)
             ? "ARWEAVE"
             : "ART_BLOCKS_DEPENDENCY_REGISTRY";
-      return {
+
+      let data = d.isOnchain ? d.data : null;
+      if (
+        d.dependency_type === "ONCHAIN" &&
+        d.bytecode_address.toLowerCase() === pmpv0Address &&
+        tokenParams &&
+        Object.keys(tokenParams).length > 0
+      ) {
+        data = tokenParams;
+      }
+
+      const dependency = {
         cid,
         dependency_type: type,
-        data: d.isOnchain ? d.data : null,
+        data,
       };
+
+      if (d.bytecode_address) {
+        dependency.bytecode_address = d.bytecode_address;
+      }
+
+      return dependency;
     });
     tokenData.preferredIPFSGateway = ipfsUrl;
     tokenData.preferredArweaveGateway = arweaveUrl;
