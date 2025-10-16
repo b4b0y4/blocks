@@ -264,17 +264,19 @@ async function grabData(tokenId, contract, updateOnly = false) {
     } else {
       clearDataStorage();
 
+      const projId = Math.floor(tokenId / 1000000);
       const isV3 = is.v3.includes(nameMap[contract]);
-      const [projectId, hash, { owner, ensName }] = await Promise.all([
-        fetchProjectId(tokenId, contract),
+      const [
+        hash,
+        projectInfo,
+        detail,
+        { owner, ensName },
+        { edition, minted },
+      ] = await Promise.all([
         fetchHash(tokenId, contract),
-        fetchOwner(tokenId, contract),
-      ]);
-
-      const projId = Number(projectId);
-      const [projectInfo, detail, { edition, minted }] = await Promise.all([
         fetchProjectInfo(projId, contract, isV3),
         fetchProjectDetails(projId, contract),
+        fetchOwner(tokenId, contract),
         fetchEditionInfo(projId, contract, isV3),
       ]);
 
@@ -351,11 +353,6 @@ async function fetchHash(tokenId, contract) {
   return nameMap[contract] == "AB"
     ? instance[contract].showTokenHashes(tokenId)
     : instance[contract].tokenIdToHash(tokenId);
-}
-
-// Resolves the projectId for a given tokenId and contract.
-async function fetchProjectId(tokenId, contract) {
-  return instance[contract].tokenIdToProjectId(tokenId);
 }
 
 // Fetches project script info/details depending on contract version.
