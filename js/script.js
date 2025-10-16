@@ -540,25 +540,7 @@ function update(
   arweave,
   tokenParams,
 ) {
-  contractData = {
-    tokenId,
-    contract,
-    projId,
-    hash,
-    script,
-    detail,
-    owner,
-    ensName,
-    extLib,
-    edition,
-    minted,
-    extDep,
-    ipfs,
-    arweave,
-    tokenParams,
-  };
-
-  localStorage.setItem("contractData", JSON.stringify(contractData));
+  const platform = getPlatform(contract, projId);
   console.log(contractData);
 
   pushItemToLocalStorage(
@@ -572,9 +554,7 @@ function update(
     arweave,
     tokenParams,
   );
-
-  const platform = getPlatform(contract, projId);
-  updateInfo(
+  updateUI(
     contract,
     owner,
     ensName,
@@ -586,8 +566,7 @@ function update(
     minted,
     extDep,
   );
-
-  setDisplay();
+  setUIControls();
   injectFrame();
   toggleSpin(false);
 }
@@ -711,7 +690,7 @@ function getPlatform(contract, projId) {
 
 // Updates the info panel with all relevant project data.
 // Handles UI rendering and copy-to-clipboard logic.
-function updateInfo(
+function updateUI(
   contract,
   owner,
   ensName,
@@ -730,11 +709,11 @@ function updateInfo(
     if (nameMap[contract] === "BMF" && !logs.length) {
       artist = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "");
       logs.push(artist);
-      update();
+      renderInfo();
     }
   };
 
-  const update = () => {
+  const renderInfo = () => {
     const infoText = `${detail[0]} #${shortId(tokenId)} / ${artist}`;
     // Cleanup previous content and classes
     dom.info.innerHTML = "";
@@ -869,7 +848,7 @@ function updateInfo(
       }
     });
   };
-  update();
+  renderInfo();
 }
 
 // Returns a shortened tokenId for display.
@@ -1240,7 +1219,7 @@ function pushFavoriteToStorage(id) {
     </div>`;
   favorite[key] = contractData;
   localStorage.setItem("favorite", JSON.stringify(favorite));
-  setDisplay();
+  setUIControls();
 }
 
 // Removes a favorite artwork from localStorage.
@@ -1248,7 +1227,7 @@ function deleteFavoriteFromStorage(key) {
   if (favorite.hasOwnProperty(key)) {
     delete favorite[key];
     localStorage.setItem("favorite", JSON.stringify(favorite));
-    setDisplay(true);
+    setUIControls(true);
   }
 }
 
@@ -1339,7 +1318,7 @@ const updateLoopButton = () => {
 
 // Utility: Sets visibility and state for main UI controls.
 // Ensures controls are only shown when relevant data is present.
-const setDisplay = (skipOverlay = false) => {
+const setUIControls = (skipOverlay = false) => {
   const hasContract = !!contractData;
   const hasRPC = !!rpcUrl;
   const hasFavorites = Object.keys(favorite).length > 0;
@@ -1617,7 +1596,7 @@ window
 
 updateLoopButton();
 checkLoop();
-setDisplay();
+setUIControls();
 initTooltips();
 initTheme();
 if (contractData) update(...Object.values(contractData));
