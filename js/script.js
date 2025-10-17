@@ -338,7 +338,6 @@ async function grabData(tokenId, contract, updateOnly = false) {
         tokenParams,
       };
 
-      localStorage.setItem("contractData", JSON.stringify(data));
       update(...Object.values(data));
     }
   } catch (error) {
@@ -541,6 +540,25 @@ function update(
   tokenParams,
 ) {
   const platform = getPlatform(contract, projId);
+  contractData = {
+    tokenId,
+    contract,
+    projId,
+    hash,
+    script,
+    detail,
+    owner,
+    ensName,
+    extLib,
+    edition,
+    minted,
+    extDep,
+    ipfs,
+    arweave,
+    tokenParams,
+  };
+
+  localStorage.setItem("contractData", JSON.stringify(contractData));
   console.log(contractData);
 
   pushItemToLocalStorage(
@@ -554,6 +572,7 @@ function update(
     arweave,
     tokenParams,
   );
+  injectFrame();
   updateUI(
     contract,
     owner,
@@ -567,7 +586,6 @@ function update(
     extDep,
   );
   setUIControls();
-  injectFrame();
   toggleSpin(false);
 }
 
@@ -702,19 +720,9 @@ function updateUI(
   minted,
   extDep,
 ) {
-  let artist = detail[1] || "Snowfro";
-  const logs = [];
-
-  dom.frame.contentWindow.console.log = (message) => {
-    if (nameMap[contract] === "BMF" && !logs.length) {
-      artist = message.replace(/Artist\s*\d+\.\s*/, "").replace(/\s*--.*/, "");
-      logs.push(artist);
-      renderInfo();
-    }
-  };
-
   const renderInfo = () => {
-    const infoText = `${detail[0]} #${shortId(tokenId)} / ${artist}`;
+    const infoText = `${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`;
+
     // Cleanup previous content and classes
     dom.info.innerHTML = "";
     dom.info.classList.remove("scrolling");
@@ -762,7 +770,7 @@ function updateUI(
     dom.panel.innerHTML = `
        <div class="work">${detail[0]}</div>
        <p>
-         <span class="artist">${artist}${
+         <span class="artist">${detail[1]}${
            platform ? ` &bull; ${platform}` : ""
          }</span><br>
          <span class="edition">${editionTxt(edition, minted)}</span>
@@ -1023,7 +1031,6 @@ function getRandom(source) {
       ];
     clearDataStorage();
     contractData = source[randomKey];
-    localStorage.setItem("contractData", JSON.stringify(contractData));
     update(...Object.values(contractData));
   }
 }
@@ -1055,8 +1062,6 @@ function exploreAlgo() {
   contractData.tokenId = tokenId;
   contractData.owner = "";
   contractData.ensName = "";
-
-  localStorage.setItem("contractData", JSON.stringify(contractData));
 
   update(...Object.values(contractData));
 }
@@ -1235,7 +1240,6 @@ function deleteFavoriteFromStorage(key) {
 function frameFavorite(key) {
   clearDataStorage();
   contractData = favorite[key];
-  localStorage.setItem("contractData", JSON.stringify(contractData));
   update(...Object.values(contractData));
 }
 
