@@ -6459,6 +6459,10 @@ export const contractRegistry = {
     abi: abi.v3Flex,
     address: "0xB8E8Bec0891A7519091E18590e0b60221853dd2B",
   },
+  MAYA: {
+    abi: abi.v3,
+    address: "0x00002491B000Aa008756652C87cc92D87e896f0f",
+  },
 };
 
 export const is = {
