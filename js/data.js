@@ -555,7 +555,7 @@ export const list = [
   "ABSXXXV1 # Unlived; Unliveable / KALA # 1 Work",
   "ABSXXXVIII0 # 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt # 64 Works",
   "ABSXL0 # Strings / JMY # 25 Works",
-  "ABSL0 # Into the Light / Jason Ting # 7 Works",
+  "ABSL0 # Into the Light / Jason Ting # 8 Works",
   "ABSLIII0 # E-PASTEL II / Holger Lippmann # 75 Works",
   "ABSLIV0 # Lightweight Reconstruction / itsgalo x office ca # 128 Works",
   "ABSLVI0 # I. / ryley-o.eth # 240 Works",
@@ -572,13 +572,13 @@ export const list = [
   "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 301 Works",
   "ABSLXXXI0 # Winterkammer TO BE DELETED / Frederik Vanhoutte x The Generative Art Museum # 0 Works!",
   "ABSLXXXI1 # Winterkammer / Frederik Vanhoutte x The Generative Art Museum # 28 Works",
-  "ABSLXXXII0 # Neural Prometheus / Paolo Curtoni x The Generative Art Museum # 30 Works",
+  "ABSLXXXII0 # Neural Prometheus / Paolo Curtoni x The Generative Art Museum # 31 Works",
   "ABSLXXXIII0 # Tracing Archetypes / Aleksandra Jovanić x The Generative Art Museum # 11 Works",
   "ABSLXXXIV0 # Ratio / Julian Hespenheide × The Generative Art Museum # 128 Works",
-  "ABSLXXXV0 # The light where we meet / Amy Goodchild x The Generative Art Museum # 21 Works",
+  "ABSLXXXV0 # The light where we meet / Amy Goodchild x The Generative Art Museum # 22 Works",
   "ABSLXXXVI0 # VIVOTECA / bustavo x The Generative Art Museum # 11 Works",
   "ABSLXXXVII0 # Transformations du Champ / HAL09999 x The Generative Art Museum # 18 Works",
-  "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 93 Works",
+  "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 98 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38943 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
@@ -943,6 +943,7 @@ export const list = [
   "ITERATION0 # 9dcc ITERATION-02 /  # 1183 Works!",
   "ITERATION0 # 9dcc ITERATION-02 / Snowfro # 1183 Works",
   "NUMBER0 # Number / Wang # 166 Works",
+  "MAYA0 # Ofrenda / Stefano Contiero # 78 Works",
 ];
 
 // Library metadata for external dependencies.
