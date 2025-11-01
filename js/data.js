@@ -578,7 +578,7 @@ export const list = [
   "ABSLXXXV0 # The light where we meet / Amy Goodchild x The Generative Art Museum # 22 Works",
   "ABSLXXXVI0 # VIVOTECA / bustavo x The Generative Art Museum # 11 Works",
   "ABSLXXXVII0 # Transformations du Champ / HAL09999 x The Generative Art Museum # 18 Works",
-  "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 98 Works",
+  "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 104 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38943 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
@@ -943,7 +943,7 @@ export const list = [
   "ITERATION0 # 9dcc ITERATION-02 /  # 1183 Works!",
   "ITERATION0 # 9dcc ITERATION-02 / Snowfro # 1183 Works",
   "NUMBER0 # Number / Wang # 166 Works",
-  "MAYA0 # Ofrenda / Stefano Contiero # 78 Works",
+  "MAYA0 # Ofrenda / Stefano Contiero # 507 Works",
 ];
 
 // Library metadata for external dependencies.
