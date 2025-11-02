@@ -943,7 +943,7 @@ export const list = [
   "ITERATION0 # 9dcc ITERATION-02 /  # 1183 Works!",
   "ITERATION0 # 9dcc ITERATION-02 / Snowfro # 1183 Works",
   "NUMBER0 # Number / Wang # 166 Works",
-  "MAYA0 # Ofrenda / Stefano Contiero # 507 Works",
+  "MAYA0 # Ofrenda / Stefano Contiero # 798 Works",
 ];
 
 // Library metadata for external dependencies.
