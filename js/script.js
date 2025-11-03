@@ -402,7 +402,12 @@ async function fetchOwner(tokenId, contract) {
 
 // Extracts the external library name from project metadata.
 function extractLibraryName(projectInfo) {
-  if (typeof projectInfo[0] === "string" && projectInfo[0].includes("@")) {
+  if (!projectInfo[0]) {
+    return "js";
+  } else if (
+    typeof projectInfo[0] === "string" &&
+    projectInfo[0].includes("@")
+  ) {
     return projectInfo[0].trim();
   } else {
     return JSON.parse(projectInfo[0]).type;
