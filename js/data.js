@@ -518,6 +518,7 @@ export const list = [
   "ABSIV0 # Monochronos / Heeey # 40 Works",
   "ABSVII0 # Deco Echo / Harvey Rayner # 300 Works",
   "ABSVII1 # Amplitudes of Canvas / Harvey Rayner # 555 Works",
+  "ABSVII2 # Covehithe / Harvey Rayner # 60 Works",
   "ABSVIII0 # Edge of Space / Robert Baker # 100 Works",
   "ABSIX0 # On-Chain Memory Token / Jeff Davis # 200 Works",
   "ABSIX1 # Untitled / Jeff Davis # 1 Work!",
@@ -943,7 +944,7 @@ export const list = [
   "ITERATION0 # 9dcc ITERATION-02 /  # 1183 Works!",
   "ITERATION0 # 9dcc ITERATION-02 / Snowfro # 1183 Works",
   "NUMBER0 # Number / Wang # 166 Works",
-  "MAYA0 # Ofrenda / Stefano Contiero # 798 Works",
+  "MAYA0 # Ofrenda / Stefano Contiero # 1111 Works",
 ];
 
 // Library metadata for external dependencies.
