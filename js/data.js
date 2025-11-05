@@ -550,7 +550,7 @@ export const list = [
   "ABSXXVIII0 # Defrag Me / Jorge Ledezma # 22 Works",
   "ABSXXX0 # Heartbeat / AnaPet # 20 Works",
   "ABSXXX1 # re:Fleur / AnaPet # 107 Works",
-  "ABSXXXI0 # Chroma Genesis / xnmtrc # 80 Works",
+  "ABSXXXI0 # Chroma Genesis / xnmtrc # 81 Works",
   "ABSXXXII0 # And Yet We Dance / Ryan Bell # 100 Works",
   "ABSXXXV0 # Songs of Utopia / KALA # 13 Works",
   "ABSXXXV1 # Unlived; Unliveable / KALA # 1 Work",
