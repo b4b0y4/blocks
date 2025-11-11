@@ -569,6 +569,7 @@ export const list = [
   "ABSLXXIV0 # Pacific Spirit / Emily Nicoll & 747 # 300 Works",
   "ABSLXXV0 # SINE / Shaunaq # 58 Works",
   "ABSLXXVIII0 # DDUST / jiwa # 500 Works",
+  "ABSLXXVIII1 # Portraits / jiwa # 0 Works!",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
   "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 301 Works",
   "ABSLXXXI0 # Winterkammer TO BE DELETED / Frederik Vanhoutte x The Generative Art Museum # 0 Works!",
