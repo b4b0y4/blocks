@@ -83,6 +83,15 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   intervalId: null,
 };
 
+// Treats the last slash-separated segment as the artist and everything before as the collection.
+function splitCollectionAndArtist(text) {
+  const parts = text.split(" / ").map((s) => s.trim());
+  const artist = parts.length > 0 ? parts[parts.length - 1] : "";
+  const collection =
+    parts.length > 1 ? parts.slice(0, -1).join(" / ") : parts[0] || "";
+  return { collection, artist };
+}
+
 // Encapsulates filtering, navigation, and selection logic for project lists.
 // Keeps UI logic simple and DRY.
 class ListManager {
@@ -110,18 +119,15 @@ class ListManager {
       this.originalList.forEach((line) => {
         const parts = line.split(" # ");
         if (parts.length > 1) {
-          const collectionAndArtist = parts[1].split(" / ");
-          const collection = collectionAndArtist[0].trim().toLowerCase();
-          const artist =
-            collectionAndArtist.length > 1
-              ? collectionAndArtist[1].trim().toLowerCase()
-              : "";
+          const { collection, artist } = splitCollectionAndArtist(parts[1]);
+          const collectionLower = collection.trim().toLowerCase();
+          const artistLower = artist.trim().toLowerCase();
 
-          if (collection === query) {
+          if (collectionLower === query) {
             exactMatches.push(line);
           } else if (
-            collection.includes(query) ||
-            (artist && artist.includes(query))
+            collectionLower.includes(query) ||
+            (artistLower && artistLower.includes(query))
           ) {
             partialMatches.push(line);
           }
@@ -168,9 +174,7 @@ function displayList(items, numberQuery = "") {
   const listItems = items
     .map((line, index) => {
       const parts = line.split(" # ");
-      const collectionAndArtist = parts[1].split(" / ");
-      const collection = collectionAndArtist[0];
-      const artist = collectionAndArtist[1];
+      const { collection, artist } = splitCollectionAndArtist(parts[1]);
       const workCount = parts[parts.length - 1];
 
       const displayName = numberQuery
@@ -1488,9 +1492,7 @@ dom.search.addEventListener("input", (event) => {
       listManager.selectedIndex = 0;
 
       const parts = originalLine.split(" # ");
-      const collectionAndArtist = parts[1].split(" / ");
-      const collection = collectionAndArtist[0];
-      const artist = collectionAndArtist[1];
+      const { collection, artist } = splitCollectionAndArtist(parts[1]);
       const workCount = parts[parts.length - 1];
 
       const listItemHTML = `<p class="list-item selected" data-index="0">
