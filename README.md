@@ -70,9 +70,9 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 ### Required Contract Functions
 
 The contract must implement these standard functions:
+- `nextProjectId()`
 - `projectDetails(uint256)`
 - `tokenIdToHash(uint256)` or `showTokenHashes(uint256)`
-- `tokenIdToProjectId(uint256)`
 - `projectScriptInfo(uint256)` or `projectScriptDetails(uint256)`
 - `projectScriptByIndex(uint256, uint256)`
 - `ownerOf(uint256)`
