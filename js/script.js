@@ -1658,10 +1658,10 @@ async function blocks(...contract) {
     }
 
     if (newBlocks.length > 0) {
-      console.log(`%cNew items for ${contractName}:`, "color: #7BDFC1;");
-      console.log(`%c${newBlocks.join("\n")}`, "color: #FAC085");
+      console.log(`%cNew items for ${contractName}:`, "color: seagreen;");
+      console.log(`%c${newBlocks.join("\n")}`, "color: gold");
     } else {
-      console.log(`%cNo new items for ${contractName}.`, "color: #666666;");
+      console.log(`%cNo new items for ${contractName}.`, "color: grey;");
     }
   }
 }
@@ -1680,13 +1680,13 @@ window.fetchBlocks = async (...contracts) => {
   }
 
   console.log(
-    `%cFetching blocks for:%c ${contractArray.join(", ")}`,
-    "color: #F16F36;",
-    "color: #666666;",
+    `%cFetching blocks for:%c${contractArray.join(", ")}`,
+    "color: indianred;",
+    "color: grey;",
   );
 
   await blocks(contractArray);
-  console.log("%cDone fetching!", "color: #F16F36;");
+  console.log("%cDone fetching!", "color: indianred;");
 };
 
 // Expose is object and contract shortcuts
