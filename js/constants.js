@@ -521,6 +521,11 @@ export const contractRegistry = {
     address: "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a",
     platform: "Art Blocks Explorations",
   },
+  ABEXPII: {
+    abi: abi.v3Flex,
+    address: "0xAbaBabABAb20053426aD1C782de9ea8444358070",
+    platform: "Art Blocks Explorations",
+  },
   ABXPACE: {
     abi: abi.v2,
     address: "0x64780CE53f6e966E18a22Af13a2F97369580Ec11",
