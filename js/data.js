@@ -538,7 +538,7 @@ export const list = [
   "ABSXX0 # Mister Shifty and the Drifty Dudes / Joshua Bagley # 250 Works",
   "ABSXX1 # Isoplanet / Joshua Bagley # 61 Works",
   "ABSXXI0 # Carattere / michelangelo (encapsuled) # 48 Works",
-  "ABSXXI1 # Linea / michelangelo (encapsuled) # 42 Works",
+  "ABSXXI1 # Linea / michelangelo (encapsuled) # 43 Works",
   "ABSXXI2 # Testo / michelangelo (encapsuled) # 40 Works",
   "ABSXXI3 # Compressione / michelangelo (encapsuled) # 8 Works",
   "ABSXXII0 # Pax / Eric De Giuli # 100 Works",
