@@ -572,9 +572,11 @@ export const list = [
   "ABSLXXVIII1 # Portraits I / jiwa # 64 Works",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
   "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 301 Works",
+  "ABSLXXX1 # Tigerbob Charm Packs / Gossamer Rozen # 1 Work",
+
   "ABSLXXXI0 # Winterkammer TO BE DELETED / Frederik Vanhoutte x The Generative Art Museum # 0 Works!",
   "ABSLXXXI1 # Winterkammer / Frederik Vanhoutte x The Generative Art Museum # 28 Works",
-  "ABSLXXXII0 # Neural Prometheus / Paolo Curtoni x The Generative Art Museum # 34 Works",
+  "ABSLXXXII0 # Neural Prometheus / Paolo Curtoni x The Generative Art Museum # 35 Works",
   "ABSLXXXIII0 # Tracing Archetypes / Aleksandra Jovanić x The Generative Art Museum # 16 Works",
   "ABSLXXXIV0 # Ratio / Julian Hespenheide × The Generative Art Museum # 128 Works",
   "ABSLXXXV0 # The light where we meet / Amy Goodchild x The Generative Art Museum # 25 Works",
@@ -958,6 +960,7 @@ export const libs = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.9.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
+  "p5@1.11.11": "https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js",
   threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
   "three@0.124.0":
     "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
