@@ -1627,8 +1627,8 @@ async function blocks(...contract) {
     const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const newBlocks = [];
-    const BATCH = 20;
-    const DELAY_MS = 1000;
+    const BATCH = 10;
+    const DELAY_MS = 1500;
 
     for (let id = start; id < end; id += BATCH) {
       const batchPromises = [];
