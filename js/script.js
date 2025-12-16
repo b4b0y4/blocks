@@ -1620,12 +1620,15 @@ async function blocks(...contract) {
       ? contract[0]
       : contract;
 
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   for (const contractName of contractArray) {
     const n = indexMap[contractName];
     const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const newBlocks = [];
     const BATCH = 20;
+    const DELAY_MS = 1000;
 
     for (let id = start; id < end; id += BATCH) {
       const batchPromises = [];
@@ -1655,6 +1658,10 @@ async function blocks(...contract) {
           }
         }
       });
+
+      if (id + BATCH < end) {
+        await delay(DELAY_MS);
+      }
     }
 
     if (newBlocks.length > 0) {
