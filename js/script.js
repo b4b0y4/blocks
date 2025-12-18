@@ -469,17 +469,15 @@ async function fetchV3CIDs(projId, extDepCount, contract) {
     const data = tuple.data || "";
 
     if (dependencyType === 2) {
-      let parsedData = {};
+      let parsedData = data;
       try {
         if (data.startsWith("{")) {
           parsedData = JSON.parse(data);
-        } else {
-          parsedData = {};
         }
       } catch (error) {
         console.log("ONCHAIN data parsing error:", error);
         console.log("Raw ONCHAIN data:", data);
-        parsedData = { raw: data };
+        parsedData = data;
       }
 
       return {
