@@ -1010,6 +1010,10 @@ export const contractRegistry = {
     abi: abi.v3,
     address: "0x00002491B000Aa008756652C87cc92D87e896f0f",
   },
+  RASTER: {
+    abi: abi.v3Flex,
+    address: "0x0000002B11eec74c8Bc07f704Af67F53b3d910EF",
+  },
 };
 
 export const is = {
