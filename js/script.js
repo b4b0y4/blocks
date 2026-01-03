@@ -1142,10 +1142,12 @@ function performAction(action, favorite) {
     listManager.filterByQuery("curated");
     getRandom(listManager.filteredList);
   } else if (action === "selectedLoop") {
-    let random = Math.floor(
-      Math.random() * (contractData.edition + 1),
-    ).toString();
-    getToken(listManager.filteredList[0], random);
+    const projectLine = listManager.originalList.find(
+      (line) =>
+        splitCollectionAndArtist(line.split(" # ")[1]).collection.trim() ===
+        contractData.detail[0],
+    );
+    getToken(projectLine, "");
   } else if (action === "oobLoop") {
     exploreAlgo();
   }
