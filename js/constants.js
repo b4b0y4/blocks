@@ -678,6 +678,10 @@ export const contractRegistry = {
     abi: abi.v3,
     address: "0x000000637FddCdD459b047897afB3ea46aa6f334",
   },
+  ABSLXVI: {
+    abi: abi.v3Flex,
+    address: "0x0000006693e685fcFc54C9d423b5E321B4A15192",
+  },
   ABSLXVII: {
     abi: abi.v3,
     address: "0x0000000BF96eb73f37239F61c9344E40d4c3F665",
@@ -745,18 +749,6 @@ export const contractRegistry = {
   ABSLXXXVIII: {
     abi: abi.v3Flex,
     address: "0x000000DC68934eD27Fd11E32491cdF6717ACAF21",
-  },
-  ABSLXXXIX: {
-    abi: abi.v3,
-    address: "0x000000399EFC1EF4666A18b9c29325234CCea397",
-  },
-  ABSXC: {
-    abi: abi.v3,
-    address: "0x00009F857C1ccD5ca0DC5900427fb8DA00628099",
-  },
-  ABSXCI: {
-    abi: abi.v3,
-    address: "0x000019bD92633E9e00dC08aDB0d0DFfB00A1fe2a",
   },
   BM: {
     abi: abi.bm,
@@ -1009,10 +1001,6 @@ export const contractRegistry = {
   MAYA: {
     abi: abi.v3,
     address: "0x00002491B000Aa008756652C87cc92D87e896f0f",
-  },
-  RASTER: {
-    abi: abi.v3Flex,
-    address: "0x0000002B11eec74c8Bc07f704Af67F53b3d910EF",
   },
 };
 
