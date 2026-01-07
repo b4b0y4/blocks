@@ -338,8 +338,6 @@ async function grabData(tokenId, contract, updateOnly = false) {
   }
 }
 
-// Returns the hash for a given tokenId and contract.
-// Handles AB legacy contract logic.
 async function fetchHash(tokenId, contract) {
   return nameMap[contract] == "AB"
     ? instance[contract].showTokenHashes(tokenId)
@@ -352,8 +350,6 @@ async function fetchProjectInfo(projId, contract, isV3) {
     : instance[contract].projectScriptInfo(projId);
 }
 
-// Aggregates all script segments for a project into a single string.
-// Uses batching for performance on large scripts.
 async function constructScript(projId, projectInfo, contract) {
   const scriptCount = Number(projectInfo.scriptCount);
   let fullScript = "";
@@ -437,7 +433,6 @@ async function fetchV2CIDs(projId, extDepCount, contract) {
   }));
 }
 
-// Returns formatted external dependency objects for v3 contracts.
 // Handles on-chain and off-chain dependency types.
 async function fetchV3CIDs(projId, extDepCount, contract) {
   const cidTuples = await fetchDependencies(projId, extDepCount, contract);
@@ -505,8 +500,6 @@ async function fetchTokenParams(instance, contract, tokenId, indexMap) {
   return tokenParams;
 }
 
-// Updates contractData and UI after fetching new token/project info.
-// Triggers info panel, frame, and localStorage updates.
 function update(
   tokenId,
   contract,
@@ -662,7 +655,6 @@ function pushItemToLocalStorage(
   );
 }
 
-// Rewrites unreliable IPFS gateway URLs to a default for reliability.
 const replaceIPFSGateways = (scriptContent) => {
   return scriptContent.replace(
     /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud)/g,
@@ -689,8 +681,6 @@ function getPlatform(contract, projId) {
   return contractRegistry[contractName].platform || "";
 }
 
-// Updates the info panel with all relevant project data.
-// Handles UI rendering and copy-to-clipboard logic.
 function updateUI(
   contract,
   owner,
@@ -911,7 +901,6 @@ function getExtDepType(dependency, contract) {
   return isIPFS ? "ipfs" : "arweave";
 }
 
-// Injects artwork preview into iframe for live rendering.
 async function injectFrame() {
   try {
     const {
@@ -964,7 +953,6 @@ async function injectFrame() {
   }
 }
 
-// Handles token selection logic based on search query.
 function getToken(line, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*Work/;
   const [_, listContract, projIdStr, tokenStr] = line.match(regex);
@@ -1037,7 +1025,6 @@ function exploreAlgo() {
   update(...Object.values(contractData));
 }
 
-// Increments tokenId for navigation, wraps to zero if at max.
 function incrementTokenId() {
   let numericId = getId(contractData.tokenId);
 
@@ -1052,7 +1039,6 @@ function incrementTokenId() {
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
-// Decrements tokenId for navigation, wraps to max if at zero.
 function decrementTokenId() {
   let numericId = getId(contractData.tokenId);
 
@@ -1067,7 +1053,6 @@ function decrementTokenId() {
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
-// Returns the numeric portion of a tokenId (last 6 digits).
 function getId(tokenId) {
   return tokenId % 1000000;
 }
@@ -1239,22 +1224,16 @@ function displayFavoriteList() {
   }
 }
 
-// Utility: Clears contract and script data from localStorage.
-// Used when switching projects or resetting state.
 const clearDataStorage = () => {
   ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
 };
 
-// Utility: Hides all UI panels and overlays.
-// Keeps UI state consistent when navigating or resetting.
 const clearPanels = () => {
   [dom.overlay, dom.infobar, ...panels].forEach((el) =>
     el.classList.remove("active"),
   );
 };
 
-// Utility: Shows/hides a specific panel and manages overlay state.
-// Ensures only one panel is active at a time.
 const togglePanel = (panelElement) => {
   panels.forEach((p) =>
     p !== panelElement ? p.classList.remove("active") : (p.scrollTop = 0),
@@ -1266,14 +1245,10 @@ const togglePanel = (panelElement) => {
   );
 };
 
-// Utility: Shows or hides the loading spinner.
-// Used for async operations and feedback.
 const toggleSpin = (show = true) => {
   dom.spinner.style.display = show ? "block" : "none";
 };
 
-// Utility: Updates loop control button visibility based on loop state.
-// Keeps UI feedback clear for looping actions.
 const updateLoopButton = () => {
   document.querySelector(".fa-repeat").style.display =
     loopState.isLooping !== "true" ? "inline-block" : "none";
@@ -1282,8 +1257,6 @@ const updateLoopButton = () => {
     loopState.isLooping === "true" ? "inline-block" : "none";
 };
 
-// Utility: Sets visibility and state for main UI controls.
-// Ensures controls are only shown when relevant data is present.
 const setUIControls = (skipOverlay = false) => {
   const hasContract = !!contractData;
   const hasRPC = !!rpcUrl;
@@ -1304,8 +1277,6 @@ const setUIControls = (skipOverlay = false) => {
   if (!hasFavorites && hasRPC) clearPanels();
 };
 
-// Tooltip text mapping for UI controls.
-// Used for contextual help and improved UX.
 const tooltipTexts = {
   info: "More Info",
   settings: "Settings",
@@ -1322,8 +1293,6 @@ const tooltipTexts = {
 
 let tooltipTimeout = null;
 
-// Shows a tooltip for a given element after a delay.
-// Used for contextual UI hints.
 function showTooltip(element, text) {
   if (tooltipTimeout) {
     clearTimeout(tooltipTimeout);
@@ -1376,8 +1345,6 @@ function initTooltips() {
   });
 }
 
-// Sets the UI theme (light, dark, or system).
-// Persists preference and updates DOM.
 function setTheme(themeName) {
   dom.themeBtns.forEach((btn) =>
     btn.setAttribute("data-active", btn.dataset.theme === themeName),
