@@ -1007,12 +1007,10 @@ export const is = {
   engine: [],
 };
 
-// Populate 'is' categories based on registry and ABI naming.
 (function updateIs() {
   Object.entries(contractRegistry).forEach(([key, { abi: contractAbi }]) => {
     const abiName = Object.keys(abi).find((name) => abi[name] === contractAbi);
 
-    // Categorize by ABI name and contract key prefix
     if (abiName?.includes("3")) is.v3.push(key);
     if (abiName?.includes("Flex")) is.flex.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
