@@ -1,4 +1,3 @@
-// Common function definitions to reduce duplication
 const fn = {
   nextProjectId: {
     inputs: [],
@@ -54,7 +53,6 @@ const fn = {
   },
 };
 
-// Contract ABIs by version
 const abi = {
   v1: [
     fn.nextProjectId,
@@ -472,7 +470,6 @@ const abi = {
   ],
 };
 
-// Create a modified copy of abi.v2 and store it in abi.bm
 abi.bm = abi.v2.map((entry) =>
   entry.name === "projectScriptInfo"
     ? {
@@ -484,7 +481,6 @@ abi.bm = abi.v2.map((entry) =>
     : entry,
 );
 
-// Registry of all supported contracts, keyed by short name.
 export const contractRegistry = {
   ABPMPV0: {
     abi: abi.PMPV0,

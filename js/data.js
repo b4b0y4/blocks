@@ -1,6 +1,3 @@
-// Artworks list.
-// Used for search, filtering, and display throughout the app.
-// Structure: array of strings with metadata for each entry.
 export const list = [
   "AB0 # Chromie Squiggle / Snowfro # 10000 Works",
   "AB1 # Genesis / DCA # 512 Works",
@@ -954,9 +951,6 @@ export const list = [
   "MAYA0 # Ofrenda / Stefano Contiero # 1111 Works",
 ];
 
-// Library metadata for external dependencies.
-// Used for dependency resolution and display.
-// Keys are library names or versioned names, values are CDN URLs.
 export const libs = {
   p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
   "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
@@ -990,7 +984,6 @@ export const libs = {
     "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
 };
 
-// Project IDs for curated collections.
 export const curated = [
   0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
   41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
@@ -1000,7 +993,6 @@ export const curated = [
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ];
 
-// Project IDs for playground collections.
 export const playground = [
   6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77, 94,
   104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164, 167,
