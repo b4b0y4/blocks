@@ -560,7 +560,7 @@ export const list = [
   "ABSLIV0 # Lightweight Reconstruction / itsgalo x office ca # 128 Works",
   "ABSLVI0 # I. / ryley-o.eth # 240 Works",
   "ABSLXIII0 # Motion Pictures / Neel Shivdasani # 100 Works",
-  "ABSLXVI0 # Hatches / Rob Dixon (Radix) # 47 Works",
+  "ABSLXVI0 # Hatches / Rob Dixon (Radix) # 48 Works",
   "ABSLXVII0 # Coral Colors 2024 / Sputniko! # 1 Work!",
   "ABSLXVII1 # Coral Colors / Sputniko! # 22 Works",
   "ABSLXXI0 # Thread / Anna Lucia # 111 Works",
