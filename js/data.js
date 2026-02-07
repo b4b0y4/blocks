@@ -526,7 +526,7 @@ export const list = [
   "ABSXI1 # Field Impact / RVig × Médecins Sans Frontières (MSF) # 54 Works",
   "ABSXII0 # tied up, tied down, let loose, unwound / Ben Snell # 180 Works",
   "ABSXIII0 # AnnoMetta / Matto # 1 Work",
-  "ABSXIII1 # At the Still Point of the Turning World: Algorithmic Self Portrait, 2025 / Matto # 33 Works",
+  "ABSXIII1 # At the Still Point of the Turning World: Algorithmic Self Portrait, 2025 / Matto # 36 Works",
   "ABSXV0 # Untitled / Olga Fradina # 58 Works",
   "ABSXVI0 # Incircles / Jos Vromans # 64 Works",
   "ABSXVI1 # Art from code / Jos Vromans # 75 Works",
