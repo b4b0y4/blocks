@@ -568,7 +568,7 @@ export const list = [
   "ABSLXXIII0 # MazeFlipper / Beervangeer x SuperGood # 43 Works",
   "ABSLXXIV0 # Pacific Spirit / Emily Nicoll & 747 # 300 Works",
   "ABSLXXV0 # SINE / Shaunaq # 62 Works",
-  "ABSLXXVI0 # pool party / BASEMENT x Ryley-O # 2 Works",
+  "ABSLXXVI0 # pool party / BASEMENT x Ryley-O # 7 Works",
   "ABSLXXVIII0 # DDUST / jiwa # 500 Works",
   "ABSLXXVIII1 # Portraits I / jiwa # 64 Works",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
