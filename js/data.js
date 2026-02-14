@@ -570,7 +570,7 @@ export const list = [
   "ABSLXXV0 # SINE / Shaunaq # 62 Works",
   "ABSLXXVI0 # pool party / BASEMENT x Ryley-O # 10 Works",
   "ABSLXXVIII0 # DDUST / jiwa # 500 Works",
-  "ABSLXXVIII1 # Portraits I / jiwa # 64 Works",
+  "ABSLXXVIII1 # Portraits I / jiwa # 65 Works",
   "ABSLXXIX0 # Overture / Mitchell F. Chan # 178 Works",
   "ABSLXXX0 # Tigerbob Mystery Garden / Gossamer Rozen # 301 Works",
   "ABSLXXX1 # Tigerbob Charm Packs / Gossamer Rozen # 64 Works",
