@@ -584,7 +584,7 @@ export const list = [
   "ABSLXXXVII0 # Transformations du Champ / HAL09999 x The Generative Art Museum # 23 Works",
   "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 104 Works",
   "ABSXC0 # Logoria /  # 0 Works!",
-  "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 8 Works",
+  "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 10 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
