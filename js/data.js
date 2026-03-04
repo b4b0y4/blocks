@@ -552,7 +552,7 @@ export const list = [
   "ABSXXXV0 # Songs of Utopia / KALA # 13 Works",
   "ABSXXXV1 # Unlived; Unliveable / KALA # 1 Work",
   "ABSXXXVIII0 # 80s Pop Roxy Bonus Pack 🍿 / Daniel Catt # 64 Works",
-  "ABSXL0 # Strings / JMY # 33 Works",
+  "ABSXL0 # Strings / JMY # 43 Works",
   "ABSXLI0 # Signal Boards / Stina Jones # 288 Works",
   "ABSL0 # Into the Light / Jason Ting # 16 Works",
   "ABSLI0 # Billows / Shane Richardson # 24 Works",
