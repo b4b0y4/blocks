@@ -75,7 +75,6 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   intervalId: null,
 };
 
-// Treats the last slash-separated segment as the artist and everything before as the collection.
 function splitCollectionAndArtist(text) {
   const parts = text.split(" / ").map((s) => s.trim());
   const artist = parts.length > 0 ? parts[parts.length - 1] : "";
@@ -214,8 +213,6 @@ function handleKeyboardNavigation(event) {
   }
 }
 
-// Aggregates all project data for a given token.
-// Used for both full loads and partial updates.
 async function grabData(tokenId, contract, updateOnly = false) {
   try {
     toggleSpin();
@@ -433,7 +430,6 @@ async function fetchV2CIDs(projId, extDepCount, contract) {
   }));
 }
 
-// Handles on-chain and off-chain dependency types.
 async function fetchV3CIDs(projId, extDepCount, contract) {
   const cidTuples = await fetchDependencies(projId, extDepCount, contract);
 
@@ -696,7 +692,6 @@ function updateUI(
   const renderInfo = () => {
     const infoText = `${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`;
 
-    // Cleanup previous content and classes
     dom.info.innerHTML = "";
     dom.info.classList.remove("scrolling");
 
@@ -706,13 +701,10 @@ function updateUI(
 
     const infoElement = dom.info;
 
-    // Check for overflow
     if (spanElement.offsetWidth > infoElement.offsetWidth) {
-      // Slow down the animation
       const scrollDuration = spanElement.offsetWidth / 30;
       infoElement.style.setProperty("--scroll-duration", `${scrollDuration}s`);
 
-      // Duplicate the span for a seamless loop
       const duplicateSpan = spanElement.cloneNode(true);
       duplicateSpan.setAttribute("aria-hidden", "true");
       infoElement.appendChild(duplicateSpan);
@@ -1388,7 +1380,6 @@ dom.rpcUrlInput.addEventListener("keypress", (event) => {
 dom.search.addEventListener("input", (event) => {
   const query = event.target.value.trim();
 
-  // Searching for a specific # with artwork already loaded
   if (query.startsWith("#") && contractData) {
     const num = query.substring(1);
 
@@ -1397,7 +1388,6 @@ dom.search.addEventListener("input", (event) => {
       return;
     }
 
-    // Find the original list entry for the current artwork
     const currentArtName = contractData.detail[0];
     const originalLine = listManager.originalList.find((line) =>
       line.includes(currentArtName),
@@ -1424,7 +1414,6 @@ dom.search.addEventListener("input", (event) => {
       clearPanels();
     }
   } else {
-    // Standard search behavior
     const queryParts = query.split("#");
     const searchQuery = queryParts[0].trim();
     const numberQuery = queryParts.length > 1 ? queryParts[1].trim() : "";
@@ -1529,7 +1518,6 @@ initTheme();
 if (contractData) update(...Object.values(contractData));
 dom.root.classList.remove("no-flash");
 
-// Fetches project data for one or more contracts, identifies new items, and logs them to the console.
 async function blocks(...contract) {
   const contractArray =
     Array.isArray(contract[0]) && contract.length === 1
