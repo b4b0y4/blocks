@@ -1017,6 +1017,7 @@ export const contractRegistry = {
   MAYA: {
     abi: abi.v3,
     address: "0x00002491B000Aa008756652C87cc92D87e896f0f",
+    platform: "Maya Spirits",
   },
 };
 
