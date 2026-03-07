@@ -830,7 +830,7 @@ export const list = [
   "TDG8 # Materialistic - Curated Edition / Anthony Hiley-Mann (MV) # 12 Works",
   "TDG9 # Materialistic - Digital Edition / Anthony Hiley-Mann (MV) # 80 Works",
   "VFA0 # Fenestra / Rob Scalera # 42 Works",
-  "VFA1 # Opuntia / Jake Rockland # 3 Works",
+  "VFA1 # Opuntia / Jake Rockland # 18 Works",
   "UNITLDN1 # Disconnected / Stefano Contiero # 10 Works",
   "UNITLDN2 # Pressed Pause / Loren Bednar # 10 Works",
   "TRAME0 # Navette / Alexis André # 200 Works",
