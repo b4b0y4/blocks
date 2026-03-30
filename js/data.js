@@ -587,7 +587,7 @@ export const list = [
   "ABSLXXXVIII0 # Broken Dreams / Manuel Larino x The Generative Art Museum # 104 Works",
   "ABSLXXXIX0 # DATASPHERE / Anna Condo # 56 Works",
   "ABSXC0 # Logoria /  # 0 Works!",
-  "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 16 Works",
+  "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 17 Works",
   "ABSXCI0 # Primavera / Baret LaVida # 21 Works",
   "FERAL0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
