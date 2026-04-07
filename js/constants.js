@@ -558,6 +558,10 @@ export const contractRegistry = {
     abi: abi.v3Flex,
     address: "0x0000000826d45c6b947d485eeB8322AccCad8DdB",
   },
+  ABSV: {
+    abi: abi.v3,
+    address: "0x000000098a14b4e08132Fd55fAec521Ab597a001",
+  },
   ABSVII: {
     abi: abi.v3Flex,
     address: "0x00000007cC35dcab4a396249AEFa295A8b6E16Ba",
