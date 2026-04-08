@@ -782,7 +782,7 @@ export const list = [
   "PROOF6 # cathedral study / Eric De Giuli # 600 Works",
   "PROOF7 # Deja Vu / Melissa Wiederrecht # 516 Works",
   "PROOF8 # WaveShapes / Owen Moore # 235 Works",
-  "PROOF9 # Ephemeral Tides / Ryan Bell # 309 Works",
+  "PROOF9 # Ephemeral Tides / Ryan Bell # 311 Works",
   "PROOF10 # StackSlash / Kelly Milligan # 196 Works",
   "PROOF11 # Viridaria / Sarah Ridgley # 450 Works",
   "PROOF12 # Windwoven / Radix (Rob Dixon) # 110 Works",
