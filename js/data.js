@@ -594,7 +594,7 @@ export const list = [
   "ABSXC0 # Logoria /  # 0 Works!",
   "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 18 Works",
   "ABSXCI0 # Primavera / Baret LaVida # 35 Works",
-  "ABSXCIV0 # MASKS / Piter Pasma # 41 Works",
+  "ABSXCIV0 # MASKS / Piter Pasma # 43 Works",
   "FERAL0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
