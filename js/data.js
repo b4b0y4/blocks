@@ -595,7 +595,7 @@ export const list = [
   "ABSLXXXIX0 # DATASPHERE / Anna Condo # 111 Works",
   "ABSXC0 # Logoria /  # 0 Works!",
   "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 26 Works",
-  "ABSXCI0 # Primavera / Baret LaVida # 53 Works",
+  "ABSXCI0 # Primavera / Baret LaVida # 54 Works",
   "ABSXCIII0 # Rain Blooms / Kazuhiro Tanimoto # 128 Works",
   "ABSXCIV0 # MASKS / Piter Pasma # 63 Works",
   "FERAL0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
