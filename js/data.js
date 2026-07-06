@@ -601,6 +601,7 @@ export const list = [
   "ABSXCIV0 # MASKS / Piter Pasma # 63 Works",
   "ABSXCVI0 # Frank / Dario Lanza # 163 Works",
   "ABSXCVIII0 # DOS / William Mapan # 22 Works",
+  "ABSCI0 # Continuum / Lammetje # 1 Work",
   "FERAL0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
