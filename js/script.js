@@ -747,7 +747,7 @@ function updateUI(
              owner
                ? createSection(
                    "OWNER",
-                   `<a href="https://zapper.xyz/account/${owner}" target="_blank">
+                   `<a href="https://opensea.io/profile/${owner}" target="_blank">
                ${ensName || shortAddr(owner)}
              </a>
              <span class="copy-txt" data-text="${owner}">
