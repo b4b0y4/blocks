@@ -542,7 +542,7 @@ export const list = [
   "ABSXX1 # Isoplanet / Joshua Bagley # 65 Works",
   "ABSXXI0 # Carattere / michelangelo (encapsuled) # 48 Works",
   "ABSXXI1 # Linea / michelangelo (encapsuled) # 46 Works",
-  "ABSXXI2 # Testo / michelangelo 1(encapsuled) # 41 Works",
+  "ABSXXI2 # Testo / michelangelo (encapsuled) # 41 Works",
   "ABSXXI3 # Compressione / michelangelo (encapsuled) # 13 Works",
   "ABSXXII0 # Pax / Eric De Giuli # 100 Works",
   "ABSXXIII0 # piñata3 / Fahad Karim # 112 Works",
