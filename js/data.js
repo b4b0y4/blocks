@@ -535,7 +535,7 @@ export const list = [
   "ABSXIII1 # At the Still Point of the Turning World: Algorithmic Self Portrait, 2025 / Matto # 36 Works",
   "ABSXV0 # Untitled / Olga Fradina # 58 Works",
   "ABSXVI0 # Incircles / Jos Vromans # 64 Works",
-  "ABSXVI1 # Art from code / Jos Vromans # 79 Works",
+  "ABSXVI1 # Art from code / Jos Vromans # 89 Works",
   "ABSXVI2 # Color Experiment / Jos Vromans # 5 Works",
   "ABSXVIII0 # Origin / Monokai # 38 Works",
   "ABSXX0 # Mister Shifty and the Drifty Dudes / Joshua Bagley # 250 Works",
