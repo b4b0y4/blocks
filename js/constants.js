@@ -774,6 +774,10 @@ export const contractRegistry = {
     abi: abi.v3Flex,
     address: "0x000019bD92633E9e00dC08aDB0d0DFfB00A1fe2a",
   },
+  ABSXCII: {
+    abi: abi.v3,
+    address: "0x0000000C687DaeD0fbA60d1dBA4e5f6149E8B894",
+  },
   ABSXCIII: {
     abi: abi.v3,
     address: "0x70270E65bC37832ef845fA330C2B71501970DaB9",
@@ -797,11 +801,6 @@ export const contractRegistry = {
   ABSCII: {
     abi: abi.v3Flex,
     address: "0x51144c0cb2b77dC4a2D6573211602eC27a343112",
-  },
-  FERAL: {
-    abi: abi.v3,
-    address: "0x0000000C687DaeD0fbA60d1dBA4e5f6149E8B894",
-    platform: "Feral File",
   },
   BM: {
     abi: abi.bm,

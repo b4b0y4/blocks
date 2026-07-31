@@ -1,5 +1,5 @@
 import { ethers } from "./libs/ethers.min.js";
-import { list, libs, curated, playground } from "./data.js";
+import { list, libs, curated, playground, platformOverrides } from "./data.js";
 import { contractRegistry, is } from "./constants.js";
 
 const dom = {
@@ -660,6 +660,9 @@ const replaceIPFSGateways = (scriptContent) => {
 
 function getPlatform(contract, projId) {
   const contractName = nameMap[contract];
+
+  const override = platformOverrides[contractName + projId];
+  if (override) return override;
 
   if (["AB", "ABII", "ABIII"].includes(contractName)) {
     return curated.includes(projId)

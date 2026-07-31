@@ -598,13 +598,13 @@ export const list = [
   "ABSXC0 # Logoria /  # 0 Works!",
   "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 28 Works",
   "ABSXCI0 # Primavera / Baret LaVida # 70 Works",
+  "ABSXCII0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
   "ABSXCIII0 # Rain Blooms / Kazuhiro Tanimoto # 128 Works",
   "ABSXCIV0 # MASKS / Piter Pasma # 64 Works",
   "ABSXCVI0 # Frank / Dario Lanza # 163 Works",
   "ABSXCVIII0 # DOS / William Mapan # 22 Works",
   "ABSCI0 # Continuum / Lammetje # 128 Works",
   "ABSCII0 # In the Current / Nat Sarkissian # 1 Work",
-  "FERAL0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
@@ -1017,6 +1017,12 @@ export const curated = [
   379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
   456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ];
+
+export const platformOverrides = {
+  "ABSIX4": "OFFICE IMPART",
+  "ABSIX5": "OFFICE IMPART",
+  "ABSXCII0": "Feral File",
+};
 
 export const playground = [
   6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77, 94,
