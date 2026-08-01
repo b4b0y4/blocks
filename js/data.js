@@ -520,7 +520,7 @@ export const list = [
   "ABSVII2 # Covehithe / Harvey Rayner # 60 Works",
   "ABSVII3 # Algorithmic Synesthesia CC / Harvey Rayner # 300 Works",
   "ABSVII4 # Algorithmic Synesthesia AC / Harvey Rayner # 12 Works",
-  "ABSVII5 # Jankpop / Harvey Rayner # 0 Works!",
+  "ABSVII5 # Jankpop / Harvey Rayner # 1 Work",
   "ABSVIII0 # Edge of Space / Robert Baker # 100 Works",
   "ABSIX0 # On-Chain Memory Token / Jeff Davis # 200 Works",
   "ABSIX1 # Untitled / Jeff Davis # 1 Work!",
