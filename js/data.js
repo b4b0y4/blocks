@@ -605,7 +605,7 @@ export const list = [
   "ABSXCVI0 # Frank / Dario Lanza # 163 Works",
   "ABSXCVIII0 # DOS / William Mapan # 22 Works",
   "ABSCI0 # Continuum / Lammetje # 128 Works",
-  "ABSCII0 # In the Current / Nat Sarkissian # 11 Works",
+  "ABSCII0 # In the Current / Nat Sarkissian # 13 Works",
   "ABSCIV1 # degenerative / ryley-o.eth x Sally Ohlsen # 27 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
