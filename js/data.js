@@ -566,7 +566,7 @@ export const list = [
   "ABSLI0 # Billows / Shane Richardson # 27 Works",
   "ABSLIII0 # E-PASTEL II / Holger Lippmann # 76 Works",
   "ABSLIV0 # Lightweight Reconstruction / itsgalo x office ca # 128 Works",
-  "ABSLIV1 # GAMERS / itsgalo # 101 Works",
+  "ABSLIV1 # GAMERS / itsgalo # 102 Works",
   "ABSLVI0 # I. / ryley-o.eth # 240 Works",
   "ABSLXIII0 # Motion Pictures / Neel Shivdasani # 100 Works",
   "ABSLXVI0 # Hatches / Rob Dixon (Radix) # 75 Works",
