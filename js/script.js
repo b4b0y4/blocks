@@ -58,6 +58,7 @@ rpcUrl
 const instance = [];
 const nameMap = {};
 const indexMap = {};
+const PMPV0_ADDR = contractRegistry.ABPMPV0.address.toLowerCase();
 
 Object.keys(contractRegistry).forEach((key, index) => {
   const { abi, address } = contractRegistry[key];
@@ -106,9 +107,8 @@ class ListManager {
       const partialMatches = [];
 
       this.originalList.forEach((line) => {
-        const parts = line.split(" # ");
-        if (parts.length > 1) {
-          const { collection, artist } = splitCollectionAndArtist(parts[1]);
+        if (line.split(" # ").length > 1) {
+          const { collection, artist } = parseListLine(line);
           const collectionLower = collection.trim().toLowerCase();
           const artistLower = artist.trim().toLowerCase();
 
@@ -158,23 +158,31 @@ class ListManager {
 
 const listManager = new ListManager(list);
 
+function parseListLine(line) {
+  const parts = line.split(" # ");
+  const { collection, artist } = splitCollectionAndArtist(parts[1]);
+  return { collection, artist, workCount: parts[parts.length - 1] };
+}
+
+function listItemHTML(line, index, numberQuery = "", selected = false) {
+  const { collection, artist, workCount } = parseListLine(line);
+  const displayName = numberQuery ? `${collection} #${numberQuery}` : collection;
+  return `<p class="list-item ${selected ? "selected" : ""}" data-index="${index}">
+           ${displayName}
+           <span>${artist} - ${workCount}</span>
+        </p>`;
+}
+
 function displayList(items, numberQuery = "") {
   const listItems = items
-    .map((line, index) => {
-      const parts = line.split(" # ");
-      const { collection, artist } = splitCollectionAndArtist(parts[1]);
-      const workCount = parts[parts.length - 1];
-
-      const displayName = numberQuery
-        ? `${collection} #${numberQuery}`
-        : collection;
-
-      return `<p class="list-item ${index === listManager.selectedIndex ? "selected" : ""}"
-               data-index="${index}">
-               ${displayName}
-               <span>${artist} - ${workCount}</span>
-            </p>`;
-    })
+    .map((line, index) =>
+      listItemHTML(
+        line,
+        index,
+        numberQuery,
+        index === listManager.selectedIndex,
+      ),
+    )
     .join("");
 
   dom.listPanel.innerHTML = `<div>${listItems}</div>`;
@@ -232,7 +240,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
       data.owner = owner;
       data.ensName = ensName;
 
-      const pmpv0Address = contractRegistry.ABPMPV0.address.toLowerCase();
+      const pmpv0Address = PMPV0_ADDR;
       const onchainPmpv0Dep = data.extDep?.find(
         (dep) =>
           dep.dependency_type === "ONCHAIN" &&
@@ -249,7 +257,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
       }
 
       localStorage.setItem("contractData", JSON.stringify(data));
-      update(...Object.values(data));
+      update(data);
     } else {
       clearDataStorage();
 
@@ -282,9 +290,8 @@ async function grabData(tokenId, contract, updateOnly = false) {
       if (is.flex.includes(nameMap[contract])) {
         const extDepCount = await fetchExtDepCount(projId, contract);
         if (extDepCount) {
-          const fetchCIDsFn = isV3 ? fetchV3CIDs : fetchV2CIDs;
           [extDep, { ipfs, arweave }] = await Promise.all([
-            fetchCIDsFn(projId, extDepCount, contract),
+            fetchCIDs(isV3 ? "v3" : "v2", projId, extDepCount, contract),
             fetchGateway(contract),
           ]);
           if (["BMFLEX", "NUMBER"].includes(nameMap[contract])) {
@@ -292,7 +299,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
           }
         }
 
-        const pmpv0Address = contractRegistry.ABPMPV0.address.toLowerCase();
+        const pmpv0Address = PMPV0_ADDR;
         const onchainPmpv0Dep = extDep.find(
           (dep) =>
             dep.dependency_type === "ONCHAIN" &&
@@ -327,7 +334,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
         tokenParams,
       };
 
-      update(...Object.values(data));
+      update(data);
     }
   } catch (error) {
     console.error(`grabData (${updateOnly ? "update" : "full"})`, error);
@@ -420,18 +427,17 @@ async function fetchDependencies(projId, extDepCount, contract) {
   return Promise.all(cidPromises);
 }
 
-async function fetchV2CIDs(projId, extDepCount, contract) {
+async function fetchCIDs(version, projId, extDepCount, contract) {
   const cidTuples = await fetchDependencies(projId, extDepCount, contract);
-  return cidTuples.map((tuple) => ({
-    cid: tuple[0],
-    dependency_type: "IPFS",
-    data: null,
-    isOnchain: false,
-  }));
-}
 
-async function fetchV3CIDs(projId, extDepCount, contract) {
-  const cidTuples = await fetchDependencies(projId, extDepCount, contract);
+  if (version === "v2") {
+    return cidTuples.map((tuple) => ({
+      cid: tuple[0],
+      dependency_type: "IPFS",
+      data: null,
+      isOnchain: false,
+    }));
+  }
 
   return cidTuples.map((tuple) => {
     const cid = tuple.cid;
@@ -496,74 +502,25 @@ async function fetchTokenParams(instance, contract, tokenId, indexMap) {
   return tokenParams;
 }
 
-function update(
-  tokenId,
-  contract,
-  projId,
-  hash,
-  script,
-  detail,
-  owner,
-  ensName,
-  extLib,
-  edition,
-  minted,
-  extDep,
-  ipfs,
-  arweave,
-  tokenParams,
-) {
+function update(data) {
+  const { tokenId, contract, projId } = data;
   const platform = getPlatform(contract, projId);
-  contractData = {
-    tokenId,
-    contract,
-    projId,
-    hash,
-    script,
-    detail,
-    owner,
-    ensName,
-    extLib,
-    edition,
-    minted,
-    extDep,
-    ipfs,
-    arweave,
-    tokenParams,
-  };
+  contractData = { ...data };
 
   localStorage.setItem("contractData", JSON.stringify(contractData));
   console.log(contractData);
 
-  pushItemToLocalStorage(
-    contract,
-    tokenId,
-    hash,
-    script,
-    extLib,
-    extDep,
-    ipfs,
-    arweave,
-    tokenParams,
-  );
+  pushItemToLocalStorage(contractData);
   injectFrame();
-  updateUI(
-    contract,
-    owner,
-    ensName,
-    extLib,
-    detail,
-    tokenId,
+  updateUI({
+    ...contractData,
     platform,
-    edition,
-    minted,
-    extDep,
-  );
+  });
   setUIControls();
   toggleSpin(false);
 }
 
-function pushItemToLocalStorage(
+function pushItemToLocalStorage({
   contract,
   tokenId,
   hash,
@@ -573,7 +530,7 @@ function pushItemToLocalStorage(
   ipfs,
   arweave,
   tokenParams,
-) {
+}) {
   const contractName = nameMap[contract];
   const tokenIdStr = tokenId.toString();
 
@@ -593,7 +550,7 @@ function pushItemToLocalStorage(
   const tokenData = { tokenId: tokenId.toString() };
 
   if (extDep.length) {
-    const pmpv0Address = contractRegistry.ABPMPV0.address.toLowerCase();
+    const pmpv0Address = PMPV0_ADDR;
     tokenData.externalAssetDependencies = extDep.map((d) => {
       let cid = d.cid;
       if (contractName === "BMFLEX" && tokenIdStr.startsWith("16")) {
@@ -680,7 +637,7 @@ function getPlatform(contract, projId) {
   return contractRegistry[contractName].platform || "";
 }
 
-function updateUI(
+function updateUI({
   contract,
   owner,
   ensName,
@@ -691,7 +648,7 @@ function updateUI(
   edition,
   minted,
   extDep,
-) {
+}) {
   const renderInfo = () => {
     const infoText = `${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`;
 
@@ -807,22 +764,6 @@ function updateUI(
          </div>
        </div>
      `;
-    dom.panel.addEventListener("click", (e) => {
-      const copyBtn = e.target.closest(".copy-txt");
-      if (copyBtn) {
-        const textToCopy = copyBtn.getAttribute("data-text");
-        copyToClipboard(textToCopy);
-
-        const icon = copyBtn.querySelector("i");
-        icon.classList.replace("fa-regular", "fa-solid");
-        icon.classList.replace("fa-copy", "fa-check");
-
-        setTimeout(() => {
-          icon.classList.replace("fa-solid", "fa-regular");
-          icon.classList.replace("fa-check", "fa-copy");
-        }, 1000);
-      }
-    });
   };
   renderInfo();
 }
@@ -987,7 +928,7 @@ function getRandom(source) {
       ];
     clearDataStorage();
     contractData = source[randomKey];
-    update(...Object.values(contractData));
+    update(contractData);
   }
 }
 
@@ -1017,39 +958,22 @@ function exploreAlgo() {
   contractData.owner = "";
   contractData.ensName = "";
 
-  update(...Object.values(contractData));
+  update(contractData);
 }
 
-function incrementTokenId() {
-  let numericId = getId(contractData.tokenId);
+function stepTokenId(dir) {
+  const max = contractData.minted - 1;
+  let numericId = contractData.tokenId % 1000000;
 
-  if (numericId === contractData.minted - 1) {
-    numericId = 0;
+  if (dir > 0) {
+    numericId = numericId === max ? 0 : numericId + 1;
   } else {
-    numericId += 1;
+    numericId = numericId === 0 ? max : numericId - 1;
   }
 
   contractData.tokenId = contractData.projId * 1000000 + numericId;
 
   grabData(contractData.tokenId, contractData.contract, true);
-}
-
-function decrementTokenId() {
-  let numericId = getId(contractData.tokenId);
-
-  if (numericId === 0) {
-    numericId = contractData.minted - 1;
-  } else {
-    numericId -= 1;
-  }
-
-  contractData.tokenId = contractData.projId * 1000000 + numericId;
-
-  grabData(contractData.tokenId, contractData.contract, true);
-}
-
-function getId(tokenId) {
-  return tokenId % 1000000;
 }
 
 function loopRandom(interval, action) {
@@ -1086,8 +1010,7 @@ function performAction(action, favorite) {
   } else if (action === "selectedLoop") {
     const projectLine = listManager.originalList.find(
       (line) =>
-        splitCollectionAndArtist(line.split(" # ")[1]).collection.trim() ===
-        contractData.detail[0],
+        parseListLine(line).collection.trim() === contractData.detail[0],
     );
     getToken(projectLine, "");
   } else if (action === "oobLoop") {
@@ -1183,7 +1106,7 @@ function deleteFavoriteFromStorage(key) {
 function frameFavorite(key) {
   clearDataStorage();
   contractData = favorite[key];
-  update(...Object.values(contractData));
+  update(contractData);
 }
 
 function displayFavoriteList() {
@@ -1400,16 +1323,7 @@ dom.search.addEventListener("input", (event) => {
       listManager.filteredList = [originalLine];
       listManager.selectedIndex = 0;
 
-      const parts = originalLine.split(" # ");
-      const { collection, artist } = splitCollectionAndArtist(parts[1]);
-      const workCount = parts[parts.length - 1];
-
-      const listItemHTML = `<p class="list-item selected" data-index="0">
-         ${collection}${num ? ` #${num}` : ""}
-         <span>${artist} - ${workCount}</span>
-      </p>`;
-
-      dom.listPanel.innerHTML = `<div>${listItemHTML}</div>`;
+      dom.listPanel.innerHTML = `<div>${listItemHTML(originalLine, 0, num, true)}</div>`;
       if (!dom.listPanel.classList.contains("active")) {
         togglePanel(dom.listPanel);
       }
@@ -1481,9 +1395,9 @@ loopTypes.forEach((type) => {
 
 dom.stopLoop.addEventListener("click", stopLoop);
 
-dom.inc.addEventListener("click", incrementTokenId);
+dom.inc.addEventListener("click", () => stepTokenId(1));
 
-dom.dec.addEventListener("click", decrementTokenId);
+dom.dec.addEventListener("click", () => stepTokenId(-1));
 
 dom.randomButton.addEventListener("click", () => {
   getRandom(listManager.originalList);
@@ -1497,6 +1411,23 @@ panels.forEach((panel) => {
   panel.addEventListener("click", (event) => {
     event.stopPropagation();
   });
+});
+
+dom.panel.addEventListener("click", (e) => {
+  const copyBtn = e.target.closest(".copy-txt");
+  if (copyBtn) {
+    const textToCopy = copyBtn.getAttribute("data-text");
+    copyToClipboard(textToCopy);
+
+    const icon = copyBtn.querySelector("i");
+    icon.classList.replace("fa-regular", "fa-solid");
+    icon.classList.replace("fa-copy", "fa-check");
+
+    setTimeout(() => {
+      icon.classList.replace("fa-solid", "fa-regular");
+      icon.classList.replace("fa-check", "fa-copy");
+    }, 1000);
+  }
 });
 
 document.addEventListener("click", clearPanels);
@@ -1518,14 +1449,16 @@ checkLoop();
 setUIControls();
 initTooltips();
 initTheme();
-if (contractData) update(...Object.values(contractData));
+if (contractData) update(contractData);
 dom.root.classList.remove("no-flash");
 
+function normalizeContracts(args) {
+  if (args.length === 1 && Array.isArray(args[0])) return args[0];
+  return args;
+}
+
 async function blocks(...contract) {
-  const contractArray =
-    Array.isArray(contract[0]) && contract.length === 1
-      ? contract[0]
-      : contract;
+  const contractArray = normalizeContracts(contract);
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -1581,16 +1514,12 @@ async function blocks(...contract) {
 }
 
 window.fetchBlocks = async (...contracts) => {
-  let contractArray;
-
-  if (contracts.length === 1 && Array.isArray(contracts[0])) {
-    contractArray = contracts[0];
-  } else if (contracts.length >= 1) {
-    contractArray = contracts;
-  } else {
+  if (contracts.length === 0) {
     console.error("Please provide contract name(s) as arguments.");
     return;
   }
+
+  const contractArray = normalizeContracts(contracts);
 
   console.log(
     `%cFetching blocks for:%c${contractArray.join(", ")}`,

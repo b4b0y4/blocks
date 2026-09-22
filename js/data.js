@@ -985,57 +985,43 @@ export const list = [
   "MAYA0 # Ofrenda / Stefano Contiero # 1111 Works",
 ];
 
+const p5js100 = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js";
+const three124 = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js";
+const tone148 = "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js";
+const paper1215 = "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js";
+const regl210 = "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js";
+const babylon500 = "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js";
+
 export const libs = {
-  p5js: "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
-  "p5@1.0.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js",
+  p5js: p5js100, "p5@1.0.0": p5js100,
   "p5@1.9.0": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js",
   "p5@1.11.11": "https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js",
-  threejs: "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
-  "three@0.124.0":
-    "https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js",
-  "three@0.160.0":
-    "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js",
-  "three@0.167.0":
-    "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.min.js",
-  tonejs: "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  "tone@14.8.15": "https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.15/Tone.js",
-  paperjs:
-    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
-  "paper@0.12.15":
-    "https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js",
-  processing:
-    "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js",
-  regl: "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
-  "regl@2.1.0": "https://cdnjs.cloudflare.com/ajax/libs/regl/2.1.0/regl.min.js",
+  threejs: three124, "three@0.124.0": three124,
+  "three@0.160.0": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js",
+  "three@0.167.0": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.min.js",
+  tonejs: tone148, "tone@14.8.15": tone148,
+  paperjs: paper1215, "paper@0.12.15": paper1215,
+  processing: "https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.6/processing.min.js",
+  regl: regl210, "regl@2.1.0": regl210,
   zdog: "https://unpkg.com/zdog@1/dist/zdog.dist.min.js",
-  "a-frame":
-    "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
-  "twemoji@14.0.2":
-    'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
-  babylonjs:
-    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
-  "babylon@5.0.0":
-    "https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0/babylon.min.js",
+  "a-frame": "https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js",
+  "twemoji@14.0.2": 'https://unpkg.com/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous',
+  babylonjs: babylon500, "babylon@5.0.0": babylon500,
 };
 
 export const curated = [
-  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40,
-  41, 53, 59, 62, 64, 72, 74, 78, 89, 100, 114, 120, 129, 131, 138, 143, 147,
-  159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267, 282,
-  284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376,
-  379, 383, 385, 399, 406, 407, 412, 416, 417, 418, 423, 426, 428, 433, 455,
-  456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
+  0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 21, 23, 27, 28, 29, 35, 39, 40, 41, 53, 59, 62, 64, 72, 74, 78, 89,
+  100, 114, 120, 129, 131, 138, 143, 147, 159, 173, 204, 206, 209, 214, 215, 225, 232, 233, 250, 255, 261, 267,
+  282, 284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376, 379, 383, 385, 399, 406, 407,
+  412, 416, 417, 418, 423, 426, 428, 433, 455, 456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ];
 
 export const platformOverrides = {
-  "ABSIX4": "OFFICE IMPART",
-  "ABSIX5": "OFFICE IMPART",
-  "ABSXCII0": "Feral File",
+  ABSIX4: "OFFICE IMPART", ABSIX5: "OFFICE IMPART", ABSXCII0: "Feral File",
 };
 
 export const playground = [
-  6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77, 94,
-  104, 108, 112, 119, 121, 130, 134, 137, 139, 145, 146, 157, 163, 164, 167,
-  191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260, 264, 286,
-  289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370, 373,
+  6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77, 94, 104, 108, 112, 119, 121, 130,
+  134, 137, 139, 145, 146, 157, 163, 164, 167, 191, 197, 200, 201, 208, 212, 217, 228, 230, 234, 248, 256, 260,
+  264, 286, 289, 292, 294, 310, 319, 329, 339, 340, 350, 356, 362, 366, 369, 370, 373,
 ];

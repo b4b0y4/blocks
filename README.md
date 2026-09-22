@@ -53,7 +53,12 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 
 ### Adding New Contracts
 
-1. In `js/constants.js`, add your contract data to `contractRegistry`.
+1. In `js/constants.js`, add your contract with the `reg` helper:
+   ```js
+   YOURCONTRACT: reg(abi.v3Flex, "0xYourAddress", "Platform Name", startProjId),
+   ```
+   - ABI must already exist in `abi` (e.g. `abi.v1`, `abi.v2`, `abi.v3`, `abi.v2Flex`, `abi.v3Flex`), or add one first.
+   - `platform` and `startProjId` are optional (omit by not passing them).
 2. Open the application in your browser and open the developer console.
 3. In the console, you can now fetch blocks in several convenient ways:
     - **By variable:** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
