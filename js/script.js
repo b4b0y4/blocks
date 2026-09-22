@@ -76,6 +76,21 @@ let loopState = JSON.parse(localStorage.getItem("loopState")) || {
   intervalId: null,
 };
 
+const saveLoopState = () =>
+  localStorage.setItem("loopState", JSON.stringify(loopState));
+const makeTokenId = (projId, n) =>
+  projId === 0 ? n : Number((projId * 1000000 + n).toString().padStart(6, "0"));
+const parseQuery = (query) => {
+  const [searchQuery = "", numberQuery = ""] = query.split("#").map((s) => s.trim());
+  return { searchQuery, numberQuery };
+};
+const findPmpv0Dep = (deps = []) =>
+  deps.find(
+    (d) =>
+      d.dependency_type === "ONCHAIN" &&
+      d.bytecode_address.toLowerCase() === PMPV0_ADDR,
+  );
+
 function splitCollectionAndArtist(text) {
   const parts = text.split(" / ").map((s) => s.trim());
   const artist = parts.length > 0 ? parts[parts.length - 1] : "";
@@ -195,9 +210,7 @@ function handleKeyboardNavigation(event) {
       event.key === "ArrowUp" ? "up" : "down",
     );
 
-    const query = dom.search.value.trim();
-    const queryParts = query.split("#");
-    const numberQuery = queryParts.length > 1 ? queryParts[1].trim() : "";
+    const { numberQuery } = parseQuery(dom.search.value.trim());
     displayList(listManager.filteredList, numberQuery);
 
     const selectedItem = dom.listPanel.querySelector(
@@ -232,28 +245,11 @@ async function grabData(tokenId, contract, updateOnly = false) {
         fetchHash(tokenId, contract),
         fetchOwner(tokenId, contract),
       ]);
-
       const data = JSON.parse(localStorage.getItem("contractData"));
-      data.tokenId = tokenId;
-      data.contract = contract;
-      data.hash = hash;
-      data.owner = owner;
-      data.ensName = ensName;
+      Object.assign(data, { tokenId, contract, hash, owner, ensName });
 
-      const pmpv0Address = PMPV0_ADDR;
-      const onchainPmpv0Dep = data.extDep?.find(
-        (dep) =>
-          dep.dependency_type === "ONCHAIN" &&
-          dep.bytecode_address.toLowerCase() === pmpv0Address,
-      );
-
-      if (onchainPmpv0Dep) {
-        data.tokenParams = await fetchTokenParams(
-          instance,
-          contract,
-          tokenId,
-          indexMap,
-        );
+      if (findPmpv0Dep(data.extDep)) {
+        data.tokenParams = await fetchTokenParams(contract, tokenId);
       }
 
       localStorage.setItem("contractData", JSON.stringify(data));
@@ -272,7 +268,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
       ] = await Promise.all([
         fetchHash(tokenId, contract),
         fetchProjectInfo(projId, contract, isV3),
-        fetchProjectDetails(projId, contract),
+        instance[contract].projectDetails(projId),
         fetchOwner(tokenId, contract),
         fetchEditionInfo(projId, contract, isV3),
       ]);
@@ -299,20 +295,8 @@ async function grabData(tokenId, contract, updateOnly = false) {
           }
         }
 
-        const pmpv0Address = PMPV0_ADDR;
-        const onchainPmpv0Dep = extDep.find(
-          (dep) =>
-            dep.dependency_type === "ONCHAIN" &&
-            dep.bytecode_address.toLowerCase() === pmpv0Address,
-        );
-
-        if (onchainPmpv0Dep) {
-          tokenParams = await fetchTokenParams(
-            instance,
-            contract,
-            tokenId,
-            indexMap,
-          );
+        if (findPmpv0Dep(extDep)) {
+          tokenParams = await fetchTokenParams(contract, tokenId);
         }
       }
 
@@ -356,50 +340,33 @@ async function fetchProjectInfo(projId, contract, isV3) {
 
 async function constructScript(projId, projectInfo, contract) {
   const scriptCount = Number(projectInfo.scriptCount);
+  const batchSize = scriptCount > 30 ? 25 : scriptCount;
   let fullScript = "";
 
-  const batchSize = scriptCount > 30 ? 25 : scriptCount;
-
   for (let i = 0; i < scriptCount; i += batchSize) {
-    const batchPromises = [];
     const batchEnd = Math.min(i + batchSize, scriptCount);
-
-    for (let j = i; j < batchEnd; j++) {
-      batchPromises.push(instance[contract].projectScriptByIndex(projId, j));
-    }
-
-    const batchScripts = await Promise.all(batchPromises);
-    fullScript += batchScripts.join("");
-
-    if (i + batchSize < scriptCount) {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-    }
+    const batch = await Promise.all(
+      Array.from({ length: batchEnd - i }, (_, j) =>
+        instance[contract].projectScriptByIndex(projId, i + j),
+      ),
+    );
+    fullScript += batch.join("");
+    if (batchEnd < scriptCount)
+      await new Promise((r) => setTimeout(r, 300));
   }
 
   return fullScript;
 }
 
-async function fetchProjectDetails(projId, contract) {
-  return instance[contract].projectDetails(projId);
-}
-
 async function fetchOwner(tokenId, contract) {
   const owner = await instance[contract].ownerOf(tokenId);
-  const ensName = await provider.lookupAddress(owner).catch(() => null);
-  return { owner, ensName };
+  return { owner, ensName: await provider.lookupAddress(owner).catch(() => null) };
 }
 
-function extractLibraryName(projectInfo) {
-  if (!projectInfo[0]) {
-    return "js";
-  } else if (
-    typeof projectInfo[0] === "string" &&
-    projectInfo[0].includes("@")
-  ) {
-    return projectInfo[0].trim();
-  } else {
-    return JSON.parse(projectInfo[0]).type;
-  }
+function extractLibraryName([first]) {
+  if (!first) return "js";
+  if (typeof first === "string" && first.includes("@")) return first.trim();
+  return JSON.parse(first).type;
 }
 
 async function fetchEditionInfo(projId, contract, isV3) {
@@ -407,99 +374,76 @@ async function fetchEditionInfo(projId, contract, isV3) {
     await instance[contract][isV3 ? "projectStateData" : "projectTokenInfo"](
       projId,
     );
-
-  return {
-    edition: Number(invo.maxInvocations),
-    minted: Number(invo.invocations),
-  };
+  return { edition: Number(invo.maxInvocations), minted: Number(invo.invocations) };
 }
 
-async function fetchExtDepCount(projId, contract) {
-  const count =
-    await instance[contract].projectExternalAssetDependencyCount(projId);
-  return count == 0 ? null : count;
-}
+const fetchExtDepCount = async (projId, contract) =>
+  (await instance[contract].projectExternalAssetDependencyCount(projId)) || null;
 
 async function fetchDependencies(projId, extDepCount, contract) {
-  const cidPromises = Array.from({ length: Number(extDepCount) }, (_, i) =>
-    instance[contract].projectExternalAssetDependencyByIndex(projId, i),
+  return Promise.all(
+    Array.from({ length: Number(extDepCount) }, (_, i) =>
+      instance[contract].projectExternalAssetDependencyByIndex(projId, i),
+    ),
   );
-  return Promise.all(cidPromises);
 }
+
+const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
 
 async function fetchCIDs(version, projId, extDepCount, contract) {
   const cidTuples = await fetchDependencies(projId, extDepCount, contract);
 
-  if (version === "v2") {
-    return cidTuples.map((tuple) => ({
-      cid: tuple[0],
+  if (version === "v2")
+    return cidTuples.map(([cid]) => ({
+      cid,
       dependency_type: "IPFS",
       data: null,
       isOnchain: false,
     }));
-  }
 
   return cidTuples.map((tuple) => {
-    const cid = tuple.cid;
     const dependencyType = Number(tuple.dependencyType || 0);
-    const bytecodeAddress = tuple.bytecodeAddress || "";
-    const data = tuple.data || "";
 
     if (dependencyType === 2) {
-      let parsedData = data;
+      let data = tuple.data || "";
       try {
-        if (data.startsWith("{")) {
-          parsedData = JSON.parse(data);
-        }
+        if (data.startsWith("{")) data = JSON.parse(data);
       } catch (error) {
-        console.log("ONCHAIN data parsing error:", error);
-        console.log("Raw ONCHAIN data:", data);
-        parsedData = data;
+        console.log("ONCHAIN data parsing error:", error, "Raw:", data);
       }
-
       return {
-        cid: cid,
+        cid: tuple.cid,
         dependency_type: "ONCHAIN",
-        data: parsedData,
-        bytecode_address: bytecodeAddress,
+        data,
+        bytecode_address: tuple.bytecodeAddress || "",
         isOnchain: true,
       };
     }
 
     return {
-      cid: cid,
-      dependency_type:
-        dependencyType === 0
-          ? "IPFS"
-          : dependencyType === 1
-            ? "ARWEAVE"
-            : "ART_BLOCKS_DEPENDENCY_REGISTRY",
+      cid: tuple.cid,
+      dependency_type: DEP_TYPES[dependencyType] || "IPFS",
       data: null,
       isOnchain: false,
     };
   });
 }
 
-async function fetchGateway(contract) {
+const fetchGateway = async (contract) => {
   const [ipfs, arweave] = await Promise.all([
     instance[contract].preferredIPFSGateway(),
     instance[contract].preferredArweaveGateway(),
   ]);
   return { ipfs, arweave };
-}
+};
 
-async function fetchTokenParams(instance, contract, tokenId, indexMap) {
-  const pmpv0Contract = instance[indexMap["ABPMPV0"]];
-  const tokenParamsRaw = await pmpv0Contract
+async function fetchTokenParams(contract, tokenId) {
+  const raw = await instance[indexMap["ABPMPV0"]]
     .getTokenParams(instance[contract].target, tokenId)
     .catch(() => []);
-
-  const tokenParams = tokenParamsRaw.reduce((acc, [key, value]) => {
-    acc[key] = typeof value === "bigint" ? value.toString() : value;
-    return acc;
-  }, {});
-
-  return tokenParams;
+  return Object.fromEntries(
+    raw.map(([k, v]) => [k, typeof v === "bigint" ? v.toString() : v]),
+  );
 }
 
 function update(data) {
@@ -649,123 +593,112 @@ function updateUI({
   minted,
   extDep,
 }) {
-  const renderInfo = () => {
-    const infoText = `${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`;
+  const infoText = `${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`;
+  dom.info.innerHTML = "";
+  dom.info.classList.remove("scrolling");
 
-    dom.info.innerHTML = "";
-    dom.info.classList.remove("scrolling");
+  const spanElement = document.createElement("span");
+  spanElement.textContent = infoText;
+  dom.info.appendChild(spanElement);
 
-    const spanElement = document.createElement("span");
-    spanElement.textContent = infoText;
-    dom.info.appendChild(spanElement);
+  if (spanElement.offsetWidth > dom.info.offsetWidth) {
+    const scrollDuration = spanElement.offsetWidth / 30;
+    dom.info.style.setProperty("--scroll-duration", `${scrollDuration}s`);
+    const duplicateSpan = spanElement.cloneNode(true);
+    duplicateSpan.setAttribute("aria-hidden", "true");
+    dom.info.appendChild(duplicateSpan);
+    dom.info.classList.add("scrolling");
+  }
 
-    const infoElement = dom.info;
+  const showLib =
+    extLib &&
+    !extLib.startsWith("js") &&
+    !extLib.startsWith("svg") &&
+    !extLib.startsWith("custom");
+  const libInfo = showLib
+    ? getLibVersion(extLib) +
+      (extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10
+        ? ` <br> ${extDep[0].cid}`
+        : "")
+    : "";
 
-    if (spanElement.offsetWidth > infoElement.offsetWidth) {
-      const scrollDuration = spanElement.offsetWidth / 30;
-      infoElement.style.setProperty("--scroll-duration", `${scrollDuration}s`);
+  const showExt =
+    (extDep.length > 0 && showExtDep(extDep[0])) ||
+    nameMap[contract] === "BMFLEX";
+  const extInfo = showExt ? getExtDepType(extDep[0], contract) : "";
+  const dependencyInfo =
+    libInfo && extInfo ? `${libInfo} <br> ${extInfo}` : libInfo || extInfo;
 
-      const duplicateSpan = spanElement.cloneNode(true);
-      duplicateSpan.setAttribute("aria-hidden", "true");
-      infoElement.appendChild(duplicateSpan);
+  const copyLink = (title, href, label, copyText = href) =>
+    createSection(
+      title,
+      `<a href="${href}" target="_blank">${label}</a>
+       <span class="copy-txt" data-text="${copyText}">
+         <i class="fa-regular fa-copy"></i>
+       </span>`,
+    );
+  const copyVal = (title, val) =>
+    createSection(
+      title,
+      `<span class="copy-txt" data-text="${val}">${val} <i class="fa-regular fa-copy"></i></span>`,
+    );
 
-      infoElement.classList.add("scrolling");
-    }
-
-    const showLib =
-      extLib &&
-      !extLib.startsWith("js") &&
-      !extLib.startsWith("svg") &&
-      !extLib.startsWith("custom");
-    const libInfo = showLib
-      ? getLibVersion(extLib) +
-        (extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10
-          ? ` <br> ${extDep[0].cid}`
-          : "")
-      : "";
-
-    const showExt =
-      (extDep.length > 0 && showExtDep(extDep[0])) ||
-      nameMap[contract] === "BMFLEX";
-    const extInfo = showExt ? getExtDepType(extDep[0], contract) : "";
-
-    const dependencyInfo =
-      libInfo && extInfo ? `${libInfo} <br> ${extInfo}` : libInfo || extInfo;
-
-    dom.panel.innerHTML = `
-       <div class="work">${detail[0]}</div>
-       <p>
-         <span class="artist">${detail[1]}${
-           platform ? ` &bull; ${platform}` : ""
-         }</span><br>
-         <span class="edition">${editionTxt(edition, minted)}</span>
-       </p>
-       <p>${detail[2]}</p>
-       <div class="column-box">
-         <div class="column">
-           ${
-             owner
-               ? createSection(
-                   "OWNER",
-                   `<a href="https://opensea.io/profile/${owner}" target="_blank">
-               ${ensName || shortAddr(owner)}
-             </a>
-             <span class="copy-txt" data-text="${owner}">
-               <i class="fa-regular fa-copy"></i>
-             </span>`,
-                 )
-               : ""
-           }
-           ${createSection(
-             "CONTRACT",
-             `<a href="https://etherscan.io/address/${
-               instance[contract].target
-             }" target="_blank">
-               ${shortAddr(instance[contract].target)}
-             </a>
-             <span class="copy-txt" data-text="${instance[contract].target}">
-               <i class="fa-regular fa-copy"></i>
-             </span>`,
-           )}
-           ${createSection(
-             "TOKEN ID",
-             `<span class="copy-txt" data-text="${tokenId}">
-               ${tokenId} <i class="fa-regular fa-copy"></i>
-             </span>`,
-           )}
-         </div>
-         <div class="column">
-           ${
-             detail[3]
-               ? createSection(
-                   "ARTIST WEBSITE",
-                   `<a href="${detail[3]}" target="_blank">
-                   ${extractDomain(detail[3])}
-                 </a>`,
-                 )
-               : ""
-           }
-           ${
-             dependencyInfo
-               ? createSection(
-                   "DEPENDENCY",
-                   `<span class="no-copy-txt">${dependencyInfo}</span>`,
-                 )
-               : ""
-           }
-           ${
-             detail[4]
-               ? createSection(
-                   "LICENSE",
-                   `<span class="no-copy-txt">${detail[4]}</span>`,
-                 )
-               : ""
-           }
-         </div>
+  dom.panel.innerHTML = `
+     <div class="work">${detail[0]}</div>
+     <p>
+       <span class="artist">${detail[1]}${
+         platform ? ` &bull; ${platform}` : ""
+       }</span><br>
+       <span class="edition">${editionTxt(edition, minted)}</span>
+     </p>
+     <p>${detail[2]}</p>
+     <div class="column-box">
+       <div class="column">
+         ${
+           owner
+             ? copyLink(
+                 "OWNER",
+                 `https://opensea.io/profile/${owner}`,
+                 ensName || shortAddr(owner),
+                 owner,
+               )
+             : ""
+         }
+         ${copyLink(
+           "CONTRACT",
+           `https://etherscan.io/address/${instance[contract].target}`,
+           shortAddr(instance[contract].target),
+         )}
+         ${copyVal("TOKEN ID", tokenId)}
        </div>
-     `;
-  };
-  renderInfo();
+       <div class="column">
+         ${
+           detail[3]
+             ? createSection(
+                 "ARTIST WEBSITE",
+                 `<a href="${detail[3]}" target="_blank">${extractDomain(detail[3])}</a>`,
+               )
+             : ""
+         }
+         ${
+           dependencyInfo
+             ? createSection(
+                 "DEPENDENCY",
+                 `<span class="no-copy-txt">${dependencyInfo}</span>`,
+               )
+             : ""
+         }
+         ${
+           detail[4]
+             ? createSection(
+                 "LICENSE",
+                 `<span class="no-copy-txt">${detail[4]}</span>`,
+               )
+             : ""
+         }
+       </div>
+     </div>
+   `;
 }
 
 function shortId(tokenId) {
@@ -815,25 +748,20 @@ function copyToClipboard(text) {
 }
 
 function showExtDep(dependency) {
-  if (!dependency) return false;
-
-  const isOnchain = dependency.dependency_type === "ONCHAIN";
-  const isArtBlocksRegistry =
-    dependency.dependency_type === "ART_BLOCKS_DEPENDENCY_REGISTRY";
-
-  return !isOnchain && !isArtBlocksRegistry;
+  return (
+    dependency &&
+    !["ONCHAIN", "ART_BLOCKS_DEPENDENCY_REGISTRY"].includes(
+      dependency.dependency_type,
+    )
+  );
 }
 
 function getExtDepType(dependency, contract) {
-  if (nameMap[contract] === "BMFLEX") {
-    return "ipfs";
-  }
-
+  if (nameMap[contract] === "BMFLEX") return "ipfs";
   const isIPFS =
     dependency.dependency_type === "IPFS" ||
     (dependency.cid &&
       (dependency.cid.startsWith("Qm") || dependency.cid.startsWith("baf")));
-
   return isIPFS ? "ipfs" : "arweave";
 }
 
@@ -891,27 +819,16 @@ async function injectFrame() {
 
 function getToken(line, searchQuery) {
   const regex = /^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*Work/;
-  const [_, listContract, projIdStr, tokenStr] = line.match(regex);
+  const [, listContract, projIdStr, tokenStr] = line.match(regex);
   const projId = parseInt(projIdStr);
   const token = parseInt(tokenStr);
   const contract = indexMap[listContract];
-  let tokenId;
 
-  if (searchQuery.includes("#")) {
-    const searchId = parseInt(searchQuery.match(/#\s*(\d+)/)[1]);
-    tokenId =
-      projId === 0
-        ? searchId
-        : Number((projId * 1000000 + searchId).toString().padStart(6, "0"));
-  } else {
-    const randomToken = Math.floor(Math.random() * token);
-    tokenId =
-      projId === 0
-        ? randomToken
-        : Number((projId * 1000000 + randomToken).toString().padStart(6, "0"));
-  }
+  const pick = searchQuery.includes("#")
+    ? parseInt(searchQuery.match(/#\s*(\d+)/)[1])
+    : Math.floor(Math.random() * token);
 
-  grabData(tokenId, contract);
+  grabData(makeTokenId(projId, pick), contract);
   dom.search.value = "";
   listManager.reset();
   displayList(listManager.originalList);
@@ -919,15 +836,11 @@ function getToken(line, searchQuery) {
 
 function getRandom(source) {
   if (Array.isArray(source)) {
-    const randomLine = source[Math.floor(Math.random() * source.length)];
-    getToken(randomLine, "");
+    getToken(source[Math.floor(Math.random() * source.length)], "");
   } else if (typeof source === "object" && Object.keys(source).length > 0) {
-    const randomKey =
-      Object.keys(source)[
-        Math.floor(Math.random() * Object.keys(source).length)
-      ];
+    const keys = Object.keys(source);
     clearDataStorage();
-    contractData = source[randomKey];
+    contractData = source[keys[Math.floor(Math.random() * keys.length)]];
     update(contractData);
   }
 }
@@ -936,72 +849,49 @@ function generateRandomHashAndToken() {
   const randomHash = Array.from({ length: 64 }, () =>
     Math.floor(Math.random() * 16).toString(16),
   ).join("");
-
   const base = contractData.projId * 1000000;
   const minToken = base + contractData.minted;
   const maxToken = base + 999999;
-
-  const randomToken = Math.floor(
+  const tokenId = Math.floor(
     Math.random() * (maxToken - minToken + 1) + minToken,
   );
-
-  return { hash: randomHash, tokenId: randomToken };
+  return { hash: randomHash, tokenId };
 }
 
 function exploreAlgo() {
   if (contractData.detail[0] === "Unigrids") return;
-
-  const { hash, tokenId } = generateRandomHashAndToken();
-
-  contractData.hash = hash;
-  contractData.tokenId = tokenId;
-  contractData.owner = "";
-  contractData.ensName = "";
-
+  Object.assign(contractData, generateRandomHashAndToken(), {
+    owner: "",
+    ensName: "",
+  });
   update(contractData);
 }
 
 function stepTokenId(dir) {
   const max = contractData.minted - 1;
   let numericId = contractData.tokenId % 1000000;
-
-  if (dir > 0) {
-    numericId = numericId === max ? 0 : numericId + 1;
-  } else {
-    numericId = numericId === 0 ? max : numericId - 1;
-  }
-
+  numericId = dir > 0
+    ? numericId === max ? 0 : numericId + 1
+    : numericId === 0 ? max : numericId - 1;
   contractData.tokenId = contractData.projId * 1000000 + numericId;
-
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
 function loopRandom(interval, action) {
-  if (loopState.intervalId) {
-    clearInterval(loopState.intervalId);
-  }
+  if (loopState.intervalId) clearInterval(loopState.intervalId);
 
-  if (loopState.isLooping !== "true") {
-    performAction(action, favorite);
-  }
+  if (loopState.isLooping !== "true") performAction(action, favorite);
 
-  loopState.intervalId = setInterval(() => {
-    performAction(action, favorite);
-  }, interval);
-
-  loopState = {
-    isLooping: "true",
+  loopState.intervalId = setInterval(
+    () => performAction(action, favorite),
     interval,
-    action,
-    intervalId: loopState.intervalId,
-  };
-  localStorage.setItem("loopState", JSON.stringify(loopState));
-  console.log(loopState);
+  );
+  loopState = { isLooping: "true", interval, action, intervalId: loopState.intervalId };
+  saveLoopState();
 }
 
-function performAction(action, favorite) {
+function performAction(action) {
   clearPanels();
-
   if (action === "allLoop") getRandom(listManager.originalList);
   else if (action === "favLoop") getRandom(favorite);
   else if (action === "curatedLoop") {
@@ -1009,8 +899,7 @@ function performAction(action, favorite) {
     getRandom(listManager.filteredList);
   } else if (action === "selectedLoop") {
     const projectLine = listManager.originalList.find(
-      (line) =>
-        parseListLine(line).collection.trim() === contractData.detail[0],
+      (line) => parseListLine(line).collection.trim() === contractData.detail[0],
     );
     getToken(projectLine, "");
   } else if (action === "oobLoop") {
@@ -1019,24 +908,20 @@ function performAction(action, favorite) {
 }
 
 function stopRandomLoop() {
-  if (loopState.intervalId) {
-    clearInterval(loopState.intervalId);
-  }
+  if (loopState.intervalId) clearInterval(loopState.intervalId);
   loopState.isLooping = "false";
-  localStorage.setItem("loopState", JSON.stringify(loopState));
+  saveLoopState();
 }
 
 function checkLoop() {
   dom.loopInput.placeholder = `${loopState.interval / 60000} min`;
-
   if (loopState.isLooping === "true" && loopState.action !== null)
     loopRandom(loopState.interval, loopState.action);
 }
 
 function handleLoop(action) {
-  let inputValue = dom.loopInput.value.trim();
+  const inputValue = dom.loopInput.value.trim();
   const inputVal = parseInt(inputValue, 10);
-
   const interval =
     loopState.interval &&
     (inputValue === "" || loopState.interval === inputVal * 60000)
@@ -1052,45 +937,40 @@ function handleLoop(action) {
   }
 
   if (inputValue !== "" && interval !== loopState.interval) {
-    loopState = { isLooping: "false", interval: interval, action: action };
-    localStorage.setItem("loopState", JSON.stringify(loopState));
+    loopState = { isLooping: "false", interval, action };
+    saveLoopState();
   }
   updateLoopButton();
 }
 
-function stopLoop() {
+const stopLoop = () => {
   stopRandomLoop();
   updateLoopButton();
-}
+};
 
 async function saveOutput() {
   const content = dom.frame.contentDocument.documentElement.outerHTML;
-  let id = shortId(contractData.tokenId);
-  const defaultName = `${contractData.detail[0].replace(
-    /\s+/g,
-    "-",
-  )}#${id}.html`;
-  const blob = new Blob([content], { type: "text/html" });
-  const url = URL.createObjectURL(blob);
+  const id = shortId(contractData.tokenId);
+  const defaultName = `${contractData.detail[0].replace(/\s+/g, "-")}#${id}.html`;
+  const url = URL.createObjectURL(
+    new Blob([content], { type: "text/html" }),
+  );
   const link = document.createElement("a");
-
   link.href = url;
   link.download = defaultName;
   document.body.appendChild(link);
   link.click();
-
   URL.revokeObjectURL(url);
   link.remove();
   pushFavoriteToStorage(id);
 }
 
 function pushFavoriteToStorage(id) {
-  const key = `
+  favorite[`
     <div class="fav-item">
       ${contractData.detail[0]} #${id}
       <span>${contractData.detail[1]}</span>
-    </div>`;
-  favorite[key] = contractData;
+    </div>`] = contractData;
   localStorage.setItem("favorite", JSON.stringify(favorite));
   setUIControls();
 }
@@ -1103,42 +983,39 @@ function deleteFavoriteFromStorage(key) {
   }
 }
 
-function frameFavorite(key) {
+const frameFavorite = (key) => {
   clearDataStorage();
   contractData = favorite[key];
   update(contractData);
-}
+};
 
 function displayFavoriteList() {
   dom.favPanel.innerHTML = "";
 
   for (let key in favorite) {
-    if (favorite.hasOwnProperty(key)) {
-      const keyElement = document.createElement("p");
-      keyElement.style.display = "flex";
-      keyElement.style.justifyContent = "space-between";
-      keyElement.style.alignItems = "center";
+    if (!favorite.hasOwnProperty(key)) continue;
+    const keyElement = document.createElement("p");
+    keyElement.style.cssText =
+      "display:flex; justify-content:space-between; align-items:center";
 
-      const delSpan = document.createElement("span");
-      delSpan.className = "delete-btn";
-      delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+    const delSpan = document.createElement("span");
+    delSpan.className = "delete-btn";
+    delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+    delSpan.addEventListener("click", (event) => {
+      event.stopPropagation();
+      deleteFavoriteFromStorage(key);
+      displayFavoriteList();
+    });
 
-      delSpan.addEventListener("click", (event) => {
-        event.stopPropagation();
-        deleteFavoriteFromStorage(key);
-        displayFavoriteList();
-      });
+    keyElement.addEventListener("click", () => {
+      toggleSpin();
+      frameFavorite(key);
+      clearPanels();
+    });
 
-      keyElement.addEventListener("click", () => {
-        toggleSpin();
-        frameFavorite(key);
-        clearPanels();
-      });
-
-      keyElement.insertAdjacentHTML("afterbegin", key);
-      keyElement.appendChild(delSpan);
-      dom.favPanel.appendChild(keyElement);
-    }
+    keyElement.insertAdjacentHTML("afterbegin", key);
+    keyElement.appendChild(delSpan);
+    dom.favPanel.appendChild(keyElement);
   }
 }
 
@@ -1163,6 +1040,14 @@ const togglePanel = (panelElement) => {
   );
 };
 
+const bindPanelToggle = (el, panel, before) => {
+  el.addEventListener("click", (event) => {
+    event.stopPropagation();
+    before?.();
+    togglePanel(panel);
+  });
+};
+
 const toggleSpin = (show = true) => {
   dom.spinner.style.display = show ? "block" : "none";
 };
@@ -1170,7 +1055,6 @@ const toggleSpin = (show = true) => {
 const updateLoopButton = () => {
   document.querySelector(".fa-repeat").style.display =
     loopState.isLooping !== "true" ? "inline-block" : "none";
-
   document.querySelector(".fa-circle-stop").style.display =
     loopState.isLooping === "true" ? "inline-block" : "none";
 };
@@ -1212,33 +1096,27 @@ const tooltipTexts = {
 let tooltipTimeout = null;
 
 function showTooltip(element, text) {
-  if (tooltipTimeout) {
-    clearTimeout(tooltipTimeout);
-  }
+  if (tooltipTimeout) clearTimeout(tooltipTimeout);
 
   tooltipTimeout = setTimeout(() => {
     const rect = element.getBoundingClientRect();
     const infobarRect = dom.infobar.getBoundingClientRect();
-
-    dom.tooltip.textContent = text;
-
     let leftPos = rect.left + rect.width / 2;
 
+    dom.tooltip.textContent = text;
     dom.tooltip.style.visibility = "hidden";
     dom.tooltip.classList.add("active");
 
-    const tooltipRect = dom.tooltip.getBoundingClientRect();
-    const tooltipWidth = tooltipRect.width;
+    const { width } = dom.tooltip.getBoundingClientRect();
+    leftPos = Math.max(10 + width / 2, Math.min(window.innerWidth - 10 - width / 2, leftPos));
 
-    const minLeft = 10 + tooltipWidth / 2;
-    const maxLeft = window.innerWidth - 10 - tooltipWidth / 2;
-    leftPos = Math.max(minLeft, Math.min(maxLeft, leftPos));
-
-    dom.tooltip.style.left = `${leftPos}px`;
-    dom.tooltip.style.bottom = `${window.innerHeight - infobarRect.top + 10}px`;
-    dom.tooltip.style.color = "var(--color-btn)";
-    dom.tooltip.style.transform = "translateX(-50%)";
-    dom.tooltip.style.visibility = "visible";
+    Object.assign(dom.tooltip.style, {
+      left: `${leftPos}px`,
+      bottom: `${window.innerHeight - infobarRect.top + 10}px`,
+      color: "var(--color-btn)",
+      transform: "translateX(-50%)",
+      visibility: "visible",
+    });
   }, 500);
 }
 
@@ -1255,11 +1133,10 @@ function hideTooltip() {
 function initTooltips() {
   Object.entries(tooltipTexts).forEach(([key, text]) => {
     const element = dom[key];
-    if (element) {
-      element.addEventListener("mouseenter", () => showTooltip(element, text));
-      element.addEventListener("mouseleave", hideTooltip);
-      element.addEventListener("click", hideTooltip);
-    }
+    if (!element) return;
+    element.addEventListener("mouseenter", () => showTooltip(element, text));
+    element.addEventListener("mouseleave", hideTooltip);
+    element.addEventListener("click", hideTooltip);
   });
 }
 
@@ -1267,22 +1144,16 @@ function setTheme(themeName) {
   dom.themeBtns.forEach((btn) =>
     btn.setAttribute("data-active", btn.dataset.theme === themeName),
   );
-
-  if (themeName === "system") {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    dom.root.classList.toggle("dark-mode", prefersDark);
-  } else {
-    dom.root.classList.toggle("dark-mode", themeName === "dark");
-  }
-
+  const dark =
+    themeName === "system"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : themeName === "dark";
+  dom.root.classList.toggle("dark-mode", dark);
   localStorage.setItem("themePreference", themeName);
 }
 
-function initTheme() {
+const initTheme = () =>
   setTheme(localStorage.getItem("themePreference") || "system");
-}
 
 document.addEventListener("keypress", (event) => {
   if (event.key === "\\") {
@@ -1308,39 +1179,29 @@ dom.search.addEventListener("input", (event) => {
 
   if (query.startsWith("#") && contractData) {
     const num = query.substring(1);
-
     if (!/^\d*$/.test(num)) {
       clearPanels();
       return;
     }
 
-    const currentArtName = contractData.detail[0];
     const originalLine = listManager.originalList.find((line) =>
-      line.includes(currentArtName),
+      line.includes(contractData.detail[0]),
     );
-
     if (originalLine) {
       listManager.filteredList = [originalLine];
       listManager.selectedIndex = 0;
-
       dom.listPanel.innerHTML = `<div>${listItemHTML(originalLine, 0, num, true)}</div>`;
-      if (!dom.listPanel.classList.contains("active")) {
+      if (!dom.listPanel.classList.contains("active"))
         togglePanel(dom.listPanel);
-      }
     } else {
       clearPanels();
     }
   } else {
-    const queryParts = query.split("#");
-    const searchQuery = queryParts[0].trim();
-    const numberQuery = queryParts.length > 1 ? queryParts[1].trim() : "";
-
+    const { searchQuery, numberQuery } = parseQuery(query);
     if (searchQuery !== "") {
-      const filteredItems = listManager.filterByQuery(searchQuery);
-      displayList(filteredItems, numberQuery);
-      if (!dom.listPanel.classList.contains("active")) {
+      displayList(listManager.filterByQuery(searchQuery), numberQuery);
+      if (!dom.listPanel.classList.contains("active"))
         togglePanel(dom.listPanel);
-      }
     } else {
       clearPanels();
     }
@@ -1352,59 +1213,31 @@ dom.search.addEventListener("keydown", handleKeyboardNavigation);
 dom.listPanel.addEventListener("click", (event) => {
   const listItem = event.target.closest(".list-item");
   if (listItem) {
-    const index = parseInt(listItem.dataset.index);
-    listManager.selectedIndex = index;
+    listManager.selectedIndex = parseInt(listItem.dataset.index);
     const selectedItem = listManager.getSelected();
-    if (selectedItem) {
-      const query = dom.search.value.trim();
-      getToken(selectedItem, query);
-    }
+    if (selectedItem) getToken(selectedItem, dom.search.value.trim());
   }
 });
 
-dom.settings.addEventListener("click", (event) => {
-  event.stopPropagation();
-  togglePanel(dom.instruction);
-});
-
-dom.info.addEventListener("click", (event) => {
-  event.stopPropagation();
-  togglePanel(dom.panel);
-});
-
-dom.searchIcon.addEventListener("click", (event) => {
-  event.stopPropagation();
-  displayList(listManager.originalList);
-  togglePanel(dom.listPanel);
-});
-
-dom.favIcon.addEventListener("click", (event) => {
-  event.stopPropagation();
-  displayFavoriteList();
-  togglePanel(dom.favPanel);
-});
-
-dom.repeatIcon.addEventListener("click", (event) => {
-  event.stopPropagation();
-  togglePanel(dom.dropMenu);
-});
+bindPanelToggle(dom.settings, dom.instruction);
+bindPanelToggle(dom.info, dom.panel);
+bindPanelToggle(dom.searchIcon, dom.listPanel, () =>
+  displayList(listManager.originalList),
+);
+bindPanelToggle(dom.favIcon, dom.favPanel, displayFavoriteList);
+bindPanelToggle(dom.repeatIcon, dom.dropMenu);
 
 loopTypes.forEach((type) => {
   dom[`${type}Loop`].addEventListener("click", () => handleLoop(`${type}Loop`));
 });
 
 dom.stopLoop.addEventListener("click", stopLoop);
-
 dom.inc.addEventListener("click", () => stepTokenId(1));
-
 dom.dec.addEventListener("click", () => stepTokenId(-1));
-
-dom.randomButton.addEventListener("click", () => {
-  getRandom(listManager.originalList);
-});
-
+dom.randomButton.addEventListener("click", () =>
+  getRandom(listManager.originalList),
+);
 dom.explore.addEventListener("click", exploreAlgo);
-
 dom.save.addEventListener("click", saveOutput);
 
 panels.forEach((panel) => {
@@ -1459,49 +1292,41 @@ function normalizeContracts(args) {
 
 async function blocks(...contract) {
   const contractArray = normalizeContracts(contract);
-
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const BATCH = 10;
+  const DELAY_MS = 1500;
 
   for (const contractName of contractArray) {
     const n = indexMap[contractName];
     const start = contractRegistry[contractName].startProjId || 0;
     const end = Number(await instance[n].nextProjectId());
     const newBlocks = [];
-    const BATCH = 10;
-    const DELAY_MS = 1500;
 
     for (let id = start; id < end; id += BATCH) {
-      const batchPromises = [];
-
-      for (let batchId = id; batchId < Math.min(id + BATCH, end); batchId++) {
-        batchPromises.push(
-          Promise.all([
+      const batchEnd = Math.min(id + BATCH, end);
+      const results = await Promise.all(
+        Array.from({ length: batchEnd - id }, (_, idx) => {
+          const batchId = id + idx;
+          return Promise.all([
             instance[n].projectDetails(batchId.toString()),
             is.v3.includes(contractName)
               ? instance[n].projectStateData(batchId)
               : instance[n].projectTokenInfo(batchId),
-          ]).catch(() => null),
-        );
-      }
-
-      const results = await Promise.all(batchPromises);
+          ]).catch(() => null);
+        }),
+      );
 
       results.forEach((result, idx) => {
-        if (result) {
-          const [detail, token] = result;
-          const newItem = `${contractName}${id + idx} # ${detail[0]} / ${detail[1]} # ${token.invocations} ${
-            Number(token.invocations) === 1 ? "Work" : "Works"
-          }`;
-
-          if (!list.map((item) => item.replace(/!$/, "")).includes(newItem)) {
-            newBlocks.push(`"${newItem}",`);
-          }
-        }
+        if (!result) return;
+        const [detail, token] = result;
+        const newItem = `${contractName}${id + idx} # ${detail[0]} / ${detail[1]} # ${token.invocations} ${
+          Number(token.invocations) === 1 ? "Work" : "Works"
+        }`;
+        if (!list.some((item) => item.replace(/!$/, "") === newItem))
+          newBlocks.push(`"${newItem}",`);
       });
 
-      if (id + BATCH < end) {
-        await delay(DELAY_MS);
-      }
+      if (batchEnd < end) await delay(DELAY_MS);
     }
 
     if (newBlocks.length > 0) {
@@ -1518,15 +1343,12 @@ window.fetchBlocks = async (...contracts) => {
     console.error("Please provide contract name(s) as arguments.");
     return;
   }
-
   const contractArray = normalizeContracts(contracts);
-
   console.log(
     `%cFetching blocks for:%c${contractArray.join(", ")}`,
     "color: indianred;",
     "color: grey;",
   );
-
   await blocks(contractArray);
   console.log("%cDone fetching!", "color: indianred;");
 };
