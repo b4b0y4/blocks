@@ -1,4 +1,4 @@
-import { ethers } from "./libs/ethers.min.js";
+import { makeCall, lookupAddress } from "./rpc.js";
 import { list, libs, curated, playground, platformOverrides } from "./data.js";
 import { contractRegistry, is } from "./constants.js";
 
@@ -49,23 +49,27 @@ const panels = [
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
 const rpcUrl = localStorage.getItem("rpcUrl");
-const provider = new ethers.JsonRpcProvider(rpcUrl);
+const call = makeCall(rpcUrl);
 
 rpcUrl
   ? (dom.rpcUrlInput.placeholder = rpcUrl)
   : (dom.rpcUrlInput.placeholder = "Enter RPC URL");
 
-const instance = [];
 const nameMap = {};
 const indexMap = {};
 const PMPV0_ADDR = contractRegistry.ABPMPV0.address.toLowerCase();
 
 Object.keys(contractRegistry).forEach((key, index) => {
-  const { abi, address } = contractRegistry[key];
-  instance.push(new ethers.Contract(address, abi, provider));
   nameMap[index] = key;
   indexMap[key] = index;
 });
+
+const contractAt = (contract) => contractRegistry[nameMap[contract]];
+
+const contractCall = (contract, fnName, ...args) => {
+  const { abi, address } = contractAt(contract);
+  return call(address, abi, fnName, args);
+};
 
 let contractData = JSON.parse(localStorage.getItem("contractData"));
 let favorite = JSON.parse(localStorage.getItem("favorite")) || {};
@@ -268,7 +272,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
       ] = await Promise.all([
         fetchHash(tokenId, contract),
         fetchProjectInfo(projId, contract, isV3),
-        instance[contract].projectDetails(projId),
+        contractCall(contract, "projectDetails", projId),
         fetchOwner(tokenId, contract),
         fetchEditionInfo(projId, contract, isV3),
       ]);
@@ -328,14 +332,14 @@ async function grabData(tokenId, contract, updateOnly = false) {
 
 async function fetchHash(tokenId, contract) {
   return nameMap[contract] == "AB"
-    ? instance[contract].showTokenHashes(tokenId)
-    : instance[contract].tokenIdToHash(tokenId);
+    ? contractCall(contract, "showTokenHashes", tokenId)
+    : contractCall(contract, "tokenIdToHash", tokenId);
 }
 
 async function fetchProjectInfo(projId, contract, isV3) {
   return isV3
-    ? instance[contract].projectScriptDetails(projId)
-    : instance[contract].projectScriptInfo(projId);
+    ? contractCall(contract, "projectScriptDetails", projId)
+    : contractCall(contract, "projectScriptInfo", projId);
 }
 
 async function constructScript(projId, projectInfo, contract) {
@@ -347,7 +351,7 @@ async function constructScript(projId, projectInfo, contract) {
     const batchEnd = Math.min(i + batchSize, scriptCount);
     const batch = await Promise.all(
       Array.from({ length: batchEnd - i }, (_, j) =>
-        instance[contract].projectScriptByIndex(projId, i + j),
+        contractCall(contract, "projectScriptByIndex", projId, i + j),
       ),
     );
     fullScript += batch.join("");
@@ -359,8 +363,8 @@ async function constructScript(projId, projectInfo, contract) {
 }
 
 async function fetchOwner(tokenId, contract) {
-  const owner = await instance[contract].ownerOf(tokenId);
-  return { owner, ensName: await provider.lookupAddress(owner).catch(() => null) };
+  const owner = await contractCall(contract, "ownerOf", tokenId);
+  return { owner, ensName: await lookupAddress(rpcUrl, owner) };
 }
 
 function extractLibraryName([first]) {
@@ -370,20 +374,22 @@ function extractLibraryName([first]) {
 }
 
 async function fetchEditionInfo(projId, contract, isV3) {
-  const invo =
-    await instance[contract][isV3 ? "projectStateData" : "projectTokenInfo"](
-      projId,
-    );
+  const invo = await contractCall(
+    contract,
+    isV3 ? "projectStateData" : "projectTokenInfo",
+    projId,
+  );
   return { edition: Number(invo.maxInvocations), minted: Number(invo.invocations) };
 }
 
 const fetchExtDepCount = async (projId, contract) =>
-  (await instance[contract].projectExternalAssetDependencyCount(projId)) || null;
+  (await contractCall(contract, "projectExternalAssetDependencyCount", projId)) ||
+  null;
 
 async function fetchDependencies(projId, extDepCount, contract) {
   return Promise.all(
     Array.from({ length: Number(extDepCount) }, (_, i) =>
-      instance[contract].projectExternalAssetDependencyByIndex(projId, i),
+      contractCall(contract, "projectExternalAssetDependencyByIndex", projId, i),
     ),
   );
 }
@@ -431,16 +437,19 @@ async function fetchCIDs(version, projId, extDepCount, contract) {
 
 const fetchGateway = async (contract) => {
   const [ipfs, arweave] = await Promise.all([
-    instance[contract].preferredIPFSGateway(),
-    instance[contract].preferredArweaveGateway(),
+    contractCall(contract, "preferredIPFSGateway"),
+    contractCall(contract, "preferredArweaveGateway"),
   ]);
   return { ipfs, arweave };
 };
 
 async function fetchTokenParams(contract, tokenId) {
-  const raw = await instance[indexMap["ABPMPV0"]]
-    .getTokenParams(instance[contract].target, tokenId)
-    .catch(() => []);
+  const raw = await contractCall(
+    indexMap["ABPMPV0"],
+    "getTokenParams",
+    contractAt(contract).address,
+    tokenId,
+  ).catch(() => []);
   return Object.fromEntries(
     raw.map(([k, v]) => [k, typeof v === "bigint" ? v.toString() : v]),
   );
@@ -666,8 +675,8 @@ function updateUI({
          }
          ${copyLink(
            "CONTRACT",
-           `https://etherscan.io/address/${instance[contract].target}`,
-           shortAddr(instance[contract].target),
+            `https://etherscan.io/address/${contractAt(contract).address}`,
+            shortAddr(contractAt(contract).address),
          )}
          ${copyVal("TOKEN ID", tokenId)}
        </div>
@@ -1294,25 +1303,30 @@ async function blocks(...contract) {
   const contractArray = normalizeContracts(contract);
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const BATCH = 10;
-  const DELAY_MS = 1500;
+  const DELAY_MS = 2000;
 
   for (const contractName of contractArray) {
     const n = indexMap[contractName];
     const start = contractRegistry[contractName].startProjId || 0;
-    const end = Number(await instance[n].nextProjectId());
+    const end = Number(await contractCall(n, "nextProjectId"));
     const newBlocks = [];
 
     for (let id = start; id < end; id += BATCH) {
       const batchEnd = Math.min(id + BATCH, end);
       const results = await Promise.all(
-        Array.from({ length: batchEnd - id }, (_, idx) => {
+        Array.from({ length: batchEnd - id }, async (_, idx) => {
           const batchId = id + idx;
-          return Promise.all([
-            instance[n].projectDetails(batchId.toString()),
-            is.v3.includes(contractName)
-              ? instance[n].projectStateData(batchId)
-              : instance[n].projectTokenInfo(batchId),
-          ]).catch(() => null);
+          try {
+            const detail = await contractCall(n, "projectDetails", batchId.toString());
+            const token = await contractCall(
+              n,
+              is.v3.includes(contractName) ? "projectStateData" : "projectTokenInfo",
+              batchId,
+            );
+            return [detail, token];
+          } catch {
+            return null;
+          }
         }),
       );
 
