@@ -602,6 +602,7 @@ export const list = [
   "ABSXCII0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
   "ABSXCIII0 # Rain Blooms / Kazuhiro Tanimoto # 128 Works",
   "ABSXCIV0 # MASKS / Piter Pasma # 65 Works",
+  "ABSXCV0 # Starlight / Nygilia # 1 Work",
   "ABSXCVI0 # Frank / Dario Lanza # 163 Works",
   "ABSXCVIII0 # DOS / William Mapan # 22 Works",
   "ABSXCIX0 # Idoni / Anna Carreras # 1 Work",
