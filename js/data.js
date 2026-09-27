@@ -980,7 +980,7 @@ export const list = [
   "SHIS3 # Whispers of Life / Kaoru Tanaka # 600 Works",
   "SHIS4 # Growth: Threads / Robert Hodgin # 486 Works",
   "RAVENABE0 # Marfa: Middle of Somewhere / r4v3n x Brett Sylvia # 73 Works",
-  "RAVENABE1 # Marfa: Outtakes / r4v3n # 30 Works",
+  "RAVENABE1 # Marfa: Outtakes / r4v3n # 42 Works",
   "ITERATION0 # 9dcc ITERATION-02 /  # 1183 Works!",
   "ITERATION0 # 9dcc ITERATION-02 / Snowfro # 1183 Works",
   "NUMBER0 # Number / Wang # 166 Works",
