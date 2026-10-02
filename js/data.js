@@ -605,7 +605,7 @@ export const list = [
   "ABSXCV0 # Starlight / Nygilia # 300 Works",
   "ABSXCVI0 # Frank / Dario Lanza # 163 Works",
   "ABSXCVIII0 # DOS / William Mapan # 22 Works",
-  "ABSXCIX0 # Idoni / Anna Carreras # 7 Works",
+  "ABSXCIX0 # Idoni / Anna Carreras # 8 Works",
   "ABSCI0 # Continuum / Lammetje # 128 Works",
   "ABSCII0 # In the Current / Nat Sarkissian # 17 Works",
   "ABSCIII2 # Lagrange Bend / jiwa # 1 Work",
