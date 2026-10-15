@@ -608,7 +608,7 @@ export const list = [
   "ABSXCIX0 # Idoni / Anna Carreras # 8 Works",
   "ABSCI0 # Continuum / Lammetje # 128 Works",
   "ABSCII0 # In the Current / Nat Sarkissian # 17 Works",
-  "ABSCIII2 # Lagrange Bend / jiwa # 183 Works",
+  "ABSCIII2 # Lagrange Bend / jiwa # 185 Works",
   "ABSCII1 # Marfa 2 /  # 0 Works!",
   "ABSCIV1 # degenerative / ryley-o.eth x Sally Ohlsen # 37 Works",
   "ABSCV0 # Effimero / Stefano Contiero # 11 Works",
