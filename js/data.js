@@ -607,7 +607,7 @@ export const list = [
   "ABSXCVIII0 # DOS / William Mapan # 22 Works",
   "ABSXCIX0 # Idoni / Anna Carreras # 8 Works",
   "ABSCI0 # Continuum / Lammetje # 128 Works",
-  "ABSXCIX1 # Nuu vol / Anna Carreras # 0 Works!",
+  "ABSXCIX1 # Nuu vol / Anna Carreras # 12 Works",
   "ABSCII0 # In the Current / Nat Sarkissian # 17 Works",
   "ABSCII1 # Marfa 2 / Nat Sarkissian # 8 Works",
   "ABSCIII2 # Lagrange Bend / jiwa # 190 Works",
