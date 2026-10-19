@@ -88,12 +88,12 @@ const parseQuery = (query) => {
   const [searchQuery = "", numberQuery = ""] = query.split("#").map((s) => s.trim());
   return { searchQuery, numberQuery };
 };
-const findPmpv0Dep = (deps = []) =>
-  deps.find(
-    (d) =>
-      d.dependency_type === "ONCHAIN" &&
-      d.bytecode_address.toLowerCase() === PMPV0_ADDR,
-  );
+const isPmpDep = (d) =>
+  d?.dependency_type === "ONCHAIN" &&
+  (d.bytecode_address?.toLowerCase() === PMPV0_ADDR ||
+    (typeof d.data === "string" && d.data.trim().startsWith("#web3call")));
+
+const findPmpDep = (deps = []) => deps.find(isPmpDep);
 
 function splitCollectionAndArtist(text) {
   const parts = text.split(" / ").map((s) => s.trim());
@@ -252,8 +252,13 @@ async function grabData(tokenId, contract, updateOnly = false) {
       const data = JSON.parse(localStorage.getItem("contractData"));
       Object.assign(data, { tokenId, contract, hash, owner, ensName });
 
-      if (findPmpv0Dep(data.extDep)) {
-        data.tokenParams = await fetchTokenParams(contract, tokenId);
+      const pmpDep = findPmpDep(data.extDep);
+      if (pmpDep) {
+        data.tokenParams = await fetchTokenParams(
+          pmpDep.bytecode_address,
+          contract,
+          tokenId,
+        );
       }
 
       localStorage.setItem("contractData", JSON.stringify(data));
@@ -299,8 +304,13 @@ async function grabData(tokenId, contract, updateOnly = false) {
           }
         }
 
-        if (findPmpv0Dep(extDep)) {
-          tokenParams = await fetchTokenParams(contract, tokenId);
+        const pmpDep = findPmpDep(extDep);
+        if (pmpDep) {
+          tokenParams = await fetchTokenParams(
+            pmpDep.bytecode_address,
+            contract,
+            tokenId,
+          );
         }
       }
 
@@ -443,12 +453,12 @@ const fetchGateway = async (contract) => {
   return { ipfs, arweave };
 };
 
-async function fetchTokenParams(contract, tokenId) {
-  const raw = await contractCall(
-    indexMap["ABPMPV0"],
+async function fetchTokenParams(pmpAddress, contract, tokenId) {
+  const raw = await call(
+    pmpAddress,
+    contractRegistry.ABPMPV0.abi,
     "getTokenParams",
-    contractAt(contract).address,
-    tokenId,
+    [contractAt(contract).address, tokenId],
   ).catch(() => []);
   return Object.fromEntries(
     raw.map(([k, v]) => [k, typeof v === "bigint" ? v.toString() : v]),
@@ -503,7 +513,6 @@ function pushItemToLocalStorage({
   const tokenData = { tokenId: tokenId.toString() };
 
   if (extDep.length) {
-    const pmpv0Address = PMPV0_ADDR;
     tokenData.externalAssetDependencies = extDep.map((d) => {
       let cid = d.cid;
       if (contractName === "BMFLEX" && tokenIdStr.startsWith("16")) {
@@ -518,12 +527,7 @@ function pushItemToLocalStorage({
             : "ART_BLOCKS_DEPENDENCY_REGISTRY";
 
       let data = d.isOnchain ? d.data : null;
-      if (
-        d.dependency_type === "ONCHAIN" &&
-        d.bytecode_address.toLowerCase() === pmpv0Address &&
-        tokenParams &&
-        Object.keys(tokenParams).length > 0
-      ) {
+      if (isPmpDep(d) && tokenParams && Object.keys(tokenParams).length > 0) {
         data = tokenParams;
       }
 
