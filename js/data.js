@@ -619,6 +619,7 @@ export const list = [
   "ABSCIX0 # sketch01_final_FINALv1_final / finganuity (fingacode x spongenuity) # 10 Works",
   "ABSCXI0 # Unravel / Anna Lucia # 23 Works",
   "ABSCXI1 # Unravel /  # 0 Works!",
+  "ABSCXIV0 # Strikes / Medusa # 3 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
   "ABEXP2 # marfaMESH / Harvey Rayner # 343 Works",
