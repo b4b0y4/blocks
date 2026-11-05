@@ -93,7 +93,8 @@ at runtime.
 Overlay changes apply immediately to search, Random, Favorites, and loop modes.
 They are browser-local and are not committed to the repository automatically.
 Contract keys must contain letters only because collection lines use the
-`KEY<projectId>` format.
+`KEY<projectId>` format. Studio contracts use keys starting with `ABS`;
+every other key is treated as an engine contract.
 
 ### Adding New Contracts
 

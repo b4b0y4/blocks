@@ -1764,6 +1764,16 @@ function initLibraryManager() {
     setManageStatus(dom.contractStatus, "");
   });
 
+  dom.contractKey.addEventListener("input", () => {
+    const key = dom.contractKey.value.trim().toUpperCase();
+    if (!contractEditKey && registry[key])
+      fail(
+        dom.contractStatus,
+        `${key} is already used. Edit it or choose a different key.`,
+      );
+    else setManageStatus(dom.contractStatus, "");
+  });
+
   dom.contractForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -1773,7 +1783,7 @@ function initLibraryManager() {
     if (!contractEditKey && registry[key])
       return fail(
         dom.contractStatus,
-        "That contract already exists. Edit it instead.",
+        `${key} is already used. Edit it or choose a different key.`,
       );
 
     const abi = dom.contractAbi.value;
