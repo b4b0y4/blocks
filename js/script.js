@@ -1081,7 +1081,7 @@ const alignFavMenu = () => {
   }
 
   const { right } = dom.favIcon.getBoundingClientRect();
-  dom.favMenu.style.left = `${Math.max(10, right - dom.favMenu.offsetWidth)}px`;
+  dom.favMenu.style.left = `${Math.max(10, right + 25 - dom.favMenu.offsetWidth)}px`;
   dom.favMenu.style.right = "auto";
 };
 
