@@ -284,6 +284,9 @@ iframe {
   & :is(p, ul) {
     margin: 0 0 5px;
   }
+  & p:last-of-type {
+    margin-block: 8px 8px;
+  }
 }
 
 .key {
