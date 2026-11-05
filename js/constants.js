@@ -424,6 +424,7 @@ export const frozenContracts = new Set([
     if (abiName?.includes("3")) is.v3.push(key);
     if (abiName?.includes("Flex")) is.flex.push(key);
     if (key.startsWith("ABS")) is.studio.push(key);
-    if (!key.startsWith("AB")) is.engine.push(key);
+    if (!key.startsWith("AB") && !frozenContracts.has(key))
+      is.engine.push(key);
   });
 })();

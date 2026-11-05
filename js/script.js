@@ -133,7 +133,9 @@ function rebuildRuntimeContracts() {
 
     if (abiName?.includes("3")) is.v3.push(key);
     if (abiName?.includes("Flex")) is.flex.push(key);
-    (key.startsWith("ABS") ? is.studio : is.engine).push(key);
+    if (key.startsWith("ABS")) is.studio.push(key);
+    else if (!key.startsWith("AB") && !frozenContracts.has(key))
+      is.engine.push(key);
   });
 
   PMPV0_ADDR = registry.ABPMPV0
