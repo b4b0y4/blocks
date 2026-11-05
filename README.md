@@ -81,7 +81,7 @@ at runtime.
      back the updated entry
    - entries added by an update can be edited or removed
 4. Press **+ Add contract** next to **Update list** to add a contract by key,
-   ABI profile (`v1`, `v2`, `v3`, `v2Flex`, `v3Flex`, `bm`, `PMPV0`), address,
+   ABI profile (`v2`, `v3`, `v2Flex`, `v3Flex`), address,
    platform, and optional start project ID. Custom contracts appear inline and
    can be edited or removed. After adding one, press **Update list** to fetch its
    collections.

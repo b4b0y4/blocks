@@ -1188,6 +1188,7 @@ function refreshWindowContractNames() {
 function populateManagementSelects() {
   const selectedAbi = dom.contractAbi.value;
   dom.contractAbi.innerHTML = Object.keys(abiProfiles)
+    .filter((name) => !["PMPV0", "bm", "v1"].includes(name))
     .map((name) => `<option value="${name}">${name}</option>`)
     .join("");
 
