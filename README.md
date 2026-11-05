@@ -32,7 +32,9 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 
 ### Interface Features
 - Search box with keyboard navigation (up/down arrows)
-- Favorites system for saving and managing preferred artworks
+- Browser-local library editor for adding, editing, hiding, and restoring collections
+- Add custom contracts from the UI without editing source files
+- Bookmark menu to save the current artwork or open the favorites list
 - Multiple loop modes:
   - Everything: Random artwork from all collections
   - Favorites: Cycles through saved favorites
@@ -51,6 +53,47 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
 - `js/rpc.js` : Minimal eth_call client + ABI codec + ENS (no ethers dependency)
 - `js/constants.js` : Contract definitions and classification
 - `js/data.js` : Collection data and library references
+- `js/overlay.js` : Browser-local collection/contract overlay and merge helpers
+
+### Editing the Library in the UI
+
+The app can edit the collection list and add contracts without touching the source
+files. Changes are stored as an **overlay** in `localStorage` and merged with the
+bundled list from `js/data.js` and the contract registry from `js/constants.js`
+at runtime.
+
+1. Open Settings and choose **Open library editor**.
+2. Press **Update list** to check all active contracts (studio, engine, and
+   custom). It finds new collections and also compares the artwork count of
+   every project already in the list.
+   - results are shown under the button; use **Add**, **Update**, or **Apply
+     all** to put them into the overlay
+   - entries removed from the list are left alone
+   - every project is read to compare its artwork count, so the check can take
+     longer than a missing-project-only scan
+   - frozen legacy contracts (legacy Art Blocks and Bright Moments) are skipped
+     automatically
+3. The **shadow list** below shows only entries added or changed in this
+   browser — the bundled `data.js` list is not repeated there.
+   - use **Edit** on a row to change its name, artist, or artwork count
+   - use **Hide** to remove an entry from the viewer, or **Restore** to bring it
+     back; hiding keeps any pending artwork-count update, so restoring brings
+     back the updated entry
+   - entries added by an update can be edited or removed
+4. Press **+ Add contract** next to **Update list** to add a contract by key,
+   ABI profile (`v1`, `v2`, `v3`, `v2Flex`, `v3Flex`, `bm`, `PMPV0`), address,
+   platform, and optional start project ID. Custom contracts appear inline and
+   can be edited or removed. After adding one, press **Update list** to fetch its
+   collections.
+5. Use **Copy list JS** / **Copy contracts JS** to make changes permanent:
+   - paste the list output into the `list` array in `js/data.js`
+   - paste the contract output into `contractRegistry` in `js/constants.js`
+6. **Reset changes** clears the browser-local overlay.
+
+Overlay changes apply immediately to search, Random, Favorites, and loop modes.
+They are browser-local and are not committed to the repository automatically.
+Contract keys must contain letters only because collection lines use the
+`KEY<projectId>` format.
 
 ### Adding New Contracts
 
@@ -65,7 +108,9 @@ A web-based viewer for generative art collections on Ethereum, focusing on Art B
     - **By variable:** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
     - **Multiple contracts:** `fetchBlocks(yourcontract, anothercontract)`
     - **Using predefined lists:** `fetchBlocks(is.studio)`
-4. The console will output any new project lines found. Copy these entries and add them manually to the `list` array in `js/data.js`.
+4. The console will output any new project lines and artwork count changes found.
+   Copy new entries into the `list` array in `js/data.js`; for count changes,
+   replace the existing line with the updated one.
     - Add a `!` to the end of any line to ignore it in the UI.
     - Example output format:
       ```js

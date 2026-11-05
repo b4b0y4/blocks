@@ -239,6 +239,8 @@ abi.bm = abi.v2.map((entry) =>
     : entry,
 );
 
+export const abiProfiles = abi;
+
 const reg = (abi, address, platform, startProjId) => ({
   abi,
   address,
@@ -397,6 +399,23 @@ export const is = {
   studio: [],
   engine: [],
 };
+
+export const frozenContracts = new Set([
+  "ABPMPV0",
+  "AB",
+  "ABII",
+  "ABIII",
+  "ABC",
+  "ABCFLEX",
+  "ABEXP",
+  "ABEXPII",
+  "ABXPACE",
+  "ABXPACEII",
+  "ABXBM",
+  "BM",
+  "BMF",
+  "BMFLEX",
+]);
 
 (function updateIs() {
   Object.entries(contractRegistry).forEach(([key, { abi: contractAbi }]) => {

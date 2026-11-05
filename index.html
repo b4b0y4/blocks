@@ -81,10 +81,7 @@
         <div id="info" class="info"></div>
         <div class="button-box">
           <button id="settings" class="settings">
-            <i class="fa-regular fa-circle-question"></i>
-          </button>
-          <button id="saveBtn" class="save">
-            <i class="fa-regular fa-floppy-disk"></i>
+            <i class="fa-solid fa-sliders"></i>
           </button>
           <button id="loop" class="loop">
             <i id="repeatIcon" class="fa-solid fa-repeat"></i>
@@ -105,7 +102,7 @@
             </div>
             <div class="spinner"></div>
             <button id="favIcon" class="fav-icon">
-              <i class="fa-solid fa-ellipsis-vertical"></i>
+              <i class="fa-regular fa-bookmark"></i>
             </button>
           </div>
           <button id="incrementBtn" class="inc">
@@ -169,11 +166,137 @@
           placeholder="enter rpc url"
           autocomplete="off"
         />
+        <p>Edit the collection list and add contracts</p>
+        <button type="button" id="manageBtn" class="manage-btn">
+          Open library editor
+        </button>
       </div>
 
       <div class="panel"></div>
       <div class="list-panel"></div>
       <div class="fav-panel"></div>
+      <div class="fav-menu">
+        <button type="button" id="favSave">Save current artwork</button>
+        <button type="button" id="favOpen">Favorites list</button>
+      </div>
+      <div class="manage-panel">
+        <div class="manage-head">
+          <p class="manage-title">Library editor</p>
+          <button
+            type="button"
+            id="manageClose"
+            class="manage-icon"
+            title="Close"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div>
+          <div class="manage-row">
+            <button type="button" id="manageUpdate" class="manage-btn primary">
+              Update list
+            </button>
+            <button type="button" id="contractToggle" class="manage-btn">
+              + Add contract
+            </button>
+          </div>
+          <p id="updateStatus" class="manage-status"></p>
+          <div id="manageUpdateResults" class="manage-rows update-results"></div>
+        </div>
+
+        <form id="contractForm" class="manage-form" hidden>
+          <p class="manage-title">Add / edit contract</p>
+          <input
+            id="contractKey"
+            class="manage-input"
+            placeholder="KEY (letters only)"
+            autocomplete="off"
+          />
+          <select id="contractAbi" class="manage-input"></select>
+          <input
+            id="contractAddress"
+            class="manage-input"
+            placeholder="0x contract address"
+            autocomplete="off"
+          />
+          <input
+            id="contractPlatform"
+            class="manage-input"
+            placeholder="Platform (optional)"
+            autocomplete="off"
+          />
+          <input
+            id="contractStart"
+            class="manage-input"
+            placeholder="Start project ID (optional)"
+            inputmode="numeric"
+            autocomplete="off"
+          />
+          <div class="manage-row">
+            <button type="submit" class="manage-btn primary">
+              Save contract
+            </button>
+            <button type="button" id="contractCancel" class="manage-btn">
+              Cancel
+            </button>
+          </div>
+        </form>
+        <p id="contractStatus" class="manage-status"></p>
+        <div id="manageContractRows" class="manage-rows"></div>
+
+        <div class="manage-list">
+          <div id="manageListRows" class="manage-rows"></div>
+
+          <form id="collectionForm" class="manage-form" hidden>
+            <p id="collectionTarget" class="manage-title">Edit collection</p>
+            <input
+              id="collectionName"
+              class="manage-input"
+              placeholder="Collection name"
+              autocomplete="off"
+            />
+            <input
+              id="collectionArtist"
+              class="manage-input"
+              placeholder="Artist"
+              autocomplete="off"
+            />
+            <input
+              id="collectionWorks"
+              class="manage-input"
+              placeholder="Works"
+              inputmode="numeric"
+              autocomplete="off"
+            />
+            <div class="manage-row">
+              <button type="submit" class="manage-btn primary">
+                Save collection
+              </button>
+              <button type="button" id="collectionCancel" class="manage-btn">
+                Cancel
+              </button>
+            </div>
+          </form>
+          <p id="collectionStatus" class="manage-status"></p>
+          <p class="manage-status">
+            Local changes only — bundled entries stay in <code>data.js</code>.
+            Copy the JS snippets below to make them permanent.
+          </p>
+
+          <div class="manage-actions">
+            <button type="button" id="manageCopyList" class="manage-btn">
+              Copy list JS
+            </button>
+            <button type="button" id="manageCopyContracts" class="manage-btn">
+              Copy contracts JS
+            </button>
+            <button type="button" id="manageReset" class="manage-btn danger">
+              Reset changes
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="drop-menu" id="dropMenu">
         <input
           type="text"
