@@ -218,14 +218,12 @@ export function applyEdit(overlay, original, line) {
 export function applyRemove(overlay, original) {
   if (!parseListLine(original)) return false;
 
-  // Keep any pending edit so hiding and restoring does not discard it.
   dropChanges(overlay, changeMatches("remove", "original", original));
   overlay.list.push({ type: "remove", original });
   return true;
 }
 
 export function restoreOriginal(overlay, original) {
-  // Unhide only; keep an edit made to the entry.
   dropChanges(overlay, changeMatches("remove", "original", original));
 }
 
@@ -269,8 +267,6 @@ function orderedListEntries(entries, keyOrder) {
   });
   const keyRanks = new Map(baseKeys.map((key, index) => [key, index]));
 
-  // New contracts go next to their nearest known neighbour in keyOrder (the
-  // contract registry), so a new project lands inside its contract's block.
   const rankOf = (key) => {
     if (keyRanks.has(key)) return keyRanks.get(key);
 
@@ -315,7 +311,6 @@ export function exportListJS(baseList, overlay, keyOrder = []) {
 
   orderedListEntries(listEntries(baseList, overlay), keyOrder).forEach(
     ({ line, kind }) => {
-      // Hidden entries stay in the exported list, marked with the data.js "!".
       const output =
         kind === "removed" && !line.endsWith("!") ? `${line}!` : line;
       if (seen.has(output)) return;
