@@ -233,9 +233,98 @@ export function removeAddition(overlay, line) {
   dropChanges(overlay, changeMatches("add", "line", line));
 }
 
-export function exportListJS(baseList, overlay) {
-  const merged = mergeList(baseList, overlay);
-  return `export const list = [\n${merged
+const bareAdditionLine = (line) => line.replace(/!\s*$/, "");
+
+export function hideAddition(overlay, line) {
+  return setAdditionHidden(overlay, line, true);
+}
+
+export function unhideAddition(overlay, line) {
+  return setAdditionHidden(overlay, line, false);
+}
+
+function setAdditionHidden(overlay, line, hidden) {
+  if (!parseListLine(line)) return false;
+
+  const bare = bareAdditionLine(line);
+  const current =
+    overlay.list.find(
+      (change) =>
+        change.type === "add" && bareAdditionLine(change.line) === bare,
+    )?.line ?? line;
+
+  return applyAdd(overlay, hidden ? `${bare}!` : bare, current);
+}
+
+const keyOfLine = (line) => parseListLine(line)?.contract ?? "";
+
+function orderedListEntries(entries, keyOrder) {
+  const baseEntries = entries.filter((entry) => entry.kind !== "added");
+  const additions = entries.filter((entry) => entry.kind === "added");
+
+  const baseKeys = [];
+  baseEntries.forEach((entry) => {
+    const key = keyOfLine(entry.line);
+    if (!baseKeys.includes(key)) baseKeys.push(key);
+  });
+  const keyRanks = new Map(baseKeys.map((key, index) => [key, index]));
+
+  // New contracts go next to their nearest known neighbour in keyOrder (the
+  // contract registry), so a new project lands inside its contract's block.
+  const rankOf = (key) => {
+    if (keyRanks.has(key)) return keyRanks.get(key);
+
+    const position = keyOrder.indexOf(key);
+    if (position !== -1) {
+      for (let i = position - 1; i >= 0; i -= 1) {
+        const rank = keyRanks.get(keyOrder[i]);
+        if (rank !== undefined) return rank + 0.5;
+      }
+      for (let i = position + 1; i < keyOrder.length; i += 1) {
+        const rank = keyRanks.get(keyOrder[i]);
+        if (rank !== undefined) return rank - 0.5;
+      }
+    }
+
+    const boundary = baseKeys.findIndex((baseKey) => key < baseKey);
+    return boundary === -1 ? baseKeys.length + 0.5 : boundary - 0.5;
+  };
+
+  const compare = (a, b) => {
+    const keyA = keyOfLine(a.line);
+    const keyB = keyOfLine(b.line);
+    const rankA = rankOf(keyA);
+    const rankB = rankOf(keyB);
+    if (rankA !== rankB) return rankA - rankB;
+    if (keyA !== keyB) return keyA < keyB ? -1 : 1;
+    return parseListLine(a.line).projectId - parseListLine(b.line).projectId;
+  };
+
+  const ordered = [...baseEntries];
+  [...additions].sort(compare).forEach((addition) => {
+    const index = ordered.findIndex((entry) => compare(addition, entry) < 0);
+    ordered.splice(index === -1 ? ordered.length : index, 0, addition);
+  });
+
+  return ordered;
+}
+
+export function exportListJS(baseList, overlay, keyOrder = []) {
+  const seen = new Set();
+  const lines = [];
+
+  orderedListEntries(listEntries(baseList, overlay), keyOrder).forEach(
+    ({ line, kind }) => {
+      // Hidden entries stay in the exported list, marked with the data.js "!".
+      const output =
+        kind === "removed" && !line.endsWith("!") ? `${line}!` : line;
+      if (seen.has(output)) return;
+      seen.add(output);
+      lines.push(output);
+    },
+  );
+
+  return `export const list = [\n${lines
     .map((line) => `  ${JSON.stringify(line)},`)
     .join("\n")}\n];`;
 }

@@ -34,7 +34,9 @@ const dom = {
     "collectionName", "collectionArtist", "collectionWorks", "collectionCancel",
     "collectionStatus", "manageCopyList", "manageReset", "manageUpdate",
     "updateStatus", "manageUpdateResults", "manageContractRows", "contractToggle",
-    "contractForm", "contractKey", "contractAbi", "contractAddress",
+    "contractSection", "contractSectionToggle", "contractSectionLabel",
+    "contractSectionIcon", "contractForm", "contractKey", "contractAbi",
+    "contractAddress",
     "contractPlatform", "contractStart", "contractCancel", "contractStatus",
     "manageCopyContracts",
   ),
@@ -1121,6 +1123,7 @@ let listManageEntries = [];
 let contractManageEntries = [];
 let updateResults = [];
 let updateRunning = false;
+let contractSectionOpen = true;
 const exposedContracts = new Set();
 
 const escapeHTML = (value) =>
@@ -1252,16 +1255,14 @@ function renderManageList() {
 
   dom.manageListRows.innerHTML = entries
     .map((entry, index) => {
-      const actions =
-        entry.kind === "removed"
-          ? manageButton("restore", "Restore")
-          : `${manageButton("edit", "Edit")}${manageButton(
-              entry.kind === "added" ? "remove" : "hide",
-              entry.kind === "added" ? "Remove" : "Hide",
-            )}`;
+      const hidden =
+        entry.kind === "removed" || ov.parseListLine(entry.line)?.hidden;
+      const actions = hidden
+        ? manageButton("unhide", "Unhide")
+        : `${manageButton("edit", "Edit")}${manageButton("hide", "Hide")}`;
 
       return `<div class="manage-item ${
-        entry.kind === "removed" ? "removed" : ""
+        entry.kind === "removed" ? "removed" : hidden ? "hidden" : ""
       }" data-entry-index="${index}">
         <p class="manage-item-main">${escapeHTML(entry.line)}</p>
         <div class="manage-item-actions">
@@ -1294,6 +1295,9 @@ function renderManageContracts() {
   );
 
   contractManageEntries = keys;
+
+  dom.contractSection.hidden = keys.length === 0;
+  dom.contractSectionLabel.textContent = `Contracts (${keys.length})`;
 
   dom.manageContractRows.innerHTML = keys
     .map((key, index) => {
@@ -1344,6 +1348,14 @@ function setContractFormOpen(open) {
   dom.contractToggle.textContent = open ? "Cancel" : "+ Add contract";
   if (open) setManageStatus(dom.contractStatus, "");
   else resetContractForm();
+}
+
+function setContractSectionOpen(open) {
+  contractSectionOpen = open;
+  dom.manageContractRows.hidden = !open;
+  dom.contractSectionToggle.setAttribute("aria-expanded", String(open));
+  dom.contractSectionIcon.classList.toggle("fa-chevron-up", open);
+  dom.contractSectionIcon.classList.toggle("fa-chevron-down", !open);
 }
 
 function startListEdit(entry) {
@@ -1662,6 +1674,10 @@ function initLibraryManager() {
     renderUpdateResults();
   });
 
+  dom.contractSectionToggle.addEventListener("click", () => {
+    setContractSectionOpen(!contractSectionOpen);
+  });
+
   dom.contractToggle.addEventListener("click", () => {
     setContractFormOpen(dom.contractForm.hidden);
     setManageStatus(dom.contractStatus, "");
@@ -1678,24 +1694,23 @@ function initLibraryManager() {
     if (action === "edit") {
       startListEdit(entry);
     } else if (action === "hide") {
-      if (listEdit?.original === entry.original) setCollectionFormOpen(false);
-      ov.applyRemove(overlay, entry.original);
+      if (entry.kind === "added") {
+        if (listEdit?.additionLine === entry.line) setCollectionFormOpen(false);
+        ov.hideAddition(overlay, entry.line);
+      } else {
+        if (listEdit?.original === entry.original) setCollectionFormOpen(false);
+        ov.applyRemove(overlay, entry.original);
+      }
       commitChanges(
         dom.collectionStatus,
-        "Collection hidden. It stays here so you can restore it.",
+        "Collection hidden. It stays here so you can unhide it.",
       );
-    } else if (action === "restore") {
-      ov.restoreOriginal(overlay, entry.original);
+    } else if (action === "unhide") {
+      if (entry.kind === "removed") ov.restoreOriginal(overlay, entry.original);
+      else ov.unhideAddition(overlay, entry.line);
       commitChanges(
         dom.collectionStatus,
-        "Collection restored. It is back in the library.",
-      );
-    } else if (action === "remove") {
-      ov.removeAddition(overlay, entry.line);
-      if (listEdit?.additionLine === entry.line) setCollectionFormOpen(false);
-      commitChanges(
-        dom.collectionStatus,
-        "Added collection removed. Update list can find it again.",
+        "Collection unhidden. It is back in the library.",
       );
     }
   });
@@ -1813,7 +1828,7 @@ function initLibraryManager() {
 
   bindCopyButton(
     dom.manageCopyList,
-    () => ov.exportListJS(list, overlay),
+    () => ov.exportListJS(list, overlay, Object.keys(registry)),
     dom.collectionStatus,
     "Full list JS copied.",
     "Could not copy the list.",

@@ -76,17 +76,20 @@ at runtime.
 3. The **shadow list** below shows only entries added or changed in this
    browser — the bundled `data.js` list is not repeated there.
    - use **Edit** on a row to change its name, artist, or artwork count
-   - use **Hide** to remove an entry from the viewer, or **Restore** to bring it
-     back; hiding keeps any pending artwork-count update, so restoring brings
+   - use **Hide** to remove an entry from the viewer, or **Unhide** to bring it
+     back; hiding keeps any pending artwork-count update, so unhiding brings
      back the updated entry
-   - entries added by an update can be edited or removed
+   - entries added by an update can be edited, hidden, or unhidden too
 4. Press **+ Add contract** next to **Update list** to add a contract by key,
    ABI profile (`v2`, `v3`, `v2Flex`, `v3Flex`), address,
    platform, and optional start project ID. Custom contracts appear inline and
    can be edited or removed. After adding one, press **Update list** to fetch its
-   collections.
+   collections. Use the **Contracts (N)** header to collapse the contract list
+   when it gets long.
 5. Use **Copy list JS** / **Copy contracts JS** to make changes permanent:
    - paste the list output into the `list` array in `js/data.js`
+   - new collections are inserted into their contract's block, in project order
+   - hidden entries are written with a trailing `!`, so they stay hidden
    - paste the contract output into `contractRegistry` in `js/constants.js`
 6. **Reset changes** clears the browser-local overlay.
 

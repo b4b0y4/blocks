@@ -243,7 +243,23 @@
           </div>
         </form>
         <p id="contractStatus" class="manage-status"></p>
-        <div id="manageContractRows" class="manage-rows"></div>
+        <div id="contractSection" class="manage-section" hidden>
+          <button
+            type="button"
+            id="contractSectionToggle"
+            class="manage-btn manage-section-toggle"
+            aria-expanded="true"
+            aria-controls="manageContractRows"
+          >
+            <span id="contractSectionLabel">Contracts</span>
+            <i
+              id="contractSectionIcon"
+              class="fa-solid fa-chevron-up"
+              aria-hidden="true"
+            ></i>
+          </button>
+          <div id="manageContractRows" class="manage-rows"></div>
+        </div>
 
         <div class="manage-list">
           <div id="manageListRows" class="manage-rows"></div>
