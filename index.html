@@ -22,14 +22,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="blocks" />
 
-    <!-- Primary Meta -->
     <meta name="title" content="blocks" />
     <meta
       name="description"
       content="A live script generator for Art Blocks and Engine collections."
     />
 
-    <!-- Open Graph Meta -->
     <meta property="og:url" content="https://blocks.baboya.eth.limo" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="blocks" />
@@ -42,7 +40,6 @@
       content="https://blocks.baboya.eth.limo/assets/img/blocks.png"
     />
 
-    <!-- Twitter Meta -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://blocks.baboya.eth.limo" />
     <meta name="twitter:title" content="blocks" />
@@ -248,17 +245,17 @@
             type="button"
             id="contractSectionToggle"
             class="manage-btn manage-section-toggle"
-            aria-expanded="true"
+            aria-expanded="false"
             aria-controls="manageContractRows"
           >
             <span id="contractSectionLabel">Contracts</span>
             <i
               id="contractSectionIcon"
-              class="fa-solid fa-chevron-up"
+              class="fa-solid fa-chevron-down"
               aria-hidden="true"
             ></i>
           </button>
-          <div id="manageContractRows" class="manage-rows"></div>
+          <div id="manageContractRows" class="manage-rows" hidden></div>
         </div>
 
         <div class="manage-list">
@@ -295,22 +292,20 @@
             </div>
           </form>
           <p id="collectionStatus" class="manage-status"></p>
-          <p class="manage-status">
-            Changes are stored locally in your browser. To make them permanent, copy
-            the list and contract below into <code>data.js</code> and
-            <code>constants.js</code>, respectively.
-          </p>
 
-          <div class="manage-actions">
-            <button type="button" id="manageCopyList" class="manage-btn">
-              Copy list JS
-            </button>
-            <button type="button" id="manageCopyContracts" class="manage-btn">
-              Copy contracts JS
-            </button>
-            <button type="button" id="manageReset" class="manage-btn danger">
-              Reset changes
-            </button>
+          <div class="manage-copy">
+            <p id="copyStatus" class="manage-status"></p>
+            <div class="manage-actions">
+              <button type="button" id="manageCopyList" class="manage-btn">
+                Copy list JS
+              </button>
+              <button type="button" id="manageCopyContracts" class="manage-btn">
+                Copy contracts JS
+              </button>
+              <button type="button" id="manageReset" class="manage-btn danger">
+                Reset changes
+              </button>
+            </div>
           </div>
         </div>
       </div>

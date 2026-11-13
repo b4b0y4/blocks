@@ -33,6 +33,7 @@ const dom = {
     "manageClose", "manageListRows", "collectionForm", "collectionTarget",
     "collectionName", "collectionArtist", "collectionWorks", "collectionCancel",
     "collectionStatus", "manageCopyList", "manageReset", "manageUpdate",
+    "copyStatus",
     "updateStatus", "manageUpdateResults", "manageContractRows", "contractToggle",
     "contractSection", "contractSectionToggle", "contractSectionLabel",
     "contractSectionIcon", "contractForm", "contractKey", "contractAbi",
@@ -89,6 +90,8 @@ function pruneFrozenOverlay() {
 }
 
 pruneFrozenOverlay();
+
+if (ov.pruneReconciledAdditions(overlay, list)) ov.saveOverlay(overlay);
 
 const nameMap = {};
 const indexMap = {};
@@ -1123,7 +1126,7 @@ let listManageEntries = [];
 let contractManageEntries = [];
 let updateResults = [];
 let updateRunning = false;
-let contractSectionOpen = true;
+let contractSectionOpen = false;
 const exposedContracts = new Set();
 
 const escapeHTML = (value) =>
@@ -1829,16 +1832,16 @@ function initLibraryManager() {
   bindCopyButton(
     dom.manageCopyList,
     () => ov.exportListJS(list, overlay, Object.keys(registry)),
-    dom.collectionStatus,
-    "Full list JS copied.",
+    dom.copyStatus,
+    "Full list JS copied. Paste into js/data.js.",
     "Could not copy the list.",
   );
 
   bindCopyButton(
     dom.manageCopyContracts,
     () => ov.exportContractsJS(overlay),
-    dom.contractStatus,
-    "Contract JS copied.",
+    dom.copyStatus,
+    "Contract JS copied. Paste into js/constants.js.",
     "Could not copy the contracts.",
   );
 
@@ -1853,8 +1856,9 @@ function initLibraryManager() {
     updateResults = [];
     renderUpdateResults();
     [dom.collectionStatus, dom.contractStatus, dom.updateStatus].forEach(
-      (element) => setManageStatus(element, "Local changes cleared."),
+      (element) => setManageStatus(element, ""),
     );
+    setManageStatus(dom.copyStatus, "Local changes cleared.");
   });
 }
 

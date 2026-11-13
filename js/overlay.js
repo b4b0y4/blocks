@@ -231,6 +231,18 @@ export function removeAddition(overlay, line) {
   dropChanges(overlay, changeMatches("add", "line", line));
 }
 
+export function pruneReconciledAdditions(overlay, baseList) {
+  const known = new Set(baseList.map(listIdentity).filter(Boolean));
+  const countBefore = overlay.list.length;
+
+  overlay.list = overlay.list.filter(
+    (change) =>
+      change.type !== "add" || !known.has(listIdentity(change.line)),
+  );
+
+  return overlay.list.length !== countBefore;
+}
+
 const bareAdditionLine = (line) => line.replace(/!\s*$/, "");
 
 export function hideAddition(overlay, line) {
