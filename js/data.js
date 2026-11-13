@@ -624,7 +624,7 @@ export const list = [
   "ABSCXI0 # Unravel / Anna Lucia # 23 Works",
   "ABSCXI1 # Unravel /  # 0 Works!",
   "ABSCXIII0 # Nocturne / James Mendenhall # 41 Works",
-  "ABSCXIV0 # Strikes / Medusa # 46 Works",
+  "ABSCXIV0 # Strikes / Medusa # 48 Works",
   "ABSCXV0 # Flower Type / Ronen Tanchum # 256 Works",
   "ABEXP0 # Friendship Bracelets / Alexis André # 38965 Works",
   "ABEXP1 # Marfa Yucca / Daniel Calderon Arenas # 390 Works",
