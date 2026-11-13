@@ -30,7 +30,7 @@ const dom = {
     "settings", "frame", "info", "explore", "loop", "repeatIcon", "dropMenu",
     "favLoop", "curatedLoop", "selectedLoop", "oobLoop", "stopLoop", "loopInput",
     "randomButton", "searchIcon", "favIcon", "favSave", "favOpen",
-    "manageClose", "manageListRows", "collectionForm", "collectionTarget",
+    "manageListRows", "collectionForm", "collectionTarget",
     "collectionName", "collectionArtist", "collectionWorks", "collectionCancel",
     "collectionStatus", "manageCopyList", "manageReset", "manageUpdate",
     "copyStatus",
@@ -1638,11 +1638,6 @@ function initLibraryManager() {
   bindPanelToggle(dom.manage, dom.managePanel, () => {
     renderManageList();
     renderManageContracts();
-  });
-
-  dom.manageClose.addEventListener("click", (event) => {
-    event.stopPropagation();
-    clearPanels();
   });
 
   dom.manageUpdate.addEventListener("click", updateAllContracts);

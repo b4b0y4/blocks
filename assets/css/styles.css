@@ -417,14 +417,6 @@ iframe {
   }
 }
 
-.manage-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--padding-md);
-  margin-block-end: 5px;
-}
-
 .manage-list {
   margin-block-start: 7px;
   border-block-start: 1px solid var(--color-hvr);
@@ -453,19 +445,6 @@ iframe {
   & i {
     color: var(--color-btn);
     font-size: 0.85em;
-  }
-}
-
-.manage-icon {
-  background-color: transparent;
-  color: var(--color-btn);
-  border: none;
-  border-radius: var(--border-radius-sm);
-  padding: 4px 6px;
-  cursor: default;
-  &:hover {
-    background-color: var(--color-hvr);
-    color: var(--color-txt);
   }
 }
 
