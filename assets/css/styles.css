@@ -287,6 +287,10 @@ iframe {
   & p:last-of-type {
     margin-block: 8px 8px;
   }
+  & .manage-btn {
+    font-size: 1em;
+    padding: 4px;
+  }
 }
 
 .key {
@@ -760,6 +764,10 @@ iframe {
       padding: var(--padding-md);
       background-color: var(--color-hvr);
     }
+  }
+
+  .instruction .manage-btn {
+    padding: var(--padding-md);
   }
 
   :is(.search-icon, .fav-icon) {
