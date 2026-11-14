@@ -238,7 +238,7 @@ abi.bm = abi.v2.map((entry) =>
 
 export const abiProfiles = abi;
 
-export const isStudio = (key) => key.startsWith("ABABSTUDIO[");
+export const isStudio = (key) => key.startsWith("ABSTUDIO[");
 
 export const keyFromSymbol = (symbol, exists = () => false) => {
   const s = String(symbol).trim().toUpperCase();
