@@ -526,8 +526,8 @@ export const list = [
   "ABSIX1 # Untitled / Jeff Davis # 1 Work!",
   "ABSIX2 # Framework / Jeff Davis # 13 Works",
   "ABSIX3 # Progression / Jeff Davis # 777 Works",
-  "ABSIX4 # Mechanical Drawing / Jeff Davis # 12 Works",
-  "ABSIX5 # Digital Sketch / Jeff Davis # 100 Works",
+  "ABSIX4 # Mechanical Drawing / Jeff Davis # 12 Works | OFFICE IMPART",
+  "ABSIX5 # Digital Sketch / Jeff Davis # 100 Works | OFFICE IMPART",
   "ABSIX6 # Intervals / Jeff Davis # 8 Works",
   "ABSX0 # Cosmicodes / Insigħt × Leonardo Petrucci # 36 Works",
   "ABSXI0 # Alchimie / RVig # 80 Works",
@@ -601,7 +601,7 @@ export const list = [
   "ABSXC0 # Logoria /  # 0 Works!",
   "ABSXC1 #  Logoria / Srđan Šarović, Una Popović # 28 Works",
   "ABSXCI0 # Primavera / Baret LaVida # 70 Works",
-  "ABSXCII0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works",
+  "ABSXCII0 # Ex Nihilo (Cosmos) / Casey REAS # 256 Works | Feral File",
   "ABSXCIII0 # Rain Blooms / Kazuhiro Tanimoto # 128 Works",
   "ABSXCIV0 # MASKS / Piter Pasma # 69 Works",
   "ABSXCV0 # Starlight / Nygilia # 300 Works",
@@ -1030,10 +1030,6 @@ export const curated = [
   282, 284, 296, 304, 309, 320, 328, 333, 334, 336, 337, 341, 364, 367, 368, 376, 379, 383, 385, 399, 406, 407,
   412, 416, 417, 418, 423, 426, 428, 433, 455, 456, 457, 462, 466, 471, 472, 482, 483, 484, 486, 487, 488, 493,
 ];
-
-export const platformOverrides = {
-  ABSIX4: "OFFICE IMPART", ABSIX5: "OFFICE IMPART", ABSXCII0: "Feral File",
-};
 
 export const playground = [
   6, 14, 15, 16, 18, 19, 20, 22, 24, 25, 26, 30, 37, 42, 48, 56, 57, 68, 77, 94, 104, 108, 112, 119, 121, 130,

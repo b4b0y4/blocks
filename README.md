@@ -75,7 +75,8 @@ at runtime.
      automatically
 3. The **shadow list** below shows only entries added or changed in this
    browser — the bundled `data.js` list is not repeated there.
-   - use **Edit** on a row to change its name, artist, or artwork count
+   - use **Edit** on a row to change its name, artist, platform, or artwork
+     count
    - use **Hide** to remove an entry from the viewer, or **Unhide** to bring it
      back; hiding keeps any pending artwork-count update, so unhiding brings
      back the updated entry
@@ -90,6 +91,7 @@ at runtime.
    - paste the list output into the `list` array in `js/data.js`
    - new collections are inserted into their contract's block, in project order
    - hidden entries are written with a trailing `!`, so they stay hidden
+   - a platform is written inline as a ` | Platform` suffix on the line
    - the contract output is the complete `contractRegistry` block
      (bundled + your changes); replace the whole block in `js/constants.js`
    - contracts are ordered by registry position; new keys slot in beside
@@ -110,20 +112,20 @@ every other key is treated as an engine contract.
    ```
    - ABI must already exist in `abi` (e.g. `abi.v1`, `abi.v2`, `abi.v3`, `abi.v2Flex`, `abi.v3Flex`), or add one first.
    - `platform` and `startProjId` are optional (omit by not passing them).
-2. Open the application in your browser and open the developer console.
-3. In the console, you can now fetch blocks in several convenient ways:
-    - **By variable:** `fetchBlocks(yourcontract)` (uses the lowercase version of your contract name)
-    - **Multiple contracts:** `fetchBlocks(yourcontract, anothercontract)`
-    - **Using predefined lists:** `fetchBlocks(is.studio)`
-4. The console will output any new project lines and artwork count changes found.
-   Copy new entries into the `list` array in `js/data.js`; for count changes,
-   replace the existing line with the updated one.
-    - Add a `!` to the end of any line to ignore it in the UI.
-    - Example output format:
-      ```js
-      "YOURCONTRACT0 # Project Name / Artist Name # X Works",
-      "YOURCONTRACT1 # Another Project / Another Artist # Y Works!", // '!' ignores this line
-      ```
+2. Open the application in your browser, go to **Settings**, and choose
+   **Open library editor**.
+3. Press **Update list** to scan every active contract. New collections and
+   artwork count changes appear under the button; use **Add**, **Update**, or
+   **Apply all** to put them into the overlay.
+   - Use **Copy list JS** to get the merged `list` array for `js/data.js`.
+   - Add a `!` to the end of any line to ignore it in the UI.
+   - Add a platform with an optional ` | Platform` suffix.
+   - Example output format:
+     ```js
+     "YOURCONTRACT0 # Project Name / Artist Name # X Works",
+     "YOURCONTRACT1 # Another Project / Another Artist # Y Works!", // '!' ignores this line
+     "YOURCONTRACT2 # Third Project / Third Artist # Z Works | Platform Name",
+     ```
 
 ### Required Contract Functions
 

@@ -1,5 +1,5 @@
 import { makeCall, lookupAddress } from "./rpc.js";
-import { list, libs, curated, playground, platformOverrides } from "./data.js";
+import { list, libs, curated, playground } from "./data.js";
 import { contractRegistry, is, abiProfiles, frozenContracts } from "./constants.js";
 import * as ov from "./overlay.js";
 
@@ -31,7 +31,8 @@ const dom = {
     "favLoop", "curatedLoop", "selectedLoop", "oobLoop", "stopLoop", "loopInput",
     "randomButton", "searchIcon", "favIcon", "favSave", "favOpen",
     "manageListRows", "collectionForm", "collectionTarget",
-    "collectionName", "collectionArtist", "collectionWorks", "collectionCancel",
+    "collectionName", "collectionArtist", "collectionPlatform",
+    "collectionWorks", "collectionCancel",
     "collectionStatus", "manageCopyList", "manageReset", "manageUpdate",
     "copyStatus",
     "updateStatus", "manageUpdateResults", "manageContractRows", "contractToggle",
@@ -68,6 +69,20 @@ const baseContractRegistry = contractRegistry;
 let registry = {};
 let PMPV0_ADDR = "";
 let activeList = [];
+const platformByProject = new Map();
+
+function rebuildPlatformIndex() {
+  platformByProject.clear();
+
+  activeList.forEach((line) => {
+    const parsed = ov.parseListLine(line);
+    if (parsed && !parsed.hidden && parsed.platform)
+      platformByProject.set(
+        `${parsed.contract}${parsed.projectId}`,
+        parsed.platform,
+      );
+  });
+}
 
 function pruneFrozenOverlay() {
   const changedLine = (change) =>
@@ -150,6 +165,7 @@ function rebuildRuntimeContracts() {
 
 rebuildRuntimeContracts();
 activeList = ov.mergeList(list, overlay);
+rebuildPlatformIndex();
 
 const contractAt = (contract) => registry[nameMap[contract]];
 
@@ -180,14 +196,6 @@ const isPmpDep = (d) =>
     (typeof d.data === "string" && d.data.trim().startsWith("#web3call")));
 
 const findPmpDep = (deps = []) => deps.find(isPmpDep);
-
-function splitCollectionAndArtist(text) {
-  const parts = text.split(" / ").map((s) => s.trim());
-  const artist = parts.length > 0 ? parts[parts.length - 1] : "";
-  const collection =
-    parts.length > 1 ? parts.slice(0, -1).join(" / ") : parts[0] || "";
-  return { collection, artist };
-}
 
 class ListManager {
   constructor(listData) {
@@ -265,9 +273,15 @@ class ListManager {
 const listManager = new ListManager(activeList);
 
 function parseListLine(line) {
-  const parts = line.split(" # ");
-  const { collection, artist } = splitCollectionAndArtist(parts[1]);
-  return { collection, artist, workCount: parts[parts.length - 1] };
+  const parsed = ov.parseListLine(line);
+  if (!parsed) return { collection: "", artist: "", workCount: "" };
+
+  const { collection, artist, works } = parsed;
+  return {
+    collection,
+    artist,
+    workCount: `${works} ${works === 1 ? "Work" : "Works"}`,
+  };
 }
 
 function listItemHTML(line, index, numberQuery = "", selected = false) {
@@ -632,8 +646,8 @@ const replaceIPFSGateways = (scriptContent) =>
 function getPlatform(contract, projId) {
   const contractName = nameMap[contract];
 
-  const override = platformOverrides[contractName + projId];
-  if (override) return override;
+  const inline = platformByProject.get(contractName + projId);
+  if (inline) return inline;
 
   if (["AB", "ABII", "ABIII"].includes(contractName)) {
     return curated.includes(projId)
@@ -1127,7 +1141,6 @@ let contractManageEntries = [];
 let updateResults = [];
 let updateRunning = false;
 let contractSectionOpen = false;
-const exposedContracts = new Set();
 
 const escapeHTML = (value) =>
   value.replace(
@@ -1179,20 +1192,6 @@ function commitChanges(statusElement, message, { contracts = false } = {}) {
   return true;
 }
 
-function refreshWindowContractNames() {
-  exposedContracts.forEach((name) => {
-    if (!registry[name]) {
-      delete window[name.toLowerCase()];
-      exposedContracts.delete(name);
-    }
-  });
-
-  Object.keys(registry).forEach((name) => {
-    window[name.toLowerCase()] = name;
-    exposedContracts.add(name);
-  });
-}
-
 function populateManagementSelects() {
   const selectedAbi = dom.contractAbi.value;
   dom.contractAbi.innerHTML = Object.keys(abiProfiles)
@@ -1211,7 +1210,6 @@ function refreshLibrary({ contracts = false } = {}) {
       : null;
     rebuildRuntimeContracts();
     populateManagementSelects();
-    refreshWindowContractNames();
 
     if (contractData && activeContractName) {
       const index = indexMap[activeContractName];
@@ -1227,6 +1225,7 @@ function refreshLibrary({ contracts = false } = {}) {
   }
 
   activeList = ov.mergeList(list, overlay);
+  rebuildPlatformIndex();
   listManager.setList(activeList);
 
   if (dom.listPanel.classList.contains("active")) {
@@ -1384,6 +1383,7 @@ function startListEdit(entry) {
   dom.collectionTarget.textContent = `Edit ${parsed.contract}${parsed.projectId}`;
   dom.collectionName.value = parsed.collection;
   dom.collectionArtist.value = parsed.artist;
+  dom.collectionPlatform.value = parsed.platform;
   dom.collectionWorks.value = parsed.works;
   dom.collectionForm.scrollIntoView({ block: "nearest" });
 }
@@ -1638,7 +1638,6 @@ function bindCopyButton(button, getText, statusElement, okMessage, failMessage) 
 
 function initLibraryManager() {
   populateManagementSelects();
-  refreshWindowContractNames();
   renderManageList();
   renderManageContracts();
   setCollectionFormOpen(false);
@@ -1735,6 +1734,7 @@ function initLibraryManager() {
 
     const collection = dom.collectionName.value.trim();
     const artist = dom.collectionArtist.value.trim();
+    const platform = dom.collectionPlatform.value.trim();
     const works = Number(dom.collectionWorks.value);
 
     if (!collection)
@@ -1742,7 +1742,10 @@ function initLibraryManager() {
     if (!Number.isInteger(works) || works < 0)
       return fail(dom.collectionStatus, "Enter a valid work count.");
 
-    const line = lineFromParsed({ ...listEdit.parsed, collection, artist }, works);
+    const line = lineFromParsed(
+      { ...listEdit.parsed, collection, artist, platform },
+      works,
+    );
 
     if (!ov.parseListLine(line))
       return fail(dom.collectionStatus, "Contract keys must be letters only.");
@@ -2119,63 +2122,3 @@ async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
     if (offset + FETCH_BATCH_SIZE < ids.length) await sleep(FETCH_BATCH_DELAY);
   }
 }
-
-async function blocks(contractNames) {
-  const known = knownListIdentities();
-  const currentEntries = currentLibraryEntries();
-
-  for (const contractName of contractNames) {
-    const results = await scanContract(contractName, known, currentEntries);
-    const newBlocks = results.filter((result) => result.kind === "new");
-    const changedBlocks = results.filter((result) => result.kind === "changed");
-
-    if (newBlocks.length > 0) {
-      console.log(`%cNew items for ${contractName}:`, "color: seagreen;");
-      console.log(
-        `%c${newBlocks.map(({ line }) => `"${line}",`).join("\n")}`,
-        "color: gold",
-      );
-    }
-
-    if (changedBlocks.length > 0) {
-      console.log(
-        `%cArtwork count changes for ${contractName}:`,
-        "color: darkorange;",
-      );
-      changedBlocks.forEach((result) => {
-        console.log(
-          `%c"${result.line}", %c(${result.oldWorks} -> ${result.newWorks} works)`,
-          "color: gold",
-          "color: grey",
-        );
-      });
-    }
-
-    if (results.length === 0) {
-      console.log(
-        `%cNo new items or artwork count changes for ${contractName}.`,
-        "color: grey;",
-      );
-    }
-  }
-}
-
-window.fetchBlocks = async (...contracts) => {
-  if (contracts.length === 0) {
-    console.error("Please provide contract name(s) as arguments.");
-    return;
-  }
-  const contractNames = contracts.length === 1 && Array.isArray(contracts[0])
-    ? contracts[0]
-    : contracts;
-  console.log(
-    `%cFetching blocks for:%c${contractNames.join(", ")}`,
-    "color: indianred;",
-    "color: grey;",
-  );
-  await blocks(contractNames);
-  console.log("%cDone fetching!", "color: indianred;");
-};
-
-window.is = is;
-refreshWindowContractNames();

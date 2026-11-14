@@ -15,17 +15,28 @@ export function emptyOverlay() {
   return { version: OVERLAY_VERSION, list: [], contracts: {} };
 }
 
+const PLATFORM_SEPARATOR = " | ";
+
 export function parseListLine(line) {
   const value = asString(line).trim();
   if (!value) return null;
 
   const hidden = value.endsWith("!");
   const body = hidden ? value.slice(0, -1).trimEnd() : value;
+
   const parts = body.split(" # ");
   if (parts.length < 3) return null;
 
   const head = parts[0].trim().match(/^([A-Z]+)(\d+)$/);
-  const works = parts[parts.length - 1].trim().match(/^(\d+)\s+Works?$/);
+  const worksPart = parts[parts.length - 1];
+  const platformAt = worksPart.lastIndexOf(PLATFORM_SEPARATOR);
+  const worksText =
+    platformAt === -1 ? worksPart : worksPart.slice(0, platformAt);
+  const platform =
+    platformAt === -1
+      ? ""
+      : worksPart.slice(platformAt + PLATFORM_SEPARATOR.length).trim();
+  const works = worksText.trim().match(/^(\d+)\s+Works?$/);
   if (!head || !works) return null;
 
   const label = parts.slice(1, -1).join(" # ").trim();
@@ -46,6 +57,7 @@ export function parseListLine(line) {
     collection,
     artist,
     works: Number(works[1]),
+    platform,
     hidden,
   };
 }
@@ -61,12 +73,17 @@ export function makeListLine({
   collection,
   artist = "",
   works,
+  platform = "",
   hidden = false,
 }) {
   const count = Number(works);
+  const trimmedPlatform = platform.trim();
+  const suffix = trimmedPlatform
+    ? `${PLATFORM_SEPARATOR}${trimmedPlatform}`
+    : "";
   return `${contract}${projectId} # ${collection.trim()} / ${artist.trim()} # ${count} ${
     count === 1 ? "Work" : "Works"
-  }${hidden ? "!" : ""}`;
+  }${suffix}${hidden ? "!" : ""}`;
 }
 
 export function normalizeContractConfig(config) {
