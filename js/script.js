@@ -2062,16 +2062,3 @@ async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
     if (offset + FETCH_BATCH_SIZE < ids.length) await sleep(FETCH_BATCH_DELAY);
   }
 }
-
-try {
-  const result = await call(
-    "0x000000426D1a64712E3Da5d6D796b99665D47c28",
-    nameAbi,
-    "name",
-    []
-  );
-
-  console.log("Decoded name():", result);
-} catch (error) {
-  console.error("name() diagnostic failed:", error);
-}
