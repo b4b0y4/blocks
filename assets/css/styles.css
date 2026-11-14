@@ -225,7 +225,7 @@ iframe {
   inline-size: 92px;
   text-align: start;
   border-radius: var(--border-radius-sm);
-  padding: 3.5px 15px 3.5px 28px;
+  padding: 3.5px 28px;
   box-shadow: 0 0 0 1px transparent;
   transition: box-shadow var(--transition-fast);
   outline: none;
@@ -748,7 +748,7 @@ select.manage-input {
   }
 
   .search-input {
-    padding: 5px 18px 5px 32px;
+    padding: 5px 32px;
     font-size: var(--font-size-lg);
     inline-size: 96px;
   }
