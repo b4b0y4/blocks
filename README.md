@@ -82,12 +82,14 @@ at runtime.
      back the updated entry
    - entries added by an update can be edited, hidden, unhidden, or removed;
      **Remove** deletes an added entry or discards your edit to a bundled one
-4. Press **+ Add contract** next to **Update list** to add a contract by key,
-   ABI profile (`v2`, `v3`, `v2Flex`, `v3Flex`), address,
-   platform, and optional start project ID. Custom contracts appear inline and
-   can be edited or removed. After adding one, press **Update list** to fetch its
-   collections. Use the **Contracts (N)** header to collapse the contract list
-   when it gets long.
+4. Press **+ Add contract** next to **Update list** to add a contract with an
+   ABI profile (`v2`, `v3`, `v2Flex`, `v3Flex`), address, optional platform,
+   optional start project ID, and a **Studio contract** checkbox. No key or
+   name is required: one is generated from the platform (falling back to
+   `STUDIO` / `ENGINE`, with `II`, `III`, ... on collisions) and shown after
+   saving. Custom contracts appear inline and can be edited or removed. After
+   adding one, press **Update list** to fetch its collections. Use the
+   **Contracts (N)** header to collapse the contract list when it gets long.
 5. Use **Copy list** / **Copy contracts** to make changes permanent:
    - paste the list output into the `list` array in `js/data.js`
    - new collections are inserted into their contract's block, in project order
@@ -95,24 +97,29 @@ at runtime.
    - a platform is written inline as a ` | Platform` suffix on the line
    - the contract output is the complete `contractRegistry` block
      (bundled + your changes); replace the whole block in `js/constants.js`
+   - studio contracts are written with the `studio(...)` helper, other
+     contracts with `reg(...)`
    - contracts are ordered by registry position; new keys slot in beside
      their Roman-numeral neighbours (e.g. `ABSVI` between `ABSV` and `ABSVII`)
 6. **Reset changes** clears the browser-local overlay.
 
 Overlay changes apply immediately to search, Random, Favorites, and loop modes.
 They are browser-local and are not committed to the repository automatically.
-Contract keys must contain letters only because collection lines use the
-`KEY<projectId>` format. Studio contracts use keys starting with `ABS`;
-every other key is treated as an engine contract.
+Contract keys contain letters only because collection lines use the
+`KEY<projectId>` format. The key is an internal identifier; studio status is
+stored explicitly in the contract entry, so a key no longer needs to start with
+`ABS`.
 
 ### Adding New Contracts
 
-1. In `js/constants.js`, add your contract with the `reg` helper:
+1. In `js/constants.js`, add your contract with the `reg` or `studio` helper:
    ```js
    YOURCONTRACT: reg(abi.v3Flex, "0xYourAddress", "Platform Name", startProjId),
+   YOURSTUDIO: studio(abi.v3Flex, "0xYourAddress", "Platform Name", startProjId),
    ```
    - ABI must already exist in `abi` (e.g. `abi.v1`, `abi.v2`, `abi.v3`, `abi.v2Flex`, `abi.v3Flex`), or add one first.
    - `platform` and `startProjId` are optional (omit by not passing them).
+   - Use `studio` instead of `reg` for Art Blocks Studio contracts.
 2. Open the application in your browser, go to **Settings**, and choose
    **Open library editor**.
 3. Press **Update list** to scan every active contract. New collections and

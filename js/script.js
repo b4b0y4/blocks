@@ -1,6 +1,13 @@
 import { makeCall, lookupAddress } from "./rpc.js";
 import { list, libs, curated, playground } from "./data.js";
-import { contractRegistry, is, abiProfiles, frozenContracts } from "./constants.js";
+import {
+  contractRegistry,
+  abiProfiles,
+  frozenContracts,
+  isStudio,
+  nameAbi,
+  keyFromName,
+} from "./constants.js";
 import * as ov from "./overlay.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -37,10 +44,9 @@ const dom = {
     "copyStatus",
     "updateStatus", "manageUpdateResults", "manageContractRows", "contractToggle",
     "contractSection", "contractSectionToggle", "contractSectionLabel",
-    "contractSectionIcon", "contractForm", "contractKey", "contractAbi",
-    "contractAddress",
-    "contractPlatform", "contractStart", "contractCancel", "contractStatus",
-    "manageCopyContracts",
+    "contractSectionIcon", "contractForm", "contractAbi", "contractAddress",
+    "contractPlatform", "contractStart", "contractCancel",
+    "contractStatus", "manageCopyContracts",
   ),
 };
 
@@ -84,53 +90,16 @@ function rebuildPlatformIndex() {
   });
 }
 
-function pruneFrozenOverlay() {
-  const changedLine = (change) =>
-    change.type === "add" ? change.line : change.original;
-  const countBefore =
-    overlay.list.length + Object.keys(overlay.contracts).length;
-
-  overlay.list = overlay.list.filter((change) => {
-    const parsed = ov.parseListLine(changedLine(change));
-    return !parsed || !frozenContracts.has(parsed.contract);
-  });
-
-  Object.keys(overlay.contracts).forEach((key) => {
-    if (frozenContracts.has(key)) delete overlay.contracts[key];
-  });
-
-  const countAfter =
-    overlay.list.length + Object.keys(overlay.contracts).length;
-  if (countAfter !== countBefore) ov.saveOverlay(overlay);
-}
-
-pruneFrozenOverlay();
-
 if (ov.pruneReconciledAdditions(overlay, list)) ov.saveOverlay(overlay);
 
 const nameMap = {};
 const indexMap = {};
 
-const contractEntryFromConfig = (config) => {
-  const abi = abiProfiles[config.abi];
-  if (!abi) return null;
-
-  return {
-    abi,
-    address: config.address,
-    ...(config.platform ? { platform: config.platform } : {}),
-    ...(config.startProjId !== undefined
-      ? { startProjId: config.startProjId }
-      : {}),
-  };
-};
-
 function rebuildRuntimeContracts() {
   registry = { ...baseContractRegistry };
 
   Object.entries(overlay.contracts).forEach(([key, config]) => {
-    const entry = contractEntryFromConfig(config);
-    if (entry) registry[key] = entry;
+    if (abiProfiles[config.abi]) registry[key] = config;
   });
 
   Object.keys(nameMap).forEach((key) => delete nameMap[key]);
@@ -139,23 +108,6 @@ function rebuildRuntimeContracts() {
   Object.keys(registry).forEach((key, index) => {
     nameMap[index] = key;
     indexMap[key] = index;
-  });
-
-  is.v3.length = 0;
-  is.flex.length = 0;
-  is.studio.length = 0;
-  is.engine.length = 0;
-
-  Object.entries(registry).forEach(([key, entry]) => {
-    const abiName =
-      overlay.contracts[key]?.abi ||
-      Object.keys(abiProfiles).find((name) => abiProfiles[name] === entry.abi);
-
-    if (abiName?.includes("3")) is.v3.push(key);
-    if (abiName?.includes("Flex")) is.flex.push(key);
-    if (key.startsWith("ABS")) is.studio.push(key);
-    else if (!key.startsWith("AB") && !frozenContracts.has(key))
-      is.engine.push(key);
   });
 
   PMPV0_ADDR = registry.ABPMPV0
@@ -168,10 +120,12 @@ activeList = ov.mergeList(list, overlay);
 rebuildPlatformIndex();
 
 const contractAt = (contract) => registry[nameMap[contract]];
+const isV3 = (contract) => contractAt(contract).abi.startsWith("v3");
+const isFlex = (contract) => contractAt(contract).abi.endsWith("Flex");
 
 const contractCall = (contract, fnName, ...args) => {
   const { abi, address } = contractAt(contract);
-  return call(address, abi, fnName, args);
+  return call(address, abiProfiles[abi], fnName, args);
 };
 
 let contractData = load("contractData");
@@ -360,7 +314,6 @@ async function grabData(tokenId, contract, updateOnly = false) {
       clearDataStorage();
 
       const projId = Math.floor(tokenId / 1000000);
-      const isV3 = is.v3.includes(nameMap[contract]);
       const [
         hash,
         projectInfo,
@@ -369,10 +322,10 @@ async function grabData(tokenId, contract, updateOnly = false) {
         { edition, minted },
       ] = await Promise.all([
         fetchHash(tokenId, contract),
-        fetchProjectInfo(projId, contract, isV3),
+        fetchProjectInfo(projId, contract),
         contractCall(contract, "projectDetails", projId),
         fetchOwner(tokenId, contract),
-        fetchEditionInfo(projId, contract, isV3),
+        fetchEditionInfo(projId, contract),
       ]);
 
       const [script, extLib] = await Promise.all([
@@ -385,11 +338,11 @@ async function grabData(tokenId, contract, updateOnly = false) {
       let arweave = null;
       let tokenParams = null;
 
-      if (is.flex.includes(nameMap[contract])) {
+      if (isFlex(contract)) {
         const extDepCount = await fetchExtDepCount(projId, contract);
         if (extDepCount) {
           [extDep, { ipfs, arweave }] = await Promise.all([
-            fetchCIDs(isV3 ? "v3" : "v2", projId, extDepCount, contract),
+            fetchCIDs(projId, extDepCount, contract),
             fetchGateway(contract),
           ]);
           if (["BMFLEX", "NUMBER"].includes(nameMap[contract])) {
@@ -438,10 +391,10 @@ const fetchHash = (tokenId, contract) =>
     tokenId,
   );
 
-const fetchProjectInfo = (projId, contract, isV3) =>
+const fetchProjectInfo = (projId, contract) =>
   contractCall(
     contract,
-    isV3 ? "projectScriptDetails" : "projectScriptInfo",
+    isV3(contract) ? "projectScriptDetails" : "projectScriptInfo",
     projId,
   );
 
@@ -475,10 +428,10 @@ function extractLibraryName([first]) {
   return JSON.parse(first).type;
 }
 
-async function fetchEditionInfo(projId, contract, isV3) {
+async function fetchEditionInfo(projId, contract) {
   const invo = await contractCall(
     contract,
-    isV3 ? "projectStateData" : "projectTokenInfo",
+    isV3(contract) ? "projectStateData" : "projectTokenInfo",
     projId,
   );
   return { edition: Number(invo.maxInvocations), minted: Number(invo.invocations) };
@@ -497,10 +450,10 @@ const fetchDependencies = (projId, extDepCount, contract) =>
 
 const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
 
-async function fetchCIDs(version, projId, extDepCount, contract) {
+async function fetchCIDs(projId, extDepCount, contract) {
   const cidTuples = await fetchDependencies(projId, extDepCount, contract);
 
-  if (version === "v2")
+  if (!isV3(contract))
     return cidTuples.map(([cid]) => ({
       cid,
       dependency_type: "IPFS",
@@ -547,7 +500,7 @@ const fetchGateway = async (contract) => {
 async function fetchTokenParams(pmpAddress, contract, tokenId) {
   const raw = await call(
     pmpAddress,
-    contractRegistry.ABPMPV0.abi,
+    abiProfiles.PMPV0,
     "getTokenParams",
     [contractAt(contract).address, tokenId],
   ).catch(() => []);
@@ -645,6 +598,7 @@ const replaceIPFSGateways = (scriptContent) =>
 
 function getPlatform(contract, projId) {
   const contractName = nameMap[contract];
+  const entry = registry[contractName];
 
   const inline = platformByProject.get(contractName + projId);
   if (inline) return inline;
@@ -658,9 +612,10 @@ function getPlatform(contract, projId) {
           ? "Art Blocks Factory"
           : "Art Blocks Presents";
   }
-  if (is.studio.includes(contractName)) return "Art Blocks Studio";
+  if (entry?.platform) return entry.platform;
+  if (isStudio(contractName)) return "Art Blocks Studio";
 
-  return registry[contractName].platform || "";
+  return "";
 }
 
 function updateUI({
@@ -867,7 +822,7 @@ function injectFrame() {
 }
 
 function getToken(line, searchQuery) {
-  const match = line.match(/^([A-Z]+)?\s?([0-9]+).*?([0-9]+)\s*Work/);
+  const match = line.match(/^([A-Z]+(?:\[\d+\])?)\s?(\d+).*?(\d+)\s*Work/);
   if (!match) return;
 
   const [, listContract, projIdStr, tokenStr] = match;
@@ -1280,29 +1235,10 @@ function renderManageList() {
     .join("");
 }
 
-function contractAbiName(key) {
-  return (
-    overlay.contracts[key]?.abi ||
-    Object.keys(abiProfiles).find(
-      (name) => abiProfiles[name] === registry[key]?.abi,
-    ) ||
-    ""
-  );
-}
-
 const contractKind = (key) => {
   if (!baseContractRegistry[key]) return "custom";
   return overlay.contracts[key] ? "overridden" : "bundled";
 };
-
-function exportableContracts() {
-  return Object.fromEntries(
-    Object.entries(registry).map(([key, config]) => [
-      key,
-      { ...config, abi: contractAbiName(key) },
-    ]),
-  );
-}
 
 function renderManageContracts() {
   const keys = Object.keys(registry).filter(
@@ -1320,10 +1256,9 @@ function renderManageContracts() {
       const kind = contractKind(key);
 
       return `<div class="manage-item" data-contract-index="${index}">
-        <p class="manage-item-main">${key}
-          <span class="manage-badge">${kind}</span>
-        </p>
-        <p class="manage-item-main">${contractAbiName(key)} &bull; ${shortAddr(
+        <p class="manage-item-main">${escapeHTML(key)}
+          <span class="manage-badge">${kind}</span></p>
+        <p class="manage-item-main">${config.abi} &bull; ${shortAddr(
           config.address,
         )}${config.platform ? ` &bull; ${escapeHTML(config.platform)}` : ""}${
           config.startProjId !== undefined
@@ -1354,7 +1289,6 @@ function setCollectionFormOpen(open) {
 function resetContractForm() {
   contractEditKey = null;
   dom.contractForm.reset();
-  dom.contractKey.disabled = false;
   dom.contractAbi.value = "v3Flex";
 }
 
@@ -1398,9 +1332,7 @@ function startContractEdit(key) {
 
   setContractFormOpen(true);
   contractEditKey = key;
-  dom.contractKey.value = key;
-  dom.contractKey.disabled = true;
-  dom.contractAbi.value = contractAbiName(key);
+  dom.contractAbi.value = config.abi;
   dom.contractAddress.value = config.address;
   dom.contractPlatform.value = config.platform || "";
   dom.contractStart.value = config.startProjId ?? "";
@@ -1767,7 +1699,10 @@ function initLibraryManager() {
     );
 
     if (!ov.parseListLine(line))
-      return fail(dom.collectionStatus, "Contract keys must be letters only.");
+      return fail(
+        dom.collectionStatus,
+        "Contract keys must be letters, optionally followed by [number].",
+      );
 
     if (listEdit.additionLine) {
       ov.applyAdd(overlay, line, listEdit.additionLine);
@@ -1808,48 +1743,40 @@ function initLibraryManager() {
     setManageStatus(dom.contractStatus, "");
   });
 
-  dom.contractKey.addEventListener("input", () => {
-    const key = dom.contractKey.value.trim().toUpperCase();
-    if (!contractEditKey && registry[key])
-      fail(
-        dom.contractStatus,
-        `${key} is already used. Edit it or choose a different key.`,
-      );
-    else setManageStatus(dom.contractStatus, "");
-  });
-
-  dom.contractForm.addEventListener("submit", (event) => {
+  dom.contractForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const key = (contractEditKey || dom.contractKey.value.trim()).toUpperCase();
-    if (!/^[A-Z]+$/.test(key))
-      return fail(dom.contractStatus, "Contract keys must contain letters only.");
-    if (!contractEditKey && registry[key])
-      return fail(
-        dom.contractStatus,
-        `${key} is already used. Edit it or choose a different key.`,
-      );
-
-    const abi = dom.contractAbi.value;
-    if (!abiProfiles[abi])
-      return fail(dom.contractStatus, "Choose a valid ABI.");
-
     const config = ov.normalizeContractConfig({
-      abi,
+      abi: dom.contractAbi.value,
       address: dom.contractAddress.value,
       platform: dom.contractPlatform.value,
       startProjId: dom.contractStart.value,
     });
 
-    if (!config)
+    if (!config || !abiProfiles[config.abi])
       return fail(
         dom.contractStatus,
-        "Enter a valid 0x address and start project ID.",
+        "Enter a valid ABI, 0x address and start project ID.",
       );
+
+    let key = contractEditKey;
+    if (!key) {
+      if (!rpcUrl) return fail(dom.contractStatus, "Set an RPC URL first.");
+      try {
+        key = keyFromName(await call(config.address, nameAbi, "name", []));
+      } catch {
+        return fail(dom.contractStatus, "Could not read name() from that address.");
+      }
+      if (!key || registry[key])
+        return fail(
+          dom.contractStatus,
+          `Key "${key}" is empty or already used.`,
+        );
+    }
 
     const message = contractEditKey
       ? "Contract updated."
-      : 'Contract added. Press "Update list" to fetch its collections.';
+      : `Contract added as ${key}. Press "Update list" to fetch its collections.`;
     overlay.contracts[key] = config;
     if (commitChanges(dom.contractStatus, message, { contracts: true }))
       setContractFormOpen(false);
@@ -1865,11 +1792,7 @@ function initLibraryManager() {
 
   bindCopyButton(
     dom.manageCopyContracts,
-    () =>
-      ov.exportContractsJS(
-        exportableContracts(),
-        Object.keys(baseContractRegistry),
-      ),
+    () => ov.exportContractsJS(registry, Object.keys(baseContractRegistry)),
     dom.copyStatus,
     "Full contract registry copied. Replace contractRegistry in js/constants.js.",
     "Could not copy the contracts.",
@@ -2106,9 +2029,7 @@ async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
   const start = registry[contractName].startProjId || 0;
   const end = Number(await contractCall(n, "nextProjectId"));
   const ids = Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
-  const stateFn = is.v3.includes(contractName)
-    ? "projectStateData"
-    : "projectTokenInfo";
+  const stateFn = isV3(n) ? "projectStateData" : "projectTokenInfo";
 
   for (let offset = 0; offset < ids.length; offset += FETCH_BATCH_SIZE) {
     const batchIds = ids.slice(offset, offset + FETCH_BATCH_SIZE);
@@ -2140,4 +2061,17 @@ async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
 
     if (offset + FETCH_BATCH_SIZE < ids.length) await sleep(FETCH_BATCH_DELAY);
   }
+}
+
+try {
+  const result = await call(
+    "0x000000426D1a64712E3Da5d6D796b99665D47c28",
+    nameAbi,
+    "name",
+    []
+  );
+
+  console.log("Decoded name():", result);
+} catch (error) {
+  console.error("name() diagnostic failed:", error);
 }

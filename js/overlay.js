@@ -16,6 +16,7 @@ export function emptyOverlay() {
 }
 
 const PLATFORM_SEPARATOR = " | ";
+const CONTRACT_KEY = /^[A-Z]+(?:\[\d+\])?$/;
 
 export function parseListLine(line) {
   const value = asString(line).trim();
@@ -27,7 +28,7 @@ export function parseListLine(line) {
   const parts = body.split(" # ");
   if (parts.length < 3) return null;
 
-  const head = parts[0].trim().match(/^([A-Z]+)(\d+)$/);
+  const head = parts[0].trim().match(/^([A-Z]+(?:\[\d+\])?)(\d+)$/);
   const worksPart = parts[parts.length - 1];
   const platformAt = worksPart.lastIndexOf(PLATFORM_SEPARATOR);
   const worksText =
@@ -45,10 +46,7 @@ export function parseListLine(line) {
     labelParts.length > 1 ? labelParts[labelParts.length - 1].trim() : "";
   const collection =
     labelParts.length > 1
-      ? labelParts
-          .slice(0, -1)
-          .join(" / ")
-          .trim()
+      ? labelParts.slice(0, -1).join(" / ").trim()
       : labelParts[0].trim();
 
   return {
@@ -95,7 +93,11 @@ export function normalizeContractConfig(config) {
   if (!abi || !/^0x[a-fA-F0-9]{40}$/.test(address)) return null;
 
   let startProjId;
-  if (config.startProjId !== undefined && config.startProjId !== null && config.startProjId !== "") {
+  if (
+    config.startProjId !== undefined &&
+    config.startProjId !== null &&
+    config.startProjId !== ""
+  ) {
     startProjId = Number(config.startProjId);
     if (!Number.isInteger(startProjId) || startProjId < 0) return null;
   }
@@ -143,7 +145,7 @@ export function normalizeOverlay(data) {
   if (isObject(data.contracts)) {
     Object.entries(data.contracts).forEach(([key, config]) => {
       const normalized = normalizeContractConfig(config);
-      if (normalized && /^[A-Z]+$/.test(key)) overlay.contracts[key] = normalized;
+      if (normalized && CONTRACT_KEY.test(key)) overlay.contracts[key] = normalized;
     });
   }
 
@@ -288,100 +290,32 @@ function setAdditionHidden(overlay, line, hidden) {
 }
 
 const keyOfLine = (line) => parseListLine(line)?.contract ?? "";
+const stemOf = (key) => key.replace(/\[\d+\]$/, "");
+const numOf = (key) => Number(/\[(\d+)\]$/.exec(key)?.[1] ?? 0);
 
-const ROMAN_VALUES = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
-const ROMAN_PATTERN =
-  /^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
-
-function splitRoman(key) {
-  for (let i = 0; i <= key.length; i += 1) {
-    const suffix = key.slice(i);
-    if (!ROMAN_PATTERN.test(suffix)) continue;
-
-    let value = 0;
-    for (let j = 0; j < suffix.length; j += 1) {
-      const current = ROMAN_VALUES[suffix[j]];
-      value += current < (ROMAN_VALUES[suffix[j + 1]] ?? 0) ? -current : current;
-    }
-    return { prefix: key.slice(0, i), value };
-  }
-
-  return { prefix: key, value: 0 };
-}
-
-function makeKeyRank(baseKeys, keyOrder) {
-  const keyRanks = new Map(baseKeys.map((key, index) => [key, index]));
-  const romanKeys = baseKeys.map((key, index) => ({ index, ...splitRoman(key) }));
-
-  return (key) => {
-    if (keyRanks.has(key)) return keyRanks.get(key);
-
-    const { prefix, value } = splitRoman(key);
-    const family = romanKeys
-      .filter((member) => member.prefix === prefix)
-      .sort((a, b) => a.value - b.value);
-    const lower = family.filter((member) => member.value < value).pop();
-    const upper = family.find((member) => member.value > value);
-
-    if (lower && upper) {
-      const fraction = (value - lower.value) / (upper.value - lower.value);
-      return lower.index + fraction * (upper.index - lower.index);
-    }
-    if (lower) {
-      const gap = value - lower.value;
-      return lower.index + gap / (gap + 1);
-    }
-    if (upper) {
-      const gap = upper.value - value;
-      return upper.index - gap / (gap + 1);
-    }
-
-    const position = keyOrder.indexOf(key);
-    if (position !== -1) {
-      for (let i = position - 1; i >= 0; i -= 1) {
-        const rank = keyRanks.get(keyOrder[i]);
-        if (rank !== undefined) return rank + 0.5;
-      }
-      for (let i = position + 1; i < keyOrder.length; i += 1) {
-        const rank = keyRanks.get(keyOrder[i]);
-        if (rank !== undefined) return rank - 0.5;
-      }
-    }
-
-    const boundary = baseKeys.findIndex((baseKey) => key < baseKey);
-    return boundary === -1 ? baseKeys.length + 0.5 : boundary - 0.5;
+function makeKeyCompare(keyOrder) {
+  const rank = (key) => {
+    const i = keyOrder.findIndex((other) => stemOf(other) === stemOf(key));
+    return i === -1 ? Infinity : i;
   };
-}
-
-function compareKeys(rankOf) {
-  return (keyA, keyB) => {
-    const rankA = rankOf(keyA);
-    const rankB = rankOf(keyB);
-    if (rankA !== rankB) return rankA - rankB;
-    return keyA < keyB ? -1 : keyA > keyB ? 1 : 0;
-  };
+  return (a, b) =>
+    rank(a) - rank(b) || numOf(a) - numOf(b) || (a < b ? -1 : a > b ? 1 : 0);
 }
 
 function orderedListEntries(entries, keyOrder) {
-  const baseEntries = entries.filter((entry) => entry.kind !== "added");
-  const additions = entries.filter((entry) => entry.kind === "added");
-
-  const baseKeys = [];
-  baseEntries.forEach((entry) => {
-    const key = keyOfLine(entry.line);
-    if (!baseKeys.includes(key)) baseKeys.push(key);
-  });
-
-  const byKey = compareKeys(makeKeyRank(baseKeys, keyOrder));
+  const byKey = makeKeyCompare(keyOrder);
   const compare = (a, b) =>
     byKey(keyOfLine(a.line), keyOfLine(b.line)) ||
     parseListLine(a.line).projectId - parseListLine(b.line).projectId;
 
-  const ordered = [...baseEntries];
-  [...additions].sort(compare).forEach((addition) => {
-    const index = ordered.findIndex((entry) => compare(addition, entry) < 0);
-    ordered.splice(index === -1 ? ordered.length : index, 0, addition);
-  });
+  const ordered = entries.filter((entry) => entry.kind !== "added");
+  entries
+    .filter((entry) => entry.kind === "added")
+    .sort(compare)
+    .forEach((addition) => {
+      const index = ordered.findIndex((entry) => compare(addition, entry) < 0);
+      ordered.splice(index === -1 ? ordered.length : index, 0, addition);
+    });
 
   return ordered;
 }
@@ -406,22 +340,17 @@ export function exportListJS(baseList, overlay, keyOrder = []) {
 }
 
 export function exportContractsJS(contracts = {}, keyOrder = []) {
-  const entries = Object.entries(contracts);
-  if (entries.length === 0) return "export const contractRegistry = {};";
-
-  const byKey = compareKeys(makeKeyRank(keyOrder, keyOrder));
-  const ordered = [...entries].sort(([keyA], [keyB]) => byKey(keyA, keyB));
-
-  const body = ordered
-    .map(([key, config]) => {
-      const args = [`abi.${config.abi}`, JSON.stringify(config.address)];
-
-      if (config.platform || config.startProjId !== undefined) {
-        args.push(config.platform ? JSON.stringify(config.platform) : "undefined");
-        if (config.startProjId !== undefined) args.push(String(config.startProjId));
+  const byKey = makeKeyCompare(keyOrder);
+  const body = Object.entries(contracts)
+    .sort(([a], [b]) => byKey(a, b))
+    .map(([key, { abi, address, platform, startProjId }]) => {
+      const args = [JSON.stringify(abi), JSON.stringify(address)];
+      if (platform || startProjId !== undefined) {
+        args.push(platform ? JSON.stringify(platform) : "undefined");
+        if (startProjId !== undefined) args.push(String(startProjId));
       }
-
-      return `  ${key}: reg(${args.join(", ")}),`;
+      const name = /^[A-Z]+$/.test(key) ? key : JSON.stringify(key);
+      return `  ${name}: reg(${args.join(", ")}),`;
     })
     .join("\n");
 
