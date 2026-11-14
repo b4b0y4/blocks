@@ -5,8 +5,8 @@ import {
   abiProfiles,
   frozenContracts,
   isStudio,
-  nameAbi,
-  keyFromName,
+  symbolAbi,
+  keyFromSymbol,
 } from "./constants.js";
 import * as ov from "./overlay.js";
 
@@ -186,10 +186,12 @@ class ListManager {
 
     if (query === "curated") {
       this.filteredList = this.originalList.filter((line) => {
-        const idMatch = line.match(/^AB(?:II|III|C|CFLEX)?(\d+)/);
+        const idMatch = line.match(/^BLOCKS(?:\[[2-5]\])?(\d+)/);
         return (
           idMatch &&
-          (curated.includes(parseInt(idMatch[1])) || line.startsWith("ABC"))
+          (curated.includes(parseInt(idMatch[1])) ||
+            line.startsWith("BLOCKS[4]") ||
+            line.startsWith("BLOCKS[5]"))
         );
       });
     } else {
@@ -365,7 +367,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
             fetchCIDs(projId, extDepCount, contract),
             fetchGateway(contract),
           ]);
-          if (["BMFLEX", "NUMBER"].includes(nameMap[contract])) {
+          if (["MOMENTFLEX", "NNUMBER"].includes(nameMap[contract])) {
             ipfs = "https://ipfs.io/ipfs";
           }
         }
@@ -407,7 +409,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
 const fetchHash = (tokenId, contract) =>
   contractCall(
     contract,
-    nameMap[contract] == "AB" ? "showTokenHashes" : "tokenIdToHash",
+    nameMap[contract] == "BLOCKS" ? "showTokenHashes" : "tokenIdToHash",
     tokenId,
   );
 
@@ -558,8 +560,8 @@ function pushItemToLocalStorage({
   const tokenIdStr = tokenId.toString();
 
   if (
-    (contractName === "BMFLEX" && !tokenIdStr.startsWith("16")) ||
-    (contractName === "HODL" && tokenIdStr.startsWith("13"))
+    (contractName === "MOMENTFLEX" && !tokenIdStr.startsWith("16")) ||
+    (contractName === "HODLERS" && tokenIdStr.startsWith("13"))
   ) {
     script = replaceIPFSGateways(script);
   }
@@ -572,7 +574,7 @@ function pushItemToLocalStorage({
   if (extDep.length) {
     tokenData.externalAssetDependencies = extDep.map((d) => {
       let cid = d.cid;
-      if (contractName === "BMFLEX" && tokenIdStr.startsWith("16")) {
+      if (contractName === "MOMENTFLEX" && tokenIdStr.startsWith("16")) {
         cid = replaceIPFSGateways(cid);
       }
       const type = d.isOnchain
@@ -596,7 +598,7 @@ function pushItemToLocalStorage({
     tokenData.preferredIPFSGateway = ipfs || "https://ipfs.io/ipfs/";
     tokenData.preferredArweaveGateway = arweave || "https://arweave.net/";
     tokenData.hash = hash;
-  } else if (contractName === "AB") {
+  } else if (contractName === "BLOCKS") {
     tokenData.hashes = Array.isArray(hash) ? hash : [hash];
   } else {
     tokenData.hash = hash;
@@ -623,7 +625,7 @@ function getPlatform(contract, projId) {
   const inline = platformByProject.get(contractName + projId);
   if (inline) return inline;
 
-  if (["AB", "ABII", "ABIII"].includes(contractName)) {
+  if (["BLOCKS", "BLOCKS[2]", "BLOCKS[3]"].includes(contractName)) {
     return curated.includes(projId)
       ? "Art Blocks Curated"
       : playground.includes(projId)
@@ -679,7 +681,7 @@ function updateUI({
 
   const showExt =
     (extDep.length > 0 && showExtDep(extDep[0])) ||
-    nameMap[contract] === "BMFLEX";
+    nameMap[contract] === "MOMENTFLEX";
   const extInfo = showExt ? getExtDepType(extDep[0], contract) : "";
   const dependencyInfo =
     libInfo && extInfo ? `${libInfo} <br> ${extInfo}` : libInfo || extInfo;
@@ -788,7 +790,7 @@ function showExtDep(dependency) {
 }
 
 function getExtDepType(dependency, contract) {
-  if (nameMap[contract] === "BMFLEX") return "ipfs";
+  if (nameMap[contract] === "MOMENTFLEX") return "ipfs";
   const isIPFS =
     dependency.dependency_type === "IPFS" ||
     (dependency.cid &&
@@ -1779,9 +1781,16 @@ function initLibraryManager() {
     if (!key) {
       if (!rpcUrl) return fail(dom.contractStatus, "Set an RPC URL first.");
       try {
-        key = keyFromName(await call(config.address, nameAbi, "name", []));
-      } catch {
-        return fail(dom.contractStatus, "Could not read name() from that address.");
+        key = keyFromSymbol(
+          await call(config.address, symbolAbi, "symbol", []),
+          (k) => !!registry[k],
+        );
+      } catch (error) {
+        console.error("symbol() lookup failed:", error);
+        return fail(
+          dom.contractStatus,
+          `Could not read symbol(): ${error.message}`,
+        );
       }
       if (!key || registry[key])
         return fail(
