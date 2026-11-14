@@ -13,6 +13,23 @@ import * as ov from "./overlay.js";
 const $ = (selector) => document.querySelector(selector);
 const byId = (...names) =>
   Object.fromEntries(names.map((name) => [name, document.getElementById(name)]));
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const load = (key) => JSON.parse(localStorage.getItem(key));
+const save = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+const shortId = (tokenId) => tokenId % 1000000;
+const makeTokenId = (projId, n) => projId * 1000000 + n;
+const shortAddr = (address) => `${address.slice(0, 6)}...${address.slice(-4)}`;
+const escapeHTML = (value) =>
+  value.replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+  );
+
+const FETCH_BATCH_SIZE = 10;
+const FETCH_BATCH_DELAY = 2000;
+const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
+const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
 const dom = {
   root: document.documentElement,
@@ -37,67 +54,67 @@ const dom = {
     "settings", "frame", "info", "explore", "loop", "repeatIcon", "dropMenu",
     "favLoop", "curatedLoop", "selectedLoop", "oobLoop", "stopLoop", "loopInput",
     "randomButton", "searchIcon", "favIcon", "favSave", "favOpen",
-    "manageListRows", "collectionForm", "collectionTarget",
-    "collectionName", "collectionArtist", "collectionPlatform",
-    "collectionWorks", "collectionCancel",
+    "manageListRows", "collectionForm", "collectionTarget", "collectionName",
+    "collectionArtist", "collectionPlatform", "collectionWorks", "collectionCancel",
     "collectionStatus", "manageCopyList", "manageReset", "manageUpdate",
-    "copyStatus",
-    "updateStatus", "manageUpdateResults", "manageContractRows", "contractToggle",
-    "contractSection", "contractSectionToggle", "contractSectionLabel",
-    "contractSectionIcon", "contractForm", "contractAbi", "contractAddress",
-    "contractPlatform", "contractStart", "contractCancel",
+    "copyStatus", "updateStatus", "manageUpdateResults", "manageContractRows",
+    "contractToggle", "contractSection", "contractSectionToggle",
+    "contractSectionLabel", "contractSectionIcon", "contractForm", "contractAbi",
+    "contractAddress", "contractPlatform", "contractStart", "contractCancel",
     "contractStatus", "manageCopyContracts",
   ),
 };
 
 const panels = [
-  dom.instruction,
-  dom.panel,
-  dom.listPanel,
-  dom.favPanel,
-  dom.favMenu,
-  dom.dropMenu,
-  dom.managePanel,
+  dom.instruction, dom.panel, dom.listPanel, dom.favPanel,
+  dom.favMenu, dom.dropMenu, dom.managePanel,
 ];
-
-const loopTypes = ["all", "fav", "curated", "selected", "oob"];
-
-const load = (key) => JSON.parse(localStorage.getItem(key));
-const save = (key, value) => localStorage.setItem(key, JSON.stringify(value));
 
 const rpcUrl = localStorage.getItem("rpcUrl");
 const call = makeCall(rpcUrl);
-
 dom.rpcUrlInput.placeholder = rpcUrl || "Enter RPC URL";
 
-let overlay = ov.loadOverlay();
 const baseContractRegistry = contractRegistry;
+const nameMap = {};
+const indexMap = {};
+const platformByProject = new Map();
+
+let overlay = ov.loadOverlay();
 let registry = {};
 let PMPV0_ADDR = "";
 let activeList = [];
-const platformByProject = new Map();
+let contractData = load("contractData");
+let favorite = load("favorite") || {};
+let loopState = load("loopState") || {
+  isLooping: "false",
+  interval: 60000,
+  action: null,
+  intervalId: null,
+};
+
+let listEdit = null;
+let contractEditKey = null;
+let listManageEntries = [];
+let contractManageEntries = [];
+let updateResults = [];
+let updateRunning = false;
+let contractSectionOpen = false;
+
+const saveLoopState = () => save("loopState", loopState);
 
 function rebuildPlatformIndex() {
   platformByProject.clear();
-
   activeList.forEach((line) => {
     const parsed = ov.parseListLine(line);
     if (parsed && !parsed.hidden && parsed.platform)
-      platformByProject.set(
-        `${parsed.contract}${parsed.projectId}`,
-        parsed.platform,
-      );
+      platformByProject.set(`${parsed.contract}${parsed.projectId}`, parsed.platform);
   });
 }
 
 if (ov.pruneReconciledAdditions(overlay, list)) ov.saveOverlay(overlay);
 
-const nameMap = {};
-const indexMap = {};
-
 function rebuildRuntimeContracts() {
   registry = { ...baseContractRegistry };
-
   let overlayChanged = false;
 
   Object.entries(overlay.contracts).forEach(([key, config]) => {
@@ -115,23 +132,20 @@ function rebuildRuntimeContracts() {
     ) {
       delete overlay.contracts[key];
       overlayChanged = true;
-      return;
-    }
-
-    if (abiProfiles[config.abi]) {
+    } else if (abiProfiles[config.abi]) {
       registry[key] = config;
     }
   });
 
-  Object.keys(nameMap).forEach((key) => delete nameMap[key]);
-  Object.keys(indexMap).forEach((key) => delete indexMap[key]);
+  [nameMap, indexMap].forEach((map) =>
+    Object.keys(map).forEach((key) => delete map[key]),
+  );
   Object.keys(registry).forEach((key, index) => {
     nameMap[index] = key;
     indexMap[key] = index;
   });
 
   PMPV0_ADDR = registry.PMPV0 ? registry.PMPV0.address.toLowerCase() : "";
-
   return overlayChanged;
 }
 
@@ -148,28 +162,24 @@ const contractCall = (contract, fnName, ...args) => {
   return call(address, abiProfiles[abi], fnName, args);
 };
 
-let contractData = load("contractData");
-let favorite = load("favorite") || {};
-let loopState = load("loopState") || {
-  isLooping: "false",
-  interval: 60000,
-  action: null,
-  intervalId: null,
-};
-
-const saveLoopState = () => save("loopState", loopState);
-const makeTokenId = (projId, n) =>
-  projId === 0 ? n : Number((projId * 1000000 + n).toString().padStart(6, "0"));
 const parseQuery = (query) => {
   const [searchQuery = "", numberQuery = ""] = query.split("#").map((s) => s.trim());
   return { searchQuery, numberQuery };
 };
+
 const isPmpDep = (d) =>
   d?.dependency_type === "ONCHAIN" &&
   (d.bytecode_address?.toLowerCase() === PMPV0_ADDR ||
     (typeof d.data === "string" && d.data.trim().startsWith("#web3call")));
 
 const findPmpDep = (deps = []) => deps.find(isPmpDep);
+
+function parseListLine(line) {
+  const parsed = ov.parseListLine(line);
+  if (!parsed) return { collection: "", artist: "", workCount: "" };
+  const { collection, artist, works } = parsed;
+  return { collection, artist, workCount: `${works} ${works === 1 ? "Work" : "Works"}` };
+}
 
 class ListManager {
   constructor(listData) {
@@ -195,27 +205,20 @@ class ListManager {
         );
       });
     } else {
-      const exactMatches = [];
-      const partialMatches = [];
+      const exact = [];
+      const partial = [];
 
       this.originalList.forEach((line) => {
-        if (line.split(" # ").length > 1) {
-          const { collection, artist } = parseListLine(line);
-          const collectionLower = collection.trim().toLowerCase();
-          const artistLower = artist.trim().toLowerCase();
+        if (line.split(" # ").length < 2) return;
+        const { collection, artist } = parseListLine(line);
+        const name = collection.trim().toLowerCase();
+        const artistName = artist.trim().toLowerCase();
 
-          if (collectionLower === query) {
-            exactMatches.push(line);
-          } else if (
-            collectionLower.includes(query) ||
-            (artistLower && artistLower.includes(query))
-          ) {
-            partialMatches.push(line);
-          }
-        }
+        if (name === query) exact.push(line);
+        else if (name.includes(query) || (artistName && artistName.includes(query)))
+          partial.push(line);
       });
-      this.filteredList =
-        exactMatches.length > 0 ? exactMatches : partialMatches;
+      this.filteredList = exact.length > 0 ? exact : partial;
     }
 
     this.selectedIndex = -1;
@@ -223,15 +226,11 @@ class ListManager {
   }
 
   navigate(direction) {
-    const maxIndex = this.filteredList.length - 1;
+    const max = this.filteredList.length - 1;
     this.selectedIndex =
       direction === "up"
-        ? this.selectedIndex <= 0
-          ? maxIndex
-          : this.selectedIndex - 1
-        : this.selectedIndex >= maxIndex
-          ? 0
-          : this.selectedIndex + 1;
+        ? this.selectedIndex <= 0 ? max : this.selectedIndex - 1
+        : this.selectedIndex >= max ? 0 : this.selectedIndex + 1;
     return this.selectedIndex;
   }
 
@@ -248,18 +247,6 @@ class ListManager {
 
 const listManager = new ListManager(activeList);
 
-function parseListLine(line) {
-  const parsed = ov.parseListLine(line);
-  if (!parsed) return { collection: "", artist: "", workCount: "" };
-
-  const { collection, artist, works } = parsed;
-  return {
-    collection,
-    artist,
-    workCount: `${works} ${works === 1 ? "Work" : "Works"}`,
-  };
-}
-
 function listItemHTML(line, index, numberQuery = "", selected = false) {
   const { collection, artist, workCount } = parseListLine(line);
   const displayName = numberQuery ? `${collection} #${numberQuery}` : collection;
@@ -270,139 +257,28 @@ function listItemHTML(line, index, numberQuery = "", selected = false) {
 }
 
 function displayList(items, numberQuery = "") {
-  const listItems = items
-    .map((line, index) =>
-      listItemHTML(line, index, numberQuery, index === listManager.selectedIndex),
-    )
-    .join("");
-
-  dom.listPanel.innerHTML = `<div>${listItems}</div>`;
+  dom.listPanel.innerHTML = `<div>${items
+    .map((line, i) => listItemHTML(line, i, numberQuery, i === listManager.selectedIndex))
+    .join("")}</div>`;
 }
 
 function handleKeyboardNavigation(event) {
   if (event.key === "ArrowDown" || event.key === "ArrowUp") {
     event.preventDefault();
-    const newIndex = listManager.navigate(
-      event.key === "ArrowUp" ? "up" : "down",
-    );
-
+    const newIndex = listManager.navigate(event.key === "ArrowUp" ? "up" : "down");
     const { numberQuery } = parseQuery(dom.search.value.trim());
     displayList(listManager.filteredList, numberQuery);
-
     dom.listPanel
       .querySelector(`[data-index="${newIndex}"]`)
       ?.scrollIntoView({ block: "nearest" });
   } else if (event.key === "Enter") {
     const selectedItem = listManager.getSelected();
     const query = dom.search.value.trim();
-    if (selectedItem) {
-      getToken(selectedItem, query);
-    } else if (query === "curated") {
-      getRandom(listManager.filteredList);
-    } else if (query === "") {
-      getRandom(listManager.originalList);
-    } else if (listManager.filteredList.length > 0) {
+    if (selectedItem) getToken(selectedItem, query);
+    else if (query === "curated") getRandom(listManager.filteredList);
+    else if (query === "") getRandom(listManager.originalList);
+    else if (listManager.filteredList.length > 0)
       getToken(listManager.filteredList[0], query);
-    }
-  }
-}
-
-async function grabData(tokenId, contract, updateOnly = false) {
-  try {
-    toggleSpin();
-    clearPanels();
-    console.log("Contract:", contract, "Token Id:", tokenId);
-
-    if (updateOnly) {
-      const [hash, { owner, ensName }] = await Promise.all([
-        fetchHash(tokenId, contract),
-        fetchOwner(tokenId, contract),
-      ]);
-      const data = load("contractData");
-      Object.assign(data, { tokenId, contract, hash, owner, ensName });
-
-      const pmpDep = findPmpDep(data.extDep);
-      if (pmpDep) {
-        data.tokenParams = await fetchTokenParams(
-          pmpDep.bytecode_address,
-          contract,
-          tokenId,
-        );
-      }
-
-      save("contractData", data);
-      update(data);
-    } else {
-      clearDataStorage();
-
-      const projId = Math.floor(tokenId / 1000000);
-      const [
-        hash,
-        projectInfo,
-        detail,
-        { owner, ensName },
-        { edition, minted },
-      ] = await Promise.all([
-        fetchHash(tokenId, contract),
-        fetchProjectInfo(projId, contract),
-        contractCall(contract, "projectDetails", projId),
-        fetchOwner(tokenId, contract),
-        fetchEditionInfo(projId, contract),
-      ]);
-
-      const [script, extLib] = await Promise.all([
-        constructScript(projId, projectInfo, contract),
-        extractLibraryName(projectInfo),
-      ]);
-
-      let extDep = [];
-      let ipfs = null;
-      let arweave = null;
-      let tokenParams = null;
-
-      if (isFlex(contract)) {
-        const extDepCount = await fetchExtDepCount(projId, contract);
-        if (extDepCount) {
-          [extDep, { ipfs, arweave }] = await Promise.all([
-            fetchCIDs(projId, extDepCount, contract),
-            fetchGateway(contract),
-          ]);
-          if (["MOMENTFLEX", "NNUMBER"].includes(nameMap[contract])) {
-            ipfs = "https://ipfs.io/ipfs";
-          }
-        }
-
-        const pmpDep = findPmpDep(extDep);
-        if (pmpDep) {
-          tokenParams = await fetchTokenParams(
-            pmpDep.bytecode_address,
-            contract,
-            tokenId,
-          );
-        }
-      }
-
-      update({
-        tokenId,
-        contract,
-        projId,
-        hash,
-        script,
-        detail,
-        owner,
-        ensName,
-        extLib,
-        edition,
-        minted,
-        extDep,
-        ipfs,
-        arweave,
-        tokenParams,
-      });
-    }
-  } catch (error) {
-    console.error(`grabData (${updateOnly ? "update" : "full"})`, error);
-    toggleSpin(false);
   }
 }
 
@@ -435,7 +311,6 @@ async function constructScript(projId, projectInfo, contract) {
     fullScript += batch.join("");
     if (batchEnd < scriptCount) await sleep(300);
   }
-
   return fullScript;
 }
 
@@ -451,42 +326,36 @@ function extractLibraryName([first]) {
 }
 
 async function fetchEditionInfo(projId, contract) {
-  const invo = await contractCall(
+  const info = await contractCall(
     contract,
     isV3(contract) ? "projectStateData" : "projectTokenInfo",
     projId,
   );
-  return { edition: Number(invo.maxInvocations), minted: Number(invo.invocations) };
+  return { edition: Number(info.maxInvocations), minted: Number(info.invocations) };
 }
 
 const fetchExtDepCount = async (projId, contract) =>
-  (await contractCall(contract, "projectExternalAssetDependencyCount", projId)) ||
-  null;
+  (await contractCall(contract, "projectExternalAssetDependencyCount", projId)) || null;
 
-const fetchDependencies = (projId, extDepCount, contract) =>
-  Promise.all(
+async function fetchCIDs(projId, extDepCount, contract) {
+  const tuples = await Promise.all(
     Array.from({ length: Number(extDepCount) }, (_, i) =>
       contractCall(contract, "projectExternalAssetDependencyByIndex", projId, i),
     ),
   );
 
-const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
-
-async function fetchCIDs(projId, extDepCount, contract) {
-  const cidTuples = await fetchDependencies(projId, extDepCount, contract);
-
   if (!isV3(contract))
-    return cidTuples.map(([cid]) => ({
+    return tuples.map(([cid]) => ({
       cid,
       dependency_type: "IPFS",
       data: null,
       isOnchain: false,
     }));
 
-  return cidTuples.map((tuple) => {
-    const dependencyType = Number(tuple.dependencyType || 0);
+  return tuples.map((tuple) => {
+    const type = Number(tuple.dependencyType || 0);
 
-    if (dependencyType === 2) {
+    if (type === 2) {
       let data = tuple.data || "";
       try {
         if (data.startsWith("{")) data = JSON.parse(data);
@@ -504,7 +373,7 @@ async function fetchCIDs(projId, extDepCount, contract) {
 
     return {
       cid: tuple.cid,
-      dependency_type: DEP_TYPES[dependencyType] || "IPFS",
+      dependency_type: DEP_TYPES[type] || "IPFS",
       data: null,
       isOnchain: false,
     };
@@ -520,15 +389,85 @@ const fetchGateway = async (contract) => {
 };
 
 async function fetchTokenParams(pmpAddress, contract, tokenId) {
-  const raw = await call(
-    pmpAddress,
-    abiProfiles.PMPV0,
-    "getTokenParams",
-    [contractAt(contract).address, tokenId],
-  ).catch(() => []);
+  const raw = await call(pmpAddress, abiProfiles.PMPV0, "getTokenParams", [
+    contractAt(contract).address,
+    tokenId,
+  ]).catch(() => []);
   return Object.fromEntries(
     raw.map(([k, v]) => [k, typeof v === "bigint" ? v.toString() : v]),
   );
+}
+
+async function loadTokenParams(extDep, contract, tokenId) {
+  const pmpDep = findPmpDep(extDep);
+  return pmpDep ? fetchTokenParams(pmpDep.bytecode_address, contract, tokenId) : null;
+}
+
+async function grabData(tokenId, contract, updateOnly = false) {
+  try {
+    toggleSpin();
+    clearPanels();
+    console.log("Contract:", contract, "Token Id:", tokenId);
+
+    if (updateOnly) {
+      const [hash, { owner, ensName }] = await Promise.all([
+        fetchHash(tokenId, contract),
+        fetchOwner(tokenId, contract),
+      ]);
+      const data = load("contractData");
+      Object.assign(data, { tokenId, contract, hash, owner, ensName });
+
+      const tokenParams = await loadTokenParams(data.extDep, contract, tokenId);
+      if (tokenParams) data.tokenParams = tokenParams;
+
+      save("contractData", data);
+      update(data);
+      return;
+    }
+
+    clearDataStorage();
+
+    const projId = Math.floor(tokenId / 1000000);
+    const [hash, projectInfo, detail, { owner, ensName }, { edition, minted }] =
+      await Promise.all([
+        fetchHash(tokenId, contract),
+        fetchProjectInfo(projId, contract),
+        contractCall(contract, "projectDetails", projId),
+        fetchOwner(tokenId, contract),
+        fetchEditionInfo(projId, contract),
+      ]);
+
+    const [script, extLib] = await Promise.all([
+      constructScript(projId, projectInfo, contract),
+      extractLibraryName(projectInfo),
+    ]);
+
+    let extDep = [];
+    let ipfs = null;
+    let arweave = null;
+    let tokenParams = null;
+
+    if (isFlex(contract)) {
+      const extDepCount = await fetchExtDepCount(projId, contract);
+      if (extDepCount) {
+        [extDep, { ipfs, arweave }] = await Promise.all([
+          fetchCIDs(projId, extDepCount, contract),
+          fetchGateway(contract),
+        ]);
+        if (["MOMENTFLEX", "NNUMBER"].includes(nameMap[contract]))
+          ipfs = "https://ipfs.io/ipfs";
+      }
+      tokenParams = await loadTokenParams(extDep, contract, tokenId);
+    }
+
+    update({
+      tokenId, contract, projId, hash, script, detail, owner, ensName, extLib,
+      edition, minted, extDep, ipfs, arweave, tokenParams,
+    });
+  } catch (error) {
+    console.error(`grabData (${updateOnly ? "update" : "full"})`, error);
+    toggleSpin(false);
+  }
 }
 
 function update(data) {
@@ -545,16 +484,14 @@ function update(data) {
   toggleSpin(false);
 }
 
+const replaceIPFSGateways = (content) =>
+  content.replace(
+    /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud)/g,
+    "https://ipfs.io",
+  );
+
 function pushItemToLocalStorage({
-  contract,
-  tokenId,
-  hash,
-  script,
-  extLib,
-  extDep = [],
-  ipfs,
-  arweave,
-  tokenParams,
+  contract, tokenId, hash, script, extLib, extDep = [], ipfs, arweave, tokenParams,
 }) {
   const contractName = nameMap[contract];
   const tokenIdStr = tokenId.toString();
@@ -574,9 +511,9 @@ function pushItemToLocalStorage({
   if (extDep.length) {
     tokenData.externalAssetDependencies = extDep.map((d) => {
       let cid = d.cid;
-      if (contractName === "MOMENTFLEX" && tokenIdStr.startsWith("16")) {
+      if (contractName === "MOMENTFLEX" && tokenIdStr.startsWith("16"))
         cid = replaceIPFSGateways(cid);
-      }
+
       const type = d.isOnchain
         ? d.dependency_type
         : /^(Qm|baf)/.test(cid) || cid.includes("/ipfs/")
@@ -585,8 +522,7 @@ function pushItemToLocalStorage({
             ? "ARWEAVE"
             : "ART_BLOCKS_DEPENDENCY_REGISTRY";
 
-      const hasParams =
-        isPmpDep(d) && tokenParams && Object.keys(tokenParams).length > 0;
+      const hasParams = isPmpDep(d) && tokenParams && Object.keys(tokenParams).length > 0;
 
       return {
         cid,
@@ -612,15 +548,8 @@ function pushItemToLocalStorage({
   });
 }
 
-const replaceIPFSGateways = (scriptContent) =>
-  scriptContent.replace(
-    /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud)/g,
-    "https://ipfs.io",
-  );
-
 function getPlatform(contract, projId) {
   const contractName = nameMap[contract];
-  const entry = registry[contractName];
 
   const inline = platformByProject.get(contractName + projId);
   if (inline) return inline;
@@ -634,44 +563,74 @@ function getPlatform(contract, projId) {
           ? "Art Blocks Factory"
           : "Art Blocks Presents";
   }
+  const entry = registry[contractName];
   if (entry?.platform) return entry.platform;
-  if (isStudio(contractName)) return "Art Blocks Studio";
-
-  return "";
+  return isStudio(contractName) ? "Art Blocks Studio" : "";
 }
 
-function updateUI({
-  contract,
-  owner,
-  ensName,
-  extLib,
-  detail,
-  tokenId,
-  platform,
-  edition,
-  minted,
-  extDep,
-}) {
-  const infoText = `${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`;
+function getLibVersion(extLib) {
+  return (
+    Object.keys(libs).find((key) => key.startsWith(extLib.replace(/js$/, "") + "@")) ||
+    extLib
+  );
+}
+
+const showExtDep = (dep) =>
+  dep && !["ONCHAIN", "ART_BLOCKS_DEPENDENCY_REGISTRY"].includes(dep.dependency_type);
+
+function getExtDepType(dep, contract) {
+  if (nameMap[contract] === "MOMENTFLEX") return "ipfs";
+  const isIPFS =
+    dep.dependency_type === "IPFS" ||
+    (dep.cid && (dep.cid.startsWith("Qm") || dep.cid.startsWith("baf")));
+  return isIPFS ? "ipfs" : "arweave";
+}
+
+function editionTxt(edition, minted) {
+  return edition - minted > 0
+    ? `${minted} / ${edition} Minted`
+    : `${edition} Work${edition > 1 ? "s" : ""}`;
+}
+
+const createSection = (title, content) =>
+  content
+    ? `<div class="section">
+         <p class="more">
+           ${title} <br>
+           ${content}
+         </p>
+       </div>`
+    : "";
+
+function extractDomain(url) {
+  const match = url.match(/https?:\/\/(?:www\.)?([^\/]+)(\/.*)?/);
+  return match ? `${match[1]}${match[2] || ""}` : url;
+}
+
+function renderInfoTitle(text) {
   dom.info.innerHTML = "";
   dom.info.classList.remove("scrolling");
 
-  const spanElement = document.createElement("span");
-  spanElement.textContent = infoText;
-  dom.info.appendChild(spanElement);
+  const span = document.createElement("span");
+  span.textContent = text;
+  dom.info.appendChild(span);
 
-  if (spanElement.offsetWidth > dom.info.offsetWidth) {
-    const scrollDuration = spanElement.offsetWidth / 30;
-    dom.info.style.setProperty("--scroll-duration", `${scrollDuration}s`);
-    const duplicateSpan = spanElement.cloneNode(true);
-    duplicateSpan.setAttribute("aria-hidden", "true");
-    dom.info.appendChild(duplicateSpan);
+  if (span.offsetWidth > dom.info.offsetWidth) {
+    dom.info.style.setProperty("--scroll-duration", `${span.offsetWidth / 30}s`);
+    const duplicate = span.cloneNode(true);
+    duplicate.setAttribute("aria-hidden", "true");
+    dom.info.appendChild(duplicate);
     dom.info.classList.add("scrolling");
   }
+}
+
+function updateUI({
+  contract, owner, ensName, extLib, detail, tokenId, platform, edition, minted, extDep,
+}) {
+  renderInfoTitle(`${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`);
 
   const showLib =
-    extLib &&
-    !["js", "svg", "custom"].some((prefix) => extLib.startsWith(prefix));
+    extLib && !["js", "svg", "custom"].some((prefix) => extLib.startsWith(prefix));
   const libInfo = showLib
     ? getLibVersion(extLib) +
       (extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10
@@ -680,8 +639,7 @@ function updateUI({
     : "";
 
   const showExt =
-    (extDep.length > 0 && showExtDep(extDep[0])) ||
-    nameMap[contract] === "MOMENTFLEX";
+    (extDep.length > 0 && showExtDep(extDep[0])) || nameMap[contract] === "MOMENTFLEX";
   const extInfo = showExt ? getExtDepType(extDep[0], contract) : "";
   const dependencyInfo =
     libInfo && extInfo ? `${libInfo} <br> ${extInfo}` : libInfo || extInfo;
@@ -740,62 +698,6 @@ function updateUI({
        </div>
      </div>
    `;
-}
-
-function shortId(tokenId) {
-  return tokenId < 1000000
-    ? tokenId
-    : parseInt(tokenId.toString().slice(-6).replace(/^0+/, "")) || 0;
-}
-
-const shortAddr = (address) => `${address.slice(0, 6)}...${address.slice(-4)}`;
-
-function editionTxt(edition, minted) {
-  return edition - minted > 0
-    ? `${minted} / ${edition} Minted`
-    : `${edition} Work${edition > 1 ? "s" : ""}`;
-}
-
-function createSection(title, content) {
-  return content
-    ? `<div class="section">
-         <p class="more">
-           ${title} <br>
-           ${content}
-         </p>
-       </div>`
-    : "";
-}
-
-function extractDomain(url) {
-  const match = url.match(/https?:\/\/(?:www\.)?([^\/]+)(\/.*)?/);
-  return match ? `${match[1]}${match[2] || ""}` : url;
-}
-
-function getLibVersion(extLib) {
-  return (
-    Object.keys(libs).find((key) =>
-      key.startsWith(extLib.replace(/js$/, "") + "@"),
-    ) || extLib
-  );
-}
-
-function showExtDep(dependency) {
-  return (
-    dependency &&
-    !["ONCHAIN", "ART_BLOCKS_DEPENDENCY_REGISTRY"].includes(
-      dependency.dependency_type,
-    )
-  );
-}
-
-function getExtDepType(dependency, contract) {
-  if (nameMap[contract] === "MOMENTFLEX") return "ipfs";
-  const isIPFS =
-    dependency.dependency_type === "IPFS" ||
-    (dependency.cid &&
-      (dependency.cid.startsWith("Qm") || dependency.cid.startsWith("baf")));
-  return isIPFS ? "ipfs" : "arweave";
 }
 
 function injectFrame() {
@@ -877,36 +779,25 @@ function getRandom(source) {
   }
 }
 
-function generateRandomHashAndToken() {
+function exploreAlgo() {
+  if (contractData.detail[0] === "Unigrids") return;
+
   const hash = Array.from({ length: 64 }, () =>
     Math.floor(Math.random() * 16).toString(16),
   ).join("");
   const base = contractData.projId * 1000000;
   const minToken = base + contractData.minted;
-  const maxToken = base + 999999;
-  const tokenId = Math.floor(
-    Math.random() * (maxToken - minToken + 1) + minToken,
-  );
-  return { hash, tokenId };
-}
+  const tokenId = Math.floor(Math.random() * (base + 999999 - minToken + 1) + minToken);
 
-function exploreAlgo() {
-  if (contractData.detail[0] === "Unigrids") return;
-  Object.assign(contractData, generateRandomHashAndToken(), {
-    owner: "",
-    ensName: "",
-  });
+  Object.assign(contractData, { hash, tokenId, owner: "", ensName: "" });
   update(contractData);
 }
 
 function stepTokenId(dir) {
   const max = contractData.minted - 1;
-  const numericId = contractData.tokenId % 1000000;
-  const next =
-    dir > 0
-      ? numericId === max ? 0 : numericId + 1
-      : numericId === 0 ? max : numericId - 1;
-  contractData.tokenId = contractData.projId * 1000000 + next;
+  const n = shortId(contractData.tokenId);
+  const next = dir > 0 ? (n === max ? 0 : n + 1) : n === 0 ? max : n - 1;
+  contractData.tokenId = makeTokenId(contractData.projId, next);
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
@@ -918,10 +809,10 @@ const loopActions = {
     getRandom(listManager.filteredList);
   },
   selectedLoop: () => {
-    const projectLine = listManager.originalList.find(
-      (line) => parseListLine(line).collection.trim() === contractData.detail[0],
+    const line = listManager.originalList.find(
+      (l) => parseListLine(l).collection.trim() === contractData.detail[0],
     );
-    getToken(projectLine, "");
+    getToken(line, "");
   },
   oobLoop: exploreAlgo,
 };
@@ -933,7 +824,6 @@ function performAction(action) {
 
 function loopRandom(interval, action) {
   if (loopState.intervalId) clearInterval(loopState.intervalId);
-
   if (loopState.isLooping !== "true") performAction(action);
 
   const intervalId = setInterval(() => performAction(action), interval);
@@ -978,6 +868,12 @@ function handleLoop(action) {
   updateLoopButton();
 }
 
+const updateLoopButton = () => {
+  const looping = loopState.isLooping === "true";
+  $(".fa-repeat").style.display = looping ? "none" : "inline-block";
+  $(".fa-circle-stop").style.display = looping ? "inline-block" : "none";
+};
+
 function saveOutput() {
   const content = dom.frame.contentDocument.documentElement.outerHTML;
   const id = shortId(contractData.tokenId);
@@ -989,10 +885,7 @@ function saveOutput() {
   link.click();
   URL.revokeObjectURL(url);
   link.remove();
-  pushFavoriteToStorage(id);
-}
 
-function pushFavoriteToStorage(id) {
   favorite[`
     <div class="fav-item">
       ${contractData.detail[0]} #${id}
@@ -1013,20 +906,19 @@ function displayFavoriteList() {
   dom.favPanel.innerHTML = "";
 
   Object.keys(favorite).forEach((key) => {
-    const keyElement = document.createElement("p");
-    keyElement.style.cssText =
-      "display:flex; justify-content:space-between; align-items:center";
+    const row = document.createElement("p");
+    row.style.cssText = "display:flex; justify-content:space-between; align-items:center";
 
-    const delSpan = document.createElement("span");
-    delSpan.className = "delete-btn";
-    delSpan.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
-    delSpan.addEventListener("click", (event) => {
+    const del = document.createElement("span");
+    del.className = "delete-btn";
+    del.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+    del.addEventListener("click", (event) => {
       event.stopPropagation();
       deleteFavoriteFromStorage(key);
       displayFavoriteList();
     });
 
-    keyElement.addEventListener("click", () => {
+    row.addEventListener("click", () => {
       toggleSpin();
       clearDataStorage();
       contractData = favorite[key];
@@ -1034,40 +926,32 @@ function displayFavoriteList() {
       clearPanels();
     });
 
-    keyElement.insertAdjacentHTML("afterbegin", key);
-    keyElement.appendChild(delSpan);
-    dom.favPanel.appendChild(keyElement);
+    row.insertAdjacentHTML("afterbegin", key);
+    row.appendChild(del);
+    dom.favPanel.appendChild(row);
   });
 }
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const clearDataStorage = () =>
   ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
 
 const clearPanels = () =>
-  [dom.overlay, dom.infobar, ...panels].forEach((el) =>
-    el.classList.remove("active"),
-  );
+  [dom.overlay, dom.infobar, ...panels].forEach((el) => el.classList.remove("active"));
 
 const togglePanel = (panelElement) => {
   panels.forEach((p) =>
     p !== panelElement ? p.classList.remove("active") : (p.scrollTop = 0),
   );
-
   const isActive = panelElement.classList.toggle("active");
-  [dom.overlay, dom.infobar].forEach((el) =>
-    el.classList.toggle("active", isActive),
-  );
+  [dom.overlay, dom.infobar].forEach((el) => el.classList.toggle("active", isActive));
 };
 
-const bindPanelToggle = (el, panel, before) => {
+const bindPanelToggle = (el, panel, before) =>
   el.addEventListener("click", (event) => {
     event.stopPropagation();
     before?.();
     togglePanel(panel);
   });
-};
 
 const alignFavMenu = () => {
   if (window.matchMedia("(max-width: 600px)").matches) {
@@ -1075,7 +959,6 @@ const alignFavMenu = () => {
     dom.favMenu.style.right = "";
     return;
   }
-
   const { right } = dom.favIcon.getBoundingClientRect();
   dom.favMenu.style.left = `${Math.max(10, right + 25 - dom.favMenu.offsetWidth)}px`;
   dom.favMenu.style.right = "auto";
@@ -1083,12 +966,6 @@ const alignFavMenu = () => {
 
 const toggleSpin = (show = true) => {
   dom.spinner.style.display = show ? "block" : "none";
-};
-
-const updateLoopButton = () => {
-  const looping = loopState.isLooping === "true";
-  $(".fa-repeat").style.display = looping ? "none" : "inline-block";
-  $(".fa-circle-stop").style.display = looping ? "inline-block" : "none";
 };
 
 const setUIControls = (skipOverlay = false) => {
@@ -1111,58 +988,46 @@ const setUIControls = (skipOverlay = false) => {
   if (!hasFavorites && hasRPC) clearPanels();
 };
 
-let listEdit = null;
-let contractEditKey = null;
-let listManageEntries = [];
-let contractManageEntries = [];
-let updateResults = [];
-let updateRunning = false;
-let contractSectionOpen = false;
-
-const escapeHTML = (value) =>
-  value.replace(
-    /[&<>"']/g,
-    (char) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[char],
-  );
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.style.cssText = "position:fixed;opacity:0";
+    document.body.appendChild(area);
+    area.select();
+    const copied = document.execCommand("copy");
+    area.remove();
+    return copied;
+  }
+}
 
 const setManageStatus = (element, message, isError = false) => {
   element.textContent = message;
   element.classList.toggle("error", isError);
 };
 
-const persistOverlay = () => {
-  const saved = ov.saveOverlay(overlay);
-  if (!saved) {
-    setManageStatus(
-      dom.collectionStatus,
-      "Could not save changes in this browser.",
-      true,
-    );
-  }
-  return saved;
-};
-
-if (overlayDirty) persistOverlay();
-
 const fail = (element, message) => {
   setManageStatus(element, message, true);
   return false;
 };
 
+const persistOverlay = () => {
+  const saved = ov.saveOverlay(overlay);
+  if (!saved)
+    setManageStatus(dom.collectionStatus, "Could not save changes in this browser.", true);
+  return saved;
+};
+
+if (overlayDirty) persistOverlay();
+
 const lineFromParsed = (parsed, works = parsed.works) =>
   ov.makeListLine({ ...parsed, works });
 
 const manageButton = (action, label, attr = "data-action", extra = "") =>
-  `<button type="button" class="manage-btn${
-    extra ? ` ${extra}` : ""
-  }" ${attr}="${action}">${label}</button>`;
+  `<button type="button" class="manage-btn${extra ? ` ${extra}` : ""}" ${attr}="${action}">${label}</button>`;
 
 function commitChanges(statusElement, message, { contracts = false } = {}) {
   if (!persistOverlay()) return false;
@@ -1177,21 +1042,18 @@ function populateManagementSelects() {
     .filter((name) => !["PMPV0", "bm", "v1"].includes(name))
     .map((name) => `<option value="${name}">${name}</option>`)
     .join("");
-
   dom.contractAbi.value =
     selectedAbi && abiProfiles[selectedAbi] ? selectedAbi : "v3Flex";
 }
 
 function refreshLibrary({ contracts = false } = {}) {
   if (contracts) {
-    const activeContractName = contractData
-      ? nameMap[contractData.contract]
-      : null;
+    const activeName = contractData ? nameMap[contractData.contract] : null;
     if (rebuildRuntimeContracts()) persistOverlay();
     populateManagementSelects();
 
-    if (contractData && activeContractName) {
-      const index = indexMap[activeContractName];
+    if (contractData && activeName) {
+      const index = indexMap[activeName];
       if (index === undefined) {
         clearDataStorage();
         contractData = null;
@@ -1210,9 +1072,7 @@ function refreshLibrary({ contracts = false } = {}) {
   if (dom.listPanel.classList.contains("active")) {
     const { searchQuery, numberQuery } = parseQuery(dom.search.value.trim());
     displayList(
-      searchQuery
-        ? listManager.filterByQuery(searchQuery)
-        : listManager.originalList,
+      searchQuery ? listManager.filterByQuery(searchQuery) : listManager.originalList,
       searchQuery ? numberQuery : "",
     );
   }
@@ -1222,23 +1082,17 @@ function refreshLibrary({ contracts = false } = {}) {
 }
 
 function renderManageList() {
-  const entries = ov
-    .listEntries(list, overlay)
-    .filter((entry) => entry.kind !== "base");
-
+  const entries = ov.listEntries(list, overlay).filter((entry) => entry.kind !== "base");
   listManageEntries = entries;
 
   if (entries.length === 0) {
-    dom.manageListRows.innerHTML =
-      '<p class="manage-status">No local changes yet.</p>';
+    dom.manageListRows.innerHTML = '<p class="manage-status">No local changes yet.</p>';
     return;
   }
 
   dom.manageListRows.innerHTML = entries
     .map((entry, index) => {
-      const hidden =
-        entry.kind === "removed" || ov.parseListLine(entry.line)?.hidden;
-
+      const hidden = entry.kind === "removed" || ov.parseListLine(entry.line)?.hidden;
       const actions = hidden
         ? `${manageButton("unhide", "Unhide")}${manageButton("remove", "Remove")}`
         : `${manageButton("edit", "Edit")}${manageButton("hide", "Hide")}${manageButton("remove", "Remove")}`;
@@ -1256,16 +1110,13 @@ function renderManageList() {
     .join("");
 }
 
-const contractKind = (key) => {
-  if (!baseContractRegistry[key]) return "custom";
-  return overlay.contracts[key] ? "overridden" : "bundled";
-};
+const contractKind = (key) =>
+  !baseContractRegistry[key] ? "custom" : overlay.contracts[key] ? "overridden" : "bundled";
 
 function renderManageContracts() {
   const keys = Object.keys(registry).filter(
     (key) => !frozenContracts.has(key) && contractKind(key) !== "bundled",
   );
-
   contractManageEntries = keys;
 
   dom.contractSection.hidden = keys.length === 0;
@@ -1274,18 +1125,12 @@ function renderManageContracts() {
   dom.manageContractRows.innerHTML = keys
     .map((key, index) => {
       const config = registry[key];
-      const kind = contractKind(key);
-
       return `<div class="manage-item" data-contract-index="${index}">
         <p class="manage-item-main">${escapeHTML(key)}
-          <span class="manage-badge">${kind}</span></p>
-        <p class="manage-item-main">${config.abi} &bull; ${shortAddr(
-          config.address,
-        )}${config.platform ? ` &bull; ${escapeHTML(config.platform)}` : ""}${
-          config.startProjId !== undefined
-            ? ` &bull; start ${config.startProjId}`
-            : ""
-        }</p>
+          <span class="manage-badge">${contractKind(key)}</span></p>
+        <p class="manage-item-main">${config.abi} &bull; ${shortAddr(config.address)}${
+          config.platform ? ` &bull; ${escapeHTML(config.platform)}` : ""
+        }${config.startProjId !== undefined ? ` &bull; start ${config.startProjId}` : ""}</p>
         <div class="manage-item-actions">
           ${manageButton("edit", "Edit")}
           ${manageButton("remove", "Remove")}
@@ -1295,29 +1140,27 @@ function renderManageContracts() {
     .join("");
 }
 
-function resetCollectionForm() {
-  listEdit = null;
-  dom.collectionForm.reset();
-  dom.collectionTarget.textContent = "Edit collection";
-}
-
 function setCollectionFormOpen(open) {
   dom.collectionForm.hidden = !open;
-  if (open) setManageStatus(dom.collectionStatus, "");
-  else resetCollectionForm();
-}
-
-function resetContractForm() {
-  contractEditKey = null;
-  dom.contractForm.reset();
-  dom.contractAbi.value = "v3Flex";
+  if (open) {
+    setManageStatus(dom.collectionStatus, "");
+  } else {
+    listEdit = null;
+    dom.collectionForm.reset();
+    dom.collectionTarget.textContent = "Edit collection";
+  }
 }
 
 function setContractFormOpen(open) {
   dom.contractForm.hidden = !open;
   dom.contractToggle.textContent = open ? "Cancel" : "+ Add contract";
-  if (open) setManageStatus(dom.contractStatus, "");
-  else resetContractForm();
+  if (open) {
+    setManageStatus(dom.contractStatus, "");
+  } else {
+    contractEditKey = null;
+    dom.contractForm.reset();
+    dom.contractAbi.value = "v3Flex";
+  }
 }
 
 function setContractSectionOpen(open) {
@@ -1361,6 +1204,8 @@ function startContractEdit(key) {
   dom.contractForm.scrollIntoView({ block: "nearest" });
 }
 
+const countKind = (results, kind) => results.filter((r) => r.kind === kind).length;
+
 function renderUpdateResults() {
   if (updateResults.length === 0) {
     dom.manageUpdateResults.innerHTML = "";
@@ -1391,18 +1236,13 @@ function renderUpdateResults() {
     updateResults.length > limit
       ? `<p class="manage-status">Showing first ${limit} of ${updateResults.length}. Use apply all to review everything.</p>`
       : "";
-  const kinds = new Set(updateResults.map((result) => result.kind));
+  const kinds = new Set(updateResults.map((r) => r.kind));
   const applyLabel =
     kinds.size > 1 ? "Apply all" : kinds.has("new") ? "Add all" : "Update all";
 
   dom.manageUpdateResults.innerHTML = `${rows}${more}
     <div class="manage-row">
-      ${manageButton(
-        "apply-all",
-        `${applyLabel} (${updateResults.length})`,
-        "data-update-action",
-        "primary",
-      )}
+      ${manageButton("apply-all", `${applyLabel} (${updateResults.length})`, "data-update-action", "primary")}
     </div>`;
 }
 
@@ -1418,7 +1258,6 @@ function knownListIdentities() {
     if (change.line) remember(change.line);
     if (change.original) remember(change.original);
   });
-
   return known;
 }
 
@@ -1441,9 +1280,8 @@ function compareProjectLine(line, currentEntries) {
 
   const currentParsed = ov.parseListLine(current.line);
   const nextParsed = ov.parseListLine(line);
-  if (!currentParsed || !nextParsed || currentParsed.works === nextParsed.works) {
+  if (!currentParsed || !nextParsed || currentParsed.works === nextParsed.works)
     return null;
-  }
 
   return {
     kind: "changed",
@@ -1463,8 +1301,43 @@ function applyUpdateResult(result) {
   return ov.applyEdit(overlay, result.original, result.line);
 }
 
-const countKind = (results, kind) =>
-  results.filter((result) => result.kind === kind).length;
+async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
+  if (!registry[contractName]) throw new Error(`Unknown contract: ${contractName}`);
+
+  const n = indexMap[contractName];
+  const start = registry[contractName].startProjId || 0;
+  const end = Number(await contractCall(n, "nextProjectId"));
+  const ids = Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
+  const stateFn = isV3(n) ? "projectStateData" : "projectTokenInfo";
+
+  for (let offset = 0; offset < ids.length; offset += FETCH_BATCH_SIZE) {
+    const batchIds = ids.slice(offset, offset + FETCH_BATCH_SIZE);
+    const results = await Promise.all(
+      batchIds.map(async (id) => {
+        try {
+          const detail = await contractCall(n, "projectDetails", id.toString());
+          const token = await contractCall(n, stateFn, id);
+          return [detail, token];
+        } catch {
+          return null;
+        }
+      }),
+    );
+
+    results.forEach((result, idx) => {
+      if (!result) return;
+      const [detail, token] = result;
+      const noun = Number(token.invocations) === 1 ? "Work" : "Works";
+      onLine?.(
+        `${contractName}${batchIds[idx]} # ${detail[0]} / ${detail[1]} # ${token.invocations} ${noun}`,
+      );
+    });
+
+    onProgress?.({ scanned: offset + batchIds.length, total: ids.length });
+
+    if (offset + FETCH_BATCH_SIZE < ids.length) await sleep(FETCH_BATCH_DELAY);
+  }
+}
 
 async function scanContract(name, known, currentEntries, onProgress) {
   const results = [];
@@ -1486,10 +1359,7 @@ async function scanContract(name, known, currentEntries, onProgress) {
 }
 
 async function updateAllContracts() {
-  if (!rpcUrl) {
-    setManageStatus(dom.updateStatus, "Set an RPC URL first.", true);
-    return;
-  }
+  if (!rpcUrl) return setManageStatus(dom.updateStatus, "Set an RPC URL first.", true);
   if (updateRunning) return;
 
   updateRunning = true;
@@ -1500,17 +1370,12 @@ async function updateAllContracts() {
 
   const known = knownListIdentities();
   const currentEntries = currentLibraryEntries();
-  const contracts = Object.keys(registry).filter(
-    (key) => !frozenContracts.has(key),
-  );
+  const contracts = Object.keys(registry).filter((key) => !frozenContracts.has(key));
   let failed = 0;
 
   try {
     for (const [i, key] of contracts.entries()) {
-      setManageStatus(
-        dom.updateStatus,
-        `Checking ${key} (${i + 1}/${contracts.length})...`,
-      );
+      setManageStatus(dom.updateStatus, `Checking ${key} (${i + 1}/${contracts.length})...`);
 
       try {
         const results = await scanContract(
@@ -1526,9 +1391,7 @@ async function updateAllContracts() {
               .map(([count, label]) => `${count} ${label}`);
             setManageStatus(
               dom.updateStatus,
-              `${key}: ${scanned}/${total} checked${
-                parts.length ? ` (${parts.join(", ")})` : ""
-              }...`,
+              `${key}: ${scanned}/${total} checked${parts.length ? ` (${parts.join(", ")})` : ""}...`,
             );
           },
         );
@@ -1543,46 +1406,22 @@ async function updateAllContracts() {
 
     renderUpdateResults();
 
-    const suffix = failed
-      ? ` ${failed} contract(s) could not be checked.`
-      : "";
+    const suffix = failed ? ` ${failed} contract(s) could not be checked.` : "";
     const newCount = countKind(updateResults, "new");
     const changedCount = countKind(updateResults, "changed");
 
-    if (newCount === 0 && changedCount === 0) {
-      setManageStatus(
-        dom.updateStatus,
-        `No new collections or artwork count changes.${suffix}`,
-      );
+    if (!newCount && !changedCount) {
+      setManageStatus(dom.updateStatus, `No new collections or artwork count changes.${suffix}`);
       return;
     }
 
     const parts = [];
     if (newCount) parts.push(`${newCount} new collection(s)`);
     if (changedCount) parts.push(`${changedCount} artwork count change(s)`);
-    setManageStatus(
-      dom.updateStatus,
-      `Found ${parts.join(" and ")}. Review them below.${suffix}`,
-    );
+    setManageStatus(dom.updateStatus, `Found ${parts.join(" and ")}. Review them below.${suffix}`);
   } finally {
     updateRunning = false;
     dom.manageUpdate.disabled = false;
-  }
-}
-
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.style.cssText = "position:fixed;opacity:0";
-    document.body.appendChild(area);
-    area.select();
-    const copied = document.execCommand("copy");
-    area.remove();
-    return copied;
   }
 }
 
@@ -1623,10 +1462,11 @@ function initLibraryManager() {
     }
 
     const row = button.closest("[data-update-index]");
-    const result = updateResults[Number(row?.dataset.updateIndex)];
+    const rowIndex = Number(row?.dataset.updateIndex);
+    const result = updateResults[rowIndex];
     if (!result) return;
 
-    updateResults.splice(Number(row.dataset.updateIndex), 1);
+    updateResults.splice(rowIndex, 1);
     if (action === "apply") {
       applyUpdateResult(result);
       commitChanges(
@@ -1637,9 +1477,9 @@ function initLibraryManager() {
     renderUpdateResults();
   });
 
-  dom.contractSectionToggle.addEventListener("click", () => {
-    setContractSectionOpen(!contractSectionOpen);
-  });
+  dom.contractSectionToggle.addEventListener("click", () =>
+    setContractSectionOpen(!contractSectionOpen),
+  );
 
   dom.contractToggle.addEventListener("click", () => {
     setContractFormOpen(dom.contractForm.hidden);
@@ -1653,39 +1493,26 @@ function initLibraryManager() {
     if (!entry) return;
 
     const action = button.dataset.action;
+    const isAdded = entry.kind === "added";
+    const editingThis = () =>
+      listEdit && (listEdit.original === entry.original || listEdit.additionLine === entry.line);
 
     if (action === "edit") {
       startListEdit(entry);
     } else if (action === "hide") {
-      if (entry.kind === "added") {
-        if (listEdit?.additionLine === entry.line) setCollectionFormOpen(false);
-        ov.hideAddition(overlay, entry.line);
-      } else {
-        if (listEdit?.original === entry.original) setCollectionFormOpen(false);
-        ov.applyRemove(overlay, entry.original);
-      }
-      commitChanges(
-        dom.collectionStatus,
-        "Collection hidden. It stays here so you can unhide it.",
-      );
+      if (editingThis()) setCollectionFormOpen(false);
+      if (isAdded) ov.hideAddition(overlay, entry.line);
+      else ov.applyRemove(overlay, entry.original);
+      commitChanges(dom.collectionStatus, "Collection hidden. It stays here so you can unhide it.");
     } else if (action === "unhide") {
       if (entry.kind === "removed") ov.restoreOriginal(overlay, entry.original);
       else ov.unhideAddition(overlay, entry.line);
-      commitChanges(
-        dom.collectionStatus,
-        "Collection unhidden. It is back in the library.",
-      );
+      commitChanges(dom.collectionStatus, "Collection unhidden. It is back in the library.");
     } else if (action === "remove") {
       if (!confirm("Discard this local change?")) return;
-      if (listEdit && (listEdit.original === entry.original ||
-                       listEdit.additionLine === entry.line)) {
-        setCollectionFormOpen(false);
-      }
-      if (entry.kind === "added") {
-        overlay.list = overlay.list.filter((change) => change.line !== entry.line);
-      } else {
-        ov.restoreOriginal(overlay, entry.original);
-      }
+      if (editingThis()) setCollectionFormOpen(false);
+      if (isAdded) overlay.list = overlay.list.filter((c) => c.line !== entry.line);
+      else ov.restoreOriginal(overlay, entry.original);
       commitChanges(dom.collectionStatus, "Local change removed.");
     }
   });
@@ -1698,23 +1525,18 @@ function initLibraryManager() {
   dom.collectionForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    if (!listEdit)
-      return fail(dom.collectionStatus, "Choose a collection to edit.");
+    if (!listEdit) return fail(dom.collectionStatus, "Choose a collection to edit.");
 
     const collection = dom.collectionName.value.trim();
     const artist = dom.collectionArtist.value.trim();
     const platform = dom.collectionPlatform.value.trim();
     const works = Number(dom.collectionWorks.value);
 
-    if (!collection)
-      return fail(dom.collectionStatus, "Enter a collection name.");
+    if (!collection) return fail(dom.collectionStatus, "Enter a collection name.");
     if (!Number.isInteger(works) || works < 0)
       return fail(dom.collectionStatus, "Enter a valid work count.");
 
-    const line = lineFromParsed(
-      { ...listEdit.parsed, collection, artist, platform },
-      works,
-    );
+    const line = lineFromParsed({ ...listEdit.parsed, collection, artist, platform }, works);
 
     if (!ov.parseListLine(line))
       return fail(
@@ -1722,14 +1544,10 @@ function initLibraryManager() {
         "Contract keys must be letters, optionally followed by [number].",
       );
 
-    if (listEdit.additionLine) {
-      ov.applyAdd(overlay, line, listEdit.additionLine);
-    } else {
-      ov.applyEdit(overlay, listEdit.original, line);
-    }
+    if (listEdit.additionLine) ov.applyAdd(overlay, line, listEdit.additionLine);
+    else ov.applyEdit(overlay, listEdit.original, line);
 
-    if (commitChanges(dom.collectionStatus, "Collection saved."))
-      setCollectionFormOpen(false);
+    if (commitChanges(dom.collectionStatus, "Collection saved.")) setCollectionFormOpen(false);
   });
 
   dom.manageContractRows.addEventListener("click", (event) => {
@@ -1772,10 +1590,7 @@ function initLibraryManager() {
     });
 
     if (!config || !abiProfiles[config.abi])
-      return fail(
-        dom.contractStatus,
-        "Enter a valid ABI, 0x address and start project ID.",
-      );
+      return fail(dom.contractStatus, "Enter a valid ABI, 0x address and start project ID.");
 
     let key = contractEditKey;
     if (!key) {
@@ -1787,16 +1602,10 @@ function initLibraryManager() {
         );
       } catch (error) {
         console.error("symbol() lookup failed:", error);
-        return fail(
-          dom.contractStatus,
-          `Could not read symbol(): ${error.message}`,
-        );
+        return fail(dom.contractStatus, `Could not read symbol(): ${error.message}`);
       }
       if (!key || registry[key])
-        return fail(
-          dom.contractStatus,
-          `Key "${key}" is empty or already used.`,
-        );
+        return fail(dom.contractStatus, `Key "${key}" is empty or already used.`);
     }
 
     const message = contractEditKey
@@ -1833,8 +1642,8 @@ function initLibraryManager() {
     setContractFormOpen(false);
     updateResults = [];
     renderUpdateResults();
-    [dom.collectionStatus, dom.contractStatus, dom.updateStatus].forEach(
-      (element) => setManageStatus(element, ""),
+    [dom.collectionStatus, dom.contractStatus, dom.updateStatus].forEach((el) =>
+      setManageStatus(el, ""),
     );
     setManageStatus(dom.copyStatus, "Local changes cleared.");
   });
@@ -1922,10 +1731,8 @@ document.addEventListener("keypress", (event) => {
 dom.rpcUrlInput.addEventListener("keypress", (event) => {
   if (event.key !== "Enter") return;
   const value = dom.rpcUrlInput.value.trim();
-
   if (value === "") localStorage.removeItem("rpcUrl");
   else localStorage.setItem("rpcUrl", value);
-
   location.reload();
 });
 
@@ -1937,17 +1744,15 @@ dom.search.addEventListener("input", (event) => {
 
   if (query.startsWith("#") && contractData) {
     const num = query.substring(1);
-    const originalLine = /^\d*$/.test(num)
-      ? listManager.originalList.find((line) =>
-          line.includes(contractData.detail[0]),
-        )
+    const line = /^\d*$/.test(num)
+      ? listManager.originalList.find((l) => l.includes(contractData.detail[0]))
       : null;
 
-    if (!originalLine) return clearPanels();
+    if (!line) return clearPanels();
 
-    listManager.filteredList = [originalLine];
+    listManager.filteredList = [line];
     listManager.selectedIndex = 0;
-    dom.listPanel.innerHTML = `<div>${listItemHTML(originalLine, 0, num, true)}</div>`;
+    dom.listPanel.innerHTML = `<div>${listItemHTML(line, 0, num, true)}</div>`;
     openList();
     return;
   }
@@ -1971,9 +1776,7 @@ dom.listPanel.addEventListener("click", (event) => {
 
 bindPanelToggle(dom.settings, dom.instruction);
 bindPanelToggle(dom.info, dom.panel);
-bindPanelToggle(dom.searchIcon, dom.listPanel, () =>
-  displayList(listManager.originalList),
-);
+bindPanelToggle(dom.searchIcon, dom.listPanel, () => displayList(listManager.originalList));
 bindPanelToggle(dom.favIcon, dom.favMenu, alignFavMenu);
 bindPanelToggle(dom.favOpen, dom.favPanel, displayFavoriteList);
 bindPanelToggle(dom.repeatIcon, dom.dropMenu);
@@ -1987,21 +1790,19 @@ dom.favSave.addEventListener("click", () => {
   clearPanels();
 });
 
-loopTypes.forEach((type) => {
-  dom[`${type}Loop`].addEventListener("click", () => handleLoop(`${type}Loop`));
-});
+loopTypes.forEach((type) =>
+  dom[`${type}Loop`].addEventListener("click", () => handleLoop(`${type}Loop`)),
+);
 
 dom.stopLoop.addEventListener("click", stopLoop);
 dom.inc.addEventListener("click", () => stepTokenId(1));
 dom.dec.addEventListener("click", () => stepTokenId(-1));
-dom.randomButton.addEventListener("click", () =>
-  getRandom(listManager.originalList),
-);
+dom.randomButton.addEventListener("click", () => getRandom(listManager.originalList));
 dom.explore.addEventListener("click", exploreAlgo);
 
-panels.forEach((panel) => {
-  panel.addEventListener("click", (event) => event.stopPropagation());
-});
+panels.forEach((panel) =>
+  panel.addEventListener("click", (event) => event.stopPropagation()),
+);
 
 dom.panel.addEventListener("click", (event) => {
   const copyBtn = event.target.closest(".copy-txt");
@@ -2021,17 +1822,14 @@ dom.panel.addEventListener("click", (event) => {
 
 document.addEventListener("click", clearPanels);
 
-dom.themeBtns.forEach((button) => {
-  button.addEventListener("click", () => setTheme(button.dataset.theme));
-});
+dom.themeBtns.forEach((button) =>
+  button.addEventListener("click", () => setTheme(button.dataset.theme)),
+);
 
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", (event) => {
-    if (localStorage.getItem("themePreference") === "system") {
-      dom.root.classList.toggle("dark-mode", event.matches);
-    }
-  });
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+  if (localStorage.getItem("themePreference") === "system")
+    dom.root.classList.toggle("dark-mode", event.matches);
+});
 
 updateLoopButton();
 checkLoop();
@@ -2041,49 +1839,3 @@ setTheme(localStorage.getItem("themePreference") || "system");
 initLibraryManager();
 if (contractData) update(contractData);
 dom.root.classList.remove("no-flash");
-
-const FETCH_BATCH_SIZE = 10;
-const FETCH_BATCH_DELAY = 2000;
-
-async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
-  if (!registry[contractName]) {
-    throw new Error(`Unknown contract: ${contractName}`);
-  }
-
-  const n = indexMap[contractName];
-  const start = registry[contractName].startProjId || 0;
-  const end = Number(await contractCall(n, "nextProjectId"));
-  const ids = Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
-  const stateFn = isV3(n) ? "projectStateData" : "projectTokenInfo";
-
-  for (let offset = 0; offset < ids.length; offset += FETCH_BATCH_SIZE) {
-    const batchIds = ids.slice(offset, offset + FETCH_BATCH_SIZE);
-    const results = await Promise.all(
-      batchIds.map(async (id) => {
-        try {
-          const detail = await contractCall(n, "projectDetails", id.toString());
-          const token = await contractCall(n, stateFn, id);
-          return [detail, token];
-        } catch {
-          return null;
-        }
-      }),
-    );
-
-    results.forEach((result, idx) => {
-      if (!result) return;
-      const [detail, token] = result;
-      const noun = Number(token.invocations) === 1 ? "Work" : "Works";
-      onLine?.(
-        `${contractName}${batchIds[idx]} # ${detail[0]} / ${detail[1]} # ${token.invocations} ${noun}`,
-      );
-    });
-
-    onProgress?.({
-      scanned: offset + batchIds.length,
-      total: ids.length,
-    });
-
-    if (offset + FETCH_BATCH_SIZE < ids.length) await sleep(FETCH_BATCH_DELAY);
-  }
-}
