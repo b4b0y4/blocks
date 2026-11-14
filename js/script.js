@@ -1259,9 +1259,13 @@ function renderManageList() {
     .map((entry, index) => {
       const hidden =
         entry.kind === "removed" || ov.parseListLine(entry.line)?.hidden;
+      const remove =
+        entry.kind === "added" || entry.kind === "edited"
+          ? manageButton("remove", "Remove")
+          : "";
       const actions = hidden
-        ? manageButton("unhide", "Unhide")
-        : `${manageButton("edit", "Edit")}${manageButton("hide", "Hide")}`;
+        ? `${manageButton("unhide", "Unhide")}${remove}`
+        : `${manageButton("edit", "Edit")}${manageButton("hide", "Hide")}${remove}`;
 
       return `<div class="manage-item ${
         entry.kind === "removed" ? "removed" : hidden ? "hidden" : ""
@@ -1718,6 +1722,21 @@ function initLibraryManager() {
         dom.collectionStatus,
         "Collection unhidden. It is back in the library.",
       );
+    } else if (action === "remove") {
+      if (entry.kind === "added") {
+        if (!confirm("Remove this added collection from your overlay?")) return;
+        if (listEdit?.additionLine === entry.line) setCollectionFormOpen(false);
+        ov.removeAddition(overlay, entry.line);
+        commitChanges(dom.collectionStatus, "Added collection removed.");
+      } else {
+        if (!confirm("Discard your changes to this collection?")) return;
+        if (listEdit?.original === entry.original) setCollectionFormOpen(false);
+        ov.removeEdit(overlay, entry.original);
+        commitChanges(
+          dom.collectionStatus,
+          "Collection restored to the bundled line.",
+        );
+      }
     }
   });
 

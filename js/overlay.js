@@ -244,6 +244,10 @@ export function restoreOriginal(overlay, original) {
   dropChanges(overlay, changeMatches("remove", "original", original));
 }
 
+export function removeEdit(overlay, original) {
+  dropChanges(overlay, changeMatches("edit", "original", original));
+}
+
 export function removeAddition(overlay, line) {
   dropChanges(overlay, changeMatches("add", "line", line));
 }

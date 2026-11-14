@@ -80,7 +80,8 @@ at runtime.
    - use **Hide** to remove an entry from the viewer, or **Unhide** to bring it
      back; hiding keeps any pending artwork-count update, so unhiding brings
      back the updated entry
-   - entries added by an update can be edited, hidden, or unhidden too
+   - entries added by an update can be edited, hidden, unhidden, or removed;
+     **Remove** deletes an added entry or discards your edit to a bundled one
 4. Press **+ Add contract** next to **Update list** to add a contract by key,
    ABI profile (`v2`, `v3`, `v2Flex`, `v3Flex`), address,
    platform, and optional start project ID. Custom contracts appear inline and
