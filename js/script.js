@@ -1811,7 +1811,7 @@ function initLibraryManager() {
     dom.manageCopyList,
     () => ov.exportListJS(list, overlay, Object.keys(registry)),
     dom.copyStatus,
-    "Full list JS copied. Paste into js/data.js.",
+    "Full list JS copied. Replace list in js/data.js.",
     "Could not copy the list.",
   );
 
