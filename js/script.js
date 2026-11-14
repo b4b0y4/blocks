@@ -102,14 +102,16 @@ function rebuildRuntimeContracts() {
 
   Object.entries(overlay.contracts).forEach(([key, config]) => {
     const bundled = baseContractRegistry[key];
+    const samePlatform =
+      !config.platform || config.platform === (bundled?.platform || "");
 
     if (
       bundled &&
       config.abi === bundled.abi &&
       String(config.address || "").toLowerCase() ===
         String(bundled.address || "").toLowerCase() &&
-      (config.platform || "") === (bundled.platform || "") &&
-      config.startProjId === bundled.startProjId
+      samePlatform &&
+      (config.startProjId ?? 0) === (bundled.startProjId ?? 0)
     ) {
       delete overlay.contracts[key];
       overlayChanged = true;
@@ -128,14 +130,12 @@ function rebuildRuntimeContracts() {
     indexMap[key] = index;
   });
 
-  PMPV0_ADDR = registry.PMPV0
-    ? registry.PMPV0.address.toLowerCase()
-    : "";
+  PMPV0_ADDR = registry.PMPV0 ? registry.PMPV0.address.toLowerCase() : "";
 
   return overlayChanged;
 }
 
-rebuildRuntimeContracts();
+const overlayDirty = rebuildRuntimeContracts();
 activeList = ov.mergeList(list, overlay);
 rebuildPlatformIndex();
 
@@ -1149,7 +1149,7 @@ const persistOverlay = () => {
   return saved;
 };
 
-if (rebuildRuntimeContracts()) persistOverlay();
+if (overlayDirty) persistOverlay();
 
 const fail = (element, message) => {
   setManageStatus(element, message, true);
@@ -1187,7 +1187,7 @@ function refreshLibrary({ contracts = false } = {}) {
     const activeContractName = contractData
       ? nameMap[contractData.contract]
       : null;
-    rebuildRuntimeContracts();
+    if (rebuildRuntimeContracts()) persistOverlay();
     populateManagementSelects();
 
     if (contractData && activeContractName) {
@@ -1676,17 +1676,17 @@ function initLibraryManager() {
         "Collection unhidden. It is back in the library.",
       );
     } else if (action === "remove") {
-      if (!confirm(`Permanently remove ${key} from local storage?`)) return;
-
-      delete overlay.contracts[key];
-
-      if (contractEditKey === key) setContractFormOpen(false);
-
-      commitChanges(
-        dom.contractStatus,
-        "Local contract entry removed.",
-        { contracts: true },
-      );
+      if (!confirm("Discard this local change?")) return;
+      if (listEdit && (listEdit.original === entry.original ||
+                       listEdit.additionLine === entry.line)) {
+        setCollectionFormOpen(false);
+      }
+      if (entry.kind === "added") {
+        overlay.list = overlay.list.filter((change) => change.line !== entry.line);
+      } else {
+        ov.restoreOriginal(overlay, entry.original);
+      }
+      commitChanges(dom.collectionStatus, "Local change removed.");
     }
   });
 
