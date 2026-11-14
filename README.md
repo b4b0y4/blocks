@@ -90,7 +90,10 @@ at runtime.
    - paste the list output into the `list` array in `js/data.js`
    - new collections are inserted into their contract's block, in project order
    - hidden entries are written with a trailing `!`, so they stay hidden
-   - paste the contract output into `contractRegistry` in `js/constants.js`
+   - the contract output is the complete `contractRegistry` block
+     (bundled + your changes); replace the whole block in `js/constants.js`
+   - contracts are ordered by registry position; new keys slot in beside
+     their Roman-numeral neighbours (e.g. `ABSVI` between `ABSV` and `ABSVII`)
 6. **Reset changes** clears the browser-local overlay.
 
 Overlay changes apply immediately to search, Random, Favorites, and loop modes.

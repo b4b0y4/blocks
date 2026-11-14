@@ -1292,6 +1292,15 @@ const contractKind = (key) => {
   return overlay.contracts[key] ? "overridden" : "bundled";
 };
 
+function exportableContracts() {
+  return Object.fromEntries(
+    Object.entries(registry).map(([key, config]) => [
+      key,
+      { ...config, abi: contractAbiName(key) },
+    ]),
+  );
+}
+
 function renderManageContracts() {
   const keys = Object.keys(registry).filter(
     (key) => !frozenContracts.has(key) && contractKind(key) !== "bundled",
@@ -1834,9 +1843,13 @@ function initLibraryManager() {
 
   bindCopyButton(
     dom.manageCopyContracts,
-    () => ov.exportContractsJS(overlay),
+    () =>
+      ov.exportContractsJS(
+        exportableContracts(),
+        Object.keys(baseContractRegistry),
+      ),
     dom.copyStatus,
-    "Contract JS copied. Paste into js/constants.js.",
+    "Full contract registry copied. Replace contractRegistry in js/constants.js.",
     "Could not copy the contracts.",
   );
 

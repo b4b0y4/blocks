@@ -268,19 +268,52 @@ function setAdditionHidden(overlay, line, hidden) {
 
 const keyOfLine = (line) => parseListLine(line)?.contract ?? "";
 
-function orderedListEntries(entries, keyOrder) {
-  const baseEntries = entries.filter((entry) => entry.kind !== "added");
-  const additions = entries.filter((entry) => entry.kind === "added");
+const ROMAN_VALUES = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+const ROMAN_PATTERN =
+  /^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
 
-  const baseKeys = [];
-  baseEntries.forEach((entry) => {
-    const key = keyOfLine(entry.line);
-    if (!baseKeys.includes(key)) baseKeys.push(key);
-  });
+function splitRoman(key) {
+  for (let i = 0; i <= key.length; i += 1) {
+    const suffix = key.slice(i);
+    if (!ROMAN_PATTERN.test(suffix)) continue;
+
+    let value = 0;
+    for (let j = 0; j < suffix.length; j += 1) {
+      const current = ROMAN_VALUES[suffix[j]];
+      value += current < (ROMAN_VALUES[suffix[j + 1]] ?? 0) ? -current : current;
+    }
+    return { prefix: key.slice(0, i), value };
+  }
+
+  return { prefix: key, value: 0 };
+}
+
+function makeKeyRank(baseKeys, keyOrder) {
   const keyRanks = new Map(baseKeys.map((key, index) => [key, index]));
+  const romanKeys = baseKeys.map((key, index) => ({ index, ...splitRoman(key) }));
 
-  const rankOf = (key) => {
+  return (key) => {
     if (keyRanks.has(key)) return keyRanks.get(key);
+
+    const { prefix, value } = splitRoman(key);
+    const family = romanKeys
+      .filter((member) => member.prefix === prefix)
+      .sort((a, b) => a.value - b.value);
+    const lower = family.filter((member) => member.value < value).pop();
+    const upper = family.find((member) => member.value > value);
+
+    if (lower && upper) {
+      const fraction = (value - lower.value) / (upper.value - lower.value);
+      return lower.index + fraction * (upper.index - lower.index);
+    }
+    if (lower) {
+      const gap = value - lower.value;
+      return lower.index + gap / (gap + 1);
+    }
+    if (upper) {
+      const gap = upper.value - value;
+      return upper.index - gap / (gap + 1);
+    }
 
     const position = keyOrder.indexOf(key);
     if (position !== -1) {
@@ -297,16 +330,31 @@ function orderedListEntries(entries, keyOrder) {
     const boundary = baseKeys.findIndex((baseKey) => key < baseKey);
     return boundary === -1 ? baseKeys.length + 0.5 : boundary - 0.5;
   };
+}
 
-  const compare = (a, b) => {
-    const keyA = keyOfLine(a.line);
-    const keyB = keyOfLine(b.line);
+function compareKeys(rankOf) {
+  return (keyA, keyB) => {
     const rankA = rankOf(keyA);
     const rankB = rankOf(keyB);
     if (rankA !== rankB) return rankA - rankB;
-    if (keyA !== keyB) return keyA < keyB ? -1 : 1;
-    return parseListLine(a.line).projectId - parseListLine(b.line).projectId;
+    return keyA < keyB ? -1 : keyA > keyB ? 1 : 0;
   };
+}
+
+function orderedListEntries(entries, keyOrder) {
+  const baseEntries = entries.filter((entry) => entry.kind !== "added");
+  const additions = entries.filter((entry) => entry.kind === "added");
+
+  const baseKeys = [];
+  baseEntries.forEach((entry) => {
+    const key = keyOfLine(entry.line);
+    if (!baseKeys.includes(key)) baseKeys.push(key);
+  });
+
+  const byKey = compareKeys(makeKeyRank(baseKeys, keyOrder));
+  const compare = (a, b) =>
+    byKey(keyOfLine(a.line), keyOfLine(b.line)) ||
+    parseListLine(a.line).projectId - parseListLine(b.line).projectId;
 
   const ordered = [...baseEntries];
   [...additions].sort(compare).forEach((addition) => {
@@ -336,11 +384,14 @@ export function exportListJS(baseList, overlay, keyOrder = []) {
     .join("\n")}\n];`;
 }
 
-export function exportContractsJS(overlay) {
-  const entries = Object.entries(overlay.contracts);
-  if (entries.length === 0) return "// No custom contracts or overrides.";
+export function exportContractsJS(contracts = {}, keyOrder = []) {
+  const entries = Object.entries(contracts);
+  if (entries.length === 0) return "export const contractRegistry = {};";
 
-  return entries
+  const byKey = compareKeys(makeKeyRank(keyOrder, keyOrder));
+  const ordered = [...entries].sort(([keyA], [keyB]) => byKey(keyA, keyB));
+
+  const body = ordered
     .map(([key, config]) => {
       const args = [`abi.${config.abi}`, JSON.stringify(config.address)];
 
@@ -352,4 +403,6 @@ export function exportContractsJS(overlay) {
       return `  ${key}: reg(${args.join(", ")}),`;
     })
     .join("\n");
+
+  return `export const contractRegistry = {\n${body}\n};`;
 }
