@@ -88,7 +88,7 @@ at runtime.
    can be edited or removed. After adding one, press **Update list** to fetch its
    collections. Use the **Contracts (N)** header to collapse the contract list
    when it gets long.
-5. Use **Copy list JS** / **Copy contracts JS** to make changes permanent:
+5. Use **Copy list** / **Copy contracts** to make changes permanent:
    - paste the list output into the `list` array in `js/data.js`
    - new collections are inserted into their contract's block, in project order
    - hidden entries are written with a trailing `!`, so they stay hidden
