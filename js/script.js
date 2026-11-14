@@ -1214,13 +1214,10 @@ function renderManageList() {
     .map((entry, index) => {
       const hidden =
         entry.kind === "removed" || ov.parseListLine(entry.line)?.hidden;
-      const remove =
-        entry.kind === "added" || entry.kind === "edited"
-          ? manageButton("remove", "Remove")
-          : "";
+
       const actions = hidden
-        ? `${manageButton("unhide", "Unhide")}${remove}`
-        : `${manageButton("edit", "Edit")}${manageButton("hide", "Hide")}${remove}`;
+        ? `${manageButton("unhide", "Unhide")}${manageButton("remove", "Remove")}`
+        : `${manageButton("edit", "Edit")}${manageButton("hide", "Hide")}${manageButton("remove", "Remove")}`;
 
       return `<div class="manage-item ${
         entry.kind === "removed" ? "removed" : hidden ? "hidden" : ""
@@ -1267,7 +1264,7 @@ function renderManageContracts() {
         }</p>
         <div class="manage-item-actions">
           ${manageButton("edit", "Edit")}
-          ${manageButton("remove", kind === "custom" ? "Remove" : "Restore")}
+          ${manageButton("remove", "Remove")}
         </div>
       </div>`;
     })
@@ -1655,20 +1652,17 @@ function initLibraryManager() {
         "Collection unhidden. It is back in the library.",
       );
     } else if (action === "remove") {
-      if (entry.kind === "added") {
-        if (!confirm("Remove this added collection from your overlay?")) return;
-        if (listEdit?.additionLine === entry.line) setCollectionFormOpen(false);
-        ov.removeAddition(overlay, entry.line);
-        commitChanges(dom.collectionStatus, "Added collection removed.");
-      } else {
-        if (!confirm("Discard your changes to this collection?")) return;
-        if (listEdit?.original === entry.original) setCollectionFormOpen(false);
-        ov.removeEdit(overlay, entry.original);
-        commitChanges(
-          dom.collectionStatus,
-          "Collection restored to the bundled line.",
-        );
-      }
+      if (!confirm(`Permanently remove ${key} from local storage?`)) return;
+
+      delete overlay.contracts[key];
+
+      if (contractEditKey === key) setContractFormOpen(false);
+
+      commitChanges(
+        dom.contractStatus,
+        "Local contract entry removed.",
+        { contracts: true },
+      );
     }
   });
 
