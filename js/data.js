@@ -639,7 +639,7 @@ export const list = [
   "ABSTUDIO[110]1 # Hashzznible Collective: Hexa Quillsplice / mlibty # 12 Works",
   "ABSTUDIO[111]0 # Unravel / Anna Lucia # 25 Works | The Generative Art Museum",
   "ABSTUDIO[111]1 # Unravel /  # 0 Works!",
-  "ABSTUDIO[113]0 # Nocturne / James Mendenhall # 41 Works",
+  "ABSTUDIO[113]0 # Nocturne / James Mendenhall # 42 Works",
   "ABSTUDIO[114]0 # Strikes / Medusa # 57 Works",
   "ABSTUDIO[115]0 # Flower Type / Ronen Tanchum # 256 Works",
   "ABSTUDIO[117]0 # Timescale / Takens Theorem # 1 Work",
