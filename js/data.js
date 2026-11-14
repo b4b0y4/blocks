@@ -643,7 +643,7 @@ export const list = [
   "STUDIO[114]0 # Strikes / Medusa # 57 Works",
   "STUDIO[115]0 # Flower Type / Ronen Tanchum # 256 Works",
   "STUDIO[117]0 # Timescale / Takens Theorem # 1 Work",
-  "STUDIO[118]0 # Here with me / rudxane # 0 Works",
+  "STUDIO[118]0 # Here with me / rudxane # 1 Work",
   "STUDIO[119]0 # Disturbed Memory / Satoshi Aizawa # 1 Work",
   "GLITCH1 # nameless dread / diewiththemostlikes # 669 Works",
   "GLITCHII2 # LIFT (a self portrait) / Snowfro # 999 Works",

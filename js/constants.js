@@ -253,7 +253,7 @@ const reg = (abiName, address, platform, startProjId) => ({
 });
 
 export const contractRegistry = {
-  "ABPMPV0": reg("PMPV0", "0x00000000A78E278b2d2e2935FaeBe19ee9F1FF14"),
+  "PMPV0": reg("PMPV0", "0x00000000A78E278b2d2e2935FaeBe19ee9F1FF14"),
   AB: reg("v1", "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"),
   ABII: reg("v2", "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270", undefined, 3),
   ABIII: reg("v3", "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069", undefined, 374),
@@ -402,7 +402,7 @@ export const contractRegistry = {
 };
 
 export const frozenContracts = new Set([
-  "ABPMPV0",
+  "PMPV0",
   "AB",
   "ABII",
   "ABIII",

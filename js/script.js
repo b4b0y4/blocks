@@ -98,21 +98,41 @@ const indexMap = {};
 function rebuildRuntimeContracts() {
   registry = { ...baseContractRegistry };
 
+  let overlayChanged = false;
+
   Object.entries(overlay.contracts).forEach(([key, config]) => {
-    if (abiProfiles[config.abi]) registry[key] = config;
+    const bundled = baseContractRegistry[key];
+
+    if (
+      bundled &&
+      config.abi === bundled.abi &&
+      String(config.address || "").toLowerCase() ===
+        String(bundled.address || "").toLowerCase() &&
+      (config.platform || "") === (bundled.platform || "") &&
+      config.startProjId === bundled.startProjId
+    ) {
+      delete overlay.contracts[key];
+      overlayChanged = true;
+      return;
+    }
+
+    if (abiProfiles[config.abi]) {
+      registry[key] = config;
+    }
   });
 
   Object.keys(nameMap).forEach((key) => delete nameMap[key]);
   Object.keys(indexMap).forEach((key) => delete indexMap[key]);
-
   Object.keys(registry).forEach((key, index) => {
     nameMap[index] = key;
     indexMap[key] = index;
   });
 
-  PMPV0_ADDR = registry.ABPMPV0
-    ? registry.ABPMPV0.address.toLowerCase()
+  PMPV0_ADDR = registry.PMPV0
+    ? registry.PMPV0.address.toLowerCase()
     : "";
+
+  return overlayChanged;
 }
 
 rebuildRuntimeContracts();
@@ -1126,6 +1146,8 @@ const persistOverlay = () => {
   }
   return saved;
 };
+
+if (rebuildRuntimeContracts()) persistOverlay();
 
 const fail = (element, message) => {
   setManageStatus(element, message, true);
