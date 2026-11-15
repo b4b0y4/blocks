@@ -99,8 +99,6 @@ const call = makeCall(rpcUrl);
 dom.rpcUrlInput.placeholder = rpcUrl || "Enter RPC URL";
 
 const baseContractRegistry = contractRegistry;
-const nameMap = {};
-const indexMap = {};
 const platformByProject = new Map();
 
 let overlay = ov.loadOverlay();
@@ -162,14 +160,6 @@ function rebuildRuntimeContracts() {
     }
   });
 
-  [nameMap, indexMap].forEach((map) =>
-    Object.keys(map).forEach((key) => delete map[key]),
-  );
-  Object.keys(registry).forEach((key, index) => {
-    nameMap[index] = key;
-    indexMap[key] = index;
-  });
-
   PMPV0_ADDR = registry.PMPV0 ? registry.PMPV0.address.toLowerCase() : "";
   return overlayChanged;
 }
@@ -178,7 +168,7 @@ const overlayDirty = rebuildRuntimeContracts();
 activeList = ov.mergeList(list, overlay);
 rebuildPlatformIndex();
 
-const contractAt = (contract) => registry[nameMap[contract]];
+const contractAt = (key) => registry[key];
 const isV3 = (contract) => contractAt(contract).abi.startsWith("v3");
 const isFlex = (contract) => contractAt(contract).abi.endsWith("Flex");
 
@@ -310,7 +300,7 @@ function handleKeyboardNavigation(event) {
 const fetchHash = (tokenId, contract) =>
   contractCall(
     contract,
-    nameMap[contract] == "BLOCKS" ? "showTokenHashes" : "tokenIdToHash",
+    contract === "BLOCKS" ? "showTokenHashes" : "tokenIdToHash",
     tokenId,
   );
 
@@ -489,8 +479,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
           fetchGateway(contract),
         ]);
         if (!isCurrentRequest()) return;
-        if (["MOMENTFLEX", "NNUMBER"].includes(nameMap[contract]))
-          ipfs = "https://ipfs.io/ipfs";
+        if (["MOMENTFLEX", "NNUMBER"].includes(contract)) ipfs = "https://ipfs.io/ipfs";
       }
       tokenParams = await loadTokenParams(extDep, contract, tokenId);
       if (!isCurrentRequest()) return;
@@ -507,22 +496,29 @@ async function grabData(tokenId, contract, updateOnly = false) {
   }
 }
 
+function normalizeContract(data) {
+  const key =
+    data.contractKey ??
+    (typeof data.contract === "string"
+      ? data.contract
+      : Object.keys(registry)[data.contract]);
+  if (!registry[key]) return null;
+  const { contractKey, ...rest } = data;
+  return { ...rest, contract: key };
+}
+
 function update(data, { cancelPending = false } = {}) {
   if (cancelPending) grabRequestId += 1;
 
-  const savedKey = data.contractKey;
-  const contract =
-    savedKey !== undefined && indexMap[savedKey] !== undefined
-      ? indexMap[savedKey]
-      : data.contract;
-  const contractKey = nameMap[contract] ?? savedKey;
-  const normalized =
-    contractKey !== undefined && indexMap[contractKey] !== undefined
-      ? { ...data, contract, contractKey }
-      : data;
+  const normalized = normalizeContract(data);
+  if (!normalized) {
+    console.error("Unknown contract:", data.contract);
+    toggleSpin(false);
+    return false;
+  }
 
-  const platform = getPlatform(normalized.contract, normalized.projId);
-  contractData = { ...normalized };
+  contractData = normalized;
+  const platform = getPlatform(contractData.contract, contractData.projId);
 
   save("contractData", contractData);
   console.log(contractData);
@@ -532,6 +528,7 @@ function update(data, { cancelPending = false } = {}) {
   updateUI({ ...contractData, platform });
   setUIControls();
   toggleSpin(false);
+  return true;
 }
 
 const replaceIPFSGateways = (content) =>
@@ -543,12 +540,11 @@ const replaceIPFSGateways = (content) =>
 function pushItemToLocalStorage({
   contract, tokenId, hash, script, extLib, extDep = [], ipfs, arweave, tokenParams,
 }) {
-  const contractName = nameMap[contract];
   const tokenIdStr = tokenId.toString();
 
   if (
-    (contractName === "MOMENTFLEX" && !tokenIdStr.startsWith("16")) ||
-    (contractName === "HODLERS" && tokenIdStr.startsWith("13"))
+    (contract === "MOMENTFLEX" && !tokenIdStr.startsWith("16")) ||
+    (contract === "HODLERS" && tokenIdStr.startsWith("13"))
   ) {
     script = replaceIPFSGateways(script);
   }
@@ -562,7 +558,7 @@ function pushItemToLocalStorage({
   if (extDep.length) {
     tokenData.externalAssetDependencies = extDep.map((d) => {
       let cid = d.cid;
-      if (contractName === "MOMENTFLEX" && tokenIdStr.startsWith("16"))
+      if (contract === "MOMENTFLEX" && tokenIdStr.startsWith("16"))
         cid = replaceIPFSGateways(cid);
 
       const type = d.isOnchain
@@ -586,7 +582,7 @@ function pushItemToLocalStorage({
     tokenData.preferredIPFSGateway = ipfs || "https://ipfs.io/ipfs/";
     tokenData.preferredArweaveGateway = arweave || "https://arweave.net/";
     tokenData.hash = hash;
-  } else if (contractName === "BLOCKS") {
+  } else if (contract === "BLOCKS") {
     tokenData.hashes = Array.isArray(hash) ? hash : [hash];
   } else {
     tokenData.hash = hash;
@@ -600,9 +596,7 @@ function pushItemToLocalStorage({
   });
 }
 
-function getPlatform(contract, projId) {
-  const contractName = nameMap[contract];
-
+function getPlatform(contractName, projId) {
   const inline = platformByProject.get(contractName + projId);
   if (inline) return inline;
 
@@ -631,7 +625,7 @@ const showExtDep = (dep) =>
   dep && !["ONCHAIN", "ART_BLOCKS_DEPENDENCY_REGISTRY"].includes(dep.dependency_type);
 
 function getExtDepType(dep, contract) {
-  if (nameMap[contract] === "MOMENTFLEX") return "ipfs";
+  if (contract === "MOMENTFLEX") return "ipfs";
   const isIPFS =
     dep.dependency_type === "IPFS" ||
     (dep.cid && (dep.cid.startsWith("Qm") || dep.cid.startsWith("baf")));
@@ -691,7 +685,7 @@ function updateUI({
     : "";
 
   const showExt =
-    (extDep.length > 0 && showExtDep(extDep[0])) || nameMap[contract] === "MOMENTFLEX";
+    (extDep.length > 0 && showExtDep(extDep[0])) || contract === "MOMENTFLEX";
   const extInfo = showExt ? escapeHTML(getExtDepType(extDep[0], contract)) : "";
   const dependencyInfo =
     libInfo && extInfo ? `${libInfo} <br> ${extInfo}` : libInfo || extInfo;
@@ -807,11 +801,10 @@ function getToken(line, searchQuery) {
   const match = line.match(/^([A-Z]+(?:\[\d+\])?)\s?(\d+).*?(\d+)\s*Work/);
   if (!match) return;
 
-  const [, listContract, projIdStr, tokenStr] = match;
-  const contract = indexMap[listContract];
+  const [, contract, projIdStr, tokenStr] = match;
 
-  if (contract === undefined) {
-    console.error(`Unknown contract in collection line: ${listContract}`);
+  if (!registry[contract]) {
+    console.error(`Unknown contract in collection line: ${contract}`);
     return;
   }
 
@@ -830,14 +823,12 @@ function getRandom(source) {
   if (Array.isArray(source)) {
     const usable = source.filter((line) => {
       const p = ov.parseListLine(line);
-      return p && indexMap[p.contract] !== undefined;
+      return p && registry[p.contract];
     });
     if (usable.length) getToken(usable[Math.floor(Math.random() * usable.length)], "");
   } else if (typeof source === "object" && Object.keys(source).length > 0) {
     const keys = Object.keys(source);
-    clearDataStorage();
-    contractData = source[keys[Math.floor(Math.random() * keys.length)]];
-    update(contractData, { cancelPending: true });
+    update(source[keys[Math.floor(Math.random() * keys.length)]], { cancelPending: true });
   }
 }
 
@@ -866,11 +857,8 @@ function stepTokenId(dir) {
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
-const currentContractKey = () =>
-  contractData ? nameMap[contractData.contract] : undefined;
-
 function findCurrentCollectionLine(name) {
-  const key = currentContractKey();
+  const key = contractData?.contract;
   return listManager.originalList.find((line) => {
     const parsed = ov.parseListLine(line);
     return (
@@ -1025,9 +1013,7 @@ function displayFavoriteList() {
 
     row.addEventListener("click", () => {
       toggleSpin();
-      clearDataStorage();
-      contractData = favorite[key];
-      update(contractData, { cancelPending: true });
+      update(favorite[key], { cancelPending: true });
       clearPanels();
     });
 
@@ -1152,21 +1138,13 @@ function populateManagementSelects() {
 
 function refreshLibrary({ contracts = false } = {}) {
   if (contracts) {
-    const activeName = contractData ? nameMap[contractData.contract] : null;
     if (rebuildRuntimeContracts()) persistOverlay();
     populateManagementSelects();
 
-    if (contractData && activeName) {
-      const index = indexMap[activeName];
-      if (index === undefined) {
-        clearDataStorage();
-        contractData = null;
-        setUIControls();
-      } else {
-        contractData.contract = index;
-        contractData.contractKey = activeName;
-        save("contractData", contractData);
-      }
+    if (contractData && !registry[contractData.contract]) {
+      clearDataStorage();
+      contractData = null;
+      setUIControls();
     }
   }
 
@@ -1424,22 +1402,21 @@ async function chainStartProjId(contract) {
 async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
   if (!registry[contractName]) throw new Error(`Unknown contract: ${contractName}`);
 
-  const n = indexMap[contractName];
   const start = Math.max(
     registry[contractName].startProjId || 0,
-    await chainStartProjId(n),
+    await chainStartProjId(contractName),
   );
-  const end = Number(await contractCall(n, "nextProjectId"));
+  const end = Number(await contractCall(contractName, "nextProjectId"));
   const ids = Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
-  const stateFn = isV3(n) ? "projectStateData" : "projectTokenInfo";
+  const stateFn = isV3(contractName) ? "projectStateData" : "projectTokenInfo";
 
   for (let offset = 0; offset < ids.length; offset += FETCH_BATCH_SIZE) {
     const batchIds = ids.slice(offset, offset + FETCH_BATCH_SIZE);
     const results = await Promise.all(
       batchIds.map(async (id) => {
         try {
-          const detail = await contractCall(n, "projectDetails", id.toString());
-          const token = await contractCall(n, stateFn, id);
+          const detail = await contractCall(contractName, "projectDetails", id.toString());
+          const token = await contractCall(contractName, stateFn, id);
           return [detail, token];
         } catch {
           return null;
@@ -1979,10 +1956,13 @@ initTooltips();
 setTheme(localStorage.getItem("themePreference") || "system");
 initLibraryManager();
 if (contractData) {
+  let restored = false;
   try {
-    update(contractData);
+    restored = update(contractData);
   } catch (error) {
     console.error("Could not restore the previous artwork:", error);
+  }
+  if (!restored) {
     clearDataStorage();
     contractData = null;
     setUIControls();
