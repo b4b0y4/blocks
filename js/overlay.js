@@ -42,10 +42,15 @@ export function parseListLine(line) {
 
   const label = parts.slice(1, -1).join(" # ").trim();
   const labelParts = label.split(" / ");
-  const artist =
-    labelParts.length > 1 ? labelParts[labelParts.length - 1].trim() : "";
-  const collection =
-    labelParts.length > 1
+  const hasEmptyArtist = label.endsWith(" /");
+  const artist = hasEmptyArtist
+    ? ""
+    : labelParts.length > 1
+      ? labelParts[labelParts.length - 1].trim()
+      : "";
+  const collection = hasEmptyArtist
+    ? label.slice(0, -2).trim()
+    : labelParts.length > 1
       ? labelParts.slice(0, -1).join(" / ").trim()
       : labelParts[0].trim();
 
@@ -76,10 +81,14 @@ export function makeListLine({
 }) {
   const count = Number(works);
   const trimmedPlatform = platform.trim();
+  const trimmedArtist = artist.trim();
   const suffix = trimmedPlatform
     ? `${PLATFORM_SEPARATOR}${trimmedPlatform}`
     : "";
-  return `${contract}${projectId} # ${collection.trim()} / ${artist.trim()} # ${count} ${
+  const label = trimmedArtist
+    ? `${collection.trim()} / ${trimmedArtist}`
+    : `${collection.trim()} / `;
+  return `${contract}${projectId} # ${label} # ${count} ${
     count === 1 ? "Work" : "Works"
   }${suffix}${hidden ? "!" : ""}`;
 }

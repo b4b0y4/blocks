@@ -247,11 +247,13 @@ export const keyFromSymbol = (symbol, exists = () => false) => {
   const s = String(symbol).trim().toUpperCase();
   const letters = (str) => str.replace(/[^A-Z]/g, "");
   const m = /^([A-Z][A-Z_-]*?)[_-]?(\d+)$/.exec(s);
-  const base = m ? `${letters(m[1])}[${m[2]}]` : letters(s);
+  const root = letters(m ? m[1] : s);
+  const base = m ? `${root}[${m[2]}]` : root;
 
-  if (!base || m || !exists(base)) return base;
-  for (let n = 2; ; n++) {
-    const candidate = `${base}[${n}]`;
+  if (!base) return base;
+  if (!exists(base)) return base;
+  for (let n = m ? Number(m[2]) + 1 : 2; ; n++) {
+    const candidate = `${root}[${n}]`;
     if (!exists(candidate)) return candidate;
   }
 };
@@ -272,9 +274,9 @@ export const contractRegistry = {
   "BLOCKS[5]": reg("v3Flex", "0xAB00000000002ADE39f58F9D8278a31574fFBe77", "Art Blocks Curated", 505),
   EXPLORE: reg("v3", "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a", "Art Blocks Explorations"),
   "EXPLORE[2]": reg("v3Flex", "0xAbaBabABAb20053426aD1C782de9ea8444358070", "Art Blocks Explorations", 3),
-  ABXPACE: reg("v2", "0x64780CE53f6e966E18a22Af13a2F97369580Ec11", "Art Blocks &times; Pace"),
-  ABXPACEII: reg("v3", "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36", "Art Blocks &times; Pace", 5),
-  ABXBMG: reg("v3", "0x145789247973C5D612bF121e9E4Eef84b63Eb707", "Art Blocks &times; Bright Moments"),
+  ABXPACE: reg("v2", "0x64780CE53f6e966E18a22Af13a2F97369580Ec11", "Art Blocks × Pace"),
+  "ABXPACE[2]": reg("v3", "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36", "Art Blocks × Pace", 5),
+  ABXBMG: reg("v3", "0x145789247973C5D612bF121e9E4Eef84b63Eb707", "Art Blocks × Bright Moments"),
   "ABSTUDIO[0]": reg("v3Flex", "0x0000000c687F0226Eaf0bdb39104fAD56738CDF2"),
   "ABSTUDIO[1]": reg("v3Flex", "0x0000000b0a4340083AFbA8b0B71CBcD80432Cf2c"),
   "ABSTUDIO[2]": reg("v3Flex", "0x0000000A77593CDa3f3434454AE534163Fe1A431"),
@@ -414,6 +416,6 @@ export const contractRegistry = {
 
 export const frozenContracts = new Set([
   "PMPV0", "BLOCKS", "BLOCKS[2]", "BLOCKS[3]", "BLOCKS[4]", "BLOCKS[5]", "EXPLORE",
-  "EXPLORE[2]", "ABXPACE", "ABXPACEII", "ABXBMG", "MOMENT", "FINALE",
+  "EXPLORE[2]", "ABXPACE", "ABXPACE[2]", "ABXBMG", "MOMENT", "FINALE",
   "MOMENTFLEX", "CITIZEN",
 ]);

@@ -110,8 +110,7 @@ They are browser-local and are not committed to the repository automatically.
 Contract keys contain letters, optionally followed by a `[number]` suffix when
 several contracts share a symbol (e.g. `BLOCKS[2]`, `PLOTS[2]`), because
 collection lines use the `KEY<projectId>` format. The key is an internal
-identifier; studio status is derived from the `ABSTUDIO[` prefix, so other keys
-do not need to start with `ABS`.
+identifier.
 
 ### Adding New Contracts
 
