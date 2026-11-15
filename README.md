@@ -1,148 +1,91 @@
 # Blocks
 
-A web-based viewer for generative art collections on Ethereum, focusing on Art Blocks and Engine collections.
-
-## Features
-
-- View and interact with collections from:
-  - Art Blocks (Curated, Presents, Explorations)
-  - Art Blocks Collaborations (Pace, Bright Moments)
-  - Engine Collections (Bright Moments, Plottables, etc.)
-- Direct Ethereum blockchain integration
-- Artwork information display
-- Local HTML file saving
-- Random artwork discovery
-- Collection searching and filtering
+A web viewer for generative art on Ethereum, focused on Art Blocks and Engine collections. It reads directly from the chain through your own RPC URL. No backend, no dependency.
 
 ## Getting Started
 
-1. Visit the application at [blocks.baboya.eth](https://blocks.baboya.eth.limo)
-2. Connect your RPC URL (e.g., from [Alchemy](https://alchemy.com))
-3. Start exploring!
+1. Open [blocks.baboya.eth](https://blocks.baboya.eth.limo).
+2. Open Settings and enter an RPC URL (e.g. from [Alchemy](https://alchemy.com)).
+3. Search for a collection or press Enter for a random artwork.
 
-## Navigation
+## Usage
 
-### Keyboard Controls
-- `\` - Clear current view
-- `Enter` - Execute search with following behaviors:
-  - Empty input: Display random artwork
-  - Collection name: Random piece from that collection
-  - Collection name #ID: Specific artwork
-  - #ID number: Specific artwork from current collection
+**Search box**
 
-### Interface Features
-- Search box with keyboard navigation (up/down arrows)
-- Browser-local library editor for adding, editing, hiding, and restoring collections
-- Add custom contracts from the UI without editing source files
-- Bookmark menu to save the current artwork or open the favorites list
-- Multiple loop modes:
-  - Everything: Random artwork from all collections
-  - Favorites: Cycles through saved favorites
-  - Curated: Art Blocks Curated collections only
-  - Selected: Random pieces from current collection
-  - OOB: Out of bounds exploration (hash variations)
-- Copy functionality for contract addresses and token IDs
-- Responsive design for mobile devices
-- System/Light/Dark theme options
+| Input | Result |
+| --- | --- |
+| *(empty)* + `Enter` | Random artwork |
+| `Collection` + `Enter` | Random piece from that collection |
+| `Collection #123` + `Enter` | That specific piece |
+| `#123` | Piece 123 of the current collection |
+| `curated` + `Enter` | Random Art Blocks Curated piece |
 
-## Development
+Use the up/down arrows to move through results. Press `\` to clear the stored artwork and reload.
 
-### Code Structure
+**Other controls**
 
-- `js/script.js` : Main application logic and UI interactions
-- `js/rpc.js` : Minimal eth_call client + ABI codec + ENS (no ethers dependency)
-- `js/constants.js` : Contract definitions and classification
-- `js/data.js` : Collection data and library references
-- `js/overlay.js` : Browser-local collection/contract overlay and merge helpers
+- Previous / next artwork, and a random button.
+- Explore (OOB): same algorithm with a random hash.
+- Loop modes: Everything, Favorites, Curated, Selected (current collection), OOB.
+- Bookmark menu: save the current artwork (also downloads it as an HTML file) or open your favorites.
+- Copy buttons for the contract address and token ID.
+- System, light and dark themes.
 
-### Editing the Library in the UI
+## Library Editor
 
-The app can edit the collection list and add contracts without touching the source
-files. Changes are stored as an **overlay** in `localStorage` and merged with the
-bundled list from `js/data.js` and the contract registry from `js/constants.js`
-at runtime.
+Open **Settings → Open library editor** to change the collection list and contracts without editing source files. Changes are stored as an overlay in your browser's `localStorage` and merged with `js/data.js` and `js/constants.js` at runtime. They apply immediately to search, random, favorites and loops.
 
-1. Open Settings and choose **Open library editor**.
-2. Press **Update list** to check all active contracts (studio, engine, and
-   custom). It finds new collections and also compares the artwork count of
-   every project already in the list.
-   - results are shown under the button; use **Add**, **Update**, or **Apply
-     all** to put them into the overlay
-   - entries removed from the list are left alone
-   - every project is read to compare its artwork count, so the check can take
-     longer than a missing-project-only scan
-   - frozen legacy contracts (legacy Art Blocks and Bright Moments) are skipped
-     automatically
-3. The **shadow list** below shows only entries added or changed in this
-   browser — the bundled `data.js` list is not repeated there.
-   - use **Edit** on a row to change its name, artist, platform, or artwork
-     count
-   - use **Hide** to remove an entry from the viewer, or **Unhide** to bring it
-     back; hiding keeps any pending artwork-count update, so unhiding brings
-     back the updated entry
-   - entries added by an update can be edited, hidden, unhidden, or removed;
-     **Remove** deletes an added entry or discards your edit to a bundled one
-4. Press **+ Add contract** next to **Update list** to add a contract with an
-   ABI profile (`v1`, `v2`, `v3`, `v2Flex`, `v3Flex`), address, and optional
-   platform. No key is required: one is generated from the contract's
-   `symbol()` (with a `[2]`, `[3]`, ... suffix on collisions) and shown after
-   saving. For `v3` / `v3Flex` contracts the start project ID is read from the
-   contract's `startingProjectId()` and saved with the contract when it is
-   non-zero; the optional **Start project ID** field overrides that value, which
-   is useful to skip leading placeholder projects. Custom contracts appear
-   inline and can be edited or removed. After adding one, press **Update list** to fetch its
-   collections. Use the **Contracts (N)** header to collapse the contract list
-   when it gets long.
-5. Use **Copy list** / **Copy contracts** to make changes permanent:
-   - paste the list output into the `list` array in `js/data.js`
-   - new collections are inserted into their contract's block, in project order
-   - hidden entries are written with a trailing `!`, so they stay hidden
-   - a platform is written inline as a ` | Platform` suffix on the line
-   - the contract output is the complete `contractRegistry` block
-     (bundled + your changes); replace the whole block in `js/constants.js`
-   - all contracts are written with the `reg(...)` helper
-   - contracts are ordered by registry position; new keys slot in beside
-     their `[n]` siblings (e.g. `PLOTS[2]` beside `PLOTS`)
-6. **Reset changes** clears the browser-local overlay.
+**Update the list**
 
-Overlay changes apply immediately to search, Random, Favorites, and loop modes.
-They are browser-local and are not committed to the repository automatically.
-Contract keys contain letters, optionally followed by a `[number]` suffix when
-several contracts share a symbol (e.g. `BLOCKS[2]`, `PLOTS[2]`), because
-collection lines use the `KEY<projectId>` format. The key is an internal
-identifier.
+Press **Update list** to scan all active contracts. It finds new collections and artwork count changes. Use **Add**, **Update** or **Apply all** to accept them. Frozen legacy contracts are skipped, and entries you removed are left alone.
 
-### Adding New Contracts
+**Edit the list**
 
-1. In `js/constants.js`, add your contract with the `reg` helper:
-   ```js
-   YOURCONTRACT: reg("v3Flex", "0xYourAddress", "Platform Name"),
-   ```
-   - ABI must already exist in `abi` (e.g. `"v1"`, `"v2"`, `"v3"`, `"v2Flex"`,
-     `"v3Flex"`), or add one first.
-   - `platform` is optional (omit by not passing it).
-   - A fourth `startProjId` argument is optional. For `v3` / `v3Flex` contracts
-     the scan already starts at the contract's `startingProjectId()`; only set
-     it to skip leading placeholder projects, since the configured value wins
-     when it is larger.
-2. Open the application in your browser, go to **Settings**, and choose
-   **Open library editor**.
-3. Press **Update list** to scan every active contract. New collections and
-   artwork count changes appear under the button; use **Add**, **Update**, or
-   **Apply all** to put them into the overlay.
-   - Use **Copy list JS** to get the merged `list` array for `js/data.js`.
-   - Add a `!` to the end of any line to ignore it in the UI.
-   - Add a platform with an optional ` | Platform` suffix.
-   - Example output format:
-     ```js
-     "YOURCONTRACT0 # Project Name / Artist Name # X Works",
-     "YOURCONTRACT1 # Another Project / Another Artist # Y Works!", // '!' ignores this line
-     "YOURCONTRACT2 # Third Project / Third Artist # Z Works | Platform Name",
-     ```
+The shadow list shows only entries you added or changed:
 
-### Required Contract Functions
+- **Edit**: name, artist, platform, artwork count.
+- **Hide / Unhide**: remove an entry from the viewer without losing it.
+- **Remove**: delete an added entry, or discard your edit to a bundled one.
 
-The contract must implement these standard functions:
+**Add a contract**
+
+Press **+ Add contract**, then choose an ABI profile, an address and an optional platform. The key is generated from the contract's `symbol()`, with a `[2]`, `[3]`… suffix on collisions. Keys are letters plus an optional `[n]`, because list lines use the `KEY<projectId>` format.
+
+For `v3` contracts the start project ID is read from `startingProjectId()`. The optional **Start project ID** field overrides it (useful to skip placeholder projects). After adding a contract, press **Update list** to fetch its collections.
+
+**Make changes permanent**
+
+Overlay changes are local to your browser. To commit them:
+
+1. **Copy list** → replace the `list` array in `js/data.js`.
+2. **Copy contracts** → replace the whole `contractRegistry` block in `js/constants.js`.
+
+**Reset changes** clears the overlay.
+
+## Editing the Source Directly
+
+Add a contract in `js/constants.js`:
+
+```js
+YOURCONTRACT: reg("v3Flex", "0xYourAddress", "Platform Name"),
+```
+
+- The ABI profile must already exist (`v1`, `v2`, `v3`, `v2Flex`, `v3Flex`), or add one first.
+- `platform` is optional.
+- An optional fourth argument, `startProjId`, skips leading projects. The larger of it and `startingProjectId()` wins.
+
+Then use **Update list** and **Copy list**, or write lines by hand in `js/data.js`:
+
+```js
+"YOURCONTRACT0 # Project Name / Artist Name # 10 Works",
+"YOURCONTRACT1 # Hidden Project / Artist Name # 5 Works!",       // trailing ! hides it
+"YOURCONTRACT2 # Third Project / Artist Name # 8 Works | Platform", // optional platform
+```
+
+## Contract Requirements
+
+Every contract needs:
+
 - `nextProjectId()`
 - `projectDetails(uint256)`
 - `tokenIdToHash(uint256)` or `showTokenHashes(uint256)`
@@ -151,20 +94,27 @@ The contract must implement these standard functions:
 - `ownerOf(uint256)`
 - `projectTokenInfo(uint256)` or `projectStateData(uint256)`
 
-For `v3` / `v3Flex` contracts, `startingProjectId()` is used when present to
-find the first project ID; contracts that do not expose it are scanned from 0
-(or from a configured `startProjId`).
+`v3` contracts should also expose `startingProjectId()`. Without it, scanning starts at 0 (or at the configured `startProjId`).
 
-For FLEX contracts, additional functions:
+Flex contracts also need:
+
 - `projectExternalAssetDependencyCount(uint256)`
 - `projectExternalAssetDependencyByIndex(uint256, uint256)`
-- `preferredIPFSGateway()` (optional)
-- `preferredArweaveGateway()` (optional)
+- `preferredIPFSGateway()`
+- `preferredArweaveGateway()`
+
+## Code Structure
+
+- `js/script.js`: app logic and UI
+- `js/rpc.js`: minimal `eth_call` client, ABI codec and ENS lookup
+- `js/constants.js`: contract registry and ABI profiles
+- `js/data.js`: bundled collection list and library references
+- `js/overlay.js`: browser-local overlay and merge helpers
 
 ## Supporting Decentralization
 
-Help maintain the application's decentralized nature by pinning it to your IPFS node.
+Help keep the app decentralized by pinning it to your IPFS node.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT. See [LICENSE](LICENSE).
