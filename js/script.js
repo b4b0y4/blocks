@@ -644,10 +644,7 @@ const createSection = (title, content) =>
        </div>`
     : "";
 
-function extractDomain(url) {
-  const match = url.match(/https?:\/\/(?:www\.)?([^\/]+)(\/.*)?/);
-  return match ? `${match[1]}${match[2] || ""}` : url;
-}
+const extractDomain = (href) => new URL(href).host.replace(/^www\./, "");
 
 function renderInfoTitle(text) {
   dom.info.innerHTML = "";
@@ -1305,7 +1302,7 @@ function renderUpdateResults() {
 
   const more =
     updateResults.length > limit
-      ? `<p class="manage-status">Showing first ${limit} of ${updateResults.length}. Use apply all to review everything.</p>`
+      ? `<p class="manage-status">Showing first ${limit} of ${updateResults.length}. Apply all the results.</p>`
       : "";
   const kinds = new Set(updateResults.map((r) => r.kind));
   const applyLabel =
