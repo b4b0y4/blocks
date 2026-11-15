@@ -446,8 +446,6 @@ async function grabData(tokenId, contract, updateOnly = false) {
       return;
     }
 
-    clearDataStorage();
-
     const projId = Math.floor(tokenId / 1000000);
     const [hash, projectInfo, detail, { owner, ensName }, { edition, minted }] =
       await Promise.all([
@@ -941,6 +939,8 @@ const updateLoopButton = () => {
   $(".fa-circle-stop").style.display = looping ? "inline-block" : "none";
 };
 
+const favoriteKey = ({ contract, tokenId }) => `${contract}:${tokenId}`;
+
 function saveOutput() {
   let content = lastFrameHTML;
   try {
@@ -958,12 +958,7 @@ function saveOutput() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   link.remove();
 
-  favorite[`
-    <div class="fav-item">
-      ${contractData.detail[0]} #${id}
-      <span>${contractData.detail[1]}</span>
-    </div>`] = contractData;
-  save("favorite", favorite);
+  favorite[favoriteKey(contractData)] = contractData;
   setUIControls();
 }
 
@@ -977,19 +972,14 @@ function deleteFavoriteFromStorage(key) {
 function displayFavoriteList() {
   dom.favPanel.innerHTML = "";
 
-  const favoriteText = (key) => {
-    const template = document.createElement("template");
-    template.innerHTML = key;
-    return (template.content.textContent || "").replace(/\s+/g, " ").trim();
-  };
-
   Object.keys(favorite).forEach((key) => {
     const data = favorite[key] || {};
     const id = data.tokenId !== undefined && data.tokenId !== null
       ? shortId(data.tokenId)
       : null;
-    const name = data.detail?.[0] ?? favoriteText(key);
+    const name = data.detail?.[0] ?? key;
     const artist = data.detail?.[1] ?? "";
+
 
     const row = document.createElement("p");
     row.style.cssText = "display:flex; justify-content:space-between; align-items:center";
