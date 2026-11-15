@@ -96,7 +96,7 @@ export function normalizeContractConfig(config) {
   if (
     config.startProjId !== undefined &&
     config.startProjId !== null &&
-    config.startProjId !== ""
+    String(config.startProjId).trim() !== ""
   ) {
     startProjId = Number(config.startProjId);
     if (!Number.isInteger(startProjId) || startProjId < 0) return null;

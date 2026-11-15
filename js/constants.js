@@ -22,6 +22,7 @@ export const symbolAbi = [view("symbol", [], [s("")])];
 
 const fn = {
   nextProjectId: view("nextProjectId", [], [u("")]),
+  startingProjectId: view("startingProjectId", [], [u("")]),
   ownerOf: view("ownerOf", [u("tokenId")], [a("")]),
   tokenIdToHash: view("tokenIdToHash", [u("")], [
     { internalType: "bytes32", name: "", type: "bytes32" },
@@ -180,6 +181,7 @@ const abi = {
   ],
   v3: [
     fn.nextProjectId,
+    fn.startingProjectId,
     fn.projectDetailsPlain(),
     fn.projectScriptByIndex,
     fn.projectScriptDetails(),
@@ -206,6 +208,7 @@ const abi = {
   ],
   v3Flex: [
     fn.nextProjectId,
+    fn.startingProjectId,
     fn.preferredArweaveGateway,
     fn.preferredIPFSGateway,
     fn.projectDetailsPlain(),
@@ -268,7 +271,7 @@ export const contractRegistry = {
   "BLOCKS[4]": reg("v3", "0xAB0000000000aa06f89B268D604a9c1C41524Ac6", "Art Blocks Curated", 494),
   "BLOCKS[5]": reg("v3Flex", "0xAB00000000002ADE39f58F9D8278a31574fFBe77", "Art Blocks Curated", 505),
   EXPLORE: reg("v3", "0x942BC2d3e7a589FE5bd4A5C6eF9727DFd82F5C8a", "Art Blocks Explorations"),
-  "EXPLORE[2]": reg("v3Flex", "0xAbaBabABAb20053426aD1C782de9ea8444358070", "Art Blocks Explorations"),
+  "EXPLORE[2]": reg("v3Flex", "0xAbaBabABAb20053426aD1C782de9ea8444358070", "Art Blocks Explorations", 3),
   ABXPACE: reg("v2", "0x64780CE53f6e966E18a22Af13a2F97369580Ec11", "Art Blocks &times; Pace"),
   ABXPACEII: reg("v3", "0xEa698596b6009A622C3eD00dD5a8b5d1CAE4fC36", "Art Blocks &times; Pace", 5),
   ABXBMG: reg("v3", "0x145789247973C5D612bF121e9E4Eef84b63Eb707", "Art Blocks &times; Bright Moments"),
@@ -342,7 +345,7 @@ export const contractRegistry = {
   "ABSTUDIO[101]": reg("v3", "0x16DA6C9f17b525613950BFBA89f7719DAD35607d"),
   "ABSTUDIO[102]": reg("v3Flex", "0x51144c0cb2b77dC4a2D6573211602eC27a343112"),
   "ABSTUDIO[103]": reg("v3Flex", "0x0D08b807fec2E80dD40EDBC4137E4542dc9c45Bc", undefined, 2),
-  "ABSTUDIO[104]": reg("v3Flex", "0xcfa6A2d5bc2a77C0cDd3046E09Da21E45d1dF0F1"),
+  "ABSTUDIO[104]": reg("v3Flex", "0xcfa6A2d5bc2a77C0cDd3046E09Da21E45d1dF0F1", undefined, 1),
   "ABSTUDIO[105]": reg("v3Flex", "0xA144fe940DD7aA85Ff79c1C5E3ED35c163e313A8"),
   "ABSTUDIO[106]": reg("v3Flex", "0xa246Bf4293E6c293450428Bf804429e214a2aDeA"),
   "ABSTUDIO[107]": reg("v3", "0xcEb0C691553c416fe68BC740f769b12064b75e9A"),

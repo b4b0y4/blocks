@@ -746,6 +746,7 @@ function injectFrame() {
 }
 
 function getToken(line, searchQuery) {
+  if (!line) return;
   const match = line.match(/^([A-Z]+(?:\[\d+\])?)\s?(\d+).*?(\d+)\s*Work/);
   if (!match) return;
 
@@ -809,10 +810,11 @@ const loopActions = {
     getRandom(listManager.filteredList);
   },
   selectedLoop: () => {
+    const name = contractData.detail[0].trim();
     const line = listManager.originalList.find(
-      (l) => parseListLine(l).collection.trim() === contractData.detail[0],
+      (l) => parseListLine(l).collection.trim() === name,
     );
-    getToken(line, "");
+    if (line) getToken(line, "");
   },
   oobLoop: exploreAlgo,
 };
@@ -1301,11 +1303,29 @@ function applyUpdateResult(result) {
   return ov.applyEdit(overlay, result.original, result.line);
 }
 
+async function fetchStartingProjectId(address, abi) {
+  try {
+    const start = Number(await call(address, abiProfiles[abi], "startingProjectId", []));
+    return Number.isFinite(start) ? start : 0;
+  } catch {
+    return 0;
+  }
+}
+
+async function chainStartProjId(contract) {
+  if (!isV3(contract)) return 0;
+  const { address, abi } = contractAt(contract);
+  return fetchStartingProjectId(address, abi);
+}
+
 async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
   if (!registry[contractName]) throw new Error(`Unknown contract: ${contractName}`);
 
   const n = indexMap[contractName];
-  const start = registry[contractName].startProjId || 0;
+  const start = Math.max(
+    registry[contractName].startProjId || 0,
+    await chainStartProjId(n),
+  );
   const end = Number(await contractCall(n, "nextProjectId"));
   const ids = Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
   const stateFn = isV3(n) ? "projectStateData" : "projectTokenInfo";
@@ -1590,7 +1610,7 @@ function initLibraryManager() {
     });
 
     if (!config || !abiProfiles[config.abi])
-      return fail(dom.contractStatus, "Enter a valid ABI, 0x address and start project ID.");
+      return fail(dom.contractStatus, "Enter a valid ABI, 0x address and start project ID (if set).");
 
     let key = contractEditKey;
     if (!key) {
@@ -1606,6 +1626,11 @@ function initLibraryManager() {
       }
       if (!key || registry[key])
         return fail(dom.contractStatus, `Key "${key}" is empty or already used.`);
+
+      if (config.startProjId === undefined) {
+        const start = await fetchStartingProjectId(config.address, config.abi);
+        if (start > 0) config.startProjId = start;
+      }
     }
 
     const message = contractEditKey
@@ -1744,8 +1769,11 @@ dom.search.addEventListener("input", (event) => {
 
   if (query.startsWith("#") && contractData) {
     const num = query.substring(1);
+    const name = contractData.detail[0].trim();
     const line = /^\d*$/.test(num)
-      ? listManager.originalList.find((l) => l.includes(contractData.detail[0]))
+      ? listManager.originalList.find(
+          (l) => parseListLine(l).collection.trim() === name,
+        )
       : null;
 
     if (!line) return clearPanels();

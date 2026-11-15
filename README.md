@@ -83,13 +83,16 @@ at runtime.
    - entries added by an update can be edited, hidden, unhidden, or removed;
      **Remove** deletes an added entry or discards your edit to a bundled one
 4. Press **+ Add contract** next to **Update list** to add a contract with an
-   ABI profile (`v2`, `v3`, `v2Flex`, `v3Flex`), address, optional platform,
-   optional start project ID, and a **Studio contract** checkbox. No key or
-   name is required: one is generated from the platform (falling back to
-   `STUDIO` / `ENGINE`, with `II`, `III`, ... on collisions) and shown after
-   saving. Custom contracts appear inline and can be edited or removed. After
-   adding one, press **Update list** to fetch its collections. Use the
-   **Contracts (N)** header to collapse the contract list when it gets long.
+   ABI profile (`v1`, `v2`, `v3`, `v2Flex`, `v3Flex`), address, and optional
+   platform. No key is required: one is generated from the contract's
+   `symbol()` (with a `[2]`, `[3]`, ... suffix on collisions) and shown after
+   saving. For `v3` / `v3Flex` contracts the start project ID is read from the
+   contract's `startingProjectId()` and saved with the contract when it is
+   non-zero; the optional **Start project ID** field overrides that value, which
+   is useful to skip leading placeholder projects. Custom contracts appear
+   inline and can be edited or removed. After adding one, press **Update list** to fetch its
+   collections. Use the **Contracts (N)** header to collapse the contract list
+   when it gets long.
 5. Use **Copy list** / **Copy contracts** to make changes permanent:
    - paste the list output into the `list` array in `js/data.js`
    - new collections are inserted into their contract's block, in project order
@@ -97,29 +100,32 @@ at runtime.
    - a platform is written inline as a ` | Platform` suffix on the line
    - the contract output is the complete `contractRegistry` block
      (bundled + your changes); replace the whole block in `js/constants.js`
-   - studio contracts are written with the `studio(...)` helper, other
-     contracts with `reg(...)`
+   - all contracts are written with the `reg(...)` helper
    - contracts are ordered by registry position; new keys slot in beside
-     their Roman-numeral neighbours (e.g. `ABSVI` between `ABSV` and `ABSVII`)
+     their `[n]` siblings (e.g. `PLOTS[2]` beside `PLOTS`)
 6. **Reset changes** clears the browser-local overlay.
 
 Overlay changes apply immediately to search, Random, Favorites, and loop modes.
 They are browser-local and are not committed to the repository automatically.
-Contract keys contain letters only because collection lines use the
-`KEY<projectId>` format. The key is an internal identifier; studio status is
-stored explicitly in the contract entry, so a key no longer needs to start with
-`ABS`.
+Contract keys contain letters, optionally followed by a `[number]` suffix when
+several contracts share a symbol (e.g. `BLOCKS[2]`, `PLOTS[2]`), because
+collection lines use the `KEY<projectId>` format. The key is an internal
+identifier; studio status is derived from the `ABSTUDIO[` prefix, so other keys
+do not need to start with `ABS`.
 
 ### Adding New Contracts
 
-1. In `js/constants.js`, add your contract with the `reg` or `studio` helper:
+1. In `js/constants.js`, add your contract with the `reg` helper:
    ```js
-   YOURCONTRACT: reg(abi.v3Flex, "0xYourAddress", "Platform Name", startProjId),
-   YOURSTUDIO: studio(abi.v3Flex, "0xYourAddress", "Platform Name", startProjId),
+   YOURCONTRACT: reg("v3Flex", "0xYourAddress", "Platform Name"),
    ```
-   - ABI must already exist in `abi` (e.g. `abi.v1`, `abi.v2`, `abi.v3`, `abi.v2Flex`, `abi.v3Flex`), or add one first.
-   - `platform` and `startProjId` are optional (omit by not passing them).
-   - Use `studio` instead of `reg` for Art Blocks Studio contracts.
+   - ABI must already exist in `abi` (e.g. `"v1"`, `"v2"`, `"v3"`, `"v2Flex"`,
+     `"v3Flex"`), or add one first.
+   - `platform` is optional (omit by not passing it).
+   - A fourth `startProjId` argument is optional. For `v3` / `v3Flex` contracts
+     the scan already starts at the contract's `startingProjectId()`; only set
+     it to skip leading placeholder projects, since the configured value wins
+     when it is larger.
 2. Open the application in your browser, go to **Settings**, and choose
    **Open library editor**.
 3. Press **Update list** to scan every active contract. New collections and
@@ -145,6 +151,10 @@ The contract must implement these standard functions:
 - `projectScriptByIndex(uint256, uint256)`
 - `ownerOf(uint256)`
 - `projectTokenInfo(uint256)` or `projectStateData(uint256)`
+
+For `v3` / `v3Flex` contracts, `startingProjectId()` is used when present to
+find the first project ID; contracts that do not expose it are scanned from 0
+(or from a configured `startProjId`).
 
 For FLEX contracts, additional functions:
 - `projectExternalAssetDependencyCount(uint256)`
