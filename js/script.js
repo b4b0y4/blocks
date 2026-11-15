@@ -519,8 +519,6 @@ function update(data, { cancelPending = false } = {}) {
   const platform = getPlatform(contractData.contract, contractData.projId);
 
   save("contractData", contractData);
-  console.log(contractData);
-
   pushItemToLocalStorage(contractData);
   injectFrame();
   updateUI({ ...contractData, platform });
