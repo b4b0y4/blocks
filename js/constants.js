@@ -379,7 +379,7 @@ export const contractRegistry = {
   FLUTTER: reg("v2", "0x13aAe6f9599880edbB7d144BB13F1212CeE99533", "Flamingo DAO"),
   CDESK: reg("v2", "0x2b3c48Be4fB33B0724214aFF12b086B0214f8F15", "Coindesk"),
   ARTCODE: reg("v2", "0xd10e3DEe203579FcEE90eD7d0bDD8086F7E53beB", "ArtCode"),
-  TBOA: reg("v2", "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b", "TBOA Club"),
+  TBOA: reg("v2", "0x62e37f664b5945629B6549a87F8e10Ed0B6D923b", "TBOA"),
   LOM: reg("v2", "0x010bE6545e14f1DC50256286d9920e833F809C6A", "Legends of Metaterra"),
   TDG: reg("v3Flex", "0x96A83b48dE94E130Cf2AA81b28391c28EE33d253", "The Disruptive Gallery"),
   VFA: reg("v3Flex", "0xEdd5c3D8e8fC1E88b93A98282b8ccfD953C483A4", "Vertu"),
@@ -410,7 +410,7 @@ export const contractRegistry = {
   SHISABE: reg("v3Flex", "0xc74eC888104842277Fa1b74e1C3D415eb673009F", "Shiseido", 1),
   RVNABE: reg("v3Flex", "0xd9b7eC74C06c558A59AfdE6a16E614950730F44d"),
   "IT[02]": reg("v2", "0x54a6356244059d5A50b97200a928f19a3682b669", "9dcc"),
-  NNUMBER: reg("v3Flex", "0xB8E8Bec0891A7519091E18590e0b60221853dd2B"),
+  NNUMBER: reg("v3Flex", "0xB8E8Bec0891A7519091E18590e0b60221853dd2B", "Numbers"),
   MAYA: reg("v3", "0x00002491B000Aa008756652C87cc92D87e896f0f", "Maya Spirits"),
 };
 
