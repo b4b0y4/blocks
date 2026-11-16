@@ -53,6 +53,7 @@ const safeUrl = (value) => {
 const FETCH_BATCH_SIZE = 10;
 const FETCH_BATCH_DELAY = 2000;
 const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
+const IPFS_GATEWAY = "https://ipfs.filebase.io"
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
 const dom = {
@@ -477,7 +478,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
           fetchGateway(contract),
         ]);
         if (!isCurrentRequest()) return;
-        if (["MOMENTFLEX"].includes(contract)) ipfs = "https://ipfs.filebase.io/ipfs";
+        if (["MOMENTFLEX"].includes(contract)) ipfs = `${IPFS_GATEWAY}/ipfs`;
       }
       tokenParams = await loadTokenParams(extDep, contract, tokenId);
       if (!isCurrentRequest()) return;
@@ -530,7 +531,7 @@ function update(data, { cancelPending = false } = {}) {
 const replaceIPFSGateways = (content) =>
   content.replace(
     /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud|ipfs\.io)/g,
-    "https://ipfs.filebase.io",
+    IPFS_GATEWAY,
   );
 
 function pushItemToLocalStorage({
@@ -575,7 +576,7 @@ function pushItemToLocalStorage({
         ...(d.bytecode_address ? { bytecode_address: d.bytecode_address } : {}),
       };
     });
-    tokenData.preferredIPFSGateway = ipfs || "https://filebase.io/ipfs/";
+    tokenData.preferredIPFSGateway = ipfs || `${IPFS_GATEWAY}/ipfs/`;
     tokenData.preferredArweaveGateway = arweave || "https://arweave.net/";
     tokenData.hash = hash;
   } else if (contract === "BLOCKS") {
