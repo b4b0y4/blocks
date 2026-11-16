@@ -263,15 +263,29 @@ export function removeAddition(overlay, line) {
   dropChanges(overlay, changeMatches("add", "line", line));
 }
 
-export function pruneReconciledAdditions(overlay, baseList) {
+const sameEntry = (a, b) =>
+  a.contract === b.contract &&
+  a.projectId === b.projectId &&
+  a.collection === b.collection &&
+  a.artist === b.artist &&
+  a.works === b.works &&
+  a.platform === b.platform;
+
+export function pruneReconciledChanges(overlay, baseList) {
   const known = new Set(baseList.map(listIdentity).filter(Boolean));
+  const parsedBase = baseList.map(parseListLine).filter(Boolean);
+
+  const isReconciled = (change) => {
+    if (change.type === "add") return known.has(listIdentity(change.line));
+    if (change.type === "edit") {
+      const parsed = parseListLine(change.line);
+      return Boolean(parsed && parsedBase.some((base) => sameEntry(parsed, base)));
+    }
+    return !baseList.includes(change.original);
+  };
+
   const countBefore = overlay.list.length;
-
-  overlay.list = overlay.list.filter(
-    (change) =>
-      change.type !== "add" || !known.has(listIdentity(change.line)),
-  );
-
+  overlay.list = overlay.list.filter((change) => !isReconciled(change));
   return overlay.list.length !== countBefore;
 }
 

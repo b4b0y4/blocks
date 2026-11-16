@@ -135,7 +135,7 @@ function rebuildPlatformIndex() {
   });
 }
 
-if (ov.pruneReconciledAdditions(overlay, list)) ov.saveOverlay(overlay);
+if (ov.pruneReconciledChanges(overlay, list)) ov.saveOverlay(overlay);
 
 function rebuildRuntimeContracts() {
   registry = { ...baseContractRegistry };
