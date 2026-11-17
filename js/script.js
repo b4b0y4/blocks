@@ -53,20 +53,14 @@ const safeUrl = (value) => {
 const FETCH_BATCH_SIZE = 10;
 const FETCH_BATCH_DELAY = 2000;
 const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
-const IPFS_GATEWAY = "https://ipfs.filebase.io"
-const RETIRED_GATEWAYS = /(^|\.)(infura-ipfs\.io|cloudflare-ipfs\.com)$/i;
+const IPFS_HOST = "https://ipfs.filebase.io";
+const IPFS_GATEWAY = `${IPFS_HOST}/ipfs/`;
+const ARWEAVE_GATEWAY = "https://arweave.net/";
+const IPFS_GATEWAY_URL = /https?:\/\/[^/\s"'`()<>]+\/ipfs(?=[/?#$"'`\s]|$)/gi;
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
-const isRetiredGateway = (gateway) => {
-  try {
-    return RETIRED_GATEWAYS.test(new URL(gateway).hostname);
-  } catch {
-    return true;
-  }
-};
-
-const normalizeIPFSGateway = (gateway) =>
-  gateway && !isRetiredGateway(gateway) ? gateway : `${IPFS_GATEWAY}/ipfs/`;
+const canonicalizeGateways = (content) =>
+  content.replace(IPFS_GATEWAY_URL, `${IPFS_HOST}/ipfs`);
 
 const dom = {
   root: document.documentElement,
@@ -408,14 +402,6 @@ async function fetchCIDs(projId, extDepCount, contract) {
   });
 }
 
-const fetchGateway = async (contract) => {
-  const [ipfs, arweave] = await Promise.all([
-    contractCall(contract, "preferredIPFSGateway"),
-    contractCall(contract, "preferredArweaveGateway"),
-  ]);
-  return { ipfs: normalizeIPFSGateway(ipfs), arweave };
-};
-
 async function fetchTokenParams(pmpAddress, contract, tokenId) {
   const raw = await call(pmpAddress, abiProfiles.PMPV0, "getTokenParams", [
     contractAt(contract).address,
@@ -477,20 +463,14 @@ async function grabData(tokenId, contract, updateOnly = false) {
     if (!isCurrentRequest()) return;
 
     let extDep = [];
-    let ipfs = null;
-    let arweave = null;
     let tokenParams = null;
 
     if (isFlex(contract)) {
       const extDepCount = await fetchExtDepCount(projId, contract);
       if (!isCurrentRequest()) return;
       if (extDepCount) {
-        [extDep, { ipfs, arweave }] = await Promise.all([
-          fetchCIDs(projId, extDepCount, contract),
-          fetchGateway(contract),
-        ]);
+        extDep = await fetchCIDs(projId, extDepCount, contract);
         if (!isCurrentRequest()) return;
-        if (["MOMENTFLEX"].includes(contract)) ipfs = `${IPFS_GATEWAY}/ipfs`;
       }
       tokenParams = await loadTokenParams(extDep, contract, tokenId);
       if (!isCurrentRequest()) return;
@@ -498,7 +478,7 @@ async function grabData(tokenId, contract, updateOnly = false) {
 
     update({
       tokenId, contract, projId, hash, script, detail, owner, ensName, extLib,
-      edition, minted, extDep, ipfs, arweave, tokenParams,
+      edition, minted, extDep, tokenParams,
     });
   } catch (error) {
     if (!isCurrentRequest()) return;
@@ -540,23 +520,11 @@ function update(data, { cancelPending = false } = {}) {
   return true;
 }
 
-const replaceIPFSGateways = (content) =>
-  content.replace(
-    /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.(?:mypinata\.cloud|infura-ipfs\.io|cloudflare-ipfs\.com)|ipfs\.io)/g,
-    IPFS_GATEWAY,
-  );
-
 function pushItemToLocalStorage({
-  contract, tokenId, hash, script, extLib, extDep = [], ipfs, arweave, tokenParams,
+  contract, tokenId, hash, script, extLib, extDep = [], tokenParams,
 }) {
   const tokenIdStr = tokenId.toString();
-
-  if (
-    (contract === "MOMENTFLEX" && !tokenIdStr.startsWith("16")) ||
-    (contract === "HODLERS" && tokenIdStr.startsWith("13"))
-  ) {
-    script = replaceIPFSGateways(script);
-  }
+  script = canonicalizeGateways(script);
 
   const src = [libs[extLib]];
   if (extDep[0]?.cid?.includes("@")) src.push(libs[extDep[0].cid]);
@@ -566,30 +534,17 @@ function pushItemToLocalStorage({
 
   if (extDep.length) {
     tokenData.externalAssetDependencies = extDep.map((d) => {
-      let cid = d.cid;
-      if (contract === "MOMENTFLEX" && tokenIdStr.startsWith("16"))
-        cid = replaceIPFSGateways(cid);
-
-      const type = d.isOnchain
-        ? d.dependency_type
-        : d.dependency_type ||
-          (/^(Qm|baf)/.test(cid) || cid.includes("/ipfs/")
-            ? "IPFS"
-            : /^[\w-]{43}$/.test(cid)
-              ? "ARWEAVE"
-              : "ART_BLOCKS_DEPENDENCY_REGISTRY");
-
       const hasParams = isPmpDep(d) && tokenParams && Object.keys(tokenParams).length > 0;
 
       return {
-        cid,
-        dependency_type: type,
+        cid: canonicalizeGateways(d.cid),
+        dependency_type: d.dependency_type,
         data: hasParams ? tokenParams : d.isOnchain ? d.data : null,
         ...(d.bytecode_address ? { bytecode_address: d.bytecode_address } : {}),
       };
     });
-    tokenData.preferredIPFSGateway = normalizeIPFSGateway(ipfs);
-    tokenData.preferredArweaveGateway = arweave || "https://arweave.net/";
+    tokenData.preferredIPFSGateway = IPFS_GATEWAY;
+    tokenData.preferredArweaveGateway = ARWEAVE_GATEWAY;
     tokenData.hash = hash;
   } else if (contract === "BLOCKS") {
     tokenData.hashes = Array.isArray(hash) ? hash : [hash];
@@ -634,11 +589,9 @@ const showExtDep = (dep) =>
   dep && !["ONCHAIN", "ART_BLOCKS_DEPENDENCY_REGISTRY"].includes(dep.dependency_type);
 
 function getExtDepType(dep, contract) {
-  if (contract === "MOMENTFLEX") return "ipfs";
-  const isIPFS =
-    dep.dependency_type === "IPFS" ||
-    (dep.cid && (dep.cid.startsWith("Qm") || dep.cid.startsWith("baf")));
-  return isIPFS ? "ipfs" : "arweave";
+  return contract === "MOMENTFLEX" || dep.dependency_type === "IPFS"
+    ? "ipfs"
+    : "arweave";
 }
 
 function editionTxt(edition, minted) {

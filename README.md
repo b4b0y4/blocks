@@ -100,8 +100,6 @@ Flex contracts also need:
 
 - `projectExternalAssetDependencyCount(uint256)`
 - `projectExternalAssetDependencyByIndex(uint256, uint256)`
-- `preferredIPFSGateway()`
-- `preferredArweaveGateway()`
 
 ## Code Structure
 
