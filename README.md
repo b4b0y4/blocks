@@ -6,7 +6,8 @@ A web viewer for generative art on Ethereum, focused on Art Blocks and Engine co
 
 1. Open [blocks.baboya.eth](https://blocks.baboya.eth.limo).
 2. Open Settings and enter an RPC URL (e.g. from [Alchemy](https://alchemy.com)).
-3. Search for a collection or press Enter for a random artwork.
+3. Optionally enter an IPFS gateway host; `ipfs.filebase.io` is used by default.
+4. Search for a collection or press Enter for a random artwork.
 
 ## Usage
 

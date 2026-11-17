@@ -53,14 +53,24 @@ const safeUrl = (value) => {
 const FETCH_BATCH_SIZE = 10;
 const FETCH_BATCH_DELAY = 2000;
 const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
-const IPFS_HOST = "https://ipfs.filebase.io";
-const IPFS_GATEWAY = `${IPFS_HOST}/ipfs/`;
+const DEFAULT_GATEWAY_HOST = "ipfs.filebase.io";
+const parseGatewayHost = (value) => {
+  const host = String(value ?? "")
+    .trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/\/.*$/, "");
+  return /^[a-z0-9.-]+(?::\d+)?$/i.test(host) ? host.toLowerCase() : "";
+};
+const GATEWAY_HOST =
+  parseGatewayHost(localStorage.getItem("ipfsGateway")) || DEFAULT_GATEWAY_HOST;
+const GATEWAY_ORIGIN = `https://${GATEWAY_HOST}`;
+const IPFS_GATEWAY = `${GATEWAY_ORIGIN}/ipfs/`;
 const ARWEAVE_GATEWAY = "https://arweave.net/";
-const IPFS_GATEWAY_URL = /https?:\/\/[^/\s"'`()<>]+\/ipfs(?=[/?#$"'`\s]|$)/gi;
+const GATEWAY_URL_PATTERN = /https?:\/\/[^/\s"'`()<>]+\/ipfs(?=[/?#$"'`\s]|$)/gi;
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 
 const canonicalizeGateways = (content) =>
-  content.replace(IPFS_GATEWAY_URL, `${IPFS_HOST}/ipfs`);
+  content.replace(GATEWAY_URL_PATTERN, `${GATEWAY_ORIGIN}/ipfs`);
 
 const dom = {
   root: document.documentElement,
@@ -92,7 +102,7 @@ const dom = {
     "contractToggle", "contractSection", "contractSectionToggle",
     "contractSectionLabel", "contractSectionIcon", "contractForm", "contractAbi",
     "contractAddress", "contractPlatform", "contractStart", "contractCancel",
-    "contractStatus", "manageCopyContracts",
+    "contractStatus", "manageCopyContracts", "ipfsGateway",
   ),
 };
 
@@ -104,6 +114,7 @@ const panels = [
 const rpcUrl = localStorage.getItem("rpcUrl");
 const call = makeCall(rpcUrl);
 dom.rpcUrlInput.placeholder = rpcUrl || "Enter RPC URL";
+dom.ipfsGateway.placeholder = GATEWAY_HOST;
 
 const baseContractRegistry = contractRegistry;
 const platformByProject = new Map();
@@ -1792,6 +1803,19 @@ dom.rpcUrlInput.addEventListener("keypress", (event) => {
   const value = dom.rpcUrlInput.value.trim();
   if (value === "") localStorage.removeItem("rpcUrl");
   else localStorage.setItem("rpcUrl", value);
+  location.reload();
+});
+
+dom.ipfsGateway.addEventListener("keypress", (event) => {
+  if (event.key !== "Enter") return;
+  const value = dom.ipfsGateway.value.trim();
+  if (value === "") {
+    localStorage.removeItem("ipfsGateway");
+  } else {
+    const host = parseGatewayHost(value);
+    if (!host) return alert("Please enter a valid gateway host.");
+    localStorage.setItem("ipfsGateway", host);
+  }
   location.reload();
 });
 

@@ -287,6 +287,9 @@ iframe {
   & p:last-of-type {
     margin-block: 8px 8px;
   }
+  & .gateway-prompt {
+    margin-block-start: 5px;
+  }
   & .manage-btn {
     font-size: 1em;
     padding: 4px;
@@ -374,7 +377,7 @@ iframe {
   margin-block-end: 5px;
 }
 
-:is(.rpc-url, .loopInput) {
+:is(.rpc-url, .gateway-url, .loopInput) {
   box-shadow: 0 0 0 1px transparent;
   transition: box-shadow var(--transition-fast);
   outline: none;
@@ -390,9 +393,10 @@ iframe {
   }
 }
 
-.rpc-url {
+.rpc-url,
+.gateway-url {
   inline-size: 100%;
-  text-align: end;
+  text-align: start;
   z-index: 100;
 }
 
