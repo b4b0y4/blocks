@@ -931,6 +931,7 @@ function saveOutput() {
   link.remove();
 
   favorite[favoriteKey(contractData)] = contractData;
+  save("favorite", favorite);
   setUIControls();
 }
 
