@@ -799,7 +799,7 @@ select.manage-input {
   :is(.instruction, .panel, .list-panel, .fav-panel, .drop-menu, .fav-menu, .manage-panel) {
     max-inline-size: 100%;
     min-inline-size: 0;
-    max-block-size: calc(100dvh - 80px - env(safe-area-inset-bottom));
+    max-block-size: calc(80dvh - 80px - env(safe-area-inset-bottom));
     inset-inline: 0;
     inset-block-end: calc(80px + env(safe-area-inset-bottom));
     border-end-start-radius: 0;
