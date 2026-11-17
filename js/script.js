@@ -54,7 +54,19 @@ const FETCH_BATCH_SIZE = 10;
 const FETCH_BATCH_DELAY = 2000;
 const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
 const IPFS_GATEWAY = "https://ipfs.filebase.io"
+const RETIRED_GATEWAYS = /(^|\.)(infura-ipfs\.io|cloudflare-ipfs\.com)$/i;
 const loopTypes = ["all", "fav", "curated", "selected", "oob"];
+
+const isRetiredGateway = (gateway) => {
+  try {
+    return RETIRED_GATEWAYS.test(new URL(gateway).hostname);
+  } catch {
+    return true;
+  }
+};
+
+const normalizeIPFSGateway = (gateway) =>
+  gateway && !isRetiredGateway(gateway) ? gateway : `${IPFS_GATEWAY}/ipfs/`;
 
 const dom = {
   root: document.documentElement,
@@ -401,7 +413,7 @@ const fetchGateway = async (contract) => {
     contractCall(contract, "preferredIPFSGateway"),
     contractCall(contract, "preferredArweaveGateway"),
   ]);
-  return { ipfs, arweave };
+  return { ipfs: normalizeIPFSGateway(ipfs), arweave };
 };
 
 async function fetchTokenParams(pmpAddress, contract, tokenId) {
@@ -530,7 +542,7 @@ function update(data, { cancelPending = false } = {}) {
 
 const replaceIPFSGateways = (content) =>
   content.replace(
-    /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.mypinata\.cloud|ipfs\.io)/g,
+    /https:\/\/(pinata\.[a-z0-9-]+\.[a-z]+|[a-z0-9-]+\.(?:mypinata\.cloud|infura-ipfs\.io|cloudflare-ipfs\.com)|ipfs\.io)/g,
     IPFS_GATEWAY,
   );
 
@@ -576,7 +588,7 @@ function pushItemToLocalStorage({
         ...(d.bytecode_address ? { bytecode_address: d.bytecode_address } : {}),
       };
     });
-    tokenData.preferredIPFSGateway = ipfs || `${IPFS_GATEWAY}/ipfs/`;
+    tokenData.preferredIPFSGateway = normalizeIPFSGateway(ipfs);
     tokenData.preferredArweaveGateway = arweave || "https://arweave.net/";
     tokenData.hash = hash;
   } else if (contract === "BLOCKS") {
