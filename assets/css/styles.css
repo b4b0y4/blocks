@@ -599,7 +599,7 @@ select.manage-input {
 
 .column-box {
   display: flex;
-  border-block-start: 1px solid var(--color-btn);
+  border-block-start: 1px solid var(--color-hvr);
   margin-block-start: 10px;
   padding-block-start: 7.5px;
 }
