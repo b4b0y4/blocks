@@ -183,7 +183,7 @@ const reg = (abi, address, platform, startProjId) => ({
 });
 
 export const contractRegistry = {
-  PMPV0: reg("PMPV0", "0x00000000A78E278b2d2e2935FaeBe19ee9F1FF14"),
+  "PMPV0": reg("PMPV0", "0x00000000A78E278b2d2e2935FaeBe19ee9F1FF14"),
   BLOCKS: reg("v1", "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"),
   "BLOCKS[2]": reg("v2", "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270", undefined, 3),
   "BLOCKS[3]": reg("v3", "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069", undefined, 374),
@@ -329,6 +329,7 @@ export const contractRegistry = {
   "IT[02]": reg("v2", "0x54a6356244059d5A50b97200a928f19a3682b669", "9dcc"),
   NNUMBER: reg("v3Flex", "0xB8E8Bec0891A7519091E18590e0b60221853dd2B", "Numbers"),
   MAYA: reg("v3", "0x00002491B000Aa008756652C87cc92D87e896f0f", "Maya Spirits"),
+  RASTER: reg("v3Flex", "0x0000002B11eec74c8Bc07f704Af67F53b3d910EF", "RASTER"),
 };
 
 export const frozenContracts = new Set([
