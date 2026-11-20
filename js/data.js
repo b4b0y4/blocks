@@ -544,7 +544,7 @@ export const list = [
   "ABSTUDIO[9]3 # Progression / Jeff Davis # 777 Works",
   "ABSTUDIO[9]4 # Mechanical Drawing / Jeff Davis # 12 Works | OFFICE IMPART",
   "ABSTUDIO[9]5 # Digital Sketch / Jeff Davis # 100 Works | OFFICE IMPART",
-  "ABSTUDIO[9]6 # Intervals / Jeff Davis # 27 Works | HEFT",
+  "ABSTUDIO[9]6 # Intervals / Jeff Davis # 41 Works | HEFT",
   "ABSTUDIO[10]0 # Cosmicodes / Insigħt × Leonardo Petrucci # 36 Works",
   "ABSTUDIO[11]0 # Alchimie / RVig # 80 Works",
   "ABSTUDIO[11]1 # Field Impact / RVig × Médecins Sans Frontières (MSF) # 56 Works",
