@@ -1,147 +1,150 @@
-const view = (name, inputs, outputs) => ({
+const type = (t) => (name = "") => ({ internalType: t, name, type: t });
+const u = type("uint256");
+const s = type("string");
+const b = type("bool");
+const a = type("address");
+
+const view = (name, inputs, outputs, legacy = false) => ({
   inputs,
   name,
   outputs,
   stateMutability: "view",
   type: "function",
+  ...(legacy && { constant: true, payable: false }),
 });
 
-const legacy = (fn) => ({
-  ...fn,
-  constant: true,
-  payable: false,
-});
-
-const u = (n) => ({ internalType: "uint256", name: n, type: "uint256" });
-const s = (n) => ({ internalType: "string", name: n, type: "string" });
-const b = (n) => ({ internalType: "bool", name: n, type: "bool" });
-const a = (n) => ({ internalType: "address", name: n, type: "address" });
-const pid = () => [u("_projectId")];
-
-export const symbolAbi = [view("symbol", [], [s("")])];
-
-const fn = {
-  nextProjectId: view("nextProjectId", [], [u("")]),
-  startingProjectId: view("startingProjectId", [], [u("")]),
-  ownerOf: view("ownerOf", [u("tokenId")], [a("")]),
-  tokenIdToHash: view("tokenIdToHash", [u("")], [
-    { internalType: "bytes32", name: "", type: "bytes32" },
-  ]),
-  projectScriptByIndex: view("projectScriptByIndex", [u("_projectId"), u("_index")], [s("")]),
-  preferredIPFSGateway: view("preferredIPFSGateway", [], [s("")]),
-  preferredArweaveGateway: view("preferredArweaveGateway", [], [s("")]),
-  projectExternalAssetDependencyCount: view(
-    "projectExternalAssetDependencyCount",
-    pid(),
-    [u("")],
-  ),
-  projectDetailsDynamic: () =>
-    legacy(
-      view("projectDetails", pid(), [
-        s("projectName"),
-        s("artist"),
-        s("description"),
-        s("website"),
-        s("license"),
-        b("dynamic"),
-      ]),
-    ),
-  projectDetailsPlain: () =>
-    view("projectDetails", pid(), [
-      s("projectName"),
-      s("artist"),
-      s("description"),
-      s("website"),
-      s("license"),
-    ]),
-  projectScriptInfoV1: () =>
-    legacy(
-      view("projectScriptInfo", pid(), [
-        s("scriptJSON"),
-        u("scriptCount"),
-        u("hashes"),
-        s("ipfsHash"),
-        b("locked"),
-        b("paused"),
-      ]),
-    ),
-  projectScriptInfoV2: () =>
-    legacy(
-      view("projectScriptInfo", pid(), [
-        s("scriptJSON"),
-        u("scriptCount"),
-        b("useHashString"),
-        s("ipfsHash"),
-        b("locked"),
-        b("paused"),
-      ]),
-    ),
-  projectScriptInfoFlex: () =>
-    view("projectScriptInfo", pid(), [
-      s("scriptJSON"),
-      u("scriptCount"),
-      s("ipfsHash"),
-      b("locked"),
-      b("paused"),
-    ]),
-  projectTokenInfoBase: [
-    a("artistAddress"),
-    u("pricePerTokenInWei"),
-    u("invocations"),
-    u("maxInvocations"),
-    b("active"),
-    a("additionalPayee"),
-    u("additionalPayeePercentage"),
-  ],
-  projectTokenInfoV1: () =>
-    legacy(view("projectTokenInfo", pid(), fn.projectTokenInfoBase)),
-  projectTokenInfoV2: () =>
-    legacy(
-      view("projectTokenInfo", pid(), [
-        ...fn.projectTokenInfoBase,
-        s("currency"),
-        a("currencyAddress"),
-      ]),
-    ),
-  projectTokenInfoFlex: () =>
-    view("projectTokenInfo", pid(), [
-      ...fn.projectTokenInfoBase,
-      s("currency"),
-      a("currencyAddress"),
-    ]),
-  projectScriptDetails: () =>
-    view("projectScriptDetails", pid(), [
-      s("scriptTypeAndVersion"),
-      s("aspectRatio"),
-      u("scriptCount"),
-    ]),
-  projectStateData: () =>
-    view("projectStateData", pid(), [
+const PID = [u("_projectId")];
+const scriptInfo = (extra, legacy) =>
+  view(
+    "projectScriptInfo",
+    PID,
+    [s("scriptJSON"), u("scriptCount"), ...extra, s("ipfsHash"), b("locked"), b("paused")],
+    legacy,
+  );
+const tokenInfo = (withCurrency, legacy) =>
+  view(
+    "projectTokenInfo",
+    PID,
+    [
+      a("artistAddress"),
+      u("pricePerTokenInWei"),
       u("invocations"),
       u("maxInvocations"),
       b("active"),
-      b("paused"),
-      u("completedTimestamp"),
-      b("locked"),
-    ]),
-  extDepByIndex: (enumName, structName, withExtra) =>
-    view("projectExternalAssetDependencyByIndex", [u("_projectId"), u("_index")], [
+      a("additionalPayee"),
+      u("additionalPayeePercentage"),
+      ...(withCurrency ? [s("currency"), a("currencyAddress")] : []),
+    ],
+    legacy,
+  );
+const extDepByIndex = (enumName, structName, withExtra) =>
+  view(
+    "projectExternalAssetDependencyByIndex",
+    [u("_projectId"), u("_index")],
+    [
       {
         components: [
           s("cid"),
-          {
-            internalType: `enum ${enumName}.ExternalAssetDependencyType`,
-            name: "dependencyType",
-            type: "uint8",
-          },
+          { internalType: `enum ${enumName}.ExternalAssetDependencyType`, name: "dependencyType", type: "uint8" },
           ...(withExtra ? [a("bytecodeAddress"), s("data")] : []),
         ],
         internalType: `struct ${structName}`,
         name: "",
         type: "tuple",
       },
-    ]),
-  getTokenParams: () =>
+    ],
+  );
+
+const details = [s("projectName"), s("artist"), s("description"), s("website"), s("license")];
+const nextProjectId = view("nextProjectId", [], [u()]);
+const startingProjectId = view("startingProjectId", [], [u()]);
+const ownerOf = view("ownerOf", [u("tokenId")], [a()]);
+const tokenIdToHash = view("tokenIdToHash", [u()], [type("bytes32")()]);
+const scriptByIndex = view("projectScriptByIndex", [u("_projectId"), u("_index")], [s()]);
+const arweaveGateway = view("preferredArweaveGateway", [], [s()]);
+const ipfsGateway = view("preferredIPFSGateway", [], [s()]);
+const extDepCount = view("projectExternalAssetDependencyCount", PID, [u()]);
+const detailsDynamic = view("projectDetails", PID, [...details, b("dynamic")], true);
+const detailsPlain = view("projectDetails", PID, details);
+const scriptDetails = view("projectScriptDetails", PID, [
+  s("scriptTypeAndVersion"),
+  s("aspectRatio"),
+  u("scriptCount"),
+]);
+const stateData = view("projectStateData", PID, [
+  u("invocations"),
+  u("maxInvocations"),
+  b("active"),
+  b("paused"),
+  u("completedTimestamp"),
+  b("locked"),
+]);
+
+const v2 = [
+  nextProjectId,
+  scriptInfo([b("useHashString")], true),
+  scriptByIndex,
+  detailsDynamic,
+  ownerOf,
+  tokenInfo(true, true),
+  tokenIdToHash,
+];
+
+export const symbolAbi = [view("symbol", [], [s()])];
+
+export const abiProfiles = {
+  v1: [
+    nextProjectId,
+    view("showTokenHashes", [u("_tokenId")], [type("bytes32[]")()], true),
+    scriptInfo([u("hashes")], true),
+    scriptByIndex,
+    detailsDynamic,
+    ownerOf,
+    tokenInfo(false, true),
+  ],
+  v2,
+  v3: [nextProjectId, startingProjectId, detailsPlain, scriptByIndex, scriptDetails, stateData, ownerOf, tokenIdToHash],
+  v2Flex: [
+    nextProjectId,
+    arweaveGateway,
+    ipfsGateway,
+    detailsPlain,
+    extDepByIndex(
+      "GenArt721CoreV2_BrightMomentsFlex",
+      "GenArt721CoreV2_BrightMomentsFlex.ExternalAssetDependency",
+      false,
+    ),
+    extDepCount,
+    scriptByIndex,
+    scriptInfo([], false),
+    tokenInfo(true, false),
+    ownerOf,
+    tokenIdToHash,
+  ],
+  v3Flex: [
+    nextProjectId,
+    startingProjectId,
+    arweaveGateway,
+    ipfsGateway,
+    detailsPlain,
+    extDepByIndex(
+      "IGenArt721CoreContractV3_Engine_Flex",
+      "IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyWithData",
+      true,
+    ),
+    extDepCount,
+    scriptByIndex,
+    scriptDetails,
+    stateData,
+    ownerOf,
+    tokenIdToHash,
+  ],
+  bm: v2.map((entry) =>
+    entry.name === "projectScriptInfo"
+      ? { ...entry, outputs: entry.outputs.filter((o) => o.name !== "useHashString") }
+      : entry,
+  ),
+  PMPV0: [
     view(
       "getTokenParams",
       [a("coreContract"), u("tokenId")],
@@ -154,119 +157,33 @@ const fn = {
         },
       ],
     ),
+  ],
 };
-
-const abi = {
-  v1: [
-    fn.nextProjectId,
-    legacy(
-      view("showTokenHashes", [u("_tokenId")], [
-        { internalType: "bytes32[]", name: "", type: "bytes32[]" },
-      ]),
-    ),
-    fn.projectScriptInfoV1(),
-    fn.projectScriptByIndex,
-    fn.projectDetailsDynamic(),
-    fn.ownerOf,
-    fn.projectTokenInfoV1(),
-  ],
-  v2: [
-    fn.nextProjectId,
-    fn.projectScriptInfoV2(),
-    fn.projectScriptByIndex,
-    fn.projectDetailsDynamic(),
-    fn.ownerOf,
-    fn.projectTokenInfoV2(),
-    fn.tokenIdToHash,
-  ],
-  v3: [
-    fn.nextProjectId,
-    fn.startingProjectId,
-    fn.projectDetailsPlain(),
-    fn.projectScriptByIndex,
-    fn.projectScriptDetails(),
-    fn.projectStateData(),
-    fn.ownerOf,
-    fn.tokenIdToHash,
-  ],
-  v2Flex: [
-    fn.nextProjectId,
-    fn.preferredArweaveGateway,
-    fn.preferredIPFSGateway,
-    fn.projectDetailsPlain(),
-    fn.extDepByIndex(
-      "GenArt721CoreV2_BrightMomentsFlex",
-      "GenArt721CoreV2_BrightMomentsFlex.ExternalAssetDependency",
-      false,
-    ),
-    fn.projectExternalAssetDependencyCount,
-    fn.projectScriptByIndex,
-    fn.projectScriptInfoFlex(),
-    fn.projectTokenInfoFlex(),
-    fn.ownerOf,
-    fn.tokenIdToHash,
-  ],
-  v3Flex: [
-    fn.nextProjectId,
-    fn.startingProjectId,
-    fn.preferredArweaveGateway,
-    fn.preferredIPFSGateway,
-    fn.projectDetailsPlain(),
-    fn.extDepByIndex(
-      "IGenArt721CoreContractV3_Engine_Flex",
-      "IGenArt721CoreContractV3_Engine_Flex.ExternalAssetDependencyWithData",
-      true,
-    ),
-    fn.projectExternalAssetDependencyCount,
-    fn.projectScriptByIndex,
-    fn.projectScriptDetails(),
-    fn.projectStateData(),
-    fn.ownerOf,
-    fn.tokenIdToHash,
-  ],
-  bm: [],
-  PMPV0: [fn.getTokenParams()],
-};
-
-abi.bm = abi.v2.map((entry) =>
-  entry.name === "projectScriptInfo"
-    ? {
-        ...entry,
-        outputs: entry.outputs.filter(
-          (output) => output.name !== "useHashString",
-        ),
-      }
-    : entry,
-);
-
-export const abiProfiles = abi;
 
 export const isStudio = (key) => key.startsWith("ABSTUDIO[");
 
 export const keyFromSymbol = (symbol, exists = () => false) => {
-  const s = String(symbol).trim().toUpperCase();
-  const letters = (str) => str.replace(/[^A-Z]/g, "");
-  const m = /^([A-Z][A-Z_-]*?)[_-]?(\d+)$/.exec(s);
-  const root = letters(m ? m[1] : s);
+  const sym = String(symbol).trim().toUpperCase();
+  const m = /^([A-Z][A-Z_-]*?)[_-]?(\d+)$/.exec(sym);
+  const root = (m ? m[1] : sym).replace(/[^A-Z]/g, "");
   const base = m ? `${root}[${m[2]}]` : root;
 
-  if (!base) return base;
-  if (!exists(base)) return base;
+  if (!base || !exists(base)) return base;
   for (let n = m ? Number(m[2]) + 1 : 2; ; n++) {
     const candidate = `${root}[${n}]`;
     if (!exists(candidate)) return candidate;
   }
 };
 
-const reg = (abiName, address, platform, startProjId) => ({
-  abi: abiName,
+const reg = (abi, address, platform, startProjId) => ({
+  abi,
   address,
   ...(platform ? { platform } : {}),
   ...(startProjId !== undefined ? { startProjId } : {}),
 });
 
 export const contractRegistry = {
-  "PMPV0": reg("PMPV0", "0x00000000A78E278b2d2e2935FaeBe19ee9F1FF14"),
+  PMPV0: reg("PMPV0", "0x00000000A78E278b2d2e2935FaeBe19ee9F1FF14"),
   BLOCKS: reg("v1", "0x059EDD72Cd353dF5106D2B9cC5ab83a52287aC3a"),
   "BLOCKS[2]": reg("v2", "0xa7d8d9ef8D8Ce8992Df33D8b8CF4Aebabd5bD270", undefined, 3),
   "BLOCKS[3]": reg("v3", "0x99a9B7c1116f9ceEB1652de04d5969CcE509B069", undefined, 374),

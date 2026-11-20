@@ -1,7 +1,7 @@
 import { makeCall, lookupAddress } from "./rpc.js";
 import { list, libs, curated, playground } from "./data.js";
 import {
-  contractRegistry,
+  contractRegistry as baseContractRegistry,
   abiProfiles,
   frozenContracts,
   isStudio,
@@ -11,13 +11,12 @@ import {
 import * as ov from "./overlay.js";
 
 const $ = (selector) => document.querySelector(selector);
-const byId = (...names) =>
-  Object.fromEntries(names.map((name) => [name, document.getElementById(name)]));
+const byId = (id) => document.getElementById(id);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const load = (key) => {
   try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
+    return JSON.parse(localStorage.getItem(key));
   } catch {
     return null;
   }
@@ -33,15 +32,12 @@ const save = (key, value) => {
 const shortId = (tokenId) => tokenId % 1000000;
 const makeTokenId = (projId, n) => projId * 1000000 + n;
 const shortAddr = (address) => `${address.slice(0, 6)}...${address.slice(-4)}`;
-const escapeHTML = (value) =>
-  String(value ?? "").replace(
-    /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
-  );
+
+const HTML_ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => HTML_ESC[c]);
 
 const safeUrl = (value) => {
-  if (typeof value !== "string" || value.trim() === "") return "";
+  if (typeof value !== "string" || !value.trim()) return "";
   try {
     const url = new URL(value.trim(), location.href);
     return ["http:", "https:"].includes(url.protocol) ? url.href : "";
@@ -53,7 +49,6 @@ const safeUrl = (value) => {
 const FETCH_BATCH_SIZE = 10;
 const FETCH_BATCH_DELAY = 2000;
 const DEP_TYPES = ["IPFS", "ARWEAVE", "ART_BLOCKS_DEPENDENCY_REGISTRY"];
-const DEFAULT_GATEWAY_HOST = "ipfs.filebase.io";
 const parseGatewayHost = (value) => {
   const host = String(value ?? "")
     .trim()
@@ -62,7 +57,7 @@ const parseGatewayHost = (value) => {
   return /^[a-z0-9.-]+(?::\d+)?$/i.test(host) ? host.toLowerCase() : "";
 };
 const GATEWAY_HOST =
-  parseGatewayHost(localStorage.getItem("ipfsGateway")) || DEFAULT_GATEWAY_HOST;
+  parseGatewayHost(localStorage.getItem("ipfsGateway")) || "ipfs.filebase.io";
 const GATEWAY_ORIGIN = `https://${GATEWAY_HOST}`;
 const IPFS_GATEWAY = `${GATEWAY_ORIGIN}/ipfs/`;
 const ARWEAVE_GATEWAY = "https://arweave.net/";
@@ -72,37 +67,38 @@ const loopTypes = ["all", "fav", "curated", "selected", "oob"];
 const canonicalizeGateways = (content) =>
   content.replace(GATEWAY_URL_PATTERN, `${GATEWAY_ORIGIN}/ipfs`);
 
+const mapValues = (obj, fn) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v)]));
+
 const dom = {
   root: document.documentElement,
   themeBtns: document.querySelectorAll(".theme-button"),
-  instruction: $(".instruction"),
-  infobar: $(".infobar"),
-  favMenu: $(".fav-menu"),
-  spinner: $(".spinner"),
-  panel: $(".panel"),
-  listPanel: $(".list-panel"),
-  favPanel: $(".fav-panel"),
-  overlay: $(".overlay"),
-  tooltip: $(".tooltip"),
-  managePanel: $(".manage-panel"),
-  rpcUrlInput: document.getElementById("rpcUrl"),
-  dec: document.getElementById("decrementBtn"),
-  inc: document.getElementById("incrementBtn"),
-  allLoop: document.getElementById("loopAll"),
-  search: document.getElementById("searchInput"),
-  manage: document.getElementById("manageBtn"),
-  ...byId(
-    "settings", "frame", "info", "explore", "loop", "repeatIcon", "dropMenu",
-    "favLoop", "curatedLoop", "selectedLoop", "oobLoop", "stopLoop", "loopInput",
-    "randomButton", "searchIcon", "favIcon", "favSave", "favOpen",
-    "manageListRows", "collectionForm", "collectionTarget", "collectionName",
-    "collectionArtist", "collectionPlatform", "collectionWorks", "collectionCancel",
-    "collectionStatus", "manageCopyList", "manageReset", "manageUpdate",
-    "copyStatus", "updateStatus", "manageUpdateResults", "manageContractRows",
-    "contractToggle", "contractSection", "contractSectionToggle",
-    "contractSectionLabel", "contractSectionIcon", "contractForm", "contractAbi",
-    "contractAddress", "contractPlatform", "contractStart", "contractCancel",
-    "contractStatus", "manageCopyContracts", "ipfsGateway",
+  ...mapValues(
+    {
+      instruction: ".instruction", infobar: ".infobar", favMenu: ".fav-menu",
+      spinner: ".spinner", panel: ".panel", listPanel: ".list-panel",
+      favPanel: ".fav-panel", overlay: ".overlay", tooltip: ".tooltip",
+      managePanel: ".manage-panel",
+    },
+    $,
+  ),
+  ...mapValues(
+    {
+      rpcUrlInput: "rpcUrl", dec: "decrementBtn", inc: "incrementBtn",
+      allLoop: "loopAll", search: "searchInput", manage: "manageBtn",
+    },
+    byId,
+  ),
+  ...Object.fromEntries(
+    `settings frame info explore loop repeatIcon dropMenu favLoop curatedLoop selectedLoop
+     oobLoop stopLoop loopInput randomButton searchIcon favIcon favSave favOpen manageListRows
+     collectionForm collectionTarget collectionName collectionArtist collectionPlatform
+     collectionWorks collectionCancel collectionStatus manageCopyList manageReset manageUpdate
+     copyStatus updateStatus manageUpdateResults manageContractRows contractToggle
+     contractSection contractSectionToggle contractSectionLabel contractSectionIcon
+     contractForm contractAbi contractAddress contractPlatform contractStart contractCancel
+     contractStatus manageCopyContracts ipfsGateway`
+      .split(/\s+/)
+      .map((id) => [id, byId(id)]),
   ),
 };
 
@@ -116,7 +112,6 @@ const call = makeCall(rpcUrl);
 dom.rpcUrlInput.placeholder = rpcUrl || "Enter RPC URL";
 dom.ipfsGateway.placeholder = GATEWAY_HOST;
 
-const baseContractRegistry = contractRegistry;
 const platformByProject = new Map();
 
 let overlay = ov.loadOverlay();
@@ -147,41 +142,38 @@ const saveLoopState = () => save("loopState", loopState);
 function rebuildPlatformIndex() {
   platformByProject.clear();
   activeList.forEach((line) => {
-    const parsed = ov.parseListLine(line);
-    if (parsed && !parsed.hidden && parsed.platform)
-      platformByProject.set(`${parsed.contract}${parsed.projectId}`, parsed.platform);
+    const p = ov.parseListLine(line);
+    if (p && !p.hidden && p.platform)
+      platformByProject.set(`${p.contract}${p.projectId}`, p.platform);
   });
 }
 
-if (ov.pruneReconciledChanges(overlay, list)) ov.saveOverlay(overlay);
-
 function rebuildRuntimeContracts() {
   registry = { ...baseContractRegistry };
-  let overlayChanged = false;
+  let changed = false;
 
   Object.entries(overlay.contracts).forEach(([key, config]) => {
     const bundled = baseContractRegistry[key];
-    const samePlatform = config.platform === (bundled?.platform || "");
-
-    if (
+    const matchesBundled =
       bundled &&
       config.abi === bundled.abi &&
-      String(config.address || "").toLowerCase() ===
-        String(bundled.address || "").toLowerCase() &&
-      samePlatform &&
-      (config.startProjId ?? 0) === (bundled.startProjId ?? 0)
-    ) {
+      String(config.address).toLowerCase() === String(bundled.address).toLowerCase() &&
+      config.platform === (bundled.platform || "") &&
+      (config.startProjId ?? 0) === (bundled.startProjId ?? 0);
+
+    if (matchesBundled) {
       delete overlay.contracts[key];
-      overlayChanged = true;
+      changed = true;
     } else if (abiProfiles[config.abi]) {
       registry[key] = config;
     }
   });
 
-  PMPV0_ADDR = registry.PMPV0 ? registry.PMPV0.address.toLowerCase() : "";
-  return overlayChanged;
+  PMPV0_ADDR = registry.PMPV0?.address.toLowerCase() ?? "";
+  return changed;
 }
 
+const pruned = ov.pruneReconciledChanges(overlay, list);
 const overlayDirty = rebuildRuntimeContracts();
 activeList = ov.mergeList(list, overlay);
 rebuildPlatformIndex();
@@ -189,6 +181,7 @@ rebuildPlatformIndex();
 const contractAt = (key) => registry[key];
 const isV3 = (contract) => contractAt(contract).abi.startsWith("v3");
 const isFlex = (contract) => contractAt(contract).abi.endsWith("Flex");
+const stateFn = (contract) => (isV3(contract) ? "projectStateData" : "projectTokenInfo");
 
 const contractCall = (contract, fnName, ...args) => {
   const { abi, address } = contractAt(contract);
@@ -204,23 +197,15 @@ const isPmpDep = (d) =>
   d?.dependency_type === "ONCHAIN" &&
   (d.bytecode_address?.toLowerCase() === PMPV0_ADDR ||
     (typeof d.data === "string" && d.data.trim().startsWith("#web3call")));
-
 const findPmpDep = (deps = []) => deps.find(isPmpDep);
 
-function parseListLine(line) {
-  const parsed = ov.parseListLine(line);
-  if (!parsed) return { collection: "", artist: "", workCount: "" };
-  const { collection, artist, works } = parsed;
-  return { collection, artist, workCount: `${works} ${works === 1 ? "Work" : "Works"}` };
-}
-
 class ListManager {
-  constructor(listData) {
-    this.setList(listData);
+  constructor(lines) {
+    this.setList(lines);
   }
 
-  setList(listData) {
-    this.originalList = listData.filter((line) => !line.trim().endsWith("!"));
+  setList(lines) {
+    this.originalList = lines.filter((line) => !line.trim().endsWith("!"));
     this.reset();
   }
 
@@ -229,29 +214,21 @@ class ListManager {
 
     if (query === "curated") {
       this.filteredList = this.originalList.filter((line) => {
-        const idMatch = line.match(/^BLOCKS(?:\[[2-5]\])?(\d+)/);
-        return (
-          idMatch &&
-          (curated.includes(parseInt(idMatch[1])) ||
-            line.startsWith("BLOCKS[4]") ||
-            line.startsWith("BLOCKS[5]"))
-        );
+        const id = line.match(/^BLOCKS(?:\[[2-5]\])?(\d+)/);
+        return id && (curated.includes(parseInt(id[1])) || /^BLOCKS\[[45]\]/.test(line));
       });
     } else {
       const exact = [];
       const partial = [];
-
       this.originalList.forEach((line) => {
-        if (line.split(" # ").length < 2) return;
-        const { collection, artist } = parseListLine(line);
+        const { collection, artist } = ov.describeLine(line);
         const name = collection.trim().toLowerCase();
         const artistName = artist.trim().toLowerCase();
-
         if (name === query) exact.push(line);
         else if (name.includes(query) || (artistName && artistName.includes(query)))
           partial.push(line);
       });
-      this.filteredList = exact.length > 0 ? exact : partial;
+      this.filteredList = exact.length ? exact : partial;
     }
 
     this.selectedIndex = -1;
@@ -260,11 +237,9 @@ class ListManager {
 
   navigate(direction) {
     const max = this.filteredList.length - 1;
-    this.selectedIndex =
-      direction === "up"
-        ? this.selectedIndex <= 0 ? max : this.selectedIndex - 1
-        : this.selectedIndex >= max ? 0 : this.selectedIndex + 1;
-    return this.selectedIndex;
+    const i = this.selectedIndex;
+    return (this.selectedIndex =
+      direction === "up" ? (i <= 0 ? max : i - 1) : i >= max ? 0 : i + 1);
   }
 
   getSelected() {
@@ -272,19 +247,18 @@ class ListManager {
   }
 
   reset() {
-    this.filteredList = this.originalList;
     this.selectedIndex = -1;
-    return this.filteredList;
+    return (this.filteredList = this.originalList);
   }
 }
 
 const listManager = new ListManager(activeList);
 
 function listItemHTML(line, index, numberQuery = "", selected = false) {
-  const { collection, artist, workCount } = parseListLine(line);
-  const displayName = numberQuery ? `${collection} #${numberQuery}` : collection;
+  const { collection, artist, workCount } = ov.describeLine(line);
+  const name = numberQuery ? `${collection} #${numberQuery}` : collection;
   return `<p class="list-item ${selected ? "selected" : ""}" data-index="${index}">
-           ${escapeHTML(displayName)}
+           ${escapeHTML(name)}
            <span>${escapeHTML(artist)} - ${escapeHTML(workCount)}</span>
         </p>`;
 }
@@ -298,53 +272,41 @@ function displayList(items, numberQuery = "") {
 function handleKeyboardNavigation(event) {
   if (event.key === "ArrowDown" || event.key === "ArrowUp") {
     event.preventDefault();
-    const newIndex = listManager.navigate(event.key === "ArrowUp" ? "up" : "down");
-    const { numberQuery } = parseQuery(dom.search.value.trim());
-    displayList(listManager.filteredList, numberQuery);
-    dom.listPanel
-      .querySelector(`[data-index="${newIndex}"]`)
-      ?.scrollIntoView({ block: "nearest" });
+    const index = listManager.navigate(event.key === "ArrowUp" ? "up" : "down");
+    displayList(listManager.filteredList, parseQuery(dom.search.value.trim()).numberQuery);
+    dom.listPanel.querySelector(`[data-index="${index}"]`)?.scrollIntoView({ block: "nearest" });
   } else if (event.key === "Enter") {
-    const selectedItem = listManager.getSelected();
+    const selected = listManager.getSelected();
     const query = dom.search.value.trim();
-    if (selectedItem) getToken(selectedItem, query);
+    if (selected) getToken(selected, query);
     else if (query === "curated") getRandom(listManager.filteredList);
     else if (query === "") getRandom(listManager.originalList);
-    else if (listManager.filteredList.length > 0)
-      getToken(listManager.filteredList[0], query);
+    else if (listManager.filteredList.length) getToken(listManager.filteredList[0], query);
   }
 }
 
 const fetchHash = (tokenId, contract) =>
-  contractCall(
-    contract,
-    contract === "BLOCKS" ? "showTokenHashes" : "tokenIdToHash",
-    tokenId,
-  );
+  contractCall(contract, contract === "BLOCKS" ? "showTokenHashes" : "tokenIdToHash", tokenId);
 
 const fetchProjectInfo = (projId, contract) =>
-  contractCall(
-    contract,
-    isV3(contract) ? "projectScriptDetails" : "projectScriptInfo",
-    projId,
-  );
+  contractCall(contract, isV3(contract) ? "projectScriptDetails" : "projectScriptInfo", projId);
 
-async function constructScript(projId, projectInfo, contract) {
-  const scriptCount = Number(projectInfo.scriptCount);
-  const batchSize = scriptCount > 30 ? 25 : scriptCount;
-  let fullScript = "";
+async function constructScript(projId, { scriptCount }, contract) {
+  const count = Number(scriptCount);
+  const step = count > 30 ? 25 : count;
+  let script = "";
 
-  for (let i = 0; i < scriptCount; i += batchSize) {
-    const batchEnd = Math.min(i + batchSize, scriptCount);
-    const batch = await Promise.all(
-      Array.from({ length: batchEnd - i }, (_, j) =>
+  for (let i = 0; i < count; i += step) {
+    const end = Math.min(i + step, count);
+    const parts = await Promise.all(
+      Array.from({ length: end - i }, (_, j) =>
         contractCall(contract, "projectScriptByIndex", projId, i + j),
       ),
     );
-    fullScript += batch.join("");
-    if (batchEnd < scriptCount) await sleep(300);
+    script += parts.join("");
+    if (end < count) await sleep(300);
   }
-  return fullScript;
+  return script;
 }
 
 async function fetchOwner(tokenId, contract) {
@@ -359,56 +321,38 @@ function extractLibraryName([first]) {
 }
 
 async function fetchEditionInfo(projId, contract) {
-  const info = await contractCall(
-    contract,
-    isV3(contract) ? "projectStateData" : "projectTokenInfo",
-    projId,
-  );
+  const info = await contractCall(contract, stateFn(contract), projId);
   return { edition: Number(info.maxInvocations), minted: Number(info.invocations) };
 }
 
 const fetchExtDepCount = async (projId, contract) =>
   (await contractCall(contract, "projectExternalAssetDependencyCount", projId)) || null;
 
-async function fetchCIDs(projId, extDepCount, contract) {
+async function fetchCIDs(projId, count, contract) {
   const tuples = await Promise.all(
-    Array.from({ length: Number(extDepCount) }, (_, i) =>
+    Array.from({ length: Number(count) }, (_, i) =>
       contractCall(contract, "projectExternalAssetDependencyByIndex", projId, i),
     ),
   );
 
-  if (!isV3(contract))
-    return tuples.map((t) => ({
-      cid: t.cid,
-      dependency_type: DEP_TYPES[Number(t.dependencyType ?? 0)] || "IPFS",
-      data: null,
-      isOnchain: false,
-  }));
-
   return tuples.map((tuple) => {
-    const type = Number(tuple.dependencyType || 0);
+    const depType = Number(tuple.dependencyType || 0);
+    const onchain = isV3(contract) && depType === 2;
+    if (!onchain)
+      return { cid: tuple.cid, dependency_type: DEP_TYPES[depType] || "IPFS", data: null, isOnchain: false };
 
-    if (type === 2) {
-      let data = tuple.data || "";
-      try {
-        if (data.startsWith("{")) data = JSON.parse(data);
-      } catch (error) {
-        console.log("ONCHAIN data parsing error:", error, "Raw:", data);
-      }
-      return {
-        cid: tuple.cid,
-        dependency_type: "ONCHAIN",
-        data,
-        bytecode_address: tuple.bytecodeAddress || "",
-        isOnchain: true,
-      };
+    let data = tuple.data || "";
+    try {
+      if (data.startsWith("{")) data = JSON.parse(data);
+    } catch (error) {
+      console.log("ONCHAIN data parsing error:", error, "Raw:", data);
     }
-
     return {
       cid: tuple.cid,
-      dependency_type: DEP_TYPES[type] || "IPFS",
-      data: null,
-      isOnchain: false,
+      dependency_type: "ONCHAIN",
+      data,
+      bytecode_address: tuple.bytecodeAddress || "",
+      isOnchain: true,
     };
   });
 }
@@ -418,9 +362,7 @@ async function fetchTokenParams(pmpAddress, contract, tokenId) {
     contractAt(contract).address,
     tokenId,
   ]).catch(() => []);
-  return Object.fromEntries(
-    raw.map(([k, v]) => [k, typeof v === "bigint" ? v.toString() : v]),
-  );
+  return Object.fromEntries(raw.map(([k, v]) => [k, typeof v === "bigint" ? v.toString() : v]));
 }
 
 async function loadTokenParams(extDep, contract, tokenId) {
@@ -430,7 +372,11 @@ async function loadTokenParams(extDep, contract, tokenId) {
 
 async function grabData(tokenId, contract, updateOnly = false) {
   const requestId = ++grabRequestId;
-  const isCurrentRequest = () => requestId === grabRequestId;
+  const live = async (promise) => {
+    const result = await promise;
+    if (requestId !== grabRequestId) throw new Error("superseded");
+    return result;
+  };
 
   try {
     toggleSpin();
@@ -438,53 +384,36 @@ async function grabData(tokenId, contract, updateOnly = false) {
     console.log("Contract:", contract, "Token Id:", tokenId);
 
     if (updateOnly) {
-      const [hash, { owner, ensName }] = await Promise.all([
-        fetchHash(tokenId, contract),
-        fetchOwner(tokenId, contract),
-      ]);
-      if (!isCurrentRequest()) return;
-
-      const data = load("contractData");
-      Object.assign(data, { tokenId, contract, hash, owner, ensName });
-
-      const tokenParams = await loadTokenParams(data.extDep, contract, tokenId);
-      if (!isCurrentRequest()) return;
+      const [hash, { owner, ensName }] = await live(
+        Promise.all([fetchHash(tokenId, contract), fetchOwner(tokenId, contract)]),
+      );
+      const data = Object.assign(load("contractData"), { tokenId, contract, hash, owner, ensName });
+      const tokenParams = await live(loadTokenParams(data.extDep, contract, tokenId));
       if (tokenParams) data.tokenParams = tokenParams;
-
-      save("contractData", data);
       update(data);
       return;
     }
 
     const projId = Math.floor(tokenId / 1000000);
-    const [hash, projectInfo, detail, { owner, ensName }, { edition, minted }] =
-      await Promise.all([
+    const [hash, projectInfo, detail, { owner, ensName }, { edition, minted }] = await live(
+      Promise.all([
         fetchHash(tokenId, contract),
         fetchProjectInfo(projId, contract),
         contractCall(contract, "projectDetails", projId),
         fetchOwner(tokenId, contract),
         fetchEditionInfo(projId, contract),
-      ]);
-    if (!isCurrentRequest()) return;
+      ]),
+    );
 
-    const [script, extLib] = await Promise.all([
-      constructScript(projId, projectInfo, contract),
-      extractLibraryName(projectInfo),
-    ]);
-    if (!isCurrentRequest()) return;
+    const extLib = extractLibraryName(projectInfo);
+    const script = await live(constructScript(projId, projectInfo, contract));
 
     let extDep = [];
     let tokenParams = null;
-
     if (isFlex(contract)) {
-      const extDepCount = await fetchExtDepCount(projId, contract);
-      if (!isCurrentRequest()) return;
-      if (extDepCount) {
-        extDep = await fetchCIDs(projId, extDepCount, contract);
-        if (!isCurrentRequest()) return;
-      }
-      tokenParams = await loadTokenParams(extDep, contract, tokenId);
-      if (!isCurrentRequest()) return;
+      const count = await live(fetchExtDepCount(projId, contract));
+      if (count) extDep = await live(fetchCIDs(projId, count, contract));
+      tokenParams = await live(loadTokenParams(extDep, contract, tokenId));
     }
 
     update({
@@ -492,21 +421,18 @@ async function grabData(tokenId, contract, updateOnly = false) {
       edition, minted, extDep, tokenParams,
     });
   } catch (error) {
-    if (!isCurrentRequest()) return;
+    if (requestId !== grabRequestId) return;
     console.error(`grabData (${updateOnly ? "update" : "full"})`, error);
     toggleSpin(false);
   }
 }
 
 function normalizeContract(data) {
-  const key =
-    data.contractKey ??
-    (typeof data.contract === "string"
-      ? data.contract
-      : Object.keys(registry)[data.contract]);
-  if (!registry[key]) return null;
   const { contractKey, ...rest } = data;
-  return { ...rest, contract: key };
+  const key =
+    contractKey ??
+    (typeof data.contract === "string" ? data.contract : Object.keys(registry)[data.contract]);
+  return registry[key] ? { ...rest, contract: key } : null;
 }
 
 function update(data, { cancelPending = false } = {}) {
@@ -520,33 +446,26 @@ function update(data, { cancelPending = false } = {}) {
   }
 
   contractData = normalized;
-  const platform = getPlatform(contractData.contract, contractData.projId);
-
   save("contractData", contractData);
   pushItemToLocalStorage(contractData);
   injectFrame();
-  updateUI({ ...contractData, platform });
+  updateUI({ ...contractData, platform: getPlatform(contractData.contract, contractData.projId) });
   setUIControls();
   toggleSpin(false);
   return true;
 }
 
-function pushItemToLocalStorage({
-  contract, tokenId, hash, script, extLib, extDep = [], tokenParams,
-}) {
-  const tokenIdStr = tokenId.toString();
+function pushItemToLocalStorage({ contract, tokenId, hash, script, extLib, extDep = [], tokenParams }) {
   script = canonicalizeGateways(script);
 
   const src = [libs[extLib]];
   if (extDep[0]?.cid?.includes("@")) src.push(libs[extDep[0].cid]);
-  const scripts = src.filter(Boolean);
 
-  const tokenData = { tokenId: tokenIdStr };
+  const tokenData = { tokenId: tokenId.toString() };
 
   if (extDep.length) {
     tokenData.externalAssetDependencies = extDep.map((d) => {
       const hasParams = isPmpDep(d) && tokenParams && Object.keys(tokenParams).length > 0;
-
       return {
         cid: canonicalizeGateways(d.cid),
         dependency_type: d.dependency_type,
@@ -564,7 +483,7 @@ function pushItemToLocalStorage({
   }
 
   save("scriptData", {
-    src: scripts,
+    src: src.filter(Boolean),
     tokenIdHash: `let tokenData = ${JSON.stringify(tokenData)}`,
     process: extLib.startsWith("processing") ? "application/processing" : "",
     script,
@@ -576,50 +495,29 @@ function getPlatform(contractName, projId) {
   if (inline) return inline;
 
   if (["BLOCKS", "BLOCKS[2]", "BLOCKS[3]"].includes(contractName)) {
-    return curated.includes(projId)
-      ? "Art Blocks Curated"
-      : playground.includes(projId)
-        ? "Art Blocks Playground"
-        : projId < 374
-          ? "Art Blocks Factory"
-          : "Art Blocks Presents";
+    if (curated.includes(projId)) return "Art Blocks Curated";
+    if (playground.includes(projId)) return "Art Blocks Playground";
+    return projId < 374 ? "Art Blocks Factory" : "Art Blocks Presents";
   }
-  const entry = registry[contractName];
-  if (entry?.platform) return entry.platform;
-  return isStudio(contractName) ? "Art Blocks Studio" : "";
+  return registry[contractName]?.platform || (isStudio(contractName) ? "Art Blocks Studio" : "");
 }
 
-function getLibVersion(extLib) {
-  return (
-    Object.keys(libs).find((key) => key.startsWith(extLib.replace(/js$/, "") + "@")) ||
-    extLib
-  );
-}
+const getLibVersion = (extLib) =>
+  Object.keys(libs).find((key) => key.startsWith(extLib.replace(/js$/, "") + "@")) || extLib;
 
 const showExtDep = (dep) =>
   dep && !["ONCHAIN", "ART_BLOCKS_DEPENDENCY_REGISTRY"].includes(dep.dependency_type);
 
-function getExtDepType(dep, contract) {
-  return contract === "MOMENTFLEX" || dep.dependency_type === "IPFS"
-    ? "ipfs"
-    : "arweave";
-}
+const getExtDepType = (dep, contract) =>
+  contract === "MOMENTFLEX" || dep.dependency_type === "IPFS" ? "ipfs" : "arweave";
 
-function editionTxt(edition, minted) {
-  return edition - minted > 0
+const editionTxt = (edition, minted) =>
+  edition - minted > 0
     ? `${minted} / ${edition} Minted`
     : `${edition} Work${edition > 1 ? "s" : ""}`;
-}
 
 const createSection = (title, content) =>
-  content
-    ? `<div class="section">
-         <p class="more">
-           ${title} <br>
-           ${content}
-         </p>
-       </div>`
-    : "";
+  content ? `<div class="section"><p class="more">${title} <br> ${content}</p></div>` : "";
 
 const extractDomain = (href) => new URL(href).host.replace(/^www\./, "");
 
@@ -640,34 +538,27 @@ function renderInfoTitle(text) {
   }
 }
 
-function updateUI({
-  contract, owner, ensName, extLib, detail, tokenId, platform, edition, minted, extDep,
-}) {
+function updateUI({ contract, owner, ensName, extLib, detail, tokenId, platform, edition, minted, extDep }) {
   renderInfoTitle(`${detail[0]} #${shortId(tokenId)}${detail[1] ? ` / ${detail[1]}` : ""}`);
 
-  const showLib =
-    extLib && !["js", "svg", "custom"].some((prefix) => extLib.startsWith(prefix));
+  const first = extDep[0];
+  const showLib = extLib && !["js", "svg", "custom"].some((prefix) => extLib.startsWith(prefix));
   const libInfo = showLib
     ? escapeHTML(getLibVersion(extLib)) +
-      (extDep.length > 0 && extDep[0].cid && extDep[0].cid.length < 10
-        ? ` <br> ${escapeHTML(extDep[0].cid)}`
-        : "")
+      (first?.cid && first.cid.length < 10 ? ` <br> ${escapeHTML(first.cid)}` : "")
     : "";
-
-  const showExt =
-    (extDep.length > 0 && showExtDep(extDep[0])) || contract === "MOMENTFLEX";
-  const extInfo = showExt ? escapeHTML(getExtDepType(extDep[0], contract)) : "";
-  const dependencyInfo =
-    libInfo && extInfo ? `${libInfo} <br> ${extInfo}` : libInfo || extInfo;
+  const extInfo =
+    showExtDep(first) || contract === "MOMENTFLEX"
+      ? escapeHTML(getExtDepType(first, contract))
+      : "";
+  const dependencyInfo = [libInfo, extInfo].filter(Boolean).join(" <br> ");
   const website = safeUrl(detail[3]);
 
-  const copyLink = (title, href, label, copyText = href) =>
+  const link = (title, href, label, copy) =>
     createSection(
       title,
       `<a href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)}</a>
-       <span class="copy-txt" data-text="${escapeHTML(copyText)}">
-         <i class="fa-regular fa-copy"></i>
-       </span>`,
+       ${copy ? `<span class="copy-txt" data-text="${escapeHTML(copy)}"><i class="fa-regular fa-copy"></i></span>` : ""}`,
     );
   const copyVal = (title, val) =>
     createSection(
@@ -688,28 +579,12 @@ function updateUI({
      <p>${escapeHTML(detail[2])}</p>
      <div class="column-box">
        <div class="column">
-         ${
-           owner
-             ? copyLink(
-                 "OWNER",
-                 `https://opensea.io/profile/${owner}`,
-                 ensName || shortAddr(owner),
-                 owner,
-               )
-             : ""
-         }
-         ${copyLink("CONTRACT", `https://etherscan.io/address/${address}`, shortAddr(address), address)}
+         ${owner ? link("OWNER", `https://opensea.io/${owner}`, ensName || shortAddr(owner), owner) : ""}
+         ${link("CONTRACT", `https://etherscan.io/address/${address}`, shortAddr(address), address)}
          ${copyVal("TOKEN ID", tokenId)}
        </div>
        <div class="column">
-         ${
-           website
-             ? createSection(
-                 "ARTIST WEBSITE",
-                 `<a href="${escapeHTML(website)}" target="_blank" rel="noopener noreferrer">${escapeHTML(extractDomain(website))}</a>`,
-               )
-             : ""
-         }
+         ${website ? link("ARTIST WEBSITE", website, extractDomain(website)) : ""}
          ${plain("DEPENDENCY", dependencyInfo)}
          ${plain("LICENSE", escapeHTML(detail[4]))}
        </div>
@@ -729,15 +604,8 @@ function injectFrame() {
       canvas { padding: 0; margin: auto; display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }`;
 
     const three167 = src.find((s) => s.includes("three.js/0.167.0"));
-
     const scriptTags = three167
-      ? `<script type="importmap">
-          {
-            "imports": {
-              "three":  "${three167}"
-            }
-          }
-        </script>`
+      ? `<script type="importmap">{ "imports": { "three": "${three167}" } }</script>`
       : src.map((s) => `<script src="${s}"></script>`).join("");
 
     const canvasAndScript = process
@@ -754,9 +622,7 @@ function injectFrame() {
             <script>${tokenIdHash};</script>
             <style>${styles}</style>
           </head>
-          <body>
-            ${canvasAndScript}
-          </body>
+          <body>${canvasAndScript}</body>
         </html>`;
 
     lastFrameHTML = html;
@@ -767,21 +633,14 @@ function injectFrame() {
 }
 
 function getToken(line, searchQuery) {
-  if (!line) return;
-  const match = line.match(/^([A-Z]+(?:\[\d+\])?)\s?(\d+).*?(\d+)\s*Work/);
+  const match = line?.match(/^([A-Z]+(?:\[\d+\])?)\s?(\d+).*?(\d+)\s*Work/);
   if (!match) return;
 
   const [, contract, projIdStr, tokenStr] = match;
-
-  if (!registry[contract]) {
-    console.error(`Unknown contract in collection line: ${contract}`);
-    return;
-  }
+  if (!registry[contract]) return console.error(`Unknown contract in collection line: ${contract}`);
 
   const numberMatch = searchQuery.match(/#\s*(\d+)/);
-  const pick = numberMatch
-    ? parseInt(numberMatch[1])
-    : Math.floor(Math.random() * parseInt(tokenStr));
+  const pick = numberMatch ? parseInt(numberMatch[1]) : Math.floor(Math.random() * parseInt(tokenStr));
 
   grabData(makeTokenId(parseInt(projIdStr), pick), contract);
   dom.search.value = "";
@@ -791,51 +650,38 @@ function getToken(line, searchQuery) {
 
 function getRandom(source) {
   if (Array.isArray(source)) {
-    const usable = source.filter((line) => {
-      const p = ov.parseListLine(line);
-      return p && registry[p.contract];
-    });
-    if (usable.length) getToken(usable[Math.floor(Math.random() * usable.length)], "");
-  } else if (typeof source === "object" && Object.keys(source).length > 0) {
-    const keys = Object.keys(source);
-    update(source[keys[Math.floor(Math.random() * keys.length)]], { cancelPending: true });
+    const usable = source.filter((line) => registry[ov.parseListLine(line)?.contract]);
+    if (usable.length) getToken(randomItem(usable), "");
+  } else if (source && Object.keys(source).length) {
+    update(source[randomItem(Object.keys(source))], { cancelPending: true });
   }
 }
 
 function exploreAlgo() {
   if (contractData.detail[0] === "Unigrids") return;
 
-  const hash = Array.from({ length: 64 }, () =>
-    Math.floor(Math.random() * 16).toString(16),
-  ).join("");
+  const hash = Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("");
   const base = contractData.projId * 1000000;
   const minToken = base + contractData.minted;
   const maxToken = base + 999999;
   if (minToken > maxToken) return;
-  const tokenId = Math.floor(Math.random() * (maxToken - minToken + 1) + minToken);
 
+  const tokenId = Math.floor(Math.random() * (maxToken - minToken + 1) + minToken);
   Object.assign(contractData, { hash, tokenId, owner: "", ensName: "" });
   update(contractData, { cancelPending: true });
 }
 
 function stepTokenId(dir) {
   if (!contractData || contractData.minted <= 0) return;
-  const max = contractData.minted - 1;
-  const n = shortId(contractData.tokenId);
-  const next = dir > 0 ? (n === max ? 0 : n + 1) : n === 0 ? max : n - 1;
-  contractData.tokenId = makeTokenId(contractData.projId, next);
+  const { minted, projId } = contractData;
+  contractData.tokenId = makeTokenId(projId, (shortId(contractData.tokenId) + dir + minted) % minted);
   grabData(contractData.tokenId, contractData.contract, true);
 }
 
 function findCurrentCollectionLine(name) {
-  const key = contractData?.contract;
   return listManager.originalList.find((line) => {
-    const parsed = ov.parseListLine(line);
-    return (
-      parsed &&
-      parsed.contract === key &&
-      parsed.collection.trim() === name
-    );
+    const p = ov.parseListLine(line);
+    return p && p.contract === contractData?.contract && p.collection.trim() === name;
   });
 }
 
@@ -847,8 +693,7 @@ const loopActions = {
     getRandom(listManager.filteredList);
   },
   selectedLoop: () => {
-    const name = contractData.detail[0].trim();
-    const line = findCurrentCollectionLine(name);
+    const line = findCurrentCollectionLine(contractData.detail[0].trim());
     if (line) getToken(line, "");
   },
   oobLoop: exploreAlgo,
@@ -886,16 +731,16 @@ function checkLoop() {
 }
 
 function handleLoop(action) {
-  const inputValue = dom.loopInput.value.trim();
-  const interval =
-    inputValue === "" ? loopState.interval : parseInt(inputValue, 10) * 60000;
+  const input = dom.loopInput.value.trim();
+  const interval = input === "" ? loopState.interval : parseInt(input, 10) * 60000;
+  const invalid = !Number.isFinite(interval) || interval <= 0
+    ? "Please enter a time in minutes."
+    : action === "favLoop" && !Object.keys(favorite).length
+      ? "Save a favorite first."
+      : "";
 
-  if (!Number.isFinite(interval) || interval <= 0) {
-    alert("Please enter a time in minutes.");
-    return updateLoopButton();
-  }
-  if (action === "favLoop" && Object.keys(favorite).length === 0) {
-    alert("Save a favorite first.");
+  if (invalid) {
+    alert(invalid);
     return updateLoopButton();
   }
 
@@ -905,11 +750,11 @@ function handleLoop(action) {
   updateLoopButton();
 }
 
-const updateLoopButton = () => {
+function updateLoopButton() {
   const looping = loopState.isLooping === "true";
   $(".fa-repeat").style.display = looping ? "none" : "inline-block";
   $(".fa-circle-stop").style.display = looping ? "inline-block" : "none";
-};
+}
 
 const favoriteKey = ({ contract, tokenId }) => `${contract}:${tokenId}`;
 
@@ -917,18 +762,18 @@ function saveOutput() {
   let content = lastFrameHTML;
   try {
     content = dom.frame.contentDocument?.documentElement?.outerHTML || content;
-  } catch { }
+  } catch { /* cross-origin frame: fall back to the HTML we injected */ }
   if (!content) return;
 
-  const id = shortId(contractData.tokenId);
   const url = URL.createObjectURL(new Blob([content], { type: "text/html" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${contractData.detail[0].replace(/\s+/g, "-")}#${id}.html`;
+  const link = Object.assign(document.createElement("a"), {
+    href: url,
+    download: `${contractData.detail[0].replace(/\s+/g, "-")}#${shortId(contractData.tokenId)}.html`,
+  });
   document.body.appendChild(link);
   link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
   link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 
   favorite[favoriteKey(contractData)] = contractData;
   save("favorite", favorite);
@@ -947,23 +792,16 @@ function displayFavoriteList() {
 
   Object.keys(favorite).forEach((key) => {
     const data = favorite[key] || {};
-    const id = data.tokenId !== undefined && data.tokenId !== null
-      ? shortId(data.tokenId)
-      : null;
     const name = data.detail?.[0] ?? key;
-    const artist = data.detail?.[1] ?? "";
-
+    const hasId = data.tokenId !== undefined && data.tokenId !== null;
 
     const row = document.createElement("p");
     row.style.cssText = "display:flex; justify-content:space-between; align-items:center";
 
     const label = document.createElement("span");
     label.className = "fav-item";
-    label.textContent = id === null ? name : `${name} #${id}`;
-
-    const artistEl = document.createElement("span");
-    artistEl.textContent = artist;
-    label.appendChild(artistEl);
+    label.textContent = hasId ? `${name} #${shortId(data.tokenId)}` : name;
+    label.appendChild(Object.assign(document.createElement("span"), { textContent: data.detail?.[1] ?? "" }));
 
     const del = document.createElement("span");
     del.className = "delete-btn";
@@ -985,18 +823,15 @@ function displayFavoriteList() {
   });
 }
 
-const clearDataStorage = () =>
-  ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
+const clearDataStorage = () => ["contractData", "scriptData"].forEach((d) => localStorage.removeItem(d));
 
 const clearPanels = () =>
   [dom.overlay, dom.infobar, ...panels].forEach((el) => el.classList.remove("active"));
 
-const togglePanel = (panelElement) => {
-  panels.forEach((p) =>
-    p !== panelElement ? p.classList.remove("active") : (p.scrollTop = 0),
-  );
-  const isActive = panelElement.classList.toggle("active");
-  [dom.overlay, dom.infobar].forEach((el) => el.classList.toggle("active", isActive));
+const togglePanel = (panel) => {
+  panels.forEach((p) => (p !== panel ? p.classList.remove("active") : (p.scrollTop = 0)));
+  const active = panel.classList.toggle("active");
+  [dom.overlay, dom.infobar].forEach((el) => el.classList.toggle("active", active));
 };
 
 const bindPanelToggle = (el, panel, before) =>
@@ -1006,28 +841,26 @@ const bindPanelToggle = (el, panel, before) =>
     togglePanel(panel);
   });
 
-const alignFavMenu = () => {
+function alignFavMenu() {
   if (window.matchMedia("(max-width: 600px)").matches) {
-    dom.favMenu.style.left = "";
-    dom.favMenu.style.right = "";
+    dom.favMenu.style.left = dom.favMenu.style.right = "";
     return;
   }
   const { right } = dom.favIcon.getBoundingClientRect();
   dom.favMenu.style.left = `${Math.max(10, right + 25 - dom.favMenu.offsetWidth)}px`;
   dom.favMenu.style.right = "auto";
-};
+}
 
 const toggleSpin = (show = true) => {
   dom.spinner.style.display = show ? "block" : "none";
 };
 
-const setUIControls = (skipOverlay = false) => {
+function setUIControls(skipOverlay = false) {
   const hasContract = !!contractData;
   const hasRPC = !!rpcUrl;
   const hasFavorites = Object.keys(favorite).length > 0;
 
   dom.infobar.style.opacity = !hasRPC || !hasContract ? "0.9" : "";
-
   [dom.inc, dom.dec, dom.info, dom.explore, dom.loop].forEach(
     (button) => (button.style.display = hasContract ? "block" : "none"),
   );
@@ -1039,15 +872,14 @@ const setUIControls = (skipOverlay = false) => {
   dom.favOpen.disabled = !hasFavorites;
   dom.favIcon.style.display = hasContract || hasFavorites ? "block" : "none";
   if (!hasFavorites && hasRPC) clearPanels();
-};
+}
 
 async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
     return true;
   } catch {
-    const area = document.createElement("textarea");
-    area.value = text;
+    const area = Object.assign(document.createElement("textarea"), { value: text });
     area.style.cssText = "position:fixed;opacity:0";
     document.body.appendChild(area);
     area.select();
@@ -1067,17 +899,13 @@ const fail = (element, message) => {
   return false;
 };
 
-const persistOverlay = () => {
+function persistOverlay() {
   const saved = ov.saveOverlay(overlay);
-  if (!saved)
-    setManageStatus(dom.collectionStatus, "Could not save changes in this browser.", true);
+  if (!saved) fail(dom.collectionStatus, "Could not save changes in this browser.");
   return saved;
-};
+}
 
-if (overlayDirty) persistOverlay();
-
-const lineFromParsed = (parsed, works = parsed.works) =>
-  ov.makeListLine({ ...parsed, works });
+if (pruned || overlayDirty) persistOverlay();
 
 const manageButton = (action, label, attr = "data-action", extra = "") =>
   `<button type="button" class="manage-btn${extra ? ` ${extra}` : ""}" ${attr}="${action}">${label}</button>`;
@@ -1090,13 +918,12 @@ function commitChanges(statusElement, message, { contracts = false } = {}) {
 }
 
 function populateManagementSelects() {
-  const selectedAbi = dom.contractAbi.value;
+  const selected = dom.contractAbi.value;
   dom.contractAbi.innerHTML = Object.keys(abiProfiles)
     .filter((name) => !["PMPV0", "bm", "v1"].includes(name))
     .map((name) => `<option value="${name}">${name}</option>`)
     .join("");
-  dom.contractAbi.value =
-    selectedAbi && abiProfiles[selectedAbi] ? selectedAbi : "v3Flex";
+  dom.contractAbi.value = selected && abiProfiles[selected] ? selected : "v3Flex";
 }
 
 function refreshLibrary({ contracts = false } = {}) {
@@ -1128,24 +955,21 @@ function refreshLibrary({ contracts = false } = {}) {
 }
 
 function renderManageList() {
-  const entries = ov.listEntries(list, overlay).filter((entry) => entry.kind !== "base");
-  listManageEntries = entries;
+  listManageEntries = ov.listEntries(list, overlay).filter((entry) => entry.kind !== "base");
 
-  if (entries.length === 0) {
+  if (!listManageEntries.length) {
     dom.manageListRows.innerHTML = '<p class="manage-status">No local changes yet.</p>';
     return;
   }
 
-  dom.manageListRows.innerHTML = entries
+  dom.manageListRows.innerHTML = listManageEntries
     .map((entry, index) => {
       const hidden = entry.kind === "removed" || ov.parseListLine(entry.line)?.hidden;
       const actions = hidden
-        ? `${manageButton("unhide", "Unhide")}${manageButton("remove", "Remove")}`
-        : `${manageButton("edit", "Edit")}${manageButton("hide", "Hide")}${manageButton("remove", "Remove")}`;
+        ? manageButton("unhide", "Unhide") + manageButton("remove", "Remove")
+        : manageButton("edit", "Edit") + manageButton("hide", "Hide") + manageButton("remove", "Remove");
 
-      return `<div class="manage-item ${
-        entry.kind === "removed" ? "removed" : hidden ? "hidden" : ""
-      }" data-entry-index="${index}">
+      return `<div class="manage-item ${entry.kind === "removed" ? "removed" : hidden ? "hidden" : ""}" data-entry-index="${index}">
         <p class="manage-item-main">${escapeHTML(entry.line)}</p>
         <div class="manage-item-actions">
           <span class="manage-badge">${entry.kind}</span>
@@ -1160,23 +984,22 @@ const contractKind = (key) =>
   !baseContractRegistry[key] ? "custom" : overlay.contracts[key] ? "overridden" : "bundled";
 
 function renderManageContracts() {
-  const keys = Object.keys(registry).filter(
+  contractManageEntries = Object.keys(registry).filter(
     (key) => !frozenContracts.has(key) && contractKind(key) !== "bundled",
   );
-  contractManageEntries = keys;
 
-  dom.contractSection.hidden = keys.length === 0;
-  dom.contractSectionLabel.textContent = `Contracts (${keys.length})`;
+  dom.contractSection.hidden = !contractManageEntries.length;
+  dom.contractSectionLabel.textContent = `Contracts (${contractManageEntries.length})`;
 
-  dom.manageContractRows.innerHTML = keys
+  dom.manageContractRows.innerHTML = contractManageEntries
     .map((key, index) => {
-      const config = registry[key];
+      const { abi, address, platform, startProjId } = registry[key];
       return `<div class="manage-item" data-contract-index="${index}">
         <p class="manage-item-main">${escapeHTML(key)}
           <span class="manage-badge">${contractKind(key)}</span></p>
-        <p class="manage-item-main">${config.abi} &bull; ${shortAddr(config.address)}${
-          config.platform ? ` &bull; ${escapeHTML(config.platform)}` : ""
-        }${config.startProjId !== undefined ? ` &bull; start ${config.startProjId}` : ""}</p>
+        <p class="manage-item-main">${abi} &bull; ${shortAddr(address)}${
+          platform ? ` &bull; ${escapeHTML(platform)}` : ""
+        }${startProjId !== undefined ? ` &bull; start ${startProjId}` : ""}</p>
         <div class="manage-item-actions">
           ${manageButton("edit", "Edit")}
           ${manageButton("remove", "Remove")}
@@ -1188,25 +1011,19 @@ function renderManageContracts() {
 
 function setCollectionFormOpen(open) {
   dom.collectionForm.hidden = !open;
-  if (open) {
-    setManageStatus(dom.collectionStatus, "");
-  } else {
-    listEdit = null;
-    dom.collectionForm.reset();
-    dom.collectionTarget.textContent = "Edit collection";
-  }
+  if (open) return setManageStatus(dom.collectionStatus, "");
+  listEdit = null;
+  dom.collectionForm.reset();
+  dom.collectionTarget.textContent = "Edit collection";
 }
 
 function setContractFormOpen(open) {
   dom.contractForm.hidden = !open;
   dom.contractToggle.textContent = open ? "Cancel" : "+ Add contract";
-  if (open) {
-    setManageStatus(dom.contractStatus, "");
-  } else {
-    contractEditKey = null;
-    dom.contractForm.reset();
-    dom.contractAbi.value = "v3Flex";
-  }
+  if (open) return setManageStatus(dom.contractStatus, "");
+  contractEditKey = null;
+  dom.contractForm.reset();
+  dom.contractAbi.value = "v3Flex";
 }
 
 function setContractSectionOpen(open) {
@@ -1221,11 +1038,7 @@ function startListEdit(entry) {
   const parsed = ov.parseListLine(entry.line);
   if (!parsed) return;
 
-  listEdit = {
-    parsed,
-    original: entry.original,
-    additionLine: entry.kind === "added" ? entry.line : null,
-  };
+  listEdit = { parsed, original: entry.original, additionLine: entry.kind === "added" ? entry.line : null };
 
   setCollectionFormOpen(true);
   dom.collectionTarget.textContent = `Edit ${parsed.contract}${parsed.projectId}`;
@@ -1253,7 +1066,7 @@ function startContractEdit(key) {
 const countKind = (results, kind) => results.filter((r) => r.kind === kind).length;
 
 function renderUpdateResults() {
-  if (updateResults.length === 0) {
+  if (!updateResults.length) {
     dom.manageUpdateResults.innerHTML = "";
     return;
   }
@@ -1263,14 +1076,11 @@ function renderUpdateResults() {
     .slice(0, limit)
     .map((result, index) => {
       const isNew = result.kind === "new";
-      const badge = isNew
-        ? `<span class="manage-badge">new</span>`
-        : `<span class="manage-badge">${result.oldWorks} &rarr; ${result.newWorks} works</span>`;
-
+      const badge = isNew ? "new" : `${result.oldWorks} &rarr; ${result.newWorks} works`;
       return `<div class="manage-item" data-update-index="${index}">
         <p class="manage-item-main">${escapeHTML(result.line)}</p>
         <div class="manage-item-actions">
-          ${badge}
+          <span class="manage-badge">${badge}</span>
           ${manageButton("apply", isNew ? "Add" : "Update", "data-update-action")}
           ${manageButton("dismiss", "Dismiss", "data-update-action")}
         </div>
@@ -1283,68 +1093,12 @@ function renderUpdateResults() {
       ? `<p class="manage-status">Showing first ${limit} of ${updateResults.length}. Apply all the results.</p>`
       : "";
   const kinds = new Set(updateResults.map((r) => r.kind));
-  const applyLabel =
-    kinds.size > 1 ? "Apply all" : kinds.has("new") ? "Add all" : "Update all";
+  const applyLabel = kinds.size > 1 ? "Apply all" : kinds.has("new") ? "Add all" : "Update all";
 
   dom.manageUpdateResults.innerHTML = `${rows}${more}
     <div class="manage-row">
       ${manageButton("apply-all", `${applyLabel} (${updateResults.length})`, "data-update-action", "primary")}
     </div>`;
-}
-
-function knownListIdentities() {
-  const known = new Set();
-  const remember = (line) => {
-    const identity = ov.listIdentity(line);
-    if (identity) known.add(identity);
-  };
-
-  list.forEach(remember);
-  overlay.list.forEach((change) => {
-    if (change.line) remember(change.line);
-    if (change.original) remember(change.original);
-  });
-  return known;
-}
-
-function currentLibraryEntries() {
-  const entries = new Map();
-  ov.listEntries(list, overlay).forEach((entry) => {
-    if (entry.kind === "removed") return;
-    const identity = ov.listIdentity(entry.line);
-    if (identity) entries.set(identity, entry);
-  });
-  return entries;
-}
-
-function compareProjectLine(line, currentEntries) {
-  const identity = ov.listIdentity(line);
-  if (!identity) return null;
-
-  const current = currentEntries.get(identity);
-  if (!current) return { kind: "new", identity, line };
-
-  const currentParsed = ov.parseListLine(current.line);
-  const nextParsed = ov.parseListLine(line);
-  if (!currentParsed || !nextParsed || currentParsed.works === nextParsed.works)
-    return null;
-
-  return {
-    kind: "changed",
-    identity,
-    line: lineFromParsed(currentParsed, nextParsed.works),
-    original: current.original,
-    previousLine: current.line,
-    added: current.kind === "added",
-    oldWorks: currentParsed.works,
-    newWorks: nextParsed.works,
-  };
-}
-
-function applyUpdateResult(result) {
-  if (result.kind === "new") return ov.applyAdd(overlay, result.line);
-  if (result.added) return ov.applyAdd(overlay, result.line, result.previousLine);
-  return ov.applyEdit(overlay, result.original, result.line);
 }
 
 async function fetchStartingProjectId(address, abi) {
@@ -1356,22 +1110,14 @@ async function fetchStartingProjectId(address, abi) {
   }
 }
 
-async function chainStartProjId(contract) {
-  if (!isV3(contract)) return 0;
-  const { address, abi } = contractAt(contract);
-  return fetchStartingProjectId(address, abi);
-}
-
 async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
-  if (!registry[contractName]) throw new Error(`Unknown contract: ${contractName}`);
+  const config = registry[contractName];
+  if (!config) throw new Error(`Unknown contract: ${contractName}`);
 
-  const start = Math.max(
-    registry[contractName].startProjId || 0,
-    await chainStartProjId(contractName),
-  );
+  const chainStart = isV3(contractName) ? await fetchStartingProjectId(config.address, config.abi) : 0;
+  const start = Math.max(config.startProjId || 0, chainStart);
   const end = Number(await contractCall(contractName, "nextProjectId"));
   const ids = Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
-  const stateFn = isV3(contractName) ? "projectStateData" : "projectTokenInfo";
 
   for (let offset = 0; offset < ids.length; offset += FETCH_BATCH_SIZE) {
     const batchIds = ids.slice(offset, offset + FETCH_BATCH_SIZE);
@@ -1379,25 +1125,21 @@ async function fetchProjectLines(contractName, { onLine, onProgress } = {}) {
       batchIds.map(async (id) => {
         try {
           const detail = await contractCall(contractName, "projectDetails", id.toString());
-          const token = await contractCall(contractName, stateFn, id);
-          return [detail, token];
+          return [detail, await contractCall(contractName, stateFn(contractName), id)];
         } catch {
           return null;
         }
       }),
     );
 
-    results.forEach((result, idx) => {
+    results.forEach((result, i) => {
       if (!result) return;
       const [detail, token] = result;
       const noun = Number(token.invocations) === 1 ? "Work" : "Works";
-      onLine?.(
-        `${contractName}${batchIds[idx]} # ${detail[0]} / ${detail[1]} # ${token.invocations} ${noun}`,
-      );
+      onLine?.(`${contractName}${batchIds[i]} # ${detail[0]} / ${detail[1]} # ${token.invocations} ${noun}`);
     });
 
     onProgress?.({ scanned: offset + batchIds.length, total: ids.length });
-
     if (offset + FETCH_BATCH_SIZE < ids.length) await sleep(FETCH_BATCH_DELAY);
   }
 }
@@ -1407,7 +1149,7 @@ async function scanContract(name, known, currentEntries, onProgress) {
 
   await fetchProjectLines(name, {
     onLine: (line) => {
-      const result = compareProjectLine(line, currentEntries);
+      const result = ov.compareProjectLine(line, currentEntries);
       if (!result) return;
       if (result.kind === "new") {
         if (known.has(result.identity)) return;
@@ -1431,8 +1173,8 @@ async function updateAllContracts() {
   renderUpdateResults();
   setManageStatus(dom.updateStatus, "Checking active contracts...");
 
-  const known = knownListIdentities();
-  const currentEntries = currentLibraryEntries();
+  const known = ov.knownListIdentities(list, overlay);
+  const currentEntries = ov.currentLibraryEntries(list, overlay);
   const contracts = Object.keys(registry).filter((key) => !frozenContracts.has(key));
   let failed = 0;
 
@@ -1441,12 +1183,9 @@ async function updateAllContracts() {
       setManageStatus(dom.updateStatus, `Checking ${key} (${i + 1}/${contracts.length})...`);
 
       try {
-        const results = await scanContract(
-          key,
-          known,
-          currentEntries,
-          ({ scanned, total, results }) => {
-            const parts = [
+        updateResults.push(
+          ...(await scanContract(key, known, currentEntries, ({ scanned, total, results }) => {
+            const found = [
               [countKind(results, "new"), "new"],
               [countKind(results, "changed"), "changed"],
             ]
@@ -1454,11 +1193,10 @@ async function updateAllContracts() {
               .map(([count, label]) => `${count} ${label}`);
             setManageStatus(
               dom.updateStatus,
-              `${key}: ${scanned}/${total} checked${parts.length ? ` (${parts.join(", ")})` : ""}...`,
+              `${key}: ${scanned}/${total} checked${found.length ? ` (${found.join(", ")})` : ""}...`,
             );
-          },
+          })),
         );
-        updateResults.push(...results);
       } catch (error) {
         failed += 1;
         console.warn(`Update failed for ${key}:`, error);
@@ -1470,28 +1208,29 @@ async function updateAllContracts() {
     renderUpdateResults();
 
     const suffix = failed ? ` ${failed} contract(s) could not be checked.` : "";
-    const newCount = countKind(updateResults, "new");
-    const changedCount = countKind(updateResults, "changed");
+    const found = [
+      [countKind(updateResults, "new"), "new collection(s)"],
+      [countKind(updateResults, "changed"), "artwork count change(s)"],
+    ]
+      .filter(([count]) => count)
+      .map(([count, label]) => `${count} ${label}`);
 
-    if (!newCount && !changedCount) {
-      setManageStatus(dom.updateStatus, `No new collections or artwork count changes.${suffix}`);
-      return;
-    }
-
-    const parts = [];
-    if (newCount) parts.push(`${newCount} new collection(s)`);
-    if (changedCount) parts.push(`${changedCount} artwork count change(s)`);
-    setManageStatus(dom.updateStatus, `Found ${parts.join(" and ")}. Review them below.${suffix}`);
+    setManageStatus(
+      dom.updateStatus,
+      found.length
+        ? `Found ${found.join(" and ")}. Review them below.${suffix}`
+        : `No new collections or artwork count changes.${suffix}`,
+    );
   } finally {
     updateRunning = false;
     dom.manageUpdate.disabled = false;
   }
 }
 
-function bindCopyButton(button, getText, statusElement, okMessage, failMessage) {
+function bindCopyButton(button, getText, okMessage, failMessage) {
   button.addEventListener("click", async () => {
     const copied = await copyText(getText());
-    setManageStatus(statusElement, copied ? okMessage : failMessage, !copied);
+    setManageStatus(dom.copyStatus, copied ? okMessage : failMessage, !copied);
   });
 }
 
@@ -1515,34 +1254,27 @@ function initLibraryManager() {
     const action = button.dataset.updateAction;
 
     if (action === "apply-all") {
-      if (updateResults.length === 0) return;
+      if (!updateResults.length) return;
       const results = updateResults;
       updateResults = [];
-      results.forEach(applyUpdateResult);
+      results.forEach((r) => ov.applyUpdateResult(overlay, r));
       commitChanges(dom.updateStatus, `Applied ${results.length} change(s).`);
-      renderUpdateResults();
-      return;
+      return renderUpdateResults();
     }
 
-    const row = button.closest("[data-update-index]");
-    const rowIndex = Number(row?.dataset.updateIndex);
+    const rowIndex = Number(button.closest("[data-update-index]")?.dataset.updateIndex);
     const result = updateResults[rowIndex];
     if (!result) return;
-
     updateResults.splice(rowIndex, 1);
+
     if (action === "apply") {
-      applyUpdateResult(result);
-      commitChanges(
-        dom.updateStatus,
-        result.kind === "new" ? "Collection added." : "Artwork count updated.",
-      );
+      ov.applyUpdateResult(overlay, result);
+      commitChanges(dom.updateStatus, result.kind === "new" ? "Collection added." : "Artwork count updated.");
     }
     renderUpdateResults();
   });
 
-  dom.contractSectionToggle.addEventListener("click", () =>
-    setContractSectionOpen(!contractSectionOpen),
-  );
+  dom.contractSectionToggle.addEventListener("click", () => setContractSectionOpen(!contractSectionOpen));
 
   dom.contractToggle.addEventListener("click", () => {
     setContractFormOpen(dom.contractForm.hidden);
@@ -1551,8 +1283,7 @@ function initLibraryManager() {
 
   dom.manageListRows.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-action]");
-    const row = button?.closest("[data-entry-index]");
-    const entry = listManageEntries[Number(row?.dataset.entryIndex)];
+    const entry = listManageEntries[Number(button?.closest("[data-entry-index]")?.dataset.entryIndex)];
     if (!entry) return;
 
     const action = button.dataset.action;
@@ -1590,25 +1321,25 @@ function initLibraryManager() {
 
   dom.collectionForm.addEventListener("submit", (event) => {
     event.preventDefault();
-
     if (!listEdit) return fail(dom.collectionStatus, "Choose a collection to edit.");
 
     const collection = dom.collectionName.value.trim();
-    const artist = dom.collectionArtist.value.trim();
-    const platform = dom.collectionPlatform.value.trim();
     const works = Number(dom.collectionWorks.value);
-
     if (!collection) return fail(dom.collectionStatus, "Enter a collection name.");
     if (!Number.isInteger(works) || works < 0)
       return fail(dom.collectionStatus, "Enter a valid work count.");
 
-    const line = lineFromParsed({ ...listEdit.parsed, collection, artist, platform }, works);
-
+    const line = ov.lineFromParsed(
+      {
+        ...listEdit.parsed,
+        collection,
+        artist: dom.collectionArtist.value.trim(),
+        platform: dom.collectionPlatform.value.trim(),
+      },
+      works,
+    );
     if (!ov.parseListLine(line))
-      return fail(
-        dom.collectionStatus,
-        "Contract keys must be letters, optionally followed by [number].",
-      );
+      return fail(dom.collectionStatus, "Contract keys must be letters, optionally followed by [number].");
 
     if (listEdit.additionLine) ov.applyAdd(overlay, line, listEdit.additionLine);
     else ov.applyEdit(overlay, listEdit.original, line);
@@ -1618,26 +1349,21 @@ function initLibraryManager() {
 
   dom.manageContractRows.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-action]");
-    const row = button?.closest("[data-contract-index]");
-    const key = contractManageEntries[Number(row?.dataset.contractIndex)];
+    const key = contractManageEntries[Number(button?.closest("[data-contract-index]")?.dataset.contractIndex)];
     if (!key) return;
 
-    const action = button.dataset.action;
+    if (button.dataset.action === "edit") return startContractEdit(key);
 
-    if (action === "edit") {
-      startContractEdit(key);
-    } else if (action === "remove") {
-      const kind = contractKind(key);
-      if (!confirm(`Remove ${key} from your overlay?`)) return;
+    const kind = contractKind(key);
+    if (!confirm(`Remove ${key} from your overlay?`)) return;
 
-      delete overlay.contracts[key];
-      if (contractEditKey === key) setContractFormOpen(false);
-      commitChanges(
-        dom.contractStatus,
-        kind === "custom" ? "Contract removed." : "Bundled contract restored.",
-        { contracts: true },
-      );
-    }
+    delete overlay.contracts[key];
+    if (contractEditKey === key) setContractFormOpen(false);
+    commitChanges(
+      dom.contractStatus,
+      kind === "custom" ? "Contract removed." : "Bundled contract restored.",
+      { contracts: true },
+    );
   });
 
   dom.contractCancel.addEventListener("click", () => {
@@ -1654,7 +1380,6 @@ function initLibraryManager() {
       platform: dom.contractPlatform.value,
       startProjId: dom.contractStart.value,
     });
-
     if (!config || !abiProfiles[config.abi])
       return fail(dom.contractStatus, "Enter a valid ABI, 0x address and start project ID (if set).");
 
@@ -1662,10 +1387,7 @@ function initLibraryManager() {
     if (!key) {
       if (!rpcUrl) return fail(dom.contractStatus, "Set an RPC URL first.");
       try {
-        key = keyFromSymbol(
-          await call(config.address, symbolAbi, "symbol", []),
-          (k) => !!registry[k],
-        );
+        key = keyFromSymbol(await call(config.address, symbolAbi, "symbol", []), (k) => !!registry[k]);
       } catch (error) {
         console.error("symbol() lookup failed:", error);
         return fail(dom.contractStatus, `Could not read symbol(): ${error.message}`);
@@ -1679,18 +1401,16 @@ function initLibraryManager() {
       }
     }
 
+    overlay.contracts[key] = config;
     const message = contractEditKey
       ? "Contract updated."
       : `Contract added as ${key}. Press "Update list" to fetch its collections.`;
-    overlay.contracts[key] = config;
-    if (commitChanges(dom.contractStatus, message, { contracts: true }))
-      setContractFormOpen(false);
+    if (commitChanges(dom.contractStatus, message, { contracts: true })) setContractFormOpen(false);
   });
 
   bindCopyButton(
     dom.manageCopyList,
     () => ov.exportListJS(list, overlay, Object.keys(registry)),
-    dom.copyStatus,
     "Full list JS copied. Replace list in js/data.js.",
     "Could not copy the list.",
   );
@@ -1698,7 +1418,6 @@ function initLibraryManager() {
   bindCopyButton(
     dom.manageCopyContracts,
     () => ov.exportContractsJS(registry, Object.keys(baseContractRegistry)),
-    dom.copyStatus,
     "Full contract registry copied. Replace contractRegistry in js/constants.js.",
     "Could not copy the contracts.",
   );
@@ -1713,9 +1432,7 @@ function initLibraryManager() {
     setContractFormOpen(false);
     updateResults = [];
     renderUpdateResults();
-    [dom.collectionStatus, dom.contractStatus, dom.updateStatus].forEach((el) =>
-      setManageStatus(el, ""),
-    );
+    [dom.collectionStatus, dom.contractStatus, dom.updateStatus].forEach((el) => setManageStatus(el, ""));
     setManageStatus(dom.copyStatus, "Local changes cleared.");
   });
 }
@@ -1740,21 +1457,21 @@ function showTooltip(element, text) {
 
   tooltipTimeout = setTimeout(() => {
     const rect = element.getBoundingClientRect();
-    const infobarRect = dom.infobar.getBoundingClientRect();
+    const infobarTop = dom.infobar.getBoundingClientRect().top;
 
     dom.tooltip.textContent = text;
     dom.tooltip.style.visibility = "hidden";
     dom.tooltip.classList.add("active");
 
     const { width } = dom.tooltip.getBoundingClientRect();
-    const leftPos = Math.max(
+    const left = Math.max(
       10 + width / 2,
       Math.min(window.innerWidth - 10 - width / 2, rect.left + rect.width / 2),
     );
 
     Object.assign(dom.tooltip.style, {
-      left: `${leftPos}px`,
-      bottom: `${window.innerHeight - infobarRect.top + 10}px`,
+      left: `${left}px`,
+      bottom: `${window.innerHeight - infobarTop + 10}px`,
       color: "var(--color-btn)",
       transform: "translateX(-50%)",
       visibility: "visible",
@@ -1766,8 +1483,7 @@ function hideTooltip() {
   clearTimeout(tooltipTimeout);
   tooltipTimeout = null;
   dom.tooltip.classList.remove("active");
-  dom.tooltip.style.visibility = "";
-  dom.tooltip.style.opacity = "";
+  dom.tooltip.style.visibility = dom.tooltip.style.opacity = "";
 }
 
 function initTooltips() {
@@ -1780,45 +1496,33 @@ function initTooltips() {
   });
 }
 
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
 function setTheme(themeName) {
-  dom.themeBtns.forEach((btn) =>
-    btn.setAttribute("data-active", btn.dataset.theme === themeName),
-  );
-  const dark =
-    themeName === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-      : themeName === "dark";
-  dom.root.classList.toggle("dark-mode", dark);
+  dom.themeBtns.forEach((btn) => btn.setAttribute("data-active", btn.dataset.theme === themeName));
+  dom.root.classList.toggle("dark-mode", themeName === "system" ? prefersDark.matches : themeName === "dark");
   localStorage.setItem("themePreference", themeName);
 }
 
 document.addEventListener("keypress", (event) => {
-  if (event.key === "\\") {
-    clearDataStorage();
+  if (event.key !== "\\") return;
+  clearDataStorage();
+  location.reload();
+});
+
+const bindSetting = (input, storageKey, normalize = (v) => v) =>
+  input.addEventListener("keypress", (event) => {
+    if (event.key !== "Enter") return;
+    const raw = input.value.trim();
+    const value = raw && normalize(raw);
+    if (raw && !value) return alert("Please enter a valid gateway host.");
+    if (value) localStorage.setItem(storageKey, value);
+    else localStorage.removeItem(storageKey);
     location.reload();
-  }
-});
+  });
 
-dom.rpcUrlInput.addEventListener("keypress", (event) => {
-  if (event.key !== "Enter") return;
-  const value = dom.rpcUrlInput.value.trim();
-  if (value === "") localStorage.removeItem("rpcUrl");
-  else localStorage.setItem("rpcUrl", value);
-  location.reload();
-});
-
-dom.ipfsGateway.addEventListener("keypress", (event) => {
-  if (event.key !== "Enter") return;
-  const value = dom.ipfsGateway.value.trim();
-  if (value === "") {
-    localStorage.removeItem("ipfsGateway");
-  } else {
-    const host = parseGatewayHost(value);
-    if (!host) return alert("Please enter a valid gateway host.");
-    localStorage.setItem("ipfsGateway", host);
-  }
-  location.reload();
-});
+bindSetting(dom.rpcUrlInput, "rpcUrl");
+bindSetting(dom.ipfsGateway, "ipfsGateway", parseGatewayHost);
 
 dom.search.addEventListener("input", (event) => {
   const query = event.target.value.trim();
@@ -1828,10 +1532,7 @@ dom.search.addEventListener("input", (event) => {
 
   if (query.startsWith("#") && contractData) {
     const num = query.substring(1);
-    const name = contractData.detail[0].trim();
-    const line = /^\d*$/.test(num)
-      ? findCurrentCollectionLine(name)
-      : null;
+    const line = /^\d*$/.test(num) ? findCurrentCollectionLine(contractData.detail[0].trim()) : null;
 
     if (!line) {
       listManager.reset();
@@ -1841,8 +1542,7 @@ dom.search.addEventListener("input", (event) => {
     listManager.filteredList = [line];
     listManager.selectedIndex = 0;
     dom.listPanel.innerHTML = `<div>${listItemHTML(line, 0, num, true)}</div>`;
-    openList();
-    return;
+    return openList();
   }
 
   const { searchQuery, numberQuery } = parseQuery(query);
@@ -1858,11 +1558,11 @@ dom.search.addEventListener("input", (event) => {
 dom.search.addEventListener("keydown", handleKeyboardNavigation);
 
 dom.listPanel.addEventListener("click", (event) => {
-  const listItem = event.target.closest(".list-item");
-  if (!listItem) return;
-  listManager.selectedIndex = parseInt(listItem.dataset.index);
-  const selectedItem = listManager.getSelected();
-  if (selectedItem) getToken(selectedItem, dom.search.value.trim());
+  const item = event.target.closest(".list-item");
+  if (!item) return;
+  listManager.selectedIndex = parseInt(item.dataset.index);
+  const selected = listManager.getSelected();
+  if (selected) getToken(selected, dom.search.value.trim());
 });
 
 bindPanelToggle(dom.settings, dom.instruction);
@@ -1884,9 +1584,7 @@ dom.favSave.addEventListener("click", () => {
   clearPanels();
 });
 
-loopTypes.forEach((type) =>
-  dom[`${type}Loop`].addEventListener("click", () => handleLoop(`${type}Loop`)),
-);
+loopTypes.forEach((type) => dom[`${type}Loop`].addEventListener("click", () => handleLoop(`${type}Loop`)));
 
 dom.stopLoop.addEventListener("click", stopLoop);
 dom.inc.addEventListener("click", () => stepTokenId(1));
@@ -1894,9 +1592,7 @@ dom.dec.addEventListener("click", () => stepTokenId(-1));
 dom.randomButton.addEventListener("click", () => getRandom(listManager.originalList));
 dom.explore.addEventListener("click", exploreAlgo);
 
-panels.forEach((panel) =>
-  panel.addEventListener("click", (event) => event.stopPropagation()),
-);
+panels.forEach((panel) => panel.addEventListener("click", (event) => event.stopPropagation()));
 
 dom.panel.addEventListener("click", (event) => {
   const copyBtn = event.target.closest(".copy-txt");
@@ -1905,24 +1601,17 @@ dom.panel.addEventListener("click", (event) => {
   copyText(copyBtn.dataset.text);
 
   const icon = copyBtn.querySelector("i");
-  icon.classList.replace("fa-regular", "fa-solid");
-  icon.classList.replace("fa-copy", "fa-check");
-
-  setTimeout(() => {
-    icon.classList.replace("fa-solid", "fa-regular");
-    icon.classList.replace("fa-check", "fa-copy");
-  }, 1000);
+  const swap = (from, to) => from.forEach((cls, i) => icon.classList.replace(cls, to[i]));
+  swap(["fa-regular", "fa-copy"], ["fa-solid", "fa-check"]);
+  setTimeout(() => swap(["fa-solid", "fa-check"], ["fa-regular", "fa-copy"]), 1000);
 });
 
 document.addEventListener("click", clearPanels);
 
-dom.themeBtns.forEach((button) =>
-  button.addEventListener("click", () => setTheme(button.dataset.theme)),
-);
+dom.themeBtns.forEach((button) => button.addEventListener("click", () => setTheme(button.dataset.theme)));
 
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
-  if (localStorage.getItem("themePreference") === "system")
-    dom.root.classList.toggle("dark-mode", event.matches);
+prefersDark.addEventListener("change", (event) => {
+  if (localStorage.getItem("themePreference") === "system") dom.root.classList.toggle("dark-mode", event.matches);
 });
 
 updateLoopButton();
@@ -1931,6 +1620,7 @@ setUIControls();
 initTooltips();
 setTheme(localStorage.getItem("themePreference") || "system");
 initLibraryManager();
+
 if (contractData) {
   let restored = false;
   try {

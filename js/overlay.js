@@ -1,94 +1,58 @@
 export const OVERLAY_KEY = "collectionOverlay";
 export const OVERLAY_VERSION = 1;
 
-const isObject = (value) =>
-  value !== null && typeof value === "object" && !Array.isArray(value);
-const asString = (value) => (typeof value === "string" ? value : "");
+const SEP = " | ";
+const CONTRACT_KEY = /^[A-Z]+(?:\[\d+\])?$/;
+const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+const asString = (v) => (typeof v === "string" ? v : "");
 
-const dropChanges = (overlay, match) => {
+const drop = (overlay, match) => {
   overlay.list = overlay.list.filter((change) => !match(change));
 };
-const changeMatches = (type, field, value) => (change) =>
-  change.type === type && change[field] === value;
+const is = (type, field, value) => (change) => change.type === type && change[field] === value;
 
-export function emptyOverlay() {
-  return { version: OVERLAY_VERSION, list: [], contracts: {} };
-}
-
-const PLATFORM_SEPARATOR = " | ";
-const CONTRACT_KEY = /^[A-Z]+(?:\[\d+\])?$/;
+export const emptyOverlay = () => ({ version: OVERLAY_VERSION, list: [], contracts: {} });
 
 export function parseListLine(line) {
   const value = asString(line).trim();
-  if (!value) return null;
-
   const hidden = value.endsWith("!");
-  const body = hidden ? value.slice(0, -1).trimEnd() : value;
-
-  const parts = body.split(" # ");
+  const parts = (hidden ? value.slice(0, -1).trimEnd() : value).split(" # ");
   if (parts.length < 3) return null;
 
   const head = parts[0].trim().match(/^([A-Z]+(?:\[\d+\])?)(\d+)$/);
-  const worksPart = parts[parts.length - 1];
-  const platformAt = worksPart.lastIndexOf(PLATFORM_SEPARATOR);
-  const worksText =
-    platformAt === -1 ? worksPart : worksPart.slice(0, platformAt);
-  const platform =
-    platformAt === -1
-      ? ""
-      : worksPart.slice(platformAt + PLATFORM_SEPARATOR.length).trim();
-  const works = worksText.trim().match(/^(\d+)\s+Works?$/);
-  if (!head || !works) return null;
+  const worksPart = parts.at(-1);
+  const platformAt = worksPart.lastIndexOf(SEP);
+  const tail = (platformAt === -1 ? worksPart : worksPart.slice(0, platformAt))
+    .trim()
+    .match(/^(\d+)\s+Works?$/);
+  if (!head || !tail) return null;
 
   const label = parts.slice(1, -1).join(" # ").trim();
-  const labelParts = label.split(" / ");
-  const hasEmptyArtist = label.endsWith(" /");
-  const artist = hasEmptyArtist
-    ? ""
-    : labelParts.length > 1
-      ? labelParts[labelParts.length - 1].trim()
-      : "";
-  const collection = hasEmptyArtist
-    ? label.slice(0, -2).trim()
-    : labelParts.length > 1
-      ? labelParts.slice(0, -1).join(" / ").trim()
-      : labelParts[0].trim();
+  const emptyArtist = label.endsWith(" /");
+  const at = emptyArtist ? -1 : label.lastIndexOf(" / ");
 
   return {
     contract: head[1],
     projectId: Number(head[2]),
-    collection,
-    artist,
-    works: Number(works[1]),
-    platform,
+    collection: (emptyArtist ? label.slice(0, -2) : at < 0 ? label : label.slice(0, at)).trim(),
+    artist: at < 0 ? "" : label.slice(at + 3).trim(),
+    works: Number(tail[1]),
+    platform: platformAt === -1 ? "" : worksPart.slice(platformAt + SEP.length).trim(),
     hidden,
   };
 }
 
 export const listIdentity = (line) => {
-  const parsed = parseListLine(line);
-  return parsed ? `${parsed.contract}${parsed.projectId}` : null;
+  const p = parseListLine(line);
+  return p ? `${p.contract}${p.projectId}` : null;
 };
 
 export function makeListLine({
-  contract,
-  projectId,
-  collection,
-  artist = "",
-  works,
-  platform = "",
-  hidden = false,
+  contract, projectId, collection, artist = "", works, platform = "", hidden = false,
 }) {
   const count = Number(works);
-  const trimmedPlatform = platform.trim();
-  const trimmedArtist = artist.trim();
-  const suffix = trimmedPlatform
-    ? `${PLATFORM_SEPARATOR}${trimmedPlatform}`
-    : "";
-  const label = trimmedArtist
-    ? `${collection.trim()} / ${trimmedArtist}`
-    : `${collection.trim()} / `;
-  return `${contract}${projectId} # ${label} # ${count} ${
+  const suffix = platform.trim() ? `${SEP}${platform.trim()}` : "";
+  return `${contract}${projectId} # ${collection.trim()} / ${artist.trim()} # ${count} ${
     count === 1 ? "Work" : "Works"
   }${suffix}${hidden ? "!" : ""}`;
 }
@@ -98,24 +62,18 @@ export function normalizeContractConfig(config) {
 
   const abi = asString(config.abi).trim();
   const address = asString(config.address).trim();
-  const platform = asString(config.platform).trim();
   if (!abi || !/^0x[a-fA-F0-9]{40}$/.test(address)) return null;
 
-  let startProjId;
-  if (
-    config.startProjId !== undefined &&
-    config.startProjId !== null &&
-    String(config.startProjId).trim() !== ""
-  ) {
-    startProjId = Number(config.startProjId);
-    if (!Number.isInteger(startProjId) || startProjId < 0) return null;
-  }
+  const raw = config.startProjId;
+  const hasStart = raw != null && String(raw).trim() !== "";
+  const startProjId = Number(raw);
+  if (hasStart && (!Number.isInteger(startProjId) || startProjId < 0)) return null;
 
   return {
     abi,
     address,
-    platform,
-    ...(startProjId !== undefined ? { startProjId } : {}),
+    platform: asString(config.platform).trim(),
+    ...(hasStart ? { startProjId } : {}),
   };
 }
 
@@ -123,40 +81,32 @@ export function normalizeOverlay(data) {
   const overlay = emptyOverlay();
   if (!isObject(data)) return overlay;
 
-  if (Array.isArray(data.list)) {
-    const edits = new Map();
-    const removes = new Set();
-    const additions = [];
+  const edits = new Map();
+  const removes = new Set();
+  const additions = new Set();
 
-    data.list.forEach((change) => {
-      if (!isObject(change)) return;
+  (Array.isArray(data.list) ? data.list : []).forEach((change) => {
+    if (!isObject(change)) return;
+    const line = asString(change.line);
+    const original = asString(change.original);
 
-      if (change.type === "add") {
-        const line = asString(change.line);
-        if (parseListLine(line) && !additions.includes(line)) additions.push(line);
-      } else if (change.type === "edit") {
-        const original = asString(change.original);
-        const line = asString(change.line);
-        if (parseListLine(original) && parseListLine(line)) edits.set(original, line);
-      } else if (change.type === "remove") {
-        const original = asString(change.original);
-        if (parseListLine(original)) removes.add(original);
-      }
-    });
+    if (change.type === "add" && parseListLine(line)) additions.add(line);
+    else if (change.type === "edit" && parseListLine(original) && parseListLine(line))
+      edits.set(original, line);
+    else if (change.type === "remove" && parseListLine(original)) removes.add(original);
+  });
 
-    edits.forEach((line, original) => {
-      overlay.list.push({ type: "edit", original, line });
-    });
-    removes.forEach((original) => overlay.list.push({ type: "remove", original }));
-    additions.forEach((line) => overlay.list.push({ type: "add", line }));
-  }
+  overlay.list = [
+    ...[...edits].map(([original, line]) => ({ type: "edit", original, line })),
+    ...[...removes].map((original) => ({ type: "remove", original })),
+    ...[...additions].map((line) => ({ type: "add", line })),
+  ];
 
-  if (isObject(data.contracts)) {
+  if (isObject(data.contracts))
     Object.entries(data.contracts).forEach(([key, config]) => {
       const normalized = normalizeContractConfig(config);
       if (normalized && CONTRACT_KEY.test(key)) overlay.contracts[key] = normalized;
     });
-  }
 
   return overlay;
 }
@@ -190,86 +140,55 @@ export function listEntries(baseList, overlay) {
 
   const entries = baseList.map((original) => {
     const edited = edits.get(original);
-    if (removes.has(original))
-      return { line: edited ?? original, original, kind: "removed" };
-    if (edited) return { line: edited, original, kind: "edited" };
-    return { line: original, original, kind: "base" };
+    if (removes.has(original)) return { line: edited ?? original, original, kind: "removed" };
+    return edited
+      ? { line: edited, original, kind: "edited" }
+      : { line: original, original, kind: "base" };
   });
 
   overlay.list.forEach((change) => {
-    if (change.type === "add")
-      entries.push({ line: change.line, original: null, kind: "added" });
+    if (change.type === "add") entries.push({ line: change.line, original: null, kind: "added" });
   });
 
   return entries;
 }
 
 export function mergeList(baseList, overlay) {
-  const merged = [];
   const seen = new Set();
-
-  listEntries(baseList, overlay).forEach(({ line, kind }) => {
-    if (kind === "removed" || seen.has(line)) return;
+  return listEntries(baseList, overlay).flatMap(({ line, kind }) => {
+    if (kind === "removed" || seen.has(line)) return [];
     seen.add(line);
-    merged.push(line);
+    return [line];
   });
-
-  return merged;
 }
 
 export function applyAdd(overlay, line, previousLine = null) {
   if (!parseListLine(line)) return false;
-  dropChanges(
-    overlay,
-    (change) =>
-      change.type === "add" &&
-      (change.line === line || change.line === previousLine),
-  );
+  drop(overlay, (c) => c.type === "add" && (c.line === line || c.line === previousLine));
   overlay.list.push({ type: "add", line });
   return true;
 }
 
 export function applyEdit(overlay, original, line) {
   if (!parseListLine(original) || !parseListLine(line)) return false;
-
-  dropChanges(
-    overlay,
-    (change) =>
-      (change.type === "edit" || change.type === "remove") &&
-      change.original === original,
-  );
-
+  drop(overlay, (c) => (c.type === "edit" || c.type === "remove") && c.original === original);
   if (line !== original) overlay.list.push({ type: "edit", original, line });
   return true;
 }
 
 export function applyRemove(overlay, original) {
   if (!parseListLine(original)) return false;
-
-  dropChanges(overlay, changeMatches("remove", "original", original));
+  restoreOriginal(overlay, original);
   overlay.list.push({ type: "remove", original });
   return true;
 }
 
-export function restoreOriginal(overlay, original) {
-  dropChanges(overlay, changeMatches("remove", "original", original));
-}
+export const restoreOriginal = (overlay, original) =>
+  drop(overlay, is("remove", "original", original));
+export const removeEdit = (overlay, original) => drop(overlay, is("edit", "original", original));
 
-export function removeEdit(overlay, original) {
-  dropChanges(overlay, changeMatches("edit", "original", original));
-}
-
-export function removeAddition(overlay, line) {
-  dropChanges(overlay, changeMatches("add", "line", line));
-}
-
-const sameEntry = (a, b) =>
-  a.contract === b.contract &&
-  a.projectId === b.projectId &&
-  a.collection === b.collection &&
-  a.artist === b.artist &&
-  a.works === b.works &&
-  a.platform === b.platform;
+const ENTRY_FIELDS = ["contract", "projectId", "collection", "artist", "works", "platform"];
+const sameEntry = (a, b) => ENTRY_FIELDS.every((k) => a[k] === b[k]);
 
 export function pruneReconciledChanges(overlay, baseList) {
   const known = new Set(baseList.map(listIdentity).filter(Boolean));
@@ -284,33 +203,23 @@ export function pruneReconciledChanges(overlay, baseList) {
     return !baseList.includes(change.original);
   };
 
-  const countBefore = overlay.list.length;
-  overlay.list = overlay.list.filter((change) => !isReconciled(change));
-  return overlay.list.length !== countBefore;
+  const before = overlay.list.length;
+  drop(overlay, isReconciled);
+  return overlay.list.length !== before;
 }
 
-const bareAdditionLine = (line) => line.replace(/!\s*$/, "");
-
-export function hideAddition(overlay, line) {
-  return setAdditionHidden(overlay, line, true);
-}
-
-export function unhideAddition(overlay, line) {
-  return setAdditionHidden(overlay, line, false);
-}
+const bareLine = (line) => line.replace(/!\s*$/, "");
 
 function setAdditionHidden(overlay, line, hidden) {
   if (!parseListLine(line)) return false;
-
-  const bare = bareAdditionLine(line);
+  const bare = bareLine(line);
   const current =
-    overlay.list.find(
-      (change) =>
-        change.type === "add" && bareAdditionLine(change.line) === bare,
-    )?.line ?? line;
-
+    overlay.list.find((c) => c.type === "add" && bareLine(c.line) === bare)?.line ?? line;
   return applyAdd(overlay, hidden ? `${bare}!` : bare, current);
 }
+
+export const hideAddition = (overlay, line) => setAdditionHidden(overlay, line, true);
+export const unhideAddition = (overlay, line) => setAdditionHidden(overlay, line, false);
 
 const keyOfLine = (line) => parseListLine(line)?.contract ?? "";
 const stemOf = (key) => key.replace(/\[\d+\]$/, "");
@@ -321,8 +230,7 @@ function makeKeyCompare(keyOrder) {
     const i = keyOrder.findIndex((other) => stemOf(other) === stemOf(key));
     return i === -1 ? Infinity : i;
   };
-  return (a, b) =>
-    rank(a) - rank(b) || numOf(a) - numOf(b) || (a < b ? -1 : a > b ? 1 : 0);
+  return (a, b) => rank(a) - rank(b) || numOf(a) - numOf(b) || (a < b ? -1 : a > b ? 1 : 0);
 }
 
 function orderedListEntries(entries, keyOrder) {
@@ -331,35 +239,24 @@ function orderedListEntries(entries, keyOrder) {
     byKey(keyOfLine(a.line), keyOfLine(b.line)) ||
     parseListLine(a.line).projectId - parseListLine(b.line).projectId;
 
-  const ordered = entries.filter((entry) => entry.kind !== "added");
+  const ordered = entries.filter((e) => e.kind !== "added");
   entries
-    .filter((entry) => entry.kind === "added")
+    .filter((e) => e.kind === "added")
     .sort(compare)
     .forEach((addition) => {
       const index = ordered.findIndex((entry) => compare(addition, entry) < 0);
       ordered.splice(index === -1 ? ordered.length : index, 0, addition);
     });
-
   return ordered;
 }
 
 export function exportListJS(baseList, overlay, keyOrder = []) {
-  const seen = new Set();
-  const lines = [];
-
-  orderedListEntries(listEntries(baseList, overlay), keyOrder).forEach(
-    ({ line, kind }) => {
-      const output =
-        kind === "removed" && !line.endsWith("!") ? `${line}!` : line;
-      if (seen.has(output)) return;
-      seen.add(output);
-      lines.push(output);
-    },
+  const lines = new Set(
+    orderedListEntries(listEntries(baseList, overlay), keyOrder).map(({ line, kind }) =>
+      kind === "removed" && !line.endsWith("!") ? `${line}!` : line,
+    ),
   );
-
-  return `export const list = [\n${lines
-    .map((line) => `  ${JSON.stringify(line)},`)
-    .join("\n")}\n];`;
+  return `export const list = [\n${[...lines].map((l) => `  ${JSON.stringify(l)},`).join("\n")}\n];`;
 }
 
 export function exportContractsJS(contracts = {}, keyOrder = []) {
@@ -378,4 +275,69 @@ export function exportContractsJS(contracts = {}, keyOrder = []) {
     .join("\n");
 
   return `export const contractRegistry = {\n${body}\n};`;
+}
+
+export const lineFromParsed = (parsed, works = parsed.works) =>
+  makeListLine({ ...parsed, works });
+
+export function describeLine(line) {
+  const p = parseListLine(line);
+  if (!p) return { collection: "", artist: "", workCount: "" };
+  return {
+    collection: p.collection,
+    artist: p.artist,
+    workCount: `${p.works} ${p.works === 1 ? "Work" : "Works"}`,
+  };
+}
+
+export function knownListIdentities(baseList, overlay) {
+  const known = new Set();
+  const remember = (line) => {
+    const identity = listIdentity(line);
+    if (identity) known.add(identity);
+  };
+  baseList.forEach(remember);
+  overlay.list.forEach(({ line, original }) => {
+    if (line) remember(line);
+    if (original) remember(original);
+  });
+  return known;
+}
+
+export function currentLibraryEntries(baseList, overlay) {
+  const entries = new Map();
+  listEntries(baseList, overlay).forEach((entry) => {
+    const identity = entry.kind === "removed" ? null : listIdentity(entry.line);
+    if (identity) entries.set(identity, entry);
+  });
+  return entries;
+}
+
+export function compareProjectLine(line, currentEntries) {
+  const identity = listIdentity(line);
+  if (!identity) return null;
+
+  const current = currentEntries.get(identity);
+  if (!current) return { kind: "new", identity, line };
+
+  const currentParsed = parseListLine(current.line);
+  const nextParsed = parseListLine(line);
+  if (!currentParsed || !nextParsed || currentParsed.works === nextParsed.works) return null;
+
+  return {
+    kind: "changed",
+    identity,
+    line: lineFromParsed(currentParsed, nextParsed.works),
+    original: current.original,
+    previousLine: current.line,
+    added: current.kind === "added",
+    oldWorks: currentParsed.works,
+    newWorks: nextParsed.works,
+  };
+}
+
+export function applyUpdateResult(overlay, result) {
+  if (result.kind === "new") return applyAdd(overlay, result.line);
+  if (result.added) return applyAdd(overlay, result.line, result.previousLine);
+  return applyEdit(overlay, result.original, result.line);
 }
